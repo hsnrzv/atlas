@@ -83,7 +83,7 @@ design/                     design system source of truth (see design/README.md)
   mockups/                  reference mock-ups (not used at runtime)
 docs/
   adr/                      cross-cutting and frontend ADRs
-  architecture/             CONTEXT.md, DEPENDENCY-LICENSE-MATRIX.md
+  architecture/             CONTEXT.md, TECH-STACK.md, DEPENDENCY-LICENSE-MATRIX.md
   plan/                     PLAN-FRONTEND.md, IMPLEMENTATION-ROADMAP.md
 e2e/                        Playwright specs
 nginx/                      container nginx config and security headers (CSP)
@@ -120,6 +120,7 @@ capacitor.config.ts         app id dev.myatlas.app; native projects are added in
 - Product and architecture specification: [`project-instruction.md`](project-instruction.md)
 - UI/UX design specification: [`design-instructions.md`](design-instructions.md) and the [`design/`](design/README.md) package
 - [System context and containers](docs/architecture/CONTEXT.md) ·
+  [Tech stack and architecture graphic](docs/architecture/TECH-STACK.md) ·
   [Implementation roadmap](docs/plan/IMPLEMENTATION-ROADMAP.md) ·
   [Frontend plan](docs/plan/PLAN-FRONTEND.md) ·
   [Dependency and license matrix](docs/architecture/DEPENDENCY-LICENSE-MATRIX.md) ·
