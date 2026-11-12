@@ -4,9 +4,9 @@ Snapshot after Phase 0 (plans) and Phase 1 (foundations), 2026-11-12. Exact vers
 [DEPENDENCY-LICENSE-MATRIX.md](DEPENDENCY-LICENSE-MATRIX.md); the C4-style context and delivery views are in
 [CONTEXT.md](CONTEXT.md).
 
-**Status legend:** **In place** = built and verified in Phase 1. **Proposed** = ADR written, waiting for the owner.
-**Planned** = later phase (see [IMPLEMENTATION-ROADMAP.md](../plan/IMPLEMENTATION-ROADMAP.md)). **Open** = decision
-not made yet.
+**Status legend:** **In place** = built and verified in Phase 1. **Accepted** = owner decision recorded, not built
+yet. **Proposed** = ADR written, waiting for the owner. **Planned** = later phase (see
+[IMPLEMENTATION-ROADMAP.md](../plan/IMPLEMENTATION-ROADMAP.md)). **Open** = decision not made yet.
 
 ## Architecture graphic (target runtime on Azure)
 
@@ -22,11 +22,12 @@ flowchart TB
     mobile["iOS and Android apps<br/>same SPA in Capacitor 8<br/><i>Planned, Phase 10</i>"]
   end
 
-  idp["OIDC identity provider<br/>managed IdP<br/><i>Open: provider not chosen</i><br/>Keycloak optional for local dev"]
+  idp["Microsoft Entra External ID<br/>OIDC · free up to 50,000 MAU · sign-up disabled<br/><i>Accepted, Phase 9</i><br/>Keycloak optional for local dev"]
 
-  subgraph azure["② Microsoft Azure · Germany West Central · Proposed"]
-    dns["Azure DNS<br/>atlas domain · <i>Open</i>"]
-    subgraph k8s["③ Kubernetes: k3s on an Azure VM · AKS is the alternative"]
+  subgraph azure["② Microsoft Azure · free account → pay-as-you-go · Germany West Central (proposed)"]
+    dns["Azure DNS<br/>public zone (domain <i>Open</i>)<br/>private zone for PostgreSQL"]
+    mon["Azure Monitor · Cost Management<br/>metric alerts · budgets<br/>Defender CSPM (free)"]
+    subgraph k8s["③ Kubernetes: k3s on one Azure VM B2as_v2 · dev, staging, prod as namespaces"]
       ingress["Traefik Ingress (bundled with k3s)<br/>TLS termination · path routing<br/>acts as the API gateway"]
       certm["cert-manager<br/>Let's Encrypt certificates"]
       subgraph ns["Namespace atlas-dev / atlas-staging / atlas-prod<br/>PSA restricted · NetworkPolicies · non-root · read-only rootfs"]
@@ -36,8 +37,8 @@ flowchart TB
       eso["External Secrets Operator"]
       argo["Argo CD 3.6<br/>GitOps controller"]
     end
-    pg[("④ Azure Database for PostgreSQL<br/>Flexible Server · PostgreSQL 18<br/>private access · PITR backups")]
-    kv["Azure Key Vault"]
+    pg[("④ Azure Database for PostgreSQL<br/>Flexible Server B1ms · PostgreSQL 18<br/>non-prod + prod servers<br/>private access · PITR backups")]
+    kv["Azure Key Vault<br/>non-prod + prod"]
   end
 
   subgraph github["⑤ GitHub: source, CI/CD, registry"]
@@ -55,6 +56,7 @@ flowchart TB
   ingress -- "/" --> fe
   ingress -- "/api" --> be
   be -- "JDBC · Flyway migrations" --> pg
+  mon -. "metrics · alerts" .-> pg
 
   mobile -. "Auth Code + PKCE<br/>system browser" .-> idp
   be -. "OIDC client for web (BFF)<br/>JWT validation via JWKS" .-> idp
@@ -136,23 +138,66 @@ flowchart LR
 
 ## Infrastructure and delivery: `atlas-infra`
 
-| Area                | Technology                                                                                                              | Version         | Status                               |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------------------ |
-| Manifests           | Kubernetes YAML, Kustomize bases (backend, frontend, ingress, namespace baseline) and dev/staging/prod overlays         | kubectl 1.37    | In place                             |
-| Security baseline   | Pod Security Admission `restricted`, default-deny NetworkPolicies, non-root, read-only rootfs, prod PDBs, image digests | n/a             | In place                             |
-| GitOps              | Argo CD AppProject + Applications (dev auto-sync; staging and prod manual sync)                                         | 3.6.1           | Manifests in place; cluster Proposed |
-| Validation          | kubeconform, yamllint, shellcheck, `scripts/validate.sh`, `manifests-ci.yml`                                            | kubeconform 0.8 | In place                             |
-| Local stack         | Docker Compose: PostgreSQL 18.6-alpine, backend, frontend, nginx 1.30 edge proxy                                        | n/a             | In place                             |
-| Registry            | GHCR `ghcr.io/hsnrzv/atlas-{frontend,backend}`; build once, promote the digest through bump PRs (GitHub App)            | n/a             | Planned (Phase 2)                    |
-| Cloud               | Microsoft Azure, region Germany West Central, budgets and alerts                                                        | n/a             | Proposed                             |
-| Compute             | k3s on Azure VM (B2as_v2 for dev + staging; D2as_v5 for prod). Alternatives: AKS, Container Apps                        | k3s 1.37.2      | Proposed (ADR-0003)                  |
-| Ingress and gateway | Traefik bundled with k3s: TLS, `/api` → backend, `/` → frontend. No separate API gateway product                        | k3s-bundled     | Proposed                             |
-| TLS and DNS         | cert-manager + Let's Encrypt, DNS-01 challenge via Azure DNS                                                            | n/a             | Proposed; domain Open                |
-| Database            | Azure Database for PostgreSQL Flexible Server B1ms, private access, point-in-time restore                               | PostgreSQL 18   | Proposed (ADR-0004)                  |
-| Secrets             | Azure Key Vault + External Secrets Operator                                                                             | n/a             | Proposed (ADR-0005)                  |
-| Identity provider   | Managed OIDC provider; Keycloak optional for local full-stack work                                                      | n/a             | Open                                 |
-| Observability       | JSON logs to stdout, metrics-server, Argo CD health, Azure budget alerts; Prometheus deferred                           | n/a             | Proposed                             |
-| Mobile release      | GitHub Actions macOS runner → TestFlight / App Store Connect; Android validation workflow                               | n/a             | Planned (Phase 10)                   |
+| Area                | Technology                                                                                                                                                          | Version         | Status                               |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------------------ |
+| Manifests           | Kubernetes YAML, Kustomize bases (backend, frontend, ingress, namespace baseline) and dev/staging/prod overlays                                                     | kubectl 1.37    | In place                             |
+| Security baseline   | Pod Security Admission `restricted`, default-deny NetworkPolicies, non-root, read-only rootfs, prod PDBs, image digests                                             | n/a             | In place                             |
+| GitOps              | Argo CD AppProject + Applications (dev auto-sync; staging and prod manual sync)                                                                                     | 3.6.1           | Manifests in place; cluster Proposed |
+| Validation          | kubeconform, yamllint, shellcheck, `scripts/validate.sh`, `manifests-ci.yml`                                                                                        | kubeconform 0.8 | In place                             |
+| Local stack         | Docker Compose: PostgreSQL 18.6-alpine, backend, frontend, nginx 1.30 edge proxy                                                                                    | n/a             | In place                             |
+| Registry            | GHCR `ghcr.io/hsnrzv/atlas-{frontend,backend}`; build once, promote the digest through bump PRs (GitHub App)                                                        | n/a             | Planned (Phase 2)                    |
+| Cloud               | Microsoft Azure: free account, upgraded to pay-as-you-go within 30 days; budgets and alerts. Region Germany West Central                                            | n/a             | Accepted (ADR-0009); region Proposed |
+| Compute             | k3s on one Azure VM Standard_B2as_v2 (2 vCPU, 8 GiB) for dev, staging and prod as namespaces; own prod VM is the upgrade path                                       | k3s 1.37.2      | Accepted (ADR-0003)                  |
+| Ingress and gateway | Traefik bundled with k3s: TLS, `/api` → backend, `/` → frontend. No separate API gateway product                                                                    | k3s-bundled     | Proposed                             |
+| TLS and DNS         | cert-manager + Let's Encrypt, DNS-01 challenge via an Azure DNS public zone; Azure Private DNS zone for PostgreSQL                                                  | n/a             | Accepted (ADR-0009); domain Open     |
+| Database            | Azure Database for PostgreSQL Flexible Server B1ms: non-prod server (Phase 3) and prod server (Phase 9), private access, point-in-time restore                      | PostgreSQL 18   | Accepted (ADR-0004)                  |
+| Secrets             | Azure Key Vault + External Secrets Operator                                                                                                                         | n/a             | Proposed (ADR-0005)                  |
+| Identity provider   | Microsoft Entra External ID (external tenant, sign-up disabled); code stays provider-neutral OIDC; Keycloak optional for local full-stack work                      | n/a             | Accepted; Planned (Phase 9)          |
+| Observability       | JSON logs to stdout, metrics-server, Argo CD health, Azure Monitor metric alerts, budget alerts; Log Analytics only within the 5 GB free quota; Prometheus deferred | n/a             | Proposed                             |
+| Mobile release      | GitHub Actions macOS runner → TestFlight / App Store Connect; Android validation workflow                                                                           | n/a             | Planned (Phase 10)                   |
+
+## Azure services (final MVP list)
+
+Owner decision of 2026-11-12, based on the Azure free-service lists. The source of truth, with quotas, unit prices and
+guardrails, is `atlas-infra` ADR-0009 (`docs/adr/0009-azure-services-and-free-tier.md`).
+
+**Used from the free lists** (12 months = free for the first year only):
+
+| Service                                         | Used for                                                       | Free quota                         |
+| ----------------------------------------------- | -------------------------------------------------------------- | ---------------------------------- |
+| PostgreSQL Flexible Server (12 months)          | non-prod server (`atlas_dev`, `atlas_staging`)                 | 750 h B1ms, 32 GB storage + backup |
+| Managed Disks (12 months)                       | P6 OS disk of the k3s VM                                       | 2 × P6                             |
+| Key Vault (12 months)                           | secrets through External Secrets Operator                      | 10,000 operations                  |
+| Blob Storage (12 months)                        | weekly prod `pg_dump` (Phase 9)                                | 5 GB Hot LRS                       |
+| Bandwidth                                       | outbound traffic                                               | 100 GB + 15 GB (year 1) per month  |
+| Virtual Network                                 | VNet, NSG, delegated PostgreSQL subnet                         | always free                        |
+| Microsoft Entra ID                              | owner account, VM managed identity, GitHub OIDC federation     | always free                        |
+| Cost Management                                 | budgets, anomaly alerts                                        | always free                        |
+| Azure Monitor                                   | platform metrics, metric alerts, optional Log Analytics capped | 5 GB Log Analytics per month       |
+| Defender for Cloud, Advisor, Policy, Update mgr | posture recommendations, tag/region policies, OS patches       | always free (CSPM tier)            |
+
+**Needed but not in the free lists:**
+
+| Item                                     | Phase    | EUR (excl. VAT)                               |
+| ---------------------------------------- | -------- | --------------------------------------------- |
+| VM Standard_B2as_v2 (k3s node)           | 3        | 56.65 / month                                 |
+| Static public IPv4                       | 3        | 3.29 / month                                  |
+| Azure DNS public zone + Private DNS zone | 3        | 0.90 / month + queries                        |
+| PostgreSQL B1ms prod server              | 9        | 17.00 / month (the free quota covers one)     |
+| Microsoft Entra External ID              | 4–9      | 0 up to 50,000 MAU                            |
+| Domain name (external registrar)         | before 9 | ≈ 10–15 / year, to verify                     |
+| Let's Encrypt certificates               | 3        | free                                          |
+| GitHub (repos, Actions, GHCR)            | now      | GHCR currently free; Actions minutes per plan |
+| Uptime check of prod `/healthz`          | 9        | App Insights test (per run) or free external  |
+| Apple Developer Program, Google Play     | 10       | ≈ 99 USD / year, ≈ 25 USD once, to verify     |
+| LLM provider                             | 11       | decided in Phase 11                           |
+
+**Not used:** AKS (≈ 313 €/month minimum node pool), Container Apps, Static Web Apps and App Service (no Argo CD
+path), the free 1 GiB VMs (too small for k3s), Load Balancer, API Management (Traefik is the gateway), Container
+Registry (GHCR), Azure AD B2C (closed to new customers), other databases, messaging, AI and DevOps services.
+
+**Expected monthly cost** (EUR, excl. VAT): Phases 3–8 ≈ 61 in year 1 and ≈ 88 after it; from Phase 9 with prod ≈ 78
+and ≈ 105. Budget alerts at 75 €, raised to 125 € when prod exists or the free year ends.
 
 ## Runtime contract
 

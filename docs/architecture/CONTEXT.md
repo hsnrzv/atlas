@@ -7,7 +7,7 @@
   `atlas-microservices/docs/architecture/DOMAIN-MODULES.md` · `atlas-microservices/docs/architecture/API-CONTRACT.md` ·
   `atlas-infra/docs/plan/PLAN-INFRASTRUCTURE-CICD.md`
 
-Elements marked _(open)_ depend on decisions that are still `Proposed`. See the end of this document.
+Elements marked _(open)_ depend on decisions that are still `Proposed`. See the end of this document; rows there marked **decided** were accepted by the owner on 2026-11-12.
 
 ## 1. System context
 
@@ -25,7 +25,7 @@ flowchart LR
     api["Atlas backend<br/>(modular monolith + PostgreSQL)"]
   end
 
-  idp["OIDC identity provider<br/><i>(open — Phase 9)</i>"]
+  idp["OIDC identity provider<br/>Microsoft Entra External ID<br/><i>(decided; integration Phase 9)</i>"]
   gh["GitHub<br/>repos · Actions · GHCR"]
   stores["App Store Connect / Google Play<br/><i>(Phase 10)</i>"]
   llm["LLM / MCP provider<br/><i>(post-MVP, Phase 11)</i>"]
@@ -41,13 +41,13 @@ flowchart LR
   api -. "advisory suggestions,<br/>user approval required" .-> llm
 ```
 
-| External system                                    | Purpose                                                                                                         | Status                                                  |
-| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| OIDC identity provider                             | Sign-in. Proposed: BFF session for the web, PKCE system browser for Capacitor (`atlas-microservices` ADR-0005). | _(open)_, needed before any public deployment (Phase 9) |
-| GitHub                                             | Source, pull requests, Actions CI, GHCR images, Dependabot                                                      | in use (repositories created)                           |
-| Kubernetes environments (`dev`, `staging`, `prod`) | Run the containers through Argo CD                                                                              | _(open)_ platform and region: `atlas-infra` ADR-0003    |
-| App Store Connect / Google Play                    | Mobile distribution                                                                                             | Phase 10                                                |
-| LLM / MCP provider                                 | Planning suggestions; never executes without explicit approval (§8)                                             | post-MVP                                                |
+| External system                                    | Purpose                                                                                                         | Status                                                                                         |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| OIDC identity provider                             | Sign-in. Proposed: BFF session for the web, PKCE system browser for Capacitor (`atlas-microservices` ADR-0005). | Microsoft Entra External ID, decided 2026-11-12; needed before any public deployment (Phase 9) |
+| GitHub                                             | Source, pull requests, Actions CI, GHCR images, Dependabot                                                      | in use (repositories created)                                                                  |
+| Kubernetes environments (`dev`, `staging`, `prod`) | Run the containers through Argo CD                                                                              | k3s on one Azure VM, decided 2026-11-12 (`atlas-infra` ADR-0003, ADR-0009); region _(open)_    |
+| App Store Connect / Google Play                    | Mobile distribution                                                                                             | Phase 10                                                                                       |
+| LLM / MCP provider                                 | Planning suggestions; never executes without explicit approval (§8)                                             | post-MVP                                                                                       |
 
 ## 2. Containers (runtime view)
 
@@ -66,7 +66,7 @@ flowchart TB
   end
 
   secrets["Secret store<br/><i>(open — atlas-infra ADR-0005)</i>"]
-  idp["OIDC provider <i>(open)</i>"]
+  idp["OIDC provider<br/>Microsoft Entra External ID"]
 
   browser -- "HTTPS" --> edge
   capapp -- "HTTPS /api/v1 <i>(origin/CORS: open)</i>" --> edge
@@ -81,7 +81,7 @@ flowchart TB
 | -------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Frontend       | `atlas`                                                  | Angular 22 build served by `nginxinc/nginx-unprivileged:1.30-alpine`                              | Port 8080, non-root (uid 101); SPA fallback to `index.html`; `GET /healthz` → 200; hashed assets `immutable`, `index.html` `no-cache`; strict CSP (`script-src 'self'`); `/api/*` → 404 in the frontend container (the edge must route it)                 |
 | Backend        | `atlas-microservices`                                    | Spring Boot 4.1.2 modular monolith (Spring Modulith 2.1), Java 25, `eclipse-temurin:25-jre-noble` | Port 8080; API under `/api/v1`; `/actuator/health`, `/liveness`, `/readiness`, `/info` only; config `SPRING_PROFILES_ACTIVE` (`local`, `dev`, `staging`, `prod`) and `SPRING_DATASOURCE_URL`/`_USERNAME`/`_PASSWORD`; structured JSON logs outside `local` |
-| Database       | `atlas-microservices` (schema) · `atlas-infra` (hosting) | PostgreSQL 18 (`postgres:18.6-alpine` locally)                                                    | Database, user and schema `atlas`; `public` unused; migrations only through Flyway; hosting _(open)_: `atlas-infra` ADR-0004                                                                                                                               |
+| Database       | `atlas-microservices` (schema) · `atlas-infra` (hosting) | PostgreSQL 18 (`postgres:18.6-alpine` locally)                                                    | Database, user and schema `atlas`; `public` unused; migrations only through Flyway; hosting: Azure Database for PostgreSQL Flexible Server B1ms, non-prod and prod servers (`atlas-infra` ADR-0004)                                                        |
 | Edge / Ingress | `atlas-infra`                                            | `nginx:1.30-alpine` locally; Kubernetes Ingress in clusters                                       | Same-origin routing, so the web needs no CORS and the BFF session cookie can work; TLS termination in clusters                                                                                                                                             |
 
 **Same-origin rule.** The SPA calls relative URLs (`/api/v1/...`). No API host is compiled into the bundle, and one
@@ -95,7 +95,7 @@ flowchart LR
   repoFE -- "Frontend CI<br/>lint · tests · e2e · build" --> ghcr[("GHCR<br/>atlas-frontend")]
   repoBE -- "Backend CI<br/>verify · Modulith · Testcontainers" --> ghcr2[("GHCR<br/>atlas-backend")]
   ghcr & ghcr2 -- "image tag + digest<br/>(bot PR)" --> infra["atlas-infra<br/>environments/dev|staging|prod"]
-  infra -- "Argo CD sync<br/>dev: auto · staging/prod: manual" --> k8s["Kubernetes<br/><i>(platform open)</i>"]
+  infra -- "Argo CD sync<br/>dev: auto · staging/prod: manual" --> k8s["Kubernetes<br/>k3s on an Azure VM"]
 ```
 
 - Images are immutable (tag plus digest). The same digest is promoted `dev` → `staging` → `prod` through reviewed PRs
@@ -140,13 +140,13 @@ Local credentials (`atlas`/`atlas`) are throwaway values, bound to `127.0.0.1`, 
   frontend image works with a read-only root filesystem, all capabilities dropped and `no-new-privileges`. It needs
   writable `/tmp` and `/var/cache/nginx` (emptyDir), verified on 2026-11-12.
 
-## 7. Open decisions affecting this context
+## 7. Decisions affecting this context
 
-| # (§21) | Decision                                                                                               | Where                                         | Recommended default (proposed)                                         |
-| ------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------- | ---------------------------------------------------------------------- |
-| 1, 9    | Identity provider; native login and secure storage                                                     | `atlas-microservices` ADR-0005                | provider-neutral OIDC; BFF session (web); PKCE system browser (native) |
-| 2       | Kubernetes platform and region                                                                         | `atlas-infra` ADR-0003, COST-COMPARISON       | see infra ADR (cost-driven)                                            |
-| 3, 11   | Database hosting, backup/restore, RPO/RTO                                                              | `atlas-infra` ADR-0004                        | see infra ADR                                                          |
-| 4       | Frontend hosting                                                                                       | `atlas-infra` ADR-0006                        | nginx container behind the same Ingress (matches this document)        |
-| 10      | Production secrets                                                                                     | `atlas-infra` ADR-0005                        | External Secrets Operator + Azure Key Vault                            |
-| —       | Capacitor API origin (cross-origin from `capacitor://localhost` / `https://localhost`) and CORS policy | PLAN-FRONTEND, `atlas-microservices` ADR-0005 | decide with the auth spike in Phase 9; no CORS in web environments     |
+| # (§21) | Decision                                                                                               | Where                                             | Decision or recommended default                                                                                      |
+| ------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| 1, 9    | Identity provider; native login and secure storage                                                     | `atlas-microservices` ADR-0005                    | IdP **decided**: Microsoft Entra External ID; provider-neutral OIDC; BFF session (web); PKCE system browser (native) |
+| 2       | Kubernetes platform and region                                                                         | `atlas-infra` ADR-0003, ADR-0009, COST-COMPARISON | platform **decided**: k3s on one B2as_v2 VM (prod as a namespace); region Germany West Central (proposed)            |
+| 3, 11   | Database hosting, backup/restore, RPO/RTO                                                              | `atlas-infra` ADR-0004                            | hosting **decided**: Flexible Server B1ms, two servers; backup values see infra ADR                                  |
+| 4       | Frontend hosting                                                                                       | `atlas-infra` ADR-0006                            | nginx container behind the same Ingress (matches this document)                                                      |
+| 10      | Production secrets                                                                                     | `atlas-infra` ADR-0005                            | External Secrets Operator + Azure Key Vault                                                                          |
+| —       | Capacitor API origin (cross-origin from `capacitor://localhost` / `https://localhost`) and CORS policy | PLAN-FRONTEND, `atlas-microservices` ADR-0005     | decide with the auth spike in Phase 9; no CORS in web environments                                                   |
