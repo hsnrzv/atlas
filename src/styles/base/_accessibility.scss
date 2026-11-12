@@ -1,0 +1,56 @@
+// Focus visibility, reduced motion and assistive-technology utilities (design-instructions §11).
+@use '../abstracts/a11y';
+
+:focus-visible {
+  @include a11y.focus-ring;
+}
+
+// Inverse (navy) surfaces such as the sidebar use the gold ring for contrast.
+[data-surface='inverse'] :focus-visible {
+  @include a11y.focus-ring(var(--color-focus-ring-inverse));
+}
+
+.atlas-visually-hidden {
+  @include a11y.visually-hidden;
+}
+
+// "Skip to main content" link: hidden until focused.
+.atlas-skip-link {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--z-tooltip);
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-action-on-primary);
+  background: var(--color-action-primary);
+  border-radius: var(--radius-sm);
+  transform: translateY(-200%);
+
+  &:focus-visible {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-micro: 0ms;
+    --duration-standard: 0ms;
+    --duration-page: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+// Windows High Contrast / forced colours: keep focus visible.
+@media (forced-colors: active) {
+  :focus-visible {
+    outline-color: Highlight;
+  }
+}

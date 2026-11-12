@@ -1,0 +1,38 @@
+{
+  "$description": "IKIGAI ATLAS motion tokens (design-instructions §4.4). All motion is disabled under prefers-reduced-motion by the global foundation styles.",
+  "duration": {
+    "instant": { "$type": "duration", "$value": "0ms" },
+    "micro": {
+      "$type": "duration",
+      "$value": "140ms",
+      "$description": "Micro interactions (spec range 120-160ms)"
+    },
+    "standard": {
+      "$type": "duration",
+      "$value": "200ms",
+      "$description": "Standard transitions (spec range 180-240ms)"
+    },
+    "page": {
+      "$type": "duration",
+      "$value": "280ms",
+      "$description": "Page / overlay transitions (spec range 240-320ms)"
+    }
+  },
+  "easing": {
+    "enter": {
+      "$type": "cubicBezier",
+      "$value": "cubic-bezier(0.2, 0, 0, 1)",
+      "$description": "Ease-out for entrances"
+    },
+    "exit": {
+      "$type": "cubicBezier",
+      "$value": "cubic-bezier(0.4, 0, 1, 1)",
+      "$description": "Ease-in for exits"
+    },
+    "standard": {
+      "$type": "cubicBezier",
+      "$value": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "$description": "Ease-in-out for state changes"
+    }
+  }
+}

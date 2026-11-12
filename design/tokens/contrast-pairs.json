@@ -1,0 +1,530 @@
+{
+  "$description": "Color pairs verified by scripts/design-tokens/check-contrast.mjs (WCAG 2.2 relative luminance). Levels: text = 4.5:1 (SC 1.4.3), large = 3:1 (large text, SC 1.4.3), non-text = 3:1 (SC 1.4.11), info = reported only (documents a known limitation and the mitigation in design/ACCESSIBILITY.md). A failing text/large/non-text pair fails CI.",
+  "pairs": [
+    {
+      "fg": "{color.neutral.900}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Primary text on card"
+    },
+    {
+      "fg": "{color.neutral.900}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "text",
+      "use": "Primary text on page"
+    },
+    {
+      "fg": "{color.neutral.900}",
+      "bg": "{color.brand.ivory.100}",
+      "level": "text",
+      "use": "Primary text on subtle surface"
+    },
+    {
+      "fg": "{color.neutral.900}",
+      "bg": "{color.brand.gold.200}",
+      "level": "text",
+      "use": "Primary text on achievement surface"
+    },
+    {
+      "fg": "{color.neutral.700}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Secondary text on card"
+    },
+    {
+      "fg": "{color.neutral.700}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "text",
+      "use": "Secondary text on page"
+    },
+    {
+      "fg": "{color.neutral.700}",
+      "bg": "{color.brand.ivory.100}",
+      "level": "text",
+      "use": "Secondary text on subtle surface"
+    },
+    {
+      "fg": "{color.neutral.600}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Muted text on card"
+    },
+    {
+      "fg": "{color.neutral.600}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "text",
+      "use": "Muted text on page"
+    },
+    {
+      "fg": "{color.neutral.600}",
+      "bg": "{color.brand.ivory.100}",
+      "level": "text",
+      "use": "Muted text on subtle surface"
+    },
+    {
+      "fg": "{color.neutral.500}",
+      "bg": "{color.white}",
+      "level": "info",
+      "use": "neutral-500 as small text: NOT allowed (use neutral-600)"
+    },
+    {
+      "fg": "{color.neutral.500}",
+      "bg": "{color.white}",
+      "level": "non-text",
+      "use": "Control border on card"
+    },
+    {
+      "fg": "{color.neutral.500}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "non-text",
+      "use": "Control border on page"
+    },
+    {
+      "fg": "{color.brand.midnight.800}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Link on card"
+    },
+    {
+      "fg": "{color.brand.midnight.800}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "text",
+      "use": "Link on page"
+    },
+    {
+      "fg": "{color.white}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "text",
+      "use": "Primary button label"
+    },
+    {
+      "fg": "{color.white}",
+      "bg": "{color.brand.midnight.800}",
+      "level": "text",
+      "use": "Primary button label (hover)"
+    },
+    {
+      "fg": "{color.brand.midnight.900}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "non-text",
+      "use": "Focus ring / secondary button border on page"
+    },
+    {
+      "fg": "{color.brand.ivory.100}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "text",
+      "use": "Navigation label on sidebar"
+    },
+    {
+      "fg": "{color.brand.ivory.100}",
+      "bg": "{color.brand.midnight.800}",
+      "level": "text",
+      "use": "Active navigation label"
+    },
+    {
+      "fg": "{color.brand.ivory.100}",
+      "bg": "{color.brand.midnight.950}",
+      "level": "text",
+      "use": "Text on dark hero"
+    },
+    {
+      "fg": "{color.neutral.300}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "text",
+      "use": "Secondary text on sidebar"
+    },
+    {
+      "fg": "{color.brand.gold.500}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "non-text",
+      "use": "Active nav indicator / focus ring on sidebar"
+    },
+    {
+      "fg": "{color.brand.gold.500}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "text",
+      "use": "Gold text on dark"
+    },
+    {
+      "fg": "{color.brand.gold.800}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Small gold text on card"
+    },
+    {
+      "fg": "{color.brand.gold.800}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "text",
+      "use": "Small gold text on page"
+    },
+    {
+      "fg": "{color.brand.gold.800}",
+      "bg": "{color.brand.gold.200}",
+      "level": "large",
+      "use": "Gold title on achievement surface"
+    },
+    {
+      "fg": "{color.brand.gold.700}",
+      "bg": "{color.white}",
+      "level": "large",
+      "use": "Large gold emphasis on card"
+    },
+    {
+      "fg": "{color.brand.gold.700}",
+      "bg": "{color.white}",
+      "level": "non-text",
+      "use": "Gold icon / selection on card"
+    },
+    {
+      "fg": "{color.brand.gold.600}",
+      "bg": "{color.white}",
+      "level": "info",
+      "use": "Achievement gold: decorative only on light surfaces"
+    },
+
+    {
+      "fg": "{color.status.success}",
+      "bg": "{color.white}",
+      "level": "non-text",
+      "use": "Success icon/dot on card"
+    },
+    {
+      "fg": "{color.status.success}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "non-text",
+      "use": "Success icon/dot on page"
+    },
+    {
+      "fg": "{color.status.in-progress}",
+      "bg": "{color.white}",
+      "level": "non-text",
+      "use": "In-progress icon/dot on card"
+    },
+    {
+      "fg": "{color.status.in-progress}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "non-text",
+      "use": "In-progress icon/dot on page"
+    },
+    {
+      "fg": "{color.status.upcoming}",
+      "bg": "{color.white}",
+      "level": "non-text",
+      "use": "Upcoming icon/dot on card"
+    },
+    {
+      "fg": "{color.status.upcoming}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "non-text",
+      "use": "Upcoming icon/dot on page"
+    },
+    {
+      "fg": "{color.status.at-risk}",
+      "bg": "{color.white}",
+      "level": "non-text",
+      "use": "At-risk icon/dot on card"
+    },
+    {
+      "fg": "{color.status.at-risk}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "non-text",
+      "use": "At-risk icon/dot on page"
+    },
+    {
+      "fg": "{color.status.blocked}",
+      "bg": "{color.white}",
+      "level": "non-text",
+      "use": "Blocked icon/dot on card"
+    },
+    {
+      "fg": "{color.status.blocked}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "non-text",
+      "use": "Blocked icon/dot on page"
+    },
+    {
+      "fg": "{color.status.not-started}",
+      "bg": "{color.white}",
+      "level": "non-text",
+      "use": "Not-started icon/dot on card"
+    },
+    {
+      "fg": "{color.status.not-started}",
+      "bg": "{color.brand.ivory.50}",
+      "level": "non-text",
+      "use": "Not-started icon/dot on page"
+    },
+    {
+      "fg": "{color.white}",
+      "bg": "{color.status.blocked}",
+      "level": "text",
+      "use": "Destructive button label"
+    },
+    {
+      "fg": "{color.status.upcoming}",
+      "bg": "{color.white}",
+      "level": "info",
+      "use": "Upcoming as text: not allowed; label uses text-secondary"
+    },
+    {
+      "fg": "{color.status.at-risk}",
+      "bg": "{color.white}",
+      "level": "info",
+      "use": "At-risk as text: not allowed; label uses text-secondary"
+    },
+
+    {
+      "fg": "{color.dimension.career.strong}",
+      "bg": "{color.dimension.career.tint}",
+      "level": "text",
+      "use": "Career chip label"
+    },
+    {
+      "fg": "{color.dimension.finance.strong}",
+      "bg": "{color.dimension.finance.tint}",
+      "level": "text",
+      "use": "Finance chip label"
+    },
+    {
+      "fg": "{color.dimension.health.strong}",
+      "bg": "{color.dimension.health.tint}",
+      "level": "text",
+      "use": "Health chip label"
+    },
+    {
+      "fg": "{color.dimension.love.strong}",
+      "bg": "{color.dimension.love.tint}",
+      "level": "text",
+      "use": "Love chip label"
+    },
+    {
+      "fg": "{color.dimension.passion.strong}",
+      "bg": "{color.dimension.passion.tint}",
+      "level": "text",
+      "use": "Passion chip label"
+    },
+    {
+      "fg": "{color.dimension.friendship.strong}",
+      "bg": "{color.dimension.friendship.tint}",
+      "level": "text",
+      "use": "Friendship chip label"
+    },
+    {
+      "fg": "{color.dimension.family.strong}",
+      "bg": "{color.dimension.family.tint}",
+      "level": "text",
+      "use": "Family chip label"
+    },
+    {
+      "fg": "{color.dimension.career.strong}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Career label on card"
+    },
+    {
+      "fg": "{color.dimension.finance.strong}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Finance label on card"
+    },
+    {
+      "fg": "{color.dimension.health.strong}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Health label on card"
+    },
+    {
+      "fg": "{color.dimension.love.strong}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Love label on card"
+    },
+    {
+      "fg": "{color.dimension.passion.strong}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Passion label on card"
+    },
+    {
+      "fg": "{color.dimension.friendship.strong}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Friendship label on card"
+    },
+    {
+      "fg": "{color.dimension.family.strong}",
+      "bg": "{color.white}",
+      "level": "text",
+      "use": "Family label on card"
+    },
+    {
+      "fg": "{color.dimension.career}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "non-text",
+      "use": "Career accent on dark navigation"
+    },
+    {
+      "fg": "{color.dimension.finance}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "non-text",
+      "use": "Finance accent on dark navigation"
+    },
+    {
+      "fg": "{color.dimension.health}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "non-text",
+      "use": "Health accent on dark navigation"
+    },
+    {
+      "fg": "{color.dimension.love}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "non-text",
+      "use": "Love accent on dark navigation"
+    },
+    {
+      "fg": "{color.dimension.passion}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "non-text",
+      "use": "Passion accent on dark navigation"
+    },
+    {
+      "fg": "{color.dimension.friendship}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "non-text",
+      "use": "Friendship accent on dark navigation"
+    },
+    {
+      "fg": "{color.dimension.family}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "non-text",
+      "use": "Family accent on dark navigation"
+    },
+    {
+      "fg": "{color.dimension.career}",
+      "bg": "{color.white}",
+      "level": "info",
+      "use": "Career accent on light: decorative fill; pair with strong stroke + text label"
+    },
+    {
+      "fg": "{color.dimension.finance}",
+      "bg": "{color.white}",
+      "level": "info",
+      "use": "Finance accent on light: decorative fill"
+    },
+    {
+      "fg": "{color.dimension.health}",
+      "bg": "{color.white}",
+      "level": "info",
+      "use": "Health accent on light: decorative fill"
+    },
+    {
+      "fg": "{color.dimension.love}",
+      "bg": "{color.white}",
+      "level": "info",
+      "use": "Love accent on light: decorative fill"
+    },
+    {
+      "fg": "{color.dimension.passion}",
+      "bg": "{color.white}",
+      "level": "info",
+      "use": "Passion accent on light: decorative fill"
+    },
+    {
+      "fg": "{color.dimension.friendship}",
+      "bg": "{color.white}",
+      "level": "info",
+      "use": "Friendship accent on light: decorative fill"
+    },
+    {
+      "fg": "{color.dimension.family}",
+      "bg": "{color.white}",
+      "level": "info",
+      "use": "Family accent on light: decorative fill"
+    },
+
+    {
+      "fg": "{color.brand.ivory.100}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "text",
+      "use": "Dark draft: primary text on card",
+      "theme": "dark"
+    },
+    {
+      "fg": "{color.brand.ivory.200}",
+      "bg": "{color.brand.midnight.950}",
+      "level": "text",
+      "use": "Dark draft: secondary text on page",
+      "theme": "dark"
+    },
+    {
+      "fg": "{color.neutral.300}",
+      "bg": "{color.brand.midnight.800}",
+      "level": "text",
+      "use": "Dark draft: muted text on subtle surface",
+      "theme": "dark"
+    },
+    {
+      "fg": "{color.brand.midnight.950}",
+      "bg": "{color.brand.gold.500}",
+      "level": "text",
+      "use": "Dark draft: primary button label",
+      "theme": "dark"
+    },
+    {
+      "fg": "{color.status-on-dark.success}",
+      "bg": "{color.brand.midnight.800}",
+      "level": "text",
+      "use": "Dark draft: success label",
+      "theme": "dark"
+    },
+    {
+      "fg": "{color.status-on-dark.in-progress}",
+      "bg": "{color.brand.midnight.800}",
+      "level": "text",
+      "use": "Dark draft: in-progress label",
+      "theme": "dark"
+    },
+    {
+      "fg": "{color.status-on-dark.upcoming}",
+      "bg": "{color.brand.midnight.800}",
+      "level": "text",
+      "use": "Dark draft: upcoming label",
+      "theme": "dark"
+    },
+    {
+      "fg": "{color.status-on-dark.at-risk}",
+      "bg": "{color.brand.midnight.800}",
+      "level": "text",
+      "use": "Dark draft: at-risk label",
+      "theme": "dark"
+    },
+    {
+      "fg": "{color.status-on-dark.blocked}",
+      "bg": "{color.brand.midnight.800}",
+      "level": "text",
+      "use": "Dark draft: blocked label",
+      "theme": "dark"
+    },
+    {
+      "fg": "{color.status-on-dark.not-started}",
+      "bg": "{color.brand.midnight.800}",
+      "level": "text",
+      "use": "Dark draft: not-started label",
+      "theme": "dark"
+    },
+    {
+      "fg": "{color.neutral.500}",
+      "bg": "{color.brand.midnight.900}",
+      "level": "non-text",
+      "use": "Dark draft: control border on card",
+      "theme": "dark"
+    },
+    {
+      "fg": "{color.brand.gold.500}",
+      "bg": "{color.brand.midnight.950}",
+      "level": "non-text",
+      "use": "Dark draft: focus ring on page",
+      "theme": "dark"
+    }
+  ]
+}

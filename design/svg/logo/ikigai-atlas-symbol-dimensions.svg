@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="ia-title">
+  <title id="ia-title">IKIGAI ATLAS</title>
+  <!-- Expressive variant: waypoints use the Life Dimension accents. Onboarding, marketing and large sizes (>= 48px) only. -->
+  <!-- Route: the whole life as one connected journey. -->
+  <polygon points="32,11 49.2,19.28 53.45,37.9 41.55,52.82 22.45,52.82 10.55,37.9 14.8,19.28" fill="none" stroke="#14243A" stroke-width="3.25" stroke-linejoin="round" />
+  <!-- Seven waypoints = the seven Life Dimensions, clockwise from north:
+       Career, Finance, Health, Love, Passion, Friendship, Family. -->
+  <g>
+    <circle cx="32" cy="11" r="4.5" fill="#759ECA" />
+    <circle cx="49.2" cy="19.28" r="4.5" fill="#D5AD70" />
+    <circle cx="53.45" cy="37.9" r="4.5" fill="#91AD99" />
+    <circle cx="41.55" cy="52.82" r="4.5" fill="#CA8A76" />
+    <circle cx="22.45" cy="52.82" r="4.5" fill="#A99ACB" />
+    <circle cx="10.55" cy="37.9" r="4.5" fill="#78AFAE" />
+    <circle cx="14.8" cy="19.28" r="4.5" fill="#C5A66D" />
+  </g>
+  <!-- Compass needle = the person and their purpose; north half emphasised. -->
+  <path d="M32 18 38 33H26Z" fill="#B88D52" />
+  <path d="M26 33H38L32 46Z" fill="#304A65" />
+</svg>

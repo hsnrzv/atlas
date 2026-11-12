@@ -1,0 +1,70 @@
+// Proportions mirror the horizontal lockup master (283 × 64): wordmark cap height ≈ 0.29 × symbol,
+// 14/64 gap between symbol and wordmark.
+:host {
+  --atlas-logo-ink: var(--color-brand-midnight-900);
+  --atlas-logo-north: var(--color-brand-gold-600);
+  --atlas-logo-south: var(--color-brand-midnight-700);
+
+  display: inline-flex;
+  gap: calc(var(--atlas-logo-size) * 0.22);
+  align-items: center;
+  line-height: 1;
+  color: var(--atlas-logo-ink);
+}
+
+:host([data-tone='inverse']),
+:host-context([data-theme='dark']) {
+  --atlas-logo-ink: var(--color-brand-ivory-100);
+  --atlas-logo-north: var(--color-brand-gold-500);
+  --atlas-logo-south: var(--color-brand-ivory-200);
+}
+
+.symbol {
+  flex: none;
+  width: var(--atlas-logo-size);
+  height: var(--atlas-logo-size);
+  overflow: visible;
+}
+
+.route {
+  fill: none;
+  stroke: var(--atlas-logo-ink);
+  stroke-width: 3.25;
+  stroke-linejoin: round;
+}
+
+.node {
+  fill: var(--atlas-logo-ink);
+}
+
+.north {
+  fill: var(--atlas-logo-north);
+}
+
+.south {
+  fill: var(--atlas-logo-south);
+}
+
+.wordmark {
+  font-family: var(--font-sans);
+  font-size: calc(var(--atlas-logo-size) * 0.406);
+  font-weight: 600;
+
+  // Matches the master's textLength (203/64 of symbol height); trailing tracking cancelled.
+  letter-spacing: 0.12em;
+  margin-inline-end: -0.12em;
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  :host {
+    --atlas-logo-ink: CanvasText;
+    --atlas-logo-north: CanvasText;
+    --atlas-logo-south: Canvas;
+  }
+
+  .south {
+    stroke: CanvasText;
+    stroke-width: 2;
+  }
+}

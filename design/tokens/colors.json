@@ -1,0 +1,506 @@
+{
+  "$description": "IKIGAI ATLAS color tokens. Canonical source. Primitive palette values come from design-instructions.md §2; values marked \"atlas-addition\" are documented in design/DESIGN_DECISIONS.md and verified by scripts/design-tokens/check-contrast.mjs.",
+  "color": {
+    "brand": {
+      "midnight": {
+        "950": {
+          "$type": "color",
+          "$value": "#101D32",
+          "$description": "Primary navigation, dark hero surfaces"
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#14243A",
+          "$description": "Main brand navy; sidebar, primary action"
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#203650",
+          "$description": "Dark elevated surfaces; active nav item"
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#304A65",
+          "$description": "Secondary dark surfaces; borders on dark"
+        }
+      },
+      "ivory": {
+        "50": { "$type": "color", "$value": "#FBF9F4", "$description": "App canvas" },
+        "100": {
+          "$type": "color",
+          "$value": "#F5F0E6",
+          "$description": "Main warm ivory; subtle surfaces"
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#EAE2D4",
+          "$description": "Borders and subtle surfaces"
+        }
+      },
+      "gold": {
+        "900": {
+          "$type": "color",
+          "$value": "#765329",
+          "$description": "Small gold text on light surfaces (max contrast)"
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#805B2F",
+          "$description": "Small gold text on light surfaces"
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#A77C43",
+          "$description": "Accessible gold emphasis: large text, icons, selection on light (>= 3:1)"
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#B88D52",
+          "$description": "Achievement accent (decorative / non-text on light)"
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#D5AD70",
+          "$description": "Decorative gold; badges, indicators and text on dark"
+        },
+        "200": { "$type": "color", "$value": "#EBD9B9", "$description": "Gold tinted surfaces" }
+      }
+    },
+    "neutral": {
+      "900": { "$type": "color", "$value": "#252B33", "$description": "Primary body text" },
+      "700": { "$type": "color", "$value": "#4D5661", "$description": "Secondary text" },
+      "600": {
+        "$type": "color",
+        "$value": "#5F6873",
+        "$description": "atlas-addition: muted metadata text; >= 4.5:1 on all light surfaces (neutral-500 fails)"
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#747E89",
+        "$description": "Non-text UI (control borders, disabled, axes); fails 4.5:1 as small text"
+      },
+      "300": { "$type": "color", "$value": "#D4D8DC", "$description": "Borders" },
+      "200": { "$type": "color", "$value": "#E5E7E8", "$description": "Dividers" },
+      "100": { "$type": "color", "$value": "#F0F1F1", "$description": "Neutral subtle surface" }
+    },
+    "white": { "$type": "color", "$value": "#FFFFFF", "$description": "Cards and overlays" },
+    "dimension": {
+      "career": {
+        "DEFAULT": {
+          "$type": "color",
+          "$value": "#759ECA",
+          "$description": "Career / Profession accent (fills, chart series, markers)"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#426D9B",
+          "$description": "Career text/icon on light surfaces"
+        },
+        "tint": {
+          "$type": "color",
+          "$value": "#EAF1F8",
+          "$description": "Career chip/panel background"
+        }
+      },
+      "finance": {
+        "DEFAULT": { "$type": "color", "$value": "#D5AD70", "$description": "Finance accent" },
+        "strong": {
+          "$type": "color",
+          "$value": "#805B2F",
+          "$description": "Finance text/icon on light surfaces"
+        },
+        "tint": {
+          "$type": "color",
+          "$value": "#F6EFE3",
+          "$description": "Finance chip/panel background"
+        }
+      },
+      "health": {
+        "DEFAULT": { "$type": "color", "$value": "#91AD99", "$description": "Health accent" },
+        "strong": {
+          "$type": "color",
+          "$value": "#52765B",
+          "$description": "Health text/icon on light surfaces"
+        },
+        "tint": {
+          "$type": "color",
+          "$value": "#EDF3EE",
+          "$description": "Health chip/panel background"
+        }
+      },
+      "love": {
+        "DEFAULT": {
+          "$type": "color",
+          "$value": "#CA8A76",
+          "$description": "Love / Partnership accent"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#965B4A",
+          "$description": "Love text/icon on light surfaces"
+        },
+        "tint": {
+          "$type": "color",
+          "$value": "#F8EEEA",
+          "$description": "Love chip/panel background"
+        }
+      },
+      "passion": {
+        "DEFAULT": { "$type": "color", "$value": "#A99ACB", "$description": "Passion accent" },
+        "strong": {
+          "$type": "color",
+          "$value": "#6F5C98",
+          "$description": "Passion text/icon on light surfaces"
+        },
+        "tint": {
+          "$type": "color",
+          "$value": "#F1EEF7",
+          "$description": "Passion chip/panel background"
+        }
+      },
+      "friendship": {
+        "DEFAULT": { "$type": "color", "$value": "#78AFAE", "$description": "Friendship accent" },
+        "strong": {
+          "$type": "color",
+          "$value": "#3F7776",
+          "$description": "Friendship text/icon on light surfaces"
+        },
+        "tint": {
+          "$type": "color",
+          "$value": "#EAF3F2",
+          "$description": "Friendship chip/panel background"
+        }
+      },
+      "family": {
+        "DEFAULT": { "$type": "color", "$value": "#C5A66D", "$description": "Family accent" },
+        "strong": {
+          "$type": "color",
+          "$value": "#80683E",
+          "$description": "Family text/icon on light surfaces"
+        },
+        "tint": {
+          "$type": "color",
+          "$value": "#F5F0E5",
+          "$description": "Family chip/panel background"
+        }
+      }
+    },
+    "status": {
+      "success": {
+        "$type": "color",
+        "$value": "#4F8064",
+        "$description": "Success / achieved. Icon + label; as small text only on white"
+      },
+      "in-progress": {
+        "$type": "color",
+        "$value": "#426D9B",
+        "$description": "In progress / active"
+      },
+      "upcoming": {
+        "$type": "color",
+        "$value": "#9A7A43",
+        "$description": "Upcoming deadline. Non-text only (< 4.5:1 as text)"
+      },
+      "at-risk": {
+        "$type": "color",
+        "$value": "#B56B45",
+        "$description": "Needs attention. Non-text only (< 4.5:1 as text)"
+      },
+      "blocked": {
+        "$type": "color",
+        "$value": "#A65353",
+        "$description": "Blocked dependency; destructive actions"
+      },
+      "not-started": {
+        "$type": "color",
+        "$value": "#747E89",
+        "$description": "Neutral / not started. Non-text only"
+      }
+    },
+    "status-on-dark": {
+      "success": {
+        "$type": "color",
+        "$value": "#9CB6A5",
+        "$description": "atlas-addition (draft dark theme): status mixed 45% with ivory-50"
+      },
+      "in-progress": {
+        "$type": "color",
+        "$value": "#95ACC3",
+        "$description": "atlas-addition (draft dark theme)"
+      },
+      "upcoming": {
+        "$type": "color",
+        "$value": "#C6B393",
+        "$description": "atlas-addition (draft dark theme)"
+      },
+      "at-risk": {
+        "$type": "color",
+        "$value": "#D5AB94",
+        "$description": "atlas-addition (draft dark theme)"
+      },
+      "blocked": {
+        "$type": "color",
+        "$value": "#CC9E9B",
+        "$description": "atlas-addition (draft dark theme)"
+      },
+      "not-started": {
+        "$type": "color",
+        "$value": "#B1B5B9",
+        "$description": "atlas-addition (draft dark theme)"
+      }
+    }
+  },
+  "semantic": {
+    "light": {
+      "color": {
+        "surface": {
+          "page": {
+            "$type": "color",
+            "$value": "{color.brand.ivory.50}",
+            "$description": "Page canvas"
+          },
+          "card": {
+            "$type": "color",
+            "$value": "{color.white}",
+            "$description": "Cards, dialogs, menus"
+          },
+          "subtle": {
+            "$type": "color",
+            "$value": "{color.brand.ivory.100}",
+            "$description": "Subtle sections, hover backgrounds"
+          },
+          "sunken": {
+            "$type": "color",
+            "$value": "{color.neutral.100}",
+            "$description": "Progress tracks, inset wells"
+          },
+          "inverse": {
+            "$type": "color",
+            "$value": "{color.brand.midnight.900}",
+            "$description": "Sidebar, mobile navigation"
+          },
+          "inverse-strong": {
+            "$type": "color",
+            "$value": "{color.brand.midnight.950}",
+            "$description": "Dark hero surfaces"
+          },
+          "inverse-raised": {
+            "$type": "color",
+            "$value": "{color.brand.midnight.800}",
+            "$description": "Active item on inverse surfaces"
+          },
+          "achievement": {
+            "$type": "color",
+            "$value": "{color.brand.gold.200}",
+            "$description": "Award / achievement tinted surface"
+          }
+        },
+        "text": {
+          "primary": {
+            "$type": "color",
+            "$value": "{color.neutral.900}",
+            "$description": "Body text, headings"
+          },
+          "secondary": {
+            "$type": "color",
+            "$value": "{color.neutral.700}",
+            "$description": "Supporting text"
+          },
+          "muted": {
+            "$type": "color",
+            "$value": "{color.neutral.600}",
+            "$description": "Metadata (AA on all light surfaces)"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "{color.neutral.500}",
+            "$description": "Disabled text (exempt from contrast minimum)"
+          },
+          "inverse": {
+            "$type": "color",
+            "$value": "{color.brand.ivory.100}",
+            "$description": "Text on inverse surfaces"
+          },
+          "inverse-secondary": {
+            "$type": "color",
+            "$value": "{color.neutral.300}",
+            "$description": "Secondary text on inverse surfaces"
+          },
+          "achievement": {
+            "$type": "color",
+            "$value": "{color.brand.gold.800}",
+            "$description": "Small gold text on light surfaces"
+          },
+          "link": {
+            "$type": "color",
+            "$value": "{color.brand.midnight.800}",
+            "$description": "Inline links (always underlined)"
+          }
+        },
+        "border": {
+          "subtle": {
+            "$type": "color",
+            "$value": "{color.brand.ivory.200}",
+            "$description": "Card borders"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "{color.neutral.300}",
+            "$description": "Dividers between groups"
+          },
+          "divider": {
+            "$type": "color",
+            "$value": "{color.neutral.200}",
+            "$description": "List dividers"
+          },
+          "control": {
+            "$type": "color",
+            "$value": "{color.neutral.500}",
+            "$description": "Form control boundaries (>= 3:1)"
+          },
+          "inverse": {
+            "$type": "color",
+            "$value": "{color.brand.midnight.700}",
+            "$description": "Borders on inverse surfaces"
+          }
+        },
+        "action": {
+          "primary": {
+            "$type": "color",
+            "$value": "{color.brand.midnight.900}",
+            "$description": "Primary button fill"
+          },
+          "primary-hover": {
+            "$type": "color",
+            "$value": "{color.brand.midnight.800}",
+            "$description": "Primary button hover/pressed"
+          },
+          "on-primary": {
+            "$type": "color",
+            "$value": "{color.white}",
+            "$description": "Label on primary button"
+          },
+          "secondary": {
+            "$type": "color",
+            "$value": "{color.brand.midnight.900}",
+            "$description": "Secondary button border/label"
+          },
+          "destructive": {
+            "$type": "color",
+            "$value": "{color.status.blocked}",
+            "$description": "Destructive action"
+          },
+          "on-destructive": {
+            "$type": "color",
+            "$value": "{color.white}",
+            "$description": "Label on destructive action"
+          }
+        },
+        "focus": {
+          "ring": {
+            "$type": "color",
+            "$value": "{color.brand.midnight.900}",
+            "$description": "Focus ring on light surfaces"
+          },
+          "ring-inverse": {
+            "$type": "color",
+            "$value": "{color.brand.gold.500}",
+            "$description": "Focus ring on inverse surfaces"
+          }
+        },
+        "nav": {
+          "indicator": {
+            "$type": "color",
+            "$value": "{color.brand.gold.500}",
+            "$description": "Active navigation indicator (on inverse surface)"
+          }
+        }
+      }
+    },
+    "dark": {
+      "$description": "Draft dark theme (design-instructions §2.4: later enhancement). Defined now so components only ever consume semantic tokens. Not user-selectable yet.",
+      "color": {
+        "surface": {
+          "page": { "$type": "color", "$value": "{color.brand.midnight.950}" },
+          "card": { "$type": "color", "$value": "{color.brand.midnight.900}" },
+          "subtle": { "$type": "color", "$value": "{color.brand.midnight.800}" },
+          "sunken": { "$type": "color", "$value": "{color.brand.midnight.950}" },
+          "inverse": { "$type": "color", "$value": "{color.brand.midnight.950}" },
+          "inverse-strong": { "$type": "color", "$value": "{color.brand.midnight.950}" },
+          "inverse-raised": { "$type": "color", "$value": "{color.brand.midnight.800}" },
+          "achievement": { "$type": "color", "$value": "{color.brand.midnight.800}" }
+        },
+        "text": {
+          "primary": { "$type": "color", "$value": "{color.brand.ivory.100}" },
+          "secondary": { "$type": "color", "$value": "{color.brand.ivory.200}" },
+          "muted": { "$type": "color", "$value": "{color.neutral.300}" },
+          "disabled": { "$type": "color", "$value": "{color.neutral.500}" },
+          "inverse": { "$type": "color", "$value": "{color.brand.ivory.100}" },
+          "inverse-secondary": { "$type": "color", "$value": "{color.neutral.300}" },
+          "achievement": { "$type": "color", "$value": "{color.brand.gold.500}" },
+          "link": { "$type": "color", "$value": "{color.brand.ivory.100}" }
+        },
+        "border": {
+          "subtle": { "$type": "color", "$value": "{color.brand.midnight.700}" },
+          "default": { "$type": "color", "$value": "{color.brand.midnight.700}" },
+          "divider": { "$type": "color", "$value": "{color.brand.midnight.800}" },
+          "control": { "$type": "color", "$value": "{color.neutral.500}" },
+          "inverse": { "$type": "color", "$value": "{color.brand.midnight.700}" }
+        },
+        "action": {
+          "primary": { "$type": "color", "$value": "{color.brand.gold.500}" },
+          "primary-hover": { "$type": "color", "$value": "{color.brand.gold.200}" },
+          "on-primary": { "$type": "color", "$value": "{color.brand.midnight.950}" },
+          "secondary": { "$type": "color", "$value": "{color.brand.ivory.100}" },
+          "destructive": { "$type": "color", "$value": "{color.status-on-dark.blocked}" },
+          "on-destructive": { "$type": "color", "$value": "{color.brand.midnight.950}" }
+        },
+        "focus": {
+          "ring": { "$type": "color", "$value": "{color.brand.gold.500}" },
+          "ring-inverse": { "$type": "color", "$value": "{color.brand.gold.500}" }
+        },
+        "nav": {
+          "indicator": { "$type": "color", "$value": "{color.brand.gold.500}" }
+        },
+        "status": {
+          "success": { "$type": "color", "$value": "{color.status-on-dark.success}" },
+          "in-progress": { "$type": "color", "$value": "{color.status-on-dark.in-progress}" },
+          "upcoming": { "$type": "color", "$value": "{color.status-on-dark.upcoming}" },
+          "at-risk": { "$type": "color", "$value": "{color.status-on-dark.at-risk}" },
+          "blocked": { "$type": "color", "$value": "{color.status-on-dark.blocked}" },
+          "not-started": { "$type": "color", "$value": "{color.status-on-dark.not-started}" }
+        },
+        "dimension": {
+          "career": {
+            "strong": { "$type": "color", "$value": "{color.dimension.career}" },
+            "tint": { "$type": "color", "$value": "{color.brand.midnight.800}" }
+          },
+          "finance": {
+            "strong": { "$type": "color", "$value": "{color.dimension.finance}" },
+            "tint": { "$type": "color", "$value": "{color.brand.midnight.800}" }
+          },
+          "health": {
+            "strong": { "$type": "color", "$value": "{color.dimension.health}" },
+            "tint": { "$type": "color", "$value": "{color.brand.midnight.800}" }
+          },
+          "love": {
+            "strong": { "$type": "color", "$value": "{color.dimension.love}" },
+            "tint": { "$type": "color", "$value": "{color.brand.midnight.800}" }
+          },
+          "passion": {
+            "strong": { "$type": "color", "$value": "{color.dimension.passion}" },
+            "tint": { "$type": "color", "$value": "{color.brand.midnight.800}" }
+          },
+          "friendship": {
+            "strong": { "$type": "color", "$value": "{color.dimension.friendship}" },
+            "tint": { "$type": "color", "$value": "{color.brand.midnight.800}" }
+          },
+          "family": {
+            "strong": { "$type": "color", "$value": "{color.dimension.family}" },
+            "tint": { "$type": "color", "$value": "{color.brand.midnight.800}" }
+          }
+        }
+      }
+    }
+  }
+}

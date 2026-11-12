@@ -1,0 +1,14 @@
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+
+package-lock.json linguist-generated=true -diff
+*.generated.scss linguist-generated=true
+*.generated.ts linguist-generated=true
+src/styles/material/_theme-colors.scss linguist-generated=true

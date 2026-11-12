@@ -1,0 +1,56 @@
+{
+  "$description": "IKIGAI ATLAS layout tokens (design-instructions §4.1, §10.4). Breakpoints are min-widths; CSS custom properties cannot be used in media queries, so breakpoints are also generated as a Sass map.",
+  "breakpoint": {
+    "xs": { "$type": "dimension", "$value": "0px", "$description": "0-479px" },
+    "sm": { "$type": "dimension", "$value": "480px", "$description": "480-767px" },
+    "md": { "$type": "dimension", "$value": "768px", "$description": "768-1023px (tablet)" },
+    "lg": { "$type": "dimension", "$value": "1024px", "$description": "1024-1279px (desktop)" },
+    "xl": { "$type": "dimension", "$value": "1280px", "$description": "1280-1535px" },
+    "2xl": { "$type": "dimension", "$value": "1536px", "$description": ">= 1536px" }
+  },
+  "layout": {
+    "content-max": { "$type": "dimension", "$value": "1440px" },
+    "reading-max": {
+      "$type": "dimension",
+      "$value": "840px",
+      "$description": "Long-form detail reading width"
+    },
+    "sidebar-expanded": { "$type": "dimension", "$value": "248px" },
+    "sidebar-collapsed": { "$type": "dimension", "$value": "76px" },
+    "topbar-height": { "$type": "dimension", "$value": "68px", "$description": "Desktop top bar" },
+    "topbar-height-compact": {
+      "$type": "dimension",
+      "$value": "56px",
+      "$description": "Compact / mobile top bar"
+    },
+    "bottom-nav-height": {
+      "$type": "dimension",
+      "$value": "64px",
+      "$description": "Mobile bottom navigation (excluding safe-area inset)"
+    },
+    "gutter-mobile": { "$type": "dimension", "$value": "16px" },
+    "gutter-tablet": { "$type": "dimension", "$value": "24px" },
+    "gutter-desktop-narrow": { "$type": "dimension", "$value": "24px" },
+    "gutter-desktop": { "$type": "dimension", "$value": "32px" },
+    "columns-mobile": { "$type": "number", "$value": 4 },
+    "columns-tablet": { "$type": "number", "$value": 8 },
+    "columns-desktop": { "$type": "number", "$value": 12 }
+  },
+  "z": {
+    "base": { "$type": "number", "$value": 0 },
+    "raised": { "$type": "number", "$value": 10 },
+    "sticky": { "$type": "number", "$value": 100 },
+    "navigation": { "$type": "number", "$value": 200 },
+    "topbar": { "$type": "number", "$value": 300 },
+    "drawer": { "$type": "number", "$value": 400 },
+    "overlay": {
+      "$type": "number",
+      "$value": 500,
+      "$description": "Backdrops; Angular CDK overlay container uses this layer"
+    },
+    "modal": { "$type": "number", "$value": 600 },
+    "popover": { "$type": "number", "$value": 700 },
+    "toast": { "$type": "number", "$value": 800 },
+    "tooltip": { "$type": "number", "$value": 900 }
+  }
+}

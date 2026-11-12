@@ -1,0 +1,147 @@
+<a class="atlas-skip-link" href="#main">Skip to main content</a>
+
+<header class="masthead">
+  <atlas-logo [size]="40" />
+  <mat-slide-toggle [checked]="theme.mode() === 'dark'" (change)="theme.toggle()">
+    Dark theme
+  </mat-slide-toggle>
+</header>
+
+<main id="main" class="page" tabindex="-1">
+  <section class="intro" aria-labelledby="intro-title">
+    <p class="atlas-label eyebrow">Design foundation</p>
+    <h1 id="intro-title" class="atlas-display">See the whole. Shape what matters.</h1>
+    <p class="atlas-body-large atlas-text-secondary">
+      Tokens, typography, Life Dimensions, status, icons and themed Material components. Every value
+      on this page comes from <code>design/tokens</code>.
+    </p>
+  </section>
+
+  <section aria-labelledby="color-title">
+    <h2 id="color-title">Colour</h2>
+    <div class="palettes">
+      @for (palette of palettes; track palette.title) {
+        <div class="palette">
+          <h3 class="atlas-h4">{{ palette.title }}</h3>
+          <ul role="list" class="swatches">
+            @for (swatch of palette.swatches; track swatch.cssVar) {
+              <li class="swatch">
+                <span class="chip" [style.background]="'var(' + swatch.cssVar + ')'"></span>
+                <span class="atlas-label">{{ swatch.name }}</span>
+                <code class="atlas-caption atlas-text-muted">{{ swatch.hex }}</code>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section aria-labelledby="type-title">
+    <h2 id="type-title">Typography</h2>
+    <dl class="type-scale">
+      @for (style of typeStyles; track style.name) {
+        <div class="type-row">
+          <dt class="atlas-caption atlas-text-muted">{{ style.name }}</dt>
+          <dd [class]="'atlas-' + style.name">{{ style.sample }}</dd>
+        </div>
+      }
+    </dl>
+  </section>
+
+  <section aria-labelledby="dimension-title">
+    <h2 id="dimension-title">Life Dimensions</h2>
+    <ul role="list" class="dimensions">
+      @for (dimension of dimensions; track dimension.key) {
+        <li
+          class="dimension"
+          [style.--dimension-accent]="dimension.color.accent"
+          [style.--dimension-strong]="dimension.color.strong"
+          [style.--dimension-tint]="dimension.color.tint"
+        >
+          <span class="dimension-icon"><atlas-icon [name]="dimension.icon" size="lg" /></span>
+          <span class="atlas-label">{{ dimension.longLabel }}</span>
+          <code class="atlas-caption atlas-text-muted">{{ dimension.apiKey }}</code>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section aria-labelledby="status-title">
+    <h2 id="status-title">Status</h2>
+    <ul role="list" class="statuses">
+      @for (status of statuses; track status.key) {
+        <li class="status">
+          <atlas-icon [name]="status.icon" [style.color]="status.color" />
+          <span class="atlas-label atlas-text-secondary">{{ status.label }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section aria-labelledby="icon-title">
+    <h2 id="icon-title">Icons</h2>
+    <p class="atlas-text-secondary">
+      Tabler Icons (outline, stroke 1.75) referenced by meaning via <code>&lt;atlas-icon&gt;</code>.
+    </p>
+    <ul role="list" class="icons">
+      @for (name of iconNames; track name) {
+        <li class="icon-cell">
+          <atlas-icon [name]="name" size="lg" />
+          <code class="atlas-caption">{{ name }}</code>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section aria-labelledby="component-title">
+    <h2 id="component-title">Components</h2>
+    <div class="components">
+      <mat-card appearance="outlined" class="sample-card">
+        <mat-card-header>
+          <mat-card-title
+            >Complete an online Master's degree in Computer Science / AI</mat-card-title
+          >
+          <mat-card-subtitle>Career · Destination · illustrative sample</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="atlas-metric">0%</p>
+          <p class="atlas-text-secondary">
+            Next Waypoint: Prepare application, target December 2026.
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button matButton>View journey</button>
+          <button matButton="filled">
+            <atlas-icon name="add" size="sm" />
+            Add Step
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <div class="controls">
+        <div class="buttons">
+          <button matButton="filled">Primary</button>
+          <button matButton="tonal">Tonal</button>
+          <button matButton="outlined">Secondary</button>
+          <button matButton>Text</button>
+          <button matButton="filled" disabled>Disabled</button>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Destination name</mat-label>
+          <input matInput placeholder="e.g. Learn Japanese" />
+          <mat-hint>Keep it short and meaningful.</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="brand-title" class="brand" data-surface="inverse">
+    <h2 id="brand-title">Brand on navy</h2>
+    <div class="brand-row">
+      <atlas-logo tone="inverse" [size]="56" />
+      <atlas-logo tone="inverse" variant="symbol" [size]="56" />
+      <a class="inverse-link" href="#main">Focus me to see the gold focus ring</a>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,7 @@
+// Single import point for component styles:
+//   @use 'abstracts' as atlas;
+//   @include atlas.up(md) { … }   @include atlas.style(h3);   @include atlas.focus-ring;
+// (resolved via stylePreprocessorOptions.includePaths = ["src/styles"] in angular.json)
+@forward 'breakpoints';
+@forward 'typography';
+@forward 'a11y';

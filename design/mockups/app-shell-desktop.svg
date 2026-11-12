@@ -1,0 +1,224 @@
+<!-- Wireframe — not a pixel spec; tokens are the source of truth (design/tokens/*.json). -->
+<!-- IKIGAI ATLAS application shell, 1440 × 900. Static, editable, low/mid-fidelity (design-instructions §6, §7.1).
+     Colours: token hex values only. Text: live <text> (Inter → system sans fallback; DM Serif Display → Georgia).
+     Icons: Tabler Icons v3.51.0 outline glyphs (MIT License, (c) Paweł Kuna), stroke 1.75, referenced via <use>.
+     Sample content: the single illustrative mock Destination (design-instructions §14); values are placeholders. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900" role="img" aria-labelledby="mock-title mock-desc" font-family="Inter, 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title id="mock-title">IKIGAI ATLAS application shell — desktop wireframe (1440 × 900)</title>
+  <desc id="mock-desc">Navy sidebar with the IKIGAI ATLAS symbol and wordmark, eight primary areas (My Atlas active, gold indicator) and Settings, Profile and Help at the bottom. Top bar with page title, global search, quick add, notifications and profile. My Atlas content on the ivory canvas: greeting and headline, next Waypoint hero, journey status, seven Life Dimension cards, Next Waypoints list and Recent Progress feed, using the single illustrative Master's degree Destination.</desc>
+  <defs>
+    <symbol id="brand-on-dark" viewBox="0 0 64 64"><polygon points="32,11 49.2,19.28 53.45,37.9 41.55,52.82 22.45,52.82 10.55,37.9 14.8,19.28" fill="none" stroke="#F5F0E6" stroke-width="3.25" stroke-linejoin="round" /><g fill="#F5F0E6"><circle cx="32" cy="11" r="4.5" /><circle cx="49.2" cy="19.28" r="4.5" /><circle cx="53.45" cy="37.9" r="4.5" /><circle cx="41.55" cy="52.82" r="4.5" /><circle cx="22.45" cy="52.82" r="4.5" /><circle cx="10.55" cy="37.9" r="4.5" /><circle cx="14.8" cy="19.28" r="4.5" /></g><path d="M32 18 38 33H26Z" fill="#D5AD70" /><path d="M26 33H38L32 46Z" fill="#EAE2D4" /></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16l2 -6l6 -2l-2 6l-6 2" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 3l0 2" /><path d="M12 19l0 2" /><path d="M3 12l2 0" /><path d="M19 12l2 0" /></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5a5 5 0 0 1 7 0a5 5 0 0 0 7 0v9a5 5 0 0 1 -7 0a5 5 0 0 0 -7 0v-9" /><path d="M5 21v-7" /></symbol>
+    <symbol id="i-map-pin" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0" /></symbol>
+    <symbol id="i-list-check" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.5l1.5 1.5l2.5 -2.5" /><path d="M3.5 11.5l1.5 1.5l2.5 -2.5" /><path d="M3.5 17.5l1.5 1.5l2.5 -2.5" /><path d="M11 6l9 0" /><path d="M11 12l9 0" /><path d="M11 18l9 0" /></symbol>
+    <symbol id="i-affiliate" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275" /><path d="M11.683 12.317l5.759 -5.759" /><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0" /></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M19 7a2 2 0 1 0 0 -4a2 2 0 0 0 0 4" /><path d="M11 19h5.5a3.5 3.5 0 0 0 0 -7h-8a3.5 3.5 0 0 1 0 -7h4.5" /></symbol>
+    <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 0 12 0a6 6 0 1 0 -12 0" /><path d="M12 15l3.4 5.89l1.598 -3.233l3.598 .232l-3.4 -5.889" /><path d="M6.802 12l-3.4 5.89l3.598 -.233l1.598 3.232l3.4 -5.889" /></symbol>
+    <symbol id="i-circle-dot" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 17l0 .01" /><path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4" /></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l0 14" /><path d="M5 12l14 0" /></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /></symbol>
+    <symbol id="i-progress" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" /><path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" /><path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" /><path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" /><path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" /></symbol>
+    <symbol id="i-circle-dashed" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8.56 3.69a9 9 0 0 0 -2.92 1.95" /><path d="M3.69 8.56a9 9 0 0 0 -.69 3.44" /><path d="M3.69 15.44a9 9 0 0 0 1.95 2.92" /><path d="M8.56 20.31a9 9 0 0 0 3.44 .69" /><path d="M15.44 20.31a9 9 0 0 0 2.92 -1.95" /><path d="M20.31 15.44a9 9 0 0 0 .69 -3.44" /><path d="M20.31 8.56a9 9 0 0 0 -1.95 -2.92" /><path d="M15.44 3.69a9 9 0 0 0 -3.44 -.69" /></symbol>
+    <symbol id="i-circle-check" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12l2 2l4 -4" /></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6" /></symbol>
+    <symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9" /><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2" /><path d="M12 12l0 .01" /><path d="M3 13a20 20 0 0 0 18 0" /></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12" /><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4" /></symbol>
+    <symbol id="i-heartbeat" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 13.572l-7.5 7.428l-2.896 -2.868m-6.117 -8.104a5 5 0 0 1 9.013 -3.022a5 5 0 1 1 7.5 6.572" /><path d="M3 13h2l2 3l2 -6l1 3h3" /></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2m0 -12a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2m-7 12a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 -6 6a6 6 0 0 1 6 6" /></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></symbol>
+  </defs>
+  <rect x="0" y="0" width="1440" height="900" fill="#FBF9F4" />
+  <g id="sidebar" data-surface="inverse">
+    <!-- Sidebar: 248px expanded (76px collapsed), surface-inverse, sticky. -->
+    <rect x="0" y="0" width="248" height="900" fill="#14243A" />
+    <use href="#brand-on-dark" x="24" y="18" width="32" height="32" />
+    <text x="68" y="39.5" font-size="15" font-weight="600" fill="#F5F0E6" textLength="117" lengthAdjust="spacing">IKIGAI ATLAS</text>
+    <!-- Primary navigation (order fixed by design-instructions §6.1); active = gold indicator + midnight-800. -->
+    <rect x="12" y="92" width="224" height="44" rx="8" fill="#203650" />
+    <rect x="12" y="102" width="4" height="24" rx="2" fill="#D5AD70" />
+    <use href="#i-compass" x="28" y="102" width="24" height="24" stroke="#F5F0E6" />
+    <text x="64" y="119" font-size="14" font-weight="600" fill="#F5F0E6">My Atlas</text>
+    <use href="#i-flag" x="28" y="150" width="24" height="24" stroke="#D4D8DC" />
+    <text x="64" y="167" font-size="14" font-weight="500" fill="#D4D8DC">Destinations</text>
+    <use href="#i-map-pin" x="28" y="198" width="24" height="24" stroke="#D4D8DC" />
+    <text x="64" y="215" font-size="14" font-weight="500" fill="#D4D8DC">Waypoints</text>
+    <use href="#i-list-check" x="28" y="246" width="24" height="24" stroke="#D4D8DC" />
+    <text x="64" y="263" font-size="14" font-weight="500" fill="#D4D8DC">Steps</text>
+    <use href="#i-affiliate" x="28" y="294" width="24" height="24" stroke="#D4D8DC" />
+    <text x="64" y="311" font-size="14" font-weight="500" fill="#D4D8DC">Connections</text>
+    <use href="#i-route" x="28" y="342" width="24" height="24" stroke="#D4D8DC" />
+    <text x="64" y="359" font-size="14" font-weight="500" fill="#D4D8DC">Journey Overview</text>
+    <use href="#i-award" x="28" y="390" width="24" height="24" stroke="#D4D8DC" />
+    <text x="64" y="407" font-size="14" font-weight="500" fill="#D4D8DC">Milestone Awards</text>
+    <use href="#i-circle-dot" x="28" y="438" width="24" height="24" stroke="#D4D8DC" />
+    <text x="64" y="455" font-size="14" font-weight="500" fill="#D4D8DC">Life Dimensions</text>
+    <!-- Secondary navigation, separated from primary. -->
+    <line x1="24" y1="727.5" x2="224" y2="727.5" stroke="#304A65" stroke-width="1" />
+    <use href="#i-settings" x="28" y="754" width="24" height="24" stroke="#D4D8DC" />
+    <text x="64" y="771" font-size="14" font-weight="500" fill="#D4D8DC">Settings</text>
+    <use href="#i-user" x="28" y="802" width="24" height="24" stroke="#D4D8DC" />
+    <text x="64" y="819" font-size="14" font-weight="500" fill="#D4D8DC">Profile</text>
+    <use href="#i-help" x="28" y="850" width="24" height="24" stroke="#D4D8DC" />
+    <text x="64" y="867" font-size="14" font-weight="500" fill="#D4D8DC">Help</text>
+  </g>
+  <g id="top-bar">
+    <!-- Top bar: 68px; page title/breadcrumb, global search, quick add, notifications, profile. -->
+    <rect x="248" y="0" width="1192" height="68" fill="#FBF9F4" />
+    <line x1="248" y1="67.5" x2="1440" y2="67.5" stroke="#EAE2D4" stroke-width="1" />
+    <text x="280" y="41" font-size="18" font-weight="600" fill="#252B33">My Atlas</text>
+    <rect x="520" y="14" width="420" height="40" rx="8" fill="#FFFFFF" stroke="#747E89" />
+    <use href="#i-search" x="534" y="24" width="20" height="20" stroke="#4D5661" />
+    <text x="564" y="39" font-size="14" fill="#5F6873">Search Destinations, Waypoints and Steps</text>
+    <rect x="1180" y="14" width="120" height="40" rx="8" fill="#14243A" />
+    <use href="#i-plus" x="1196" y="24" width="20" height="20" stroke="#FFFFFF" />
+    <text x="1224" y="39" font-size="14" font-weight="600" fill="#FFFFFF">Quick add</text>
+    <use href="#i-bell" x="1322" y="22" width="24" height="24" stroke="#4D5661" />
+    <circle cx="1388" cy="34" r="20" fill="#F5F0E6" stroke="#EAE2D4" />
+    <use href="#i-user" x="1378" y="24" width="20" height="20" stroke="#4D5661" />
+  </g>
+  <g id="content">
+    <!-- 1–2. Greeting, headline (display type) and date/context line. -->
+    <text x="280" y="116" font-size="16" fill="#4D5661">Good morning</text>
+    <text x="280" y="166" font-family="'DM Serif Display', Georgia, serif" font-size="48" fill="#252B33" letter-spacing="-0.48">Build the life you envision.</text>
+    <text x="280" y="196" font-size="14" fill="#5F6873">Thursday, 12 November 2026 · 1 active Destination · 1 upcoming deadline</text>
+    <!-- 3a. Hero: one emphasised next Waypoint on surface-inverse-strong with a subtle map-grid/route motif. -->
+    <rect x="280" y="220" width="744" height="216" rx="20" fill="#101D32" />
+    <line x1="1056" y1="220" x2="1056" y2="436" stroke="#203650" stroke-width="1" />
+    <line x1="1128" y1="220" x2="1128" y2="436" stroke="#203650" stroke-width="1" />
+    <line x1="1200" y1="220" x2="1200" y2="436" stroke="#203650" stroke-width="1" />
+    <line x1="736" y1="292" x2="1024" y2="292" stroke="#203650" stroke-width="1" />
+    <line x1="736" y1="364" x2="1024" y2="364" stroke="#203650" stroke-width="1" />
+    <path d="M752 404 C820 370 840 312 900 308 S960 264 980 260" fill="none" stroke="#304A65" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 7" />
+    <circle cx="752" cy="404" r="5" fill="#304A65" />
+    <circle cx="900" cy="308" r="5" fill="#304A65" />
+    <circle cx="980" cy="260" r="7" fill="#D5AD70" />
+    <text x="312" y="262" font-size="12" font-weight="600" fill="#D5AD70" letter-spacing="0.96">NEXT WAYPOINT</text>
+    <text x="312" y="300" font-size="28" font-weight="600" fill="#F5F0E6">Submit application</text>
+    <circle cx="317" cy="322" r="5" fill="#759ECA" />
+    <text x="330" y="327" font-size="14" fill="#D4D8DC">Career · Complete an online Master's degree in Computer Science / AI</text>
+    <rect x="312" y="344" width="320" height="6" rx="3" fill="#304A65" />
+    <rect x="312" y="344" width="128" height="6" rx="3" fill="#759ECA" />
+    <text x="648" y="351" font-size="12" fill="#D4D8DC">2 of 5 Steps done · planned December 2026</text>
+    <rect x="312" y="368" width="212" height="40" rx="8" fill="#D5AD70" />
+    <text x="418" y="393" font-size="14" font-weight="600" fill="#101D32" text-anchor="middle">Explore next waypoint</text>
+    <!-- 3b. Journey status summary (not a wall of KPI cards). -->
+    <rect x="1048" y="220" width="360" height="216" rx="12" fill="#FFFFFF" stroke="#EAE2D4" />
+    <text x="1072" y="260" font-size="16" font-weight="600" fill="#252B33">Journey status</text>
+    <text x="1072" y="304" font-size="14" fill="#4D5661">Active Destinations</text>
+    <text x="1384" y="305" font-size="20" font-weight="600" fill="#252B33" text-anchor="end">1</text>
+    <line x1="1072" y1="320.5" x2="1384" y2="320.5" stroke="#E5E7E8" stroke-width="1" />
+    <text x="1072" y="344" font-size="14" fill="#4D5661">Waypoints completed</text>
+    <text x="1384" y="345" font-size="20" font-weight="600" fill="#252B33" text-anchor="end">0 of 7</text>
+    <line x1="1072" y1="360.5" x2="1384" y2="360.5" stroke="#E5E7E8" stroke-width="1" />
+    <text x="1072" y="384" font-size="14" fill="#4D5661">Upcoming deadlines</text>
+    <text x="1384" y="385" font-size="20" font-weight="600" fill="#252B33" text-anchor="end">1</text>
+    <text x="1072" y="416" font-size="14" font-weight="500" fill="#203650" text-decoration="underline">Open Journey Overview</text>
+    <!-- 4. Seven Life Dimensions in canonical order: white cards, tint + strong-colour icon, label, slim progress. -->
+    <text x="280" y="484" font-size="22" font-weight="600" fill="#252B33">Life Dimensions</text>
+    <text x="1408" y="484" font-size="14" font-weight="500" fill="#203650" text-anchor="end" text-decoration="underline">View all</text>
+    <g id="dimension-career">
+      <rect x="280" y="500" width="150.86" height="120" rx="12" fill="#FFFFFF" stroke="#EAE2D4" />
+      <circle cx="312" cy="532" r="18" fill="#EAF1F8" />
+      <use href="#i-briefcase" x="302" y="522" width="20" height="20" stroke="#426D9B" />
+      <text x="296" y="574" font-size="14" font-weight="600" fill="#252B33">Career</text>
+      <text x="296" y="593" font-size="12" fill="#5F6873">1 active Destination</text>
+      <rect x="296" y="602" width="118.86" height="6" rx="3" fill="#F0F1F1" />
+      <rect x="296" y="602" width="23.77" height="6" rx="3" fill="#426D9B" />
+    </g>
+    <g id="dimension-finance">
+      <rect x="442.86" y="500" width="150.86" height="120" rx="12" fill="#FFFFFF" stroke="#EAE2D4" />
+      <circle cx="474.86" cy="532" r="18" fill="#F6EFE3" />
+      <use href="#i-wallet" x="464.86" y="522" width="20" height="20" stroke="#805B2F" />
+      <text x="458.86" y="574" font-size="14" font-weight="600" fill="#252B33">Finance</text>
+      <text x="458.86" y="593" font-size="12" fill="#5F6873">No Destinations yet</text>
+      <rect x="458.86" y="602" width="118.86" height="6" rx="3" fill="#F0F1F1" />
+    </g>
+    <g id="dimension-health">
+      <rect x="605.71" y="500" width="150.86" height="120" rx="12" fill="#FFFFFF" stroke="#EAE2D4" />
+      <circle cx="637.71" cy="532" r="18" fill="#EDF3EE" />
+      <use href="#i-heartbeat" x="627.71" y="522" width="20" height="20" stroke="#52765B" />
+      <text x="621.71" y="574" font-size="14" font-weight="600" fill="#252B33">Health</text>
+      <text x="621.71" y="593" font-size="12" fill="#5F6873">No Destinations yet</text>
+      <rect x="621.71" y="602" width="118.86" height="6" rx="3" fill="#F0F1F1" />
+    </g>
+    <g id="dimension-love">
+      <rect x="768.57" y="500" width="150.86" height="120" rx="12" fill="#FFFFFF" stroke="#EAE2D4" />
+      <circle cx="800.57" cy="532" r="18" fill="#F8EEEA" />
+      <use href="#i-heart" x="790.57" y="522" width="20" height="20" stroke="#965B4A" />
+      <text x="784.57" y="574" font-size="14" font-weight="600" fill="#252B33">Love</text>
+      <text x="784.57" y="593" font-size="12" fill="#5F6873">No Destinations yet</text>
+      <rect x="784.57" y="602" width="118.86" height="6" rx="3" fill="#F0F1F1" />
+    </g>
+    <g id="dimension-passion">
+      <rect x="931.43" y="500" width="150.86" height="120" rx="12" fill="#FFFFFF" stroke="#EAE2D4" />
+      <circle cx="963.43" cy="532" r="18" fill="#F1EEF7" />
+      <use href="#i-sparkles" x="953.43" y="522" width="20" height="20" stroke="#6F5C98" />
+      <text x="947.43" y="574" font-size="14" font-weight="600" fill="#252B33">Passion</text>
+      <text x="947.43" y="593" font-size="12" fill="#5F6873">No Destinations yet</text>
+      <rect x="947.43" y="602" width="118.86" height="6" rx="3" fill="#F0F1F1" />
+    </g>
+    <g id="dimension-friendship">
+      <rect x="1094.29" y="500" width="150.86" height="120" rx="12" fill="#FFFFFF" stroke="#EAE2D4" />
+      <circle cx="1126.29" cy="532" r="18" fill="#EAF3F2" />
+      <use href="#i-users" x="1116.29" y="522" width="20" height="20" stroke="#3F7776" />
+      <text x="1110.29" y="574" font-size="14" font-weight="600" fill="#252B33">Friendship</text>
+      <text x="1110.29" y="593" font-size="12" fill="#5F6873">No Destinations yet</text>
+      <rect x="1110.29" y="602" width="118.86" height="6" rx="3" fill="#F0F1F1" />
+    </g>
+    <g id="dimension-family">
+      <rect x="1257.14" y="500" width="150.86" height="120" rx="12" fill="#FFFFFF" stroke="#EAE2D4" />
+      <circle cx="1289.14" cy="532" r="18" fill="#F5F0E5" />
+      <use href="#i-home" x="1279.14" y="522" width="20" height="20" stroke="#80683E" />
+      <text x="1273.14" y="574" font-size="14" font-weight="600" fill="#252B33">Family</text>
+      <text x="1273.14" y="593" font-size="12" fill="#5F6873">No Destinations yet</text>
+      <rect x="1273.14" y="602" width="118.86" height="6" rx="3" fill="#F0F1F1" />
+    </g>
+    <!-- 5. Next Waypoints: status = icon + text label (never colour alone). -->
+    <text x="280" y="668" font-size="22" font-weight="600" fill="#252B33">Next Waypoints</text>
+    <rect x="280" y="684" width="744" height="192" rx="12" fill="#FFFFFF" stroke="#EAE2D4" />
+    <use href="#i-progress" x="300" y="710" width="20" height="20" stroke="#426D9B" />
+    <text x="336" y="717" font-size="14" font-weight="600" fill="#252B33">Submit application</text>
+    <text x="336" y="735" font-size="12" fill="#5F6873">Master's degree in CS / AI · Career</text>
+    <text x="720" y="725" font-size="14" fill="#4D5661">Planned Dec 2026</text>
+    <use href="#i-progress" x="860" y="712" width="16" height="16" stroke="#426D9B" />
+    <text x="882" y="724" font-size="12" font-weight="600" fill="#4D5661">In progress</text>
+    <use href="#i-chevron-right" x="984" y="710" width="20" height="20" stroke="#4D5661" />
+    <line x1="300" y1="750.5" x2="1004" y2="750.5" stroke="#E5E7E8" stroke-width="1" />
+    <use href="#i-circle-dashed" x="300" y="770" width="20" height="20" stroke="#747E89" />
+    <text x="336" y="777" font-size="14" font-weight="600" fill="#252B33">Receive admission decision</text>
+    <text x="336" y="795" font-size="12" fill="#5F6873">Master's degree in CS / AI · Career</text>
+    <text x="720" y="785" font-size="14" fill="#4D5661">Date not set</text>
+    <use href="#i-circle-dashed" x="860" y="772" width="16" height="16" stroke="#747E89" />
+    <text x="882" y="784" font-size="12" font-weight="600" fill="#4D5661">Not started</text>
+    <use href="#i-chevron-right" x="984" y="770" width="20" height="20" stroke="#4D5661" />
+    <line x1="300" y1="810.5" x2="1004" y2="810.5" stroke="#E5E7E8" stroke-width="1" />
+    <use href="#i-circle-dashed" x="300" y="830" width="20" height="20" stroke="#747E89" />
+    <text x="336" y="837" font-size="14" font-weight="600" fill="#252B33">Start studying</text>
+    <text x="336" y="855" font-size="12" fill="#5F6873">Master's degree in CS / AI · Career</text>
+    <text x="720" y="845" font-size="14" fill="#4D5661">Planned Fall 2027</text>
+    <use href="#i-circle-dashed" x="860" y="832" width="16" height="16" stroke="#747E89" />
+    <text x="882" y="844" font-size="12" font-weight="600" fill="#4D5661">Not started</text>
+    <use href="#i-chevron-right" x="984" y="830" width="20" height="20" stroke="#4D5661" />
+    <!-- 6. Recent Progress feed. -->
+    <text x="1048" y="668" font-size="22" font-weight="600" fill="#252B33">Recent Progress</text>
+    <rect x="1048" y="684" width="360" height="192" rx="12" fill="#FFFFFF" stroke="#EAE2D4" />
+    <use href="#i-circle-check" x="1068" y="710" width="20" height="20" stroke="#4F8064" />
+    <text x="1100" y="717" font-size="14" font-weight="600" fill="#252B33">Shortlisted programmes</text>
+    <text x="1100" y="735" font-size="12" fill="#5F6873">Step completed · 2 days ago</text>
+    <line x1="1068" y1="750.5" x2="1388" y2="750.5" stroke="#E5E7E8" stroke-width="1" />
+    <use href="#i-circle-check" x="1068" y="770" width="20" height="20" stroke="#4F8064" />
+    <text x="1100" y="777" font-size="14" font-weight="600" fill="#252B33">Requested transcripts</text>
+    <text x="1100" y="795" font-size="12" fill="#5F6873">Step completed · 5 days ago</text>
+    <line x1="1068" y1="810.5" x2="1388" y2="810.5" stroke="#E5E7E8" stroke-width="1" />
+    <use href="#i-flag" x="1068" y="830" width="20" height="20" stroke="#4D5661" />
+    <text x="1100" y="837" font-size="14" font-weight="600" fill="#252B33">Master's degree in CS / AI</text>
+    <text x="1100" y="855" font-size="12" fill="#5F6873">Destination created · 3 weeks ago</text>
+  </g>
+</svg>

@@ -1,0 +1,204 @@
+@use 'abstracts' as atlas;
+
+:host {
+  display: block;
+}
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--space-3) + var(--safe-area-top)) calc(var(--space-4) + var(--safe-area-right))
+    var(--space-3) calc(var(--space-4) + var(--safe-area-left));
+  background: var(--color-surface-page);
+  border-bottom: 1px solid var(--color-border-subtle);
+
+  @include atlas.up(md) {
+    padding-inline: var(--space-8);
+  }
+}
+
+.page {
+  display: grid;
+  gap: var(--space-12);
+  max-width: var(--layout-content-max);
+  padding: var(--space-8) var(--space-4) calc(var(--space-16) + var(--safe-area-bottom));
+  margin-inline: auto;
+
+  &:focus {
+    outline: none;
+  }
+
+  @include atlas.up(md) {
+    padding-inline: var(--space-8);
+  }
+}
+
+section {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.intro {
+  max-width: 48rem;
+}
+
+.eyebrow {
+  color: var(--color-text-achievement);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.palettes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-6);
+}
+
+.palette {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.swatches,
+.dimensions,
+.statuses,
+.icons {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.swatch {
+  display: grid;
+  grid-template-columns: var(--space-10) 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.chip {
+  height: var(--space-10);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.type-scale {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.type-row {
+  display: grid;
+  gap: var(--space-1);
+
+  @include atlas.up(md) {
+    grid-template-columns: 8rem 1fr;
+    gap: var(--space-6);
+    align-items: baseline;
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.dimensions {
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+}
+
+.dimension {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  align-items: center;
+  padding: var(--space-3);
+  color: var(--color-text-primary);
+  background: var(--dimension-tint);
+  border-inline-start: var(--space-1) solid var(--dimension-accent);
+  border-radius: var(--radius-md);
+
+  code {
+    grid-column: 2;
+  }
+}
+
+.dimension-icon {
+  display: inline-flex;
+  grid-row: span 2;
+  color: var(--dimension-strong);
+}
+
+.statuses {
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+}
+
+.status {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.icons {
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+}
+
+.icon-cell {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: center;
+  padding: var(--space-3);
+  color: var(--color-text-primary);
+  text-align: center;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+
+  code {
+    color: var(--color-text-secondary);
+    overflow-wrap: anywhere;
+  }
+}
+
+.components {
+  display: grid;
+  gap: var(--space-6);
+
+  @include atlas.up(lg) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.controls {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.brand {
+  padding: var(--space-8);
+  color: var(--color-text-inverse);
+  background: var(--color-surface-inverse);
+  border-radius: var(--radius-lg);
+}
+
+.brand-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+.inverse-link {
+  color: var(--color-text-inverse);
+}

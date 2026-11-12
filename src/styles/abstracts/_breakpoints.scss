@@ -1,0 +1,35 @@
+// Breakpoint helpers. Values come from design/tokens/layout.json (generated map).
+// Mobile-first: prefer `up()`; use `down()` only for mobile-specific overrides.
+@use 'sass:map';
+@use '../tokens/breakpoints.generated' as generated;
+
+$breakpoints: generated.$breakpoints;
+
+@function bp($name) {
+  @if not map.has-key($breakpoints, $name) {
+    @error 'Unknown breakpoint `#{$name}`. Expected one of #{map.keys($breakpoints)}.';
+  }
+
+  @return map.get($breakpoints, $name);
+}
+
+/// Applies styles from the breakpoint upwards (min-width).
+@mixin up($name) {
+  @media (min-width: bp($name)) {
+    @content;
+  }
+}
+
+/// Applies styles below the breakpoint (max-width, exclusive).
+@mixin down($name) {
+  @media (max-width: (bp($name) - 0.02px)) {
+    @content;
+  }
+}
+
+/// Applies styles between two breakpoints ([lower, upper)).
+@mixin between($lower, $upper) {
+  @media (min-width: bp($lower)) and (max-width: (bp($upper) - 0.02px)) {
+    @content;
+  }
+}

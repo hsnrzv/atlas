@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="ia-title">
+  <title id="ia-title">IKIGAI ATLAS</title>
+  <!-- Single colour via currentColor; set the CSS color property. -->
+  <!-- Route: the whole life as one connected journey. -->
+  <polygon points="32,11 49.2,19.28 53.45,37.9 41.55,52.82 22.45,52.82 10.55,37.9 14.8,19.28" fill="none" stroke="currentColor" stroke-width="3.25" stroke-linejoin="round" />
+  <!-- Seven waypoints = the seven Life Dimensions, clockwise from north:
+       Career, Finance, Health, Love, Passion, Friendship, Family. -->
+  <g fill="currentColor">
+    <circle cx="32" cy="11" r="4.5" />
+    <circle cx="49.2" cy="19.28" r="4.5" />
+    <circle cx="53.45" cy="37.9" r="4.5" />
+    <circle cx="41.55" cy="52.82" r="4.5" />
+    <circle cx="22.45" cy="52.82" r="4.5" />
+    <circle cx="10.55" cy="37.9" r="4.5" />
+    <circle cx="14.8" cy="19.28" r="4.5" />
+  </g>
+  <!-- Compass needle = the person and their purpose; north half emphasised. -->
+  <path d="M32 18 38 33H26Z" fill="currentColor" />
+  <path d="M27 33H37L32 45Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+</svg>

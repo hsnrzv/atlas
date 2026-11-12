@@ -1,0 +1,7 @@
+# Default owner for everything in the frontend repository.
+* @hsnrzv
+
+# Design system and brand assets: changes affect every screen and the store listings.
+/design/ @hsnrzv
+/src/styles/ @hsnrzv
+/scripts/ @hsnrzv

@@ -1,0 +1,35 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    groups:
+      angular:
+        patterns: ['@angular/*', '@angular-devkit/*', 'angular-eslint', 'typescript']
+      capacitor:
+        patterns: ['@capacitor/*']
+      testing:
+        patterns: ['vitest', 'jsdom', '@playwright/test', '@axe-core/*']
+      lint-format:
+        patterns: ['eslint', '@eslint/*', 'typescript-eslint', 'stylelint*', 'prettier']
+      icons-fonts:
+        patterns: ['@tabler/*', '@fontsource*']
+    commit-message:
+      prefix: chore(deps)
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore(ci)
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore(docker)

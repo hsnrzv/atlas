@@ -1,0 +1,130 @@
+{
+  "$description": "IKIGAI ATLAS typography tokens (design-instructions §3). Fonts are bundled locally via @fontsource packages (SIL OFL 1.1); no runtime font CDN.",
+  "font": {
+    "sans": {
+      "$type": "fontFamily",
+      "$value": "\"Inter Variable\", \"Inter\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "$description": "Primary UI typeface"
+    },
+    "display": {
+      "$type": "fontFamily",
+      "$value": "\"DM Serif Display\", Georgia, serif",
+      "$description": "Editorial hero moments and selected award titles only; never dense data, controls or small text"
+    },
+    "mono": {
+      "$type": "fontFamily",
+      "$value": "\"SFMono-Regular\", Consolas, \"Liberation Mono\", monospace",
+      "$description": "Code / identifiers"
+    }
+  },
+  "font-weight": {
+    "regular": { "$type": "fontWeight", "$value": 400 },
+    "medium": { "$type": "fontWeight", "$value": 500 },
+    "semibold": { "$type": "fontWeight", "$value": 600 }
+  },
+  "typescale": {
+    "$description": "Composite type styles. 'mobile' applies below the md breakpoint (768px); 'desktop' from md upwards.",
+    "display": {
+      "$type": "typography",
+      "$description": "DM Serif Display ships a single 400 weight; synthetic bolding is disabled, so the spec's 500-600 range is realised by the face's own contrast.",
+      "$value": {
+        "fontFamily": "{font.display}",
+        "fontWeight": 400,
+        "letterSpacing": "-0.01em",
+        "mobile": { "fontSize": "36px", "lineHeight": "42px" },
+        "desktop": { "fontSize": "48px", "lineHeight": "56px" }
+      }
+    },
+    "h1": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontWeight": 600,
+        "letterSpacing": "-0.015em",
+        "mobile": { "fontSize": "30px", "lineHeight": "38px" },
+        "desktop": { "fontSize": "36px", "lineHeight": "44px" }
+      }
+    },
+    "h2": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontWeight": 600,
+        "letterSpacing": "-0.01em",
+        "mobile": { "fontSize": "24px", "lineHeight": "32px" },
+        "desktop": { "fontSize": "28px", "lineHeight": "36px" }
+      }
+    },
+    "h3": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontWeight": 600,
+        "letterSpacing": "-0.005em",
+        "mobile": { "fontSize": "20px", "lineHeight": "28px" },
+        "desktop": { "fontSize": "22px", "lineHeight": "30px" }
+      }
+    },
+    "h4": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontWeight": 600,
+        "letterSpacing": "0",
+        "mobile": { "fontSize": "18px", "lineHeight": "26px" },
+        "desktop": { "fontSize": "18px", "lineHeight": "26px" }
+      }
+    },
+    "body-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "mobile": { "fontSize": "16px", "lineHeight": "24px" },
+        "desktop": { "fontSize": "16px", "lineHeight": "26px" }
+      }
+    },
+    "body": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "mobile": { "fontSize": "14px", "lineHeight": "22px" },
+        "desktop": { "fontSize": "14px", "lineHeight": "22px" }
+      }
+    },
+    "label": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontWeight": 600,
+        "letterSpacing": "0.01em",
+        "mobile": { "fontSize": "12px", "lineHeight": "16px" },
+        "desktop": { "fontSize": "12px", "lineHeight": "16px" }
+      }
+    },
+    "caption": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontWeight": 400,
+        "letterSpacing": "0.01em",
+        "mobile": { "fontSize": "11px", "lineHeight": "16px" },
+        "desktop": { "fontSize": "11px", "lineHeight": "16px" }
+      }
+    },
+    "metric": {
+      "$type": "typography",
+      "$description": "Large numeric values; always rendered with tabular numerals.",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontWeight": 600,
+        "letterSpacing": "-0.01em",
+        "mobile": { "fontSize": "28px", "lineHeight": "34px" },
+        "desktop": { "fontSize": "32px", "lineHeight": "38px" }
+      }
+    }
+  }
+}

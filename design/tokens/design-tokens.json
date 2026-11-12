@@ -1,0 +1,55 @@
+{
+  "$description": "IKIGAI ATLAS design token manifest. The group files listed here are the single source of truth. Run `npm run tokens:build` to regenerate the SCSS custom properties, the Sass breakpoint map and the TypeScript constants; CI runs `npm run tokens:check` to reject hand edits or stale output.",
+  "name": "ikigai-atlas",
+  "version": "0.1.0",
+  "format": "W3C Design Tokens Community Group draft ($value / $type / $description); `{group.token}` references; `DEFAULT` keys collapse into the parent name.",
+  "files": [
+    "colors.json",
+    "typography.json",
+    "spacing.json",
+    "elevation.json",
+    "motion.json",
+    "layout.json"
+  ],
+  "themes": {
+    "light": { "selector": ":root", "status": "stable" },
+    "dark": { "selector": "[data-theme='dark']", "status": "draft" }
+  },
+  "outputs": [
+    "src/styles/tokens/_tokens.generated.scss",
+    "src/styles/tokens/_breakpoints.generated.scss",
+    "src/app/shared/design-system/tokens.generated.ts"
+  ],
+  "lifeDimensions": {
+    "$description": "Canonical Life Dimension order and keys. Lower-case keys are used for tokens/CSS; the backend/API key is the upper-case form (CAREER, FINANCE, …). Keys never change; labels are display defaults.",
+    "order": ["career", "finance", "health", "love", "passion", "friendship", "family"],
+    "labels": {
+      "career": "Career",
+      "finance": "Finance",
+      "health": "Health",
+      "love": "Love",
+      "passion": "Passion",
+      "friendship": "Friendship",
+      "family": "Family"
+    },
+    "longLabels": {
+      "career": "Career / Profession",
+      "finance": "Finance",
+      "health": "Health",
+      "love": "Love / Partnership",
+      "passion": "Passion",
+      "friendship": "Friendship",
+      "family": "Family"
+    },
+    "icons": {
+      "$description": "Tabler outline icon names (see atlas ADR-0005).",
+      "career": "briefcase",
+      "finance": "wallet",
+      "health": "heartbeat",
+      "love": "heart",
+      "passion": "sparkles",
+      "friendship": "users",
+      "family": "home"
+    }
+  }
+}

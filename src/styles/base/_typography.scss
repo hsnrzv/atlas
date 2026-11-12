@@ -1,0 +1,75 @@
+// Document-level typography and the global type-scale classes.
+@use '../abstracts/typography' as type;
+
+html {
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  @include type.style(body);
+
+  min-height: 100dvh;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-page);
+}
+
+h1 {
+  @include type.style(h1);
+}
+
+h2 {
+  @include type.style(h2);
+}
+
+h3 {
+  @include type.style(h3);
+}
+
+h4 {
+  @include type.style(h4);
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+a {
+  color: var(--color-text-link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+::selection {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-achievement);
+}
+
+// Global classes for templates (`<p class="atlas-caption">`). Components can use the mixins instead.
+@each $name in type.$styles {
+  .atlas-#{$name} {
+    @include type.style($name);
+  }
+}
+
+.atlas-tabular {
+  @include type.tabular-numbers;
+}
+
+.atlas-text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.atlas-text-muted {
+  color: var(--color-text-muted);
+}

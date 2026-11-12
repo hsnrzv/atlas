@@ -1,0 +1,60 @@
+name: frontend-container
+
+# Builds and smoke-tests the runtime image. Publishing to ghcr.io/hsnrzv/atlas-frontend (immutable
+# tags, provenance, signing) is added with the delivery pipeline; see atlas-infra
+# docs/plan/PLAN-INFRASTRUCTURE-CICD.md.
+on:
+  pull_request:
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - nginx/**
+      - package.json
+      - package-lock.json
+      - angular.json
+      - src/**
+      - public/**
+      - design/svg/**
+      - .github/workflows/frontend-container.yml
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  image:
+    name: Build and smoke-test image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: false
+          load: true
+          tags: atlas-frontend:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Smoke test (health, SPA fallback, security headers, API isolation)
+        run: |
+          docker run -d --name atlas-frontend -p 8080:8080 atlas-frontend:ci
+          for i in $(seq 1 30); do curl -fsS http://localhost:8080/healthz && break; sleep 1; done
+          curl -fsS http://localhost:8080/healthz
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/some/deep/link)" = 200
+          curl -fsSI http://localhost:8080/ | grep -qi '^content-security-policy:'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/api/v1/anything)" = 404
+          test "$(docker inspect -f '{{.Config.User}}' atlas-frontend:ci)" != "root"
+
+      - if: failure()
+        run: docker logs atlas-frontend

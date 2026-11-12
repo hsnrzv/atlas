@@ -1,0 +1,26 @@
+// Accessibility helpers shared by global and component styles.
+
+/// Hides content visually while keeping it available to assistive technology.
+@mixin visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/// Standard Atlas focus ring (WCAG 2.4.7 / 2.4.13). Use inside :focus-visible.
+@mixin focus-ring($color: var(--color-focus-ring)) {
+  outline: var(--size-focus-ring-width) solid $color;
+  outline-offset: var(--size-focus-ring-offset);
+}
+
+/// Ensures the minimum touch target (44px) without changing the visual size.
+@mixin touch-target {
+  min-width: var(--size-touch-target-min);
+  min-height: var(--size-touch-target-min);
+}

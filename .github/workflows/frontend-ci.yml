@@ -1,0 +1,92 @@
+name: frontend-ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Design checks, lint, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Lockfile resolves only from the public npm registry
+        run: npm run lockfile:check
+
+      - name: Design system (tokens in sync, WCAG contrast, dimension icons, brand assets)
+        run: npm run design:check
+
+      - name: ESLint (TypeScript + templates incl. accessibility rules)
+        run: npm run lint
+
+      - name: Stylelint (no raw hex in components)
+        run: npm run lint:styles
+
+      - name: Prettier
+        run: npm run format:check
+
+      - name: Unit tests (Vitest)
+        run: npm run test:ci
+
+      - name: Production build (type-check + budgets)
+        run: npm run build
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: frontend-dist
+          path: dist/atlas-frontend/browser
+          retention-days: 7
+
+  e2e:
+    name: Playwright smoke + axe
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Playwright
+        run: npm run e2e
+
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/dependency-review-action@v5
+        with:
+          fail-on-severity: high
