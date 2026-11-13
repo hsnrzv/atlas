@@ -1,22 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-labelledby="ia-title">
   <title id="ia-title">IKIGAI ATLAS adaptive icon foreground</title>
-  <!-- Android adaptive icon foreground: 1024px = 108dp canvas, transparent. Mark stays inside the 66dp (626px) safe circle. -->
+  <!-- Android adaptive icon foreground: 1024px = 108dp canvas, transparent. Mark radius 304px stays inside the 66dp (313px) safe circle. -->
   <g transform="translate(512 512) scale(10) translate(-32 -32)">
-    <!-- Route: the whole life as one connected journey. -->
-    <polygon points="32,11 49.2,19.28 53.45,37.9 41.55,52.82 22.45,52.82 10.55,37.9 14.8,19.28" fill="none" stroke="#F5F0E6" stroke-width="3.25" stroke-linejoin="round" />
-    <!-- Seven waypoints = the seven Life Dimensions, clockwise from north:
-         Career, Finance, Health, Love, Passion, Friendship, Family. -->
-    <g fill="#F5F0E6">
-      <circle cx="32" cy="11" r="4.5" />
-      <circle cx="49.2" cy="19.28" r="4.5" />
-      <circle cx="53.45" cy="37.9" r="4.5" />
-      <circle cx="41.55" cy="52.82" r="4.5" />
-      <circle cx="22.45" cy="52.82" r="4.5" />
-      <circle cx="10.55" cy="37.9" r="4.5" />
-      <circle cx="14.8" cy="19.28" r="4.5" />
+    <!-- Cardinal Ikigai Venn (Figma V3 brand symbol): four r19.2 circles on a 64 grid, centres N/W/E/S;
+         the shared centre is formed by overlap only. Source: Figma "15.Export Assets", scaled 0.4 from 160px. -->
+    <g>
+      <circle cx="32" cy="20.8" r="19.2" fill="#5685B5" opacity="0.82" style="mix-blend-mode:screen" />
+      <circle cx="20.8" cy="32" r="19.2" fill="#348F84" opacity="0.82" style="mix-blend-mode:screen" />
+      <circle cx="43.2" cy="32" r="19.2" fill="#8A73BB" opacity="0.82" style="mix-blend-mode:screen" />
+      <circle cx="32" cy="43.2" r="19.2" fill="#B17D9E" opacity="0.82" style="mix-blend-mode:screen" />
     </g>
-    <!-- Compass needle = the person and their purpose; north half emphasised. -->
-    <path d="M32 18 38 33H26Z" fill="#D5AD70" />
-    <path d="M26 33H38L32 46Z" fill="#EAE2D4" />
   </g>
 </svg>

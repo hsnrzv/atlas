@@ -106,11 +106,11 @@ they follow the same safety rules.
 
 ### Icon geometry (verified against the masters)
 
-| Master                                        | Composition                                                                                                                                                                                                              |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ikigai-atlas-app-icon-master.svg` (1024)     | A full-bleed navy rectangle with the symbol scaled ×11 (about 570 px; the comment in the file says about 600), ivory route and gold/ivory needle, no text. The store masks the corners itself, so it is not pre-rounded. |
-| `ikigai-atlas-app-icon-foreground.svg` (1024) | A transparent background with the symbol scaled ×10. The mark radius is about 274 px, inside the 313 px safe radius (66 dp of 108 dp), so it survives circle, squircle and rounded-square masks (§12.3).                 |
-| `ikigai-atlas-splash.svg` (2732)              | Solid `#14243A` with the symbol centred and scaled ×13 (about 675 px, about 25 % of the width). No text.                                                                                                                 |
+| Master                                        | Composition                                                                                                                                                                                                                                                                    |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ikigai-atlas-app-icon-master.svg` (1024)     | A full-bleed navy rectangle with the Venn symbol scaled ×10: a 640 px symbol box with a 192 px inset, as in the Figma app-icon master (160 px on 256 px, exported at 4×). Circles use `screen` at 82 %. No text. The store masks the corners itself, so it is not pre-rounded. |
+| `ikigai-atlas-app-icon-foreground.svg` (1024) | A transparent background with the symbol scaled ×10. The mark radius is 304 px, inside the 313 px safe radius (66 dp of 108 dp), so it survives circle, squircle and rounded-square masks (§12.3).                                                                             |
+| `ikigai-atlas-splash.svg` (2732)              | Solid `#14243A` with the symbol centred and scaled ×13 (about 790 px, about 29 % of the width). No text.                                                                                                                                                                       |
 
 ## Mapping to the spec's deliverable structure
 

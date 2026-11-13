@@ -9,7 +9,7 @@ describe('AtlasLogo', () => {
     expect(host.getAttribute('role')).toBe('img');
     expect(host.getAttribute('aria-label')).toBe('IKIGAI ATLAS');
     expect(host.querySelector('.wordmark')?.getAttribute('aria-hidden')).toBe('true');
-    expect(host.querySelectorAll('circle')).toHaveLength(7);
+    expect(host.querySelectorAll('circle')).toHaveLength(4);
   });
 
   it('can be marked decorative', async () => {

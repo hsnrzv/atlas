@@ -64,6 +64,28 @@
           "$description": "Decorative gold; badges, indicators and text on dark"
         },
         "200": { "$type": "color", "$value": "#EBD9B9", "$description": "Gold tinted surfaces" }
+      },
+      "venn": {
+        "blue": {
+          "$type": "color",
+          "$value": "#5685B5",
+          "$description": "Logo symbol, top circle. Figma V3 cardinal Ikigai Venn; decorative only, never text or meaning"
+        },
+        "teal": {
+          "$type": "color",
+          "$value": "#348F84",
+          "$description": "Logo symbol, left circle. Figma V3 cardinal Ikigai Venn; decorative only, never text or meaning"
+        },
+        "violet": {
+          "$type": "color",
+          "$value": "#8A73BB",
+          "$description": "Logo symbol, right circle. Figma V3 cardinal Ikigai Venn; decorative only, never text or meaning"
+        },
+        "rose": {
+          "$type": "color",
+          "$value": "#B17D9E",
+          "$description": "Logo symbol, bottom circle. Figma V3 cardinal Ikigai Venn; decorative only, never text or meaning"
+        }
       }
     },
     "neutral": {

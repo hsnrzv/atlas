@@ -2,8 +2,8 @@
 // 14/64 gap between symbol and wordmark.
 :host {
   --atlas-logo-ink: var(--color-brand-midnight-900);
-  --atlas-logo-north: var(--color-brand-gold-600);
-  --atlas-logo-south: var(--color-brand-midnight-700);
+  --atlas-logo-blend: multiply;
+  --atlas-logo-opacity: 0.72;
 
   display: inline-flex;
   gap: calc(var(--atlas-logo-size) * 0.22);
@@ -15,8 +15,8 @@
 :host([data-tone='inverse']),
 :host-context([data-theme='dark']) {
   --atlas-logo-ink: var(--color-brand-ivory-100);
-  --atlas-logo-north: var(--color-brand-gold-500);
-  --atlas-logo-south: var(--color-brand-ivory-200);
+  --atlas-logo-blend: screen;
+  --atlas-logo-opacity: 0.82;
 }
 
 .symbol {
@@ -26,23 +26,25 @@
   overflow: visible;
 }
 
-.route {
-  fill: none;
-  stroke: var(--atlas-logo-ink);
-  stroke-width: 3.25;
-  stroke-linejoin: round;
+.circle {
+  opacity: var(--atlas-logo-opacity);
+  mix-blend-mode: var(--atlas-logo-blend);
 }
 
-.node {
-  fill: var(--atlas-logo-ink);
+.top {
+  fill: var(--color-brand-venn-blue);
 }
 
-.north {
-  fill: var(--atlas-logo-north);
+.left {
+  fill: var(--color-brand-venn-teal);
 }
 
-.south {
-  fill: var(--atlas-logo-south);
+.right {
+  fill: var(--color-brand-venn-violet);
+}
+
+.bottom {
+  fill: var(--color-brand-venn-rose);
 }
 
 .wordmark {
@@ -59,11 +61,12 @@
 @media (forced-colors: active) {
   :host {
     --atlas-logo-ink: CanvasText;
-    --atlas-logo-north: CanvasText;
-    --atlas-logo-south: Canvas;
   }
 
-  .south {
+  .circle {
+    opacity: 1;
+    mix-blend-mode: normal;
+    fill: none;
     stroke: CanvasText;
     stroke-width: 2;
   }

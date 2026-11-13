@@ -25,6 +25,7 @@ export const colorPrimitives = {
       '800': '#805B2F',
       '900': '#765329',
     },
+    venn: { blue: '#5685B5', teal: '#348F84', violet: '#8A73BB', rose: '#B17D9E' },
   },
   neutral: {
     '100': '#F0F1F1',

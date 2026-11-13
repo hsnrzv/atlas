@@ -37,17 +37,20 @@ decorative noise.
 
 ![Symbol](svg/logo/ikigai-atlas-symbol.svg)
 
-| Element      | Meaning                                                                                                     | Geometry (64 × 64 viewBox)                                                                                                       |
-| ------------ | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Route        | The whole life as one connected journey                                                                     | Closed heptagon, radius 22 around (32, 33), stroke 3.25, round joins                                                             |
-| Seven nodes  | The seven Life Dimensions, clockwise from north: Career, Finance, Health, Love, Passion, Friendship, Family | Circles r = 4.5 on the heptagon vertices                                                                                         |
-| Needle north | The person's purpose and direction (gold)                                                                   | `M32 18 38 33H26Z`                                                                                                               |
-| Needle south | Grounding (navy)                                                                                            | `M26 33H38L32 46Z`. In single-colour variants the south half is an outline (`M27 33H37L32 45Z`, stroke 2), so it stays distinct. |
+The symbol is the **cardinal Ikigai Venn** from the approved Figma V3 file
+([DD-33](DESIGN_DECISIONS.md#dd-33-logo-symbol-is-the-figma-v3-cardinal-ikigai-venn)): four equal circles at the
+cardinal points whose shared centre — ikigai — is formed by overlap only.
 
-The mark is **optically centred**. A heptagon with a vertex at the top is top-heavy around its circumcentre. Placing the
-circumcentre at `cy = 33` centres the drawn shape's bounding box (y 11 → 52.8) in the 64-unit viewBox. The concept was
-"variant B". An open-ring alternative was rejected because it read as a power icon
-([DD-06](DESIGN_DECISIONS.md#dd-06-logo-concept-heptagon-route-with-a-compass-needle)).
+| Circle | Colour token                  | Geometry (64 × 64 viewBox) |
+| ------ | ----------------------------- | -------------------------- |
+| Top    | `brand-venn-blue` `#5685B5`   | centre (32, 20.8), r 19.2  |
+| Left   | `brand-venn-teal` `#348F84`   | centre (20.8, 32), r 19.2  |
+| Right  | `brand-venn-violet` `#8A73BB` | centre (43.2, 32), r 19.2  |
+| Bottom | `brand-venn-rose` `#B17D9E`   | centre (32, 43.2), r 19.2  |
+
+The drawn bounds are 1.6 → 62.4 on both axes, so the mark is centred. On light surfaces the circles use
+`mix-blend-mode: multiply` at 72 % opacity; on dark surfaces `screen` at 82 %. Single-colour variants draw the circles
+as outlines (stroke 2, inside the r 19.2 edge) so the overlaps stay visible.
 
 **Wordmark:** "IKIGAI ATLAS" set in Inter SemiBold (600) and kept as **editable `<text>`** in every master. The text is
 26 px with `textLength="203"`, so the width stays stable even when a fallback font renders it. Never outline the text in
@@ -59,25 +62,25 @@ verify whether this is needed).
 All files are in `design/svg/logo/`. Every file except the app icon and splash is also served by the web build at
 `/brand/<file>`.
 
-| File                                         | Size      | Use                                                                                         |
-| -------------------------------------------- | --------- | ------------------------------------------------------------------------------------------- |
-| `ikigai-atlas-symbol.svg`                    | 64 × 64   | Default symbol on light surfaces                                                            |
-| `ikigai-atlas-symbol-on-dark.svg`            | 64 × 64   | Symbol on navy and dark surfaces                                                            |
-| `ikigai-atlas-symbol-monochrome.svg`         | 64 × 64   | Single colour via `currentColor`. Set the CSS `color`.                                      |
-| `ikigai-atlas-symbol-dimensions.svg`         | 64 × 64   | Nodes in the seven dimension accents. **Marketing only, ≥ 48 px**, never in product chrome. |
-| `ikigai-atlas-wordmark.svg`                  | 207 × 28  | Wordmark alone on light surfaces                                                            |
-| `ikigai-atlas-wordmark-on-dark.svg`          | 207 × 28  | Wordmark alone on dark surfaces                                                             |
-| `ikigai-atlas-lockup-horizontal.svg`         | 283 × 64  | Default lockup: headers, documents, e-mail                                                  |
-| `ikigai-atlas-lockup-horizontal-on-dark.svg` | 283 × 64  | Horizontal lockup on navy                                                                   |
-| `ikigai-atlas-lockup-stacked.svg`            | 220 × 102 | Centred compositions: splash-like layouts, about pages, social cards                        |
-| `ikigai-atlas-lockup-stacked-on-dark.svg`    | 220 × 102 | Stacked lockup on navy                                                                      |
-| `ikigai-atlas-monochrome.svg`                | 283 × 64  | Horizontal lockup in `currentColor` (embossing, single-ink print, theming)                  |
-| `ikigai-atlas-monochrome-on-light.svg`       | 283 × 64  | Monochrome lockup fixed to midnight-900 `#14243A`                                           |
-| `ikigai-atlas-monochrome-on-dark.svg`        | 283 × 64  | Monochrome lockup fixed to ivory-100 `#F5F0E6`                                              |
-| `ikigai-atlas-app-icon-master.svg`           | 1024²     | iOS, Play, PWA and social icon source: full-bleed navy, symbol only, no text                |
-| `ikigai-atlas-app-icon-foreground.svg`       | 1024²     | Android adaptive-icon foreground (transparent)                                              |
-| `ikigai-atlas-splash.svg`                    | 2732²     | Native splash source: navy with the centred symbol                                          |
-| `favicon.svg`                                | 64 × 64   | Browser favicon. Switches to on-dark colours with `prefers-color-scheme: dark`.             |
+| File                                         | Size      | Use                                                                             |
+| -------------------------------------------- | --------- | ------------------------------------------------------------------------------- |
+| `ikigai-atlas-symbol.svg`                    | 64 × 64   | Default symbol on light surfaces                                                |
+| `ikigai-atlas-symbol-on-dark.svg`            | 64 × 64   | Symbol on navy and dark surfaces                                                |
+| `ikigai-atlas-symbol-monochrome.svg`         | 64 × 64   | Single colour via `currentColor`. Set the CSS `color`.                          |
+| `ikigai-atlas-symbol-dimensions.svg`         | 64 × 64   | Fine-line outlines in the four Venn colours. **Marketing only, ≥ 48 px**.       |
+| `ikigai-atlas-wordmark.svg`                  | 207 × 28  | Wordmark alone on light surfaces                                                |
+| `ikigai-atlas-wordmark-on-dark.svg`          | 207 × 28  | Wordmark alone on dark surfaces                                                 |
+| `ikigai-atlas-lockup-horizontal.svg`         | 283 × 64  | Default lockup: headers, documents, e-mail                                      |
+| `ikigai-atlas-lockup-horizontal-on-dark.svg` | 283 × 64  | Horizontal lockup on navy                                                       |
+| `ikigai-atlas-lockup-stacked.svg`            | 220 × 102 | Centred compositions: splash-like layouts, about pages, social cards            |
+| `ikigai-atlas-lockup-stacked-on-dark.svg`    | 220 × 102 | Stacked lockup on navy                                                          |
+| `ikigai-atlas-monochrome.svg`                | 283 × 64  | Horizontal lockup in `currentColor` (embossing, single-ink print, theming)      |
+| `ikigai-atlas-monochrome-on-light.svg`       | 283 × 64  | Monochrome lockup fixed to midnight-900 `#14243A`                               |
+| `ikigai-atlas-monochrome-on-dark.svg`        | 283 × 64  | Monochrome lockup fixed to ivory-100 `#F5F0E6`                                  |
+| `ikigai-atlas-app-icon-master.svg`           | 1024²     | iOS, Play, PWA and social icon source: full-bleed navy, symbol only, no text    |
+| `ikigai-atlas-app-icon-foreground.svg`       | 1024²     | Android adaptive-icon foreground (transparent)                                  |
+| `ikigai-atlas-splash.svg`                    | 2732²     | Native splash source: navy with the centred symbol                              |
+| `favicon.svg`                                | 64 × 64   | Browser favicon. Switches to on-dark colours with `prefers-color-scheme: dark`. |
 
 In the Angular app, use the `<atlas-logo>` component rather than an `<img>` of these files
 ([COMPONENT_CATALOG](COMPONENT_CATALOG.md#atlas-logo)). It inlines the symbol, renders the wordmark as live text and
@@ -98,29 +101,27 @@ full-size lockup.
 The sizes were checked by rendering the masters with sharp/librsvg at the listed sizes and inspecting them at 1× and at
 zoom.
 
-| Asset                                     | Minimum                                      | Finding                                                                                                                                      |
-| ----------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Symbol, full colour                       | **24 px** in UI. 16 px for favicon/tab only. | At 16 px the seven nodes merge into a toothed ring, but the two-tone needle stays recognisable. 24 px reads clearly. 32 and 48 px are clean. |
-| Symbol, monochrome                        | **24 px**                                    | At 16 px the outlined south needle closes up                                                                                                 |
-| Symbol, dimension colours                 | **48 px**, marketing only                    | The pastel nodes are weak on white below 48 px                                                                                               |
-| Wordmark                                  | **14 px high** (≈ 13 px type)                | Smaller sizes lose the letter shapes                                                                                                         |
-| Horizontal lockup                         | **32 px high**. Absolute minimum 24 px.      | The wordmark is about 13 px at 32 px. At 20 px it becomes illegible.                                                                         |
-| Stacked lockup                            | **56 px high**                               | At 40 px the wordmark is about 10 px. 56 px keeps it at about 14 px.                                                                         |
-| `<atlas-logo>` (`size` input = symbol px) | 24                                           | The default is 32. The wordmark renders at 0.406 × size.                                                                                     |
+| Asset                                     | Minimum                                      | Finding                                                                                                             |
+| ----------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Symbol, full colour                       | **24 px** in UI. 16 px for favicon/tab only. | At 16 px the four circles and the light/dark centre stay recognisable. 24 px reads clearly. 32 and 48 px are clean. |
+| Symbol, monochrome                        | **24 px**                                    | At 16 px the outlined overlaps close up                                                                             |
+| Symbol, fine-line colour                  | **48 px**, marketing only                    | The thin coloured outlines are weak on white below 48 px                                                            |
+| Wordmark                                  | **14 px high** (≈ 13 px type)                | Smaller sizes lose the letter shapes                                                                                |
+| Horizontal lockup                         | **32 px high**. Absolute minimum 24 px.      | The wordmark is about 13 px at 32 px. At 20 px it becomes illegible.                                                |
+| Stacked lockup                            | **56 px high**                               | At 40 px the wordmark is about 10 px. 56 px keeps it at about 14 px.                                                |
+| `<atlas-logo>` (`size` input = symbol px) | 24                                           | The default is 32. The wordmark renders at 0.406 × size.                                                            |
 
 ## Colour usage
 
-| Element                        | On light (ivory or white) | On dark (midnight-900 or 950) | Single colour          |
-| ------------------------------ | ------------------------- | ----------------------------- | ---------------------- |
-| Route, nodes, wordmark         | midnight-900 `#14243A`    | ivory-100 `#F5F0E6`           | `currentColor`         |
-| Needle north                   | gold-600 `#B88D52`        | gold-500 `#D5AD70`            | `currentColor` (solid) |
-| Needle south                   | midnight-700 `#304A65`    | ivory-200 `#EAE2D4`           | `currentColor` outline |
-| App icon and splash background | n/a                       | midnight-900 `#14243A`        | n/a                    |
+| Element                        | On light (ivory or white)            | On dark (midnight-900 or 950)      | Single colour          |
+| ------------------------------ | ------------------------------------ | ---------------------------------- | ---------------------- |
+| Symbol circles                 | Venn colours, multiply, 72 % opacity | Venn colours, screen, 82 % opacity | `currentColor` outline |
+| Wordmark                       | midnight-900 `#14243A`               | ivory-100 `#F5F0E6`                | `currentColor`         |
+| App icon and splash background | n/a                                  | midnight-900 `#14243A`             | n/a                    |
 
 - Approved backgrounds are ivory-50, white, ivory-100, midnight-900 and midnight-950.
 - On photography or busy backgrounds, use the monochrome variant on a solid panel.
-- Gold is an accent and never the dominant colour of the mark. The full-colour mark always has exactly one gold element:
-  the north needle.
+- The Venn colours belong to the logo only. Never use them to convey meaning in the UI.
 
 ## Typography pairing
 
@@ -141,11 +142,11 @@ zoom.
 
 **Don't**
 
-- Recolour the nodes, except in `symbol-dimensions` for marketing at ≥ 48 px, or make the route gold.
-- Rotate the mark. North must point up.
-- Swap the needle colours.
-- Open the ring or remove nodes. There are always seven.
-- Add effects: shadows, gradients, glows, outlines or 3D.
+- Recolour, reorder or resize the circles.
+- Rotate the mark. Blue is always on top.
+- Add a shape in the shared centre; it is formed by overlap only.
+- Remove circles. There are always four.
+- Add effects: shadows, gradients, glows or 3D.
 - Place the full-colour mark on mid-tone or patterned backgrounds.
 - Stretch or condense the mark, or change the letter spacing beyond the master's `textLength`.
 - Write the name differently, for example "Ikigai Atlas", "IKIGAIATLAS" or "Atlas" alone as the logo. "Atlas" is

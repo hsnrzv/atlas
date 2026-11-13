@@ -19,7 +19,7 @@ not repeat them.
 | [DD-03](#dd-03-ui-vocabulary-maps-onto-the-domain-model)                 | UI vocabulary maps onto the domain model                 | Accepted         |
 | [DD-04](#dd-04-life-dimension-keys-and-canonical-order)                  | Life Dimension keys and canonical order                  | Accepted         |
 | [DD-05](#dd-05-tabler-icons-instead-of-lucide)                           | Tabler Icons instead of Lucide                           | Accepted         |
-| [DD-06](#dd-06-logo-concept-heptagon-route-with-a-compass-needle)        | Logo concept: heptagon route with a compass needle       | Accepted         |
+| [DD-06](#dd-06-logo-concept-heptagon-route-with-a-compass-needle)        | Logo concept: heptagon route with a compass needle       | Superseded       |
 | [DD-07](#dd-07-muted-text-uses-neutral-600)                              | Muted text uses neutral-600                              | Accepted         |
 | [DD-08](#dd-08-status-is-never-conveyed-by-colour-alone)                 | Status is never conveyed by colour alone                 | Accepted         |
 | [DD-09](#dd-09-dimension-accents-are-decorative-on-light-surfaces)       | Dimension accents are decorative on light surfaces       | Accepted         |
@@ -46,6 +46,7 @@ not repeat them.
 | [DD-30](#dd-30-wireframes-are-static-svg-not-pixel-specs)                | Wireframes are static SVG, not pixel specs               | Accepted         |
 | [DD-31](#dd-31-one-mock-dataset)                                         | One mock dataset                                         | Open             |
 | [DD-32](#dd-32-cdk-overlay-container-uses-the-overlay-layer)             | CDK overlay container uses the overlay layer             | Accepted         |
+| [DD-33](#dd-33-logo-symbol-is-the-figma-v3-cardinal-ikigai-venn)         | Logo symbol is the Figma V3 cardinal Ikigai Venn         | Accepted         |
 
 ---
 
@@ -182,7 +183,7 @@ not repeat them.
 - **Consequences:** §1.3 asks for legibility at 16–24 px, which is only partly met. At 16 px the nodes merge into a
   toothed ring, though the two-tone needle stays legible. 16 px is therefore limited to favicon and tab use
   ([minimum sizes](BRAND_GUIDELINES.md#minimum-sizes)).
-- **Status:** Accepted, implemented (17 masters in `design/svg/logo/`).
+- **Status:** Superseded by [DD-33](#dd-33-logo-symbol-is-the-figma-v3-cardinal-ikigai-venn).
 
 ### DD-07: Muted text uses neutral-600
 
@@ -488,3 +489,23 @@ not repeat them.
   - The `modal`, `popover`, `toast` and `tooltip` tokens apply only to layers built outside the CDK. Revisit this if
     `atlas-toast` becomes a custom overlay (step 5).
 - **Status:** Accepted, implemented.
+
+### DD-33: Logo symbol is the Figma V3 cardinal Ikigai Venn
+
+- **Context:** The approved Figma file "IKIGAI ATLAS — Complete Product Design", page "15.Export Assets" (node
+  `214:1732`), replaces the heptagon/needle mark with a "cardinal Ikigai Venn": four r48 circles centred at (80, 52),
+  (52, 80), (108, 80) and (80, 108) on a 160 grid. The shared centre is formed by overlap only. The same page uses a
+  V3 palette (`#0B1020` backgrounds) and a Manrope Bold wordmark that the repo does not have.
+- **Decision:**
+  - Adopt the symbol geometry and its four circle colours. They are tokens `color.brand.venn.{blue,teal,violet,rose}`
+    (`#5685B5`, `#348F84`, `#8A73BB`, `#B17D9E`). The masters use the 64 grid (scale 0.4: r 19.2, centres (32, 20.8),
+    (20.8, 32), (43.2, 32), (32, 43.2)), so every lockup layout is unchanged.
+  - Blend as in Figma: `multiply` at 72 % opacity on light, `screen` at 82 % on dark. Single-colour variants use
+    outlines so the overlaps stay visible; `symbol-dimensions` is the Figma colour fine-line variant.
+  - Keep the repo navy `#14243A` for the app icon and splash and keep the Inter 600 wordmark. The V3 palette and
+    Manrope are not adopted.
+  - App icon: a 640 px symbol box with a 192 px inset on 1024, as in the Figma master (160 on 256 at 4×).
+- **Consequences:** The seven Life Dimensions are no longer encoded in the mark, which departs from design-instructions
+  §1.3. The full-colour symbol stays recognisable at 16 px; the monochrome outline needs 24 px.
+- **Status:** Accepted, implemented (17 masters in `design/svg/logo/`, derived rasters re-exported, `<atlas-logo>`
+  updated).

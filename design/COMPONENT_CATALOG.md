@@ -70,9 +70,9 @@ To add an icon, see [README › Add or change an icon](README.md#add-or-change-a
 | `size`       | `number`                   | `32`           | Symbol height in px, set as `--atlas-logo-size`. The minimum is 24 in UI ([minimum sizes](BRAND_GUIDELINES.md#minimum-sizes)).               |
 | `decorative` | `boolean`                  | `false`        | `false` gives `role="img"` and `aria-label="IKIGAI ATLAS"`. `true` gives `aria-hidden`; use it when adjacent text already names the product. |
 
-- In `forced-colors` mode the logo falls back to system colours.
-- Geometry is shared with `design/svg/logo/ikigai-atlas-symbol.svg`: nodes at R = 22 around (32, 33), needle paths
-  identical.
+- In `forced-colors` mode the circles become `CanvasText` outlines.
+- Geometry is shared with `design/svg/logo/ikigai-atlas-symbol.svg`: four r 19.2 circles (Figma V3 Venn). Colours come
+  from the `--color-brand-venn-*` tokens; the blend is `multiply` (72 %) by default and `screen` (82 %) when inverse.
 - Tests are in `atlas-logo.spec.ts`.
 
 ### AtlasTheme (service)
