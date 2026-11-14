@@ -10,13 +10,26 @@
 
 Act as a senior product designer, design-systems engineer, Angular architect, and accessibility specialist.
 
+### 0.1 Figma V3 precedence (corrected 2026-11-14)
+
+The approved Figma file **`zlFVZJ57AYBHUBhoIsT030`** (IKIGAI ATLAS V3, "Quiet Tide") is the source of truth for visual styling: colour, typography, spacing, radius, icon size and stroke, component anatomy and page layouts in dark and light themes. When this document and Figma disagree on a visual value, **Figma wins** (ADR-0010). Figma is used at design time only: values are translated into the code base during development (Copilot-assisted, reviewed in a PR), and the application, build and CI never depend on Figma. Accessibility is checked on the implementation; a Figma value that fails WCAG 2.2 AA is reported as a conflict, never silently changed. This document has been corrected to match V3 where the differences were known; remaining values are in:
+
+- `docs/design/figma-handoff.md`: pages, canonical frames, node IDs, states, prototype flows and the MCP workflow.
+- `docs/design/design-tokens.md`: Figma variables mapped to `design/tokens/*.json` and CSS custom properties, contrast results and the design-time translation process.
+- `docs/design/component-mapping.md`: every `Atlas/V3/*` component mapped to an Angular component.
+- `docs/architecture/frontend.md` and `docs/implementation/roadmap.md`: architecture and delivery order.
+
+Behaviour, domain rules, accessibility requirements and the "no invented data" rules in this document and in `project-instruction.md` still apply. Figma prototype frames are static: search, filters, zoom, save and companion preferences are previews, not behaviour specifications.
+
+Sections that still describe the pre-V3 direction (warm ivory, navy, DM Serif, compass logo) are marked **Superseded by Figma V3** below.
+
 ### Required workflow
 
 1. Inspect the existing frontend repository before changing files. Identify Angular and Capacitor versions, build system, styling approach, routing, tests, and native iOS/Android structure.
 2. Create a design implementation plan before coding. List files, dependencies, risks, platform considerations, and verification steps.
 3. Do not overwrite working code or introduce a second design system without explaining why.
 4. Implement in small phases. After each phase, run formatting, lint, tests, and build checks available in the repository.
-5. Treat design tokens as the single source of truth. Do not scatter hard-coded brand colors, spacing, radii, shadows, or typography values.
+5. Treat design tokens as the single source of truth in code; their values are translated from the Figma V3 variables at design time (§0.1). Do not scatter hard-coded brand colors, spacing, radii, shadows, or typography values.
 6. Build reusable components and page templates, not eight unrelated implementations.
 7. Use semantic HTML, keyboard-accessible interactions, visible focus states, reduced-motion support, and WCAG 2.2 AA contrast targets.
 8. Use Angular-native patterns and CSS/Sass compatible with web, iOS and Android WebViews. Do not depend on hover for essential interactions.
@@ -117,7 +130,9 @@ Use route lines, waypoint dots, map-grid references, contour-like curves and con
 
 ## 1.3 Logo concept and variants
 
-Create a distinctive geometric compass/atlas symbol with seven connected waypoint nodes around a central point. The seven outer points represent the seven Life Dimensions; the center represents the person and their purpose.
+**Figma V3 (pages 01 Brand and 15 Export Assets):** the symbol is **four overlapping circles with a shared centre**, the four Ikigai circles: top `#5685B5`, left `#348F84`, right `#8A73BB`, bottom `#B17D9E`. They are distinct from the seven Life Dimensions. Variants: Theme Dark/Light × Color/Mono, horizontal lockup 232 × 48, stacked lockup 172 × 138. The wordmark "IKIGAI ATLAS" is Manrope Bold 22/30 with 1 px tracking. Proofs at 24, 32, 48 and 64 px.
+
+*Superseded by Figma V3:* the earlier concept was a geometric compass/atlas symbol with seven connected waypoint nodes around a central point.
 
 The symbol must:
 - Remain legible at 16–24 px.
@@ -135,77 +150,79 @@ Create:
 5. Monochrome light and dark variants.
 6. App icon master.
 
-Use the exact wordmark **IKIGAI ATLAS**. Use a clean geometric sans-serif. Retain editable text in the master SVG and document font dependencies; outline text only in derived exports if necessary.
+Use the exact wordmark **IKIGAI ATLAS** in Manrope Bold. Retain editable text in the master SVG and document font dependencies; outline text only in derived exports if necessary.
 
 ---
 
 # 2. Color system
 
-## 2.1 Core brand palette
+## 2.1 Core palette — "Quiet Tide" (Figma V3)
 
-The interface uses warm ivory as the working surface, deep navy for structure, and muted gold for achievement.
+The interface is **dark-first with an equal light theme**: deep indigo/navy surfaces, a calm green for actions and progress, violet for focus and the signature edge, and muted gold only for achievement. Full primitive and semantic tables, CSS names and the design-time translation process are in `docs/design/design-tokens.md`.
 
-| Token | Hex | Intended use |
+Dark primitives: space `#0B1020`, indigo `#151B35`, navy `#202A46`, panel `#273452`, border `#36435D`, muted `#8290AA`, secondary `#A8B4CC`, white `#F5F7FC`, forest `#123F3C`, jade `#205D55`, emerald `#2D7266`, teal `#4B9387`, violet-deep `#493566`, violet `#65518C`, purple `#8469B5`, accent violet `#B8A5D0`, gold `#D4B477`.
+
+Light primitives: page `#F5F7FA`, card `#FFFFFF`, raised `#EAF0F4`, green surface `#E8F1EE`, text `#1D2935`, secondary `#586578`, action `#2D6A61`, border `#DCE4E9`, gold `#A17A3F` (decorative or large text only; 3.91:1 on white).
+
+| Semantic role | Dark | Light |
 |---|---|---|
-| `brand-midnight-950` | `#101D32` | Primary navigation, dark hero surfaces |
-| `brand-midnight-900` | `#14243A` | Main brand navy |
-| `brand-midnight-800` | `#203650` | Dark elevated surfaces |
-| `brand-midnight-700` | `#304A65` | Secondary dark surfaces |
-| `brand-ivory-50` | `#FBF9F4` | App canvas |
-| `brand-ivory-100` | `#F5F0E6` | Main warm ivory |
-| `brand-ivory-200` | `#EAE2D4` | Borders and subtle surfaces |
-| `brand-gold-700` | `#A77C43` | Accessible gold emphasis |
-| `brand-gold-600` | `#B88D52` | Achievement accent |
-| `brand-gold-500` | `#D5AD70` | Decorative gold / badges on dark |
-| `brand-gold-200` | `#EBD9B9` | Gold tinted surfaces |
-| `neutral-900` | `#252B33` | Primary body text |
-| `neutral-700` | `#4D5661` | Secondary text |
-| `neutral-500` | `#747E89` | Muted metadata; verify contrast |
-| `neutral-300` | `#D4D8DC` | Borders |
-| `neutral-200` | `#E5E7E8` | Dividers |
-| `neutral-100` | `#F0F1F1` | Neutral subtle surface |
-| `white` | `#FFFFFF` | Cards and overlays |
+| Page background | `#0B1020` | `#F5F7FA` |
+| Navigation background | `#151B35` | `#FFFFFF` |
+| Card surface | `#202A46` | `#FFFFFF` |
+| Raised surface | `#273452` | `#EAF0F4` |
+| Subtle surface | `#151B35` | `#E8F1EE` |
+| Text primary | `#F5F7FC` | `#1D2935` |
+| Text secondary / muted | `#A8B4CC` | `#586578` |
+| Achievement text | `#D4B477` | `#765728` |
+| Achievement surface | `#2E2B27` | `#F4EFE5` |
+| Primary action (fill) | `#205D55` | `#2D6A61` |
+| Action hover / pressed | `#2D7266` / `#123F3C` | `#205D55` / `#123F3C` |
+| Label on action | `#F5F7FC` | `#FFFFFF` |
+| Border subtle / control / action | `#36435D` / `#8290AA` / `#4B9387` | `#DCE4E9` / `#798B88` / `#2D6A61` |
+| Focus ring (2 px, outside) | `#B8A5D0` | `#65518C` |
+| Progress fill / track | `#4B9387` / `#273452` | `#2D6A61` / `#DCE4E9` |
 
-Default usage:
-- Page canvas: `#FBF9F4`.
-- Card surface: `#FFFFFF`.
-- Sidebar/mobile navigation: `#14243A`.
-- Main text: `#252B33`.
-- Secondary text: `#4D5661`.
-- Primary action: navy with white text.
-- Borders: `#EAE2D4` or `#D4D8DC`.
-- Gold is an accent, not a default text color. Never use pale gold for small text on ivory. For small gold text on light surfaces, use `#805B2F` or `#765329`.
+**Signature edge:** a thin gradient on the **top edge only** of hero and selected surfaces (dark `#123F3C` → `#205D55` → `#353D60` → `#493566`; light `#76968D` → `#71918E` → `#858B9E` → `#9583AE`). Never a full coloured border or background.
+
+Rules:
+- Gold is for achievement only, not a default text or action colour.
+- Primary actions are green, not navy or gold.
+- No glass, blur or background imagery behind content.
+
+*Superseded by Figma V3:* the warm ivory canvas, midnight-navy structure and gold primary emphasis (`brand-midnight-*`, `brand-ivory-*`, `brand-gold-*`, `neutral-*`).
 
 ## 2.2 Life Dimension accents
 
-| Dimension | Accent | Darker text/icon | Tint background |
-|---|---:|---:|---:|
-| Career / Profession | `#759ECA` | `#426D9B` | `#EAF1F8` |
-| Finance | `#D5AD70` | `#805B2F` | `#F6EFE3` |
-| Health | `#91AD99` | `#52765B` | `#EDF3EE` |
-| Love / Partnership | `#CA8A76` | `#965B4A` | `#F8EEEA` |
-| Passion | `#A99ACB` | `#6F5C98` | `#F1EEF7` |
-| Friendship | `#78AFAE` | `#3F7776` | `#EAF3F2` |
-| Family | `#C5A66D` | `#80683E` | `#F5F0E5` |
+Each dimension has a foreground (text, icon, chart series) and a background (chip, badge, tint) per theme.
 
-Use dimension accents for icons, chart series, small labels, timeline markers and selected states. Use darker variants for text/small icons on light surfaces and tints for chips/panels. Finance and Family must remain distinguishable by icon, label and tint. Never communicate dimension identity by color alone.
+| Dimension | Dark fg / bg | Light fg / bg |
+|---|---|---|
+| Career / Profession | `#A6C3DF` / `#1B2D44` | `#426D9B` / `#EAF1F8` |
+| Finance | `#D4B477` / `#302A24` | `#805B2F` / `#F6EFE3` |
+| Health | `#9BBBA7` / `#1B302C` | `#52765B` / `#EDF3EE` |
+| Love / Partnership | `#D5A498` / `#35242E` | `#965B4A` / `#F8EEEA` |
+| Passion | `#B8A5D0` / `#2C263D` | `#6F5C98` / `#F1EEF7` |
+| Friendship | `#9AC2BC` / `#193337` | `#3F7776` / `#EAF3F2` |
+| Family | `#C6B184` / `#302C25` | `#80683E` / `#F5F0E5` |
+
+Use the foreground for icons, chart series, small labels, timeline markers and selected states, and the background for chips and panels. Finance and Family must remain distinguishable by icon, label and tint. Never communicate dimension identity by color alone.
 
 ## 2.3 Semantic status colors
 
-| Meaning | Hex | Usage |
-|---|---:|---|
-| Success / achieved | `#4F8064` | Completed state |
-| In progress | `#426D9B` | Active state |
-| Upcoming | `#9A7A43` | Upcoming deadline |
-| At risk | `#B56B45` | Needs attention |
-| Blocked | `#A65353` | Blocked dependency |
-| Neutral / not started | `#747E89` | Inactive state |
+| Meaning | Badge label | Dark fg / bg | Light fg / bg |
+|---|---|---|---|
+| Success / completed | Completed (ADR-0006; Figma badges say "Achieved", see roadmap R-11) | `#9BBBA7` / `#1B302C` | `#2D6A61` / `#E8F1EE` |
+| In progress | In progress | `#A6C3DF` / `#1B2D44` | `#426D9B` / `#EAF1F8` |
+| Upcoming | Upcoming | `#D4B477` / `#2E2B27` | `#765728` / `#F4EFE5` |
+| At risk | At risk | `#D6AE8F` / `#2E2B27` | `#8F5D36` / `#F4EFE5` |
+| Blocked | Blocked | `#DBA6A6` / `#35242E` | `#924D53` / `#F8EEEA` |
+| Neutral / not started | Not started | `#A8B4CC` / `#273452` | `#586578` / `#EAF0F4` |
 
-Pair each semantic color with text or an icon. Do not use red/green alone.
+Pair each semantic color with text and an icon. Do not use red/green alone. Availability (open/blocked by a prerequisite) is shown separately from status: "Availability is not status".
 
 ## 2.4 Dark theme
 
-Dark theme is a later enhancement. Define semantic tokens for both themes from the beginning. Use navy variations, not pure black. Do not simply invert colors; verify contrast for every semantic role.
+Dark and light are both first-class in V3; Figma presents dark first. The app follows the system preference, uses dark when no preference is known, and lets the user choose (stored as a non-sensitive preference). Use navy/indigo variations, not pure black. Every semantic role has a verified value in both themes (`design/tokens/contrast-pairs.json`).
 
 ---
 
@@ -213,30 +230,34 @@ Dark theme is a later enhancement. Define semantic tokens for both themes from t
 
 ## 3.1 Font recommendation
 
-Use **Inter** as the primary UI typeface (SIL Open Font License). Use **DM Serif Display** sparingly for editorial hero moments, major page statements and selected award titles. Never use the serif font for dense data, controls or small text.
+**Figma V3:** use **Manrope** (SIL Open Font License) for headings and the wordmark, and **Inter** (SIL Open Font License) for body, labels, controls, metrics and data. Never use the heading font for dense data, controls or small text.
 
-Bundle font files locally for reliable offline/mobile rendering. Do not depend on third-party font CDNs at runtime. If font packaging is unsuitable, fall back to system sans-serif.
+*Superseded by Figma V3:* DM Serif Display for editorial hero moments.
+
+Bundle font files locally for reliable offline/mobile rendering. Do not depend on third-party font CDNs at runtime (the CSP allows no font origins). If font packaging is unsuitable, fall back to system sans-serif.
 
 ```css
+--font-heading: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
---font-display: "DM Serif Display", Georgia, serif;
 --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 ```
 
 ## 3.2 Type scale
 
-| Token | Desktop size / line-height | Mobile size / line-height | Weight |
-|---|---|---|---|
-| Display | 48 / 56 px | 36 / 42 px | 500–600 |
-| H1 | 36 / 44 px | 30 / 38 px | 600 |
-| H2 | 28 / 36 px | 24 / 32 px | 600 |
-| H3 | 22 / 30 px | 20 / 28 px | 600 |
-| H4 | 18 / 26 px | 18 / 26 px | 600 |
-| Body large | 16 / 26 px | 16 / 24 px | 400 |
-| Body | 14 / 22 px | 14 / 22 px | 400 |
-| Label | 12 / 16 px | 12 / 16 px | 600 |
-| Caption | 11 / 16 px | 11 / 16 px | 400 |
-| Metric | 32 / 38 px | 28 / 34 px | 600 |
+| Token | Family | Desktop size / line-height | Mobile size / line-height | Weight |
+|---|---|---|---|---|
+| Display | Manrope | 48 / 56 px | 36 / 42 px | 700 |
+| H1 | Manrope | 36 / 44 px | 30 / 38 px | 700 |
+| H2 | Manrope | 28 / 36 px | 24 / 32 px | 600 |
+| H3 | Manrope | 22 / 30 px | 20 / 28 px | 600 |
+| H4 | Manrope | 18 / 26 px | 18 / 26 px | 600 |
+| Body large | Inter | 16 / 26 px | 16 / 24 px | 400 |
+| Body | Inter | 14 / 22 px | 14 / 22 px | 400 |
+| Label | Inter | 12 / 16 px | 12 / 16 px | 600 |
+| Control | Inter | 14 / 22 px | 14 / 22 px | 600 |
+| Caption | Inter | 11 / 16 px | 11 / 16 px | 400 |
+| Metric | Inter | 32 / 38 px | 28 / 34 px | 600 |
+| Wordmark | Manrope | 22 / 30 px, +1 px tracking | same | 700 |
 
 Use tabular numerals for financial values, percentages, dates and chart labels. Avoid all-caps for long labels.
 
@@ -284,11 +305,11 @@ Use 8/12/16/24/32 px as common component rhythm. Document any exceptions.
 - Hero panel: 20 px.
 - Pill: 999 px, reserved for tags, filters and compact badges.
 
-Shadows are restrained; prefer borders and surface contrast:
-- Level 0: none.
-- Level 1: `0 1px 2px rgba(16, 29, 50, 0.05)`.
-- Level 2: `0 4px 12px rgba(16, 29, 50, 0.07)`.
-- Level 3: `0 12px 32px rgba(16, 29, 50, 0.12)` for modal/popover only.
+Figma V3 is **flat**: separate surfaces with surface contrast and subtle borders, not shadows. No glass or background blur. Shadows are used only for overlays (dialog, drawer/sheet, popover, toast):
+- Level 0: none (cards, panels, navigation).
+- Levels 1–3: overlay shadows from the elevation tokens, with a dark-theme override that uses a black alpha. Values live in `design/tokens/` (see `docs/design/design-tokens.md` §5.3).
+
+Selected and hero surfaces may carry the signature edge (§2.1) on the top edge only. Card radii are confirmed per component from Figma during implementation.
 
 ## 4.4 Motion
 
@@ -305,49 +326,20 @@ Shadows are restrained; prefer borders and surface contrast:
 
 ## 5.1 Icon library
 
-Use **Lucide** through an Angular-compatible package or a small internal icon wrapper. Verify package compatibility with the installed Angular version before adding it.
+Use **Tabler Icons** (MIT, ADR-0005) through the `AtlasIcon` component and its semantic registry (`src/app/shared/icons`). Figma V3 component `Atlas/V3/Icon` (`152:2139`) contains the 36 approved glyphs.
+
+*Superseded by Figma V3:* Lucide and a 1.75 stroke.
 
 Conventions:
-- Default stroke width: 1.75–2.
-- Sizes: 16, 18, 20, 24 px.
-- 24 px for primary navigation, 20 px for buttons/list rows, 16 px for inline metadata.
+- Stroke width: **2** (Figma `icon/stroke`).
+- Sizes: 16, 20, 24 px; 24 px (`icon/size`) for primary navigation, 20 px for buttons/list rows, 16 px for inline metadata.
 - Consistent outline family; do not mix unrelated filled and outline sets.
-- Icon-only buttons require accessible names and tooltips where useful.
+- Icon-only buttons require accessible names and tooltips where useful; icons next to text are `aria-hidden`.
 - Never use emoji as UI icons.
 
-Suggested icon mapping (verify exact exports in the installed version and choose a valid Lucide equivalent if needed):
+The area, action and state glyph mapping (Figma node → registry key → Tabler icon) is in `docs/design/component-mapping.md` §2. Primary areas: My Atlas `compass`, Destinations `flag`, Waypoints `map-pin`, Steps `list-check`, Connections (network glyph, Tabler equivalent to verify), Journey Overview `route`, Milestone Awards `award`, Life Dimensions `orbit`.
 
-| Area | Suggested icon |
-|---|---|
-| My Atlas | `compass` |
-| Destinations | `flag` |
-| Waypoints | `map-pin` |
-| Steps | `list-checks` |
-| Connections | `network` |
-| Journey Overview | `route` |
-| Milestone Awards | `award` |
-| Life Dimensions | `orbit` or `circle-dot` |
-| Career | `briefcase-business` |
-| Finance | `wallet` |
-| Health | `heart-pulse` |
-| Love | `heart` |
-| Passion | `sparkles` |
-| Friendship | `users` |
-| Family | `house` |
-| Add | `plus` |
-| Edit | `pencil` |
-| Delete | `trash-2` |
-| Notes | `notebook-pen` |
-| Calendar | `calendar-days` |
-| Filter | `sliders-horizontal` |
-| Search | `search` |
-| Settings | `settings` |
-| Expand | `chevron-right` or `maximize-2` |
-| Locked | `lock` |
-| Completed | `check-circle-2` |
-| Warning | `alert-triangle` |
-
-Create a consistent seven-icon Life Dimension set. Prefer Lucide glyphs where suitable; custom SVGs are allowed if they form a more coherent family. Dimension SVGs must use a 24 × 24 viewBox, consistent stroke, `currentColor`, and no embedded color.
+Life Dimension icons come from `design/svg/dimensions`: 24 × 24 viewBox, consistent stroke, `currentColor`, no embedded color.
 
 ## 5.2 Illustration style
 
@@ -370,13 +362,15 @@ Desktop sidebar, in this order:
 7. Milestone Awards
 8. Life Dimensions
 
-Place Settings, Profile and Help at the bottom, separated from primary navigation. Brand symbol and wordmark sit at the sidebar top. Active state: narrow gold indicator plus a slightly lighter navy surface, not a bright oversized highlight.
+Place Settings, Profile and Help at the bottom, separated from primary navigation. Brand symbol and wordmark sit at the sidebar top. The sidebar uses the navigation background (dark `#151B35`, light `#FFFFFF`).
+
+Active state (Figma `Atlas/V3/Navigation/Item`, `152:2587`): the green success surface (dark `#1B302C`, light `#E8F1EE`) with primary text; dark adds a teal `#4B9387` icon accent, light has no accent (verified in Figma variables); always with `aria-current="page"`, not a bright oversized highlight. *Superseded by Figma V3:* the narrow gold indicator on a lighter navy surface.
 
 ## 6.2 Desktop
 
 - Fixed/sticky left sidebar.
-- Top bar with page title/breadcrumb, global search, quick-add, notifications and profile.
-- Main content on warm ivory canvas.
+- Top bar with page title/breadcrumb, global search, quick-add, notifications and profile. Search and quick-add are rendered only once they work (roadmap R-14); no disabled placeholders.
+- Main content on the page background token (dark `#0B1020`, light `#F5F7FA`). *Superseded by Figma V3:* warm ivory canvas.
 - Clear page header, primary content and optional secondary insight panel.
 - Keep content readable on ultrawide screens.
 
@@ -389,9 +383,9 @@ Place Settings, Profile and Help at the bottom, separated from primary navigatio
 
 ## 6.4 Mobile / Capacitor
 
-- Compact top app bar and bottom navigation.
+- Compact top app bar and bottom navigation (Figma `Atlas/V3/BottomNavigation`, `152:5351`, **80 px** high plus the bottom safe area).
 - At most five bottom-nav destinations: My Atlas, Destinations, Journey, Awards, More.
-- More exposes Waypoints, Steps, Connections and Life Dimensions.
+- More opens a sheet (Figma page 05, "More sheet") exposing Waypoints, Steps, Connections and Life Dimensions.
 - Respect iOS/Android safe areas.
 - Keep dialogs and bottom sheets clear of system navigation areas.
 - Touch targets at least 44 × 44 CSS px; prefer 48 px.
@@ -414,6 +408,8 @@ Place Settings, Profile and Help at the bottom, separated from primary navigatio
 
 All pages share the shell, typography, spacing, controls and interaction language. Include loading, empty, populated, error and disabled states where relevant.
 
+**Figma V3:** every page below has approved desktop (1440), tablet (768) and mobile (390) frames in dark and light, plus Empty, Loading, Error and page-specific states. The canonical frames, node IDs and states per page are listed in `docs/design/figma-handoff.md` §3; the page-to-component breakdown is in `docs/design/component-mapping.md` §7. Where the frames and the lists below differ, the frames win on layout and the lists below still define required behaviour.
+
 ## 7.1 My Atlas
 
 **Purpose:** Immediate, motivating overview without overwhelming detail.
@@ -429,9 +425,9 @@ Desktop composition:
 8. Quick Capture action.
 
 Visual treatment:
-- Ivory canvas.
-- Hero may use navy with subtle map-grid/route motif.
-- Dimension cards use white surfaces, small accent icons and slim progress indicators.
+- Page background token; hero on the hero surface with the signature edge (Figma: "Build the life you envision." with the Destination metric). *Superseded by Figma V3:* ivory canvas and navy map-grid hero.
+- Dimension cards use card surfaces, small accent icons and slim progress indicators.
+- With no Destinations, show the Figma Empty state (the default after onboarding).
 - Avoid a wall of KPI cards; emphasize one next milestone.
 
 Mobile:
@@ -556,7 +552,7 @@ Main layout:
 - Optional workload/resource view in secondary tab.
 
 Visualization:
-- Use a maintained open-source timeline library or focused SVG/CSS component after checking accessibility and maintenance.
+- Wrap the timeline in `AtlasJourneyTimeline` (see §9): vis-timeline per `project-instruction.md` §9, or native SVG/CSS if the P-V1 spike shows a better fit.
 - Provide zoom and horizontal pan.
 - Collapse low-priority detail at broad zoom.
 - Broad zoom: Destinations and major Waypoints only.
@@ -614,6 +610,8 @@ Optional balance view: never imply mathematical equality is the definition of a 
 
 # 8. Reusable Angular component catalogue
 
+**Figma V3:** the authoritative list is `docs/design/component-mapping.md`, which maps every `Atlas/V3/*` component and variant (page 03 Components, page 04 App Shell) to an Angular component, its inputs and its backlog item. The names below are the original intent; the mapping file's names win.
+
 Create reusable components with typed inputs/outputs, accessibility and responsive behavior:
 
 - `AppShellComponent`
@@ -648,11 +646,10 @@ Create reusable components with typed inputs/outputs, accessibility and responsi
 - `Toast/NotificationComponent`
 
 Component rules:
-- Prefer standalone Angular components if compatible with repository version/conventions.
+- Standalone Angular components (no NgModules).
 - Keep components presentational where possible; do not embed domain rules.
 - Use typed inputs and outputs.
-- Use `OnPush` or the current Angular-recommended approach.
-- Use signals where supported and appropriate.
+- Use `OnPush` and signals; forms use Angular Signal Forms (ADR-0009).
 - Avoid unnecessary state-management dependencies in the mock phase.
 - Keep global styles minimal; component styles consume tokens.
 - Add Storybook only if already present or justified by maintenance needs.
@@ -663,15 +660,17 @@ Component rules:
 
 Use the right tool for each visualization; do not force one library to solve every problem.
 
-- Charts: consider Apache ECharts after checking current Angular compatibility and bundle size.
-- Timeline: evaluate an open-source timeline library or focused SVG/CSS component. Avoid paid-only timeline features.
+**Figma V3 approach:** `project-instruction.md` §9 and ADR-0004 select Apache ECharts (+ ngx-echarts) and vis-timeline, with D3 only as a fallback. A time-boxed spike at the start of roadmap item P-V1 compares them with native SVG against the Figma `GraphNode`, `GraphConnector` and `TimelineMarker` components (fidelity, keyboard and screen-reader access, CSP, bundle size); ADR-0004 records the result (roadmap R-7, trade-off T-A). Libraries always sit behind Atlas wrappers in `shared/visualization`. The Waypoint route is an ordered list styled with CSS/SVG. Graph connectors map to `GoalLink` types by line style and legend label (`docs/design/component-mapping.md` §6).
+
+- Charts: Apache ECharts behind an Atlas wrapper when a chart is needed.
+- Timeline: vis-timeline or native SVG/CSS, decided by the spike. Avoid paid-only timeline features.
 - Calendar: use an open-source standard calendar view; avoid premium-only timeline/resource features.
-- Relationship graph: add a graph library only if interaction needs justify it. A list alternative is mandatory.
+- Relationship graph: ECharts graph or native SVG, decided by the spike. A list alternative is mandatory.
 - Cartographic ornamentation: SVG and CSS.
 
 Chart rules:
 - Dimension accent colors for series.
-- Navy/neutral axes and labels.
+- Neutral (text secondary) axes and labels.
 - Minimal gridlines; no 3D charts or decorative gauges.
 - Always label units and date ranges.
 - Use direct labels where practical.
@@ -687,7 +686,7 @@ Before adding dependencies, check license, maintenance, Angular compatibility, b
 
 ## 10.1 Token architecture
 
-JSON tokens are canonical. Generate or maintain CSS custom properties from those tokens; avoid divergent manual copies.
+JSON tokens in `design/tokens/*.json` are canonical in code, and their values are translated from the Figma V3 variables at design time and reviewed in a PR (`docs/design/design-tokens.md` §6). There is no Figma sync or drift check in the build or CI. CSS custom properties are generated with `npm run tokens:build`; never edit `*.generated.*` files or keep divergent manual copies.
 
 Required token groups:
 - Primitive palette, semantic colors, dimension accents and status colors.
@@ -697,71 +696,74 @@ Required token groups:
 
 ## 10.2 CSS foundation example
 
-Implement the complete token set, not just this abbreviated example:
+The generated files (`src/styles/tokens/*.generated.scss`) are the reference; this abbreviated example shows the V3 shape (dark default, light via `prefers-color-scheme` or the user's choice). Implement the complete token set listed in `docs/design/design-tokens.md`:
 
 ```css
-:root {
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-surface-page: #0B1020;
+  --color-surface-navigation: #151B35;
+  --color-surface-card: #202A46;
+  --color-surface-raised: #273452;
+  --color-text-primary: #F5F7FC;
+  --color-text-secondary: #A8B4CC;
+  --color-action-primary: #205D55;
+  --color-action-on-primary: #F5F7FC;
+  --color-border-subtle: #36435D;
+  --color-focus-ring: #B8A5D0;
+  --color-progress-fill: #4B9387;
+  --color-progress-track: #273452;
+  --color-dimension-career: #A6C3DF;
+  --color-dimension-career-tint: #1B2D44;
+}
+
+[data-theme="light"] {
   color-scheme: light;
 
-  --color-brand-midnight-950: #101D32;
-  --color-brand-midnight-900: #14243A;
-  --color-brand-midnight-800: #203650;
-  --color-brand-ivory-50: #FBF9F4;
-  --color-brand-ivory-100: #F5F0E6;
-  --color-brand-ivory-200: #EAE2D4;
-  --color-brand-gold-600: #B88D52;
-  --color-brand-gold-500: #D5AD70;
-
-  --color-text-primary: #252B33;
-  --color-text-secondary: #4D5661;
-  --color-text-muted: #747E89;
-  --color-surface-page: #FBF9F4;
+  --color-surface-page: #F5F7FA;
+  --color-surface-navigation: #FFFFFF;
   --color-surface-card: #FFFFFF;
-  --color-border-subtle: #EAE2D4;
+  --color-surface-raised: #EAF0F4;
+  --color-text-primary: #1D2935;
+  --color-text-secondary: #586578;
+  --color-action-primary: #2D6A61;
+  --color-action-on-primary: #FFFFFF;
+  --color-border-subtle: #DCE4E9;
+  --color-focus-ring: #65518C;
+  --color-progress-fill: #2D6A61;
+  --color-progress-track: #DCE4E9;
+  --color-dimension-career: #426D9B;
+  --color-dimension-career-tint: #EAF1F8;
+}
 
-  --color-dimension-career: #759ECA;
-  --color-dimension-finance: #D5AD70;
-  --color-dimension-health: #91AD99;
-  --color-dimension-love: #CA8A76;
-  --color-dimension-passion: #A99ACB;
-  --color-dimension-friendship: #78AFAE;
-  --color-dimension-family: #C5A66D;
-
+:root {
+  --font-heading: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-display: "DM Serif Display", Georgia, serif;
 
-  --space-1: 4px;
   --space-2: 8px;
-  --space-3: 12px;
   --space-4: 16px;
-  --space-5: 20px;
   --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
-  --space-12: 48px;
-
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
   --radius-pill: 999px;
-
-  --shadow-1: 0 1px 2px rgba(16, 29, 50, 0.05);
-  --shadow-2: 0 4px 12px rgba(16, 29, 50, 0.07);
-  --shadow-3: 0 12px 32px rgba(16, 29, 50, 0.12);
 
   --layout-sidebar-expanded: 248px;
   --layout-sidebar-collapsed: 76px;
   --layout-topbar-height: 68px;
+  --layout-bottom-nav-height: 80px;
   --layout-content-max: 1440px;
 }
 ```
+
+*Superseded by Figma V3:* the earlier example with `--color-brand-midnight-*`, `--color-brand-ivory-*`, `--color-brand-gold-*`, `--font-display: "DM Serif Display"` and navy-tinted shadows.
 
 ## 10.3 Angular integration
 
 - Use global `styles.scss` for reset/base typography, font declarations, tokens, theme setup and minimal global utilities.
 - Use component SCSS for local layout.
-- If Angular Material exists, theme through supported APIs. Prevent default purple/indigo colors from leaking into the app.
+- Angular Material is installed: theme it through supported APIs, mapping its system variables to the semantic tokens in both themes. Prevent default Material colors from leaking into the app.
 - Override Material components through supported theming APIs, not brittle deep selectors.
 - Theme buttons, form fields, dialogs, menus, tooltips, tabs and snackbars.
 - Avoid broad `::ng-deep` selectors.
@@ -814,8 +816,8 @@ Master logos remain vector SVG. Platform stores and launchers require raster/nat
 
 Create square SVG master:
 - 1024 × 1024 viewBox.
-- Opaque midnight navy `#14243A` background unless a platform asset specifically requires otherwise.
-- Central compass/waypoint mark in warm ivory and muted gold.
+- Figma V3 (page 15 Export Assets): the four-circle Ikigai symbol (§1.3) centred on an opaque background, in a dark variant (page background `#0B1020`) and a light variant (`#F5F7FA`).
+- *Superseded by Figma V3:* midnight navy `#14243A` with an ivory/gold compass mark.
 - Strong silhouette; no text.
 - Generous safe area.
 - No tiny lines, fine text or details that disappear at small sizes.
@@ -825,7 +827,7 @@ Generate derived assets:
 - Android adaptive icon foreground/background per current Android guidance.
 - Android legacy density assets if required by the generated project.
 - Google Play listing icon: 512 × 512 PNG.
-- Splash artwork with centered symbol and solid brand background.
+- Splash artwork with centered symbol and solid brand background (dark and light, per Figma page 15).
 
 Do not assume one PNG is sufficient for iOS and Android. Verify current Capacitor and native platform requirements.
 
@@ -870,12 +872,12 @@ Keep marketing assets consistent with the app. Use “See the whole. Shape what 
 
 # 14. Mock data
 
-Use one coherent mock dataset only; it demonstrates the design and is not permanent product data.
+Use one coherent mock dataset only; it demonstrates the design and is not permanent product data. It lives only in the dev-only mock adapter behind the data-access ports, never in components (`docs/architecture/frontend.md` §6). The exact values Figma shows (sample date 12 Nov 2026, Destination 20 %, "Submit application" Waypoint 40 %, Step states and the blocked checklist dependency) are listed in `docs/design/figma-handoff.md` §6. The mock reproduces the backend's progress rule only to show the designs; real progress always comes from the backend.
 
 Example Destination:
 - Title: Complete an online Master's degree in Computer Science / AI.
 - Dimension: Career.
-- Waypoints: Prepare application; receive admission; begin studies; complete foundational courses; complete electives; complete thesis if required; graduate.
+- Waypoints (Figma V3): Submit application; Receive admission decision; Start studying; Complete foundational coursework; Complete elective coursework; Graduate. Thesis/capstone is excluded until programme requirements are confirmed.
 - Steps: a few illustrative application and study actions.
 - Application target: December 2026.
 - Planned study start: Fall 2027.
@@ -891,8 +893,9 @@ Show one cross-goal Connection. Mark any financial impact as illustrative and un
 Every major component needs default, hover (where relevant), focus-visible, pressed, selected, disabled, loading, empty and error states as applicable.
 
 Patterns:
-- Primary button: navy fill, white/ivory label.
-- Secondary button: transparent/ivory surface with navy border/text.
+- Primary button: green action fill (`--color-action-primary`) with the on-action label; hover and pressed use the action hover/pressed tokens (Figma `Atlas/V3/Button`, `152:2307`). *Superseded by Figma V3:* navy fill.
+- Secondary button: transparent surface with the action border and text color.
+- Focus: 2 px focus ring outside the control (violet, §2.1) on every interactive element.
 - Tertiary action: text button.
 - Destructive action: semantic destructive color and confirmation.
 - Selected dimension: accent tint + border + icon + text.
@@ -957,6 +960,8 @@ Do not mark complete until the following are checked.
 
 Do not skip phases or proceed with unresolved design decisions.
 
+**Superseded for production work:** the phase order, gates and backlog IDs for building the app from the Figma V3 designs are in `docs/implementation/roadmap.md`. The prompts below are kept for history; where they conflict with the roadmap or with Figma V3 (palette, fonts, logo, icons), the roadmap and Figma win.
+
 ## Prompt 1 — Inspect and plan
 
 > Read this design specification completely. Inspect the frontend repository and report Angular version, build tooling, styling approach, routing, component conventions, test setup, Capacitor version and native platform structure. Create `design/DESIGN_DECISIONS.md` and a phased implementation plan. Identify incompatible/unnecessary dependencies. Do not modify application code yet. Ask for approval before proceeding.
@@ -996,7 +1001,7 @@ Do not skip phases or proceed with unresolved design decisions.
 1. **Big picture first:** users understand overall direction before task detail.
 2. **Progressive disclosure:** Destination → Waypoint → Step.
 3. **One visual language:** all modules share the same design system.
-4. **Color has meaning:** dimension accents identify life areas; semantic colors identify status; gold highlights meaningful achievements.
+4. **Color has meaning:** dimension accents identify life areas; semantic colors identify status; green marks actions and progress; gold highlights meaningful achievements only.
 5. **Motivation through clarity:** progress, meaningful rewards and next steps—not pressure, streak manipulation or noisy gamification.
 6. **Connections matter:** show cross-goal dependencies and impacts, but never present uncertain forecasts as facts.
 7. **Mobile is first-class:** do not squeeze a desktop dashboard onto a phone.

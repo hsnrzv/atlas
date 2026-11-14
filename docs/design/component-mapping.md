@@ -1,0 +1,156 @@
+# Component mapping — Figma `Atlas/V3` to Angular
+
+- Status: approved 2026-11-14 (roadmap §4). No component in this list is built yet unless marked "exists".
+- Source: Figma page 03 Components (`152:2100`) and page 04 App Shell (`214:1721`), file `zlFVZJ57AYBHUBhoIsT030`
+- Related: [figma-handoff.md](figma-handoff.md), [design-tokens.md](design-tokens.md),
+  [frontend.md](../architecture/frontend.md), [roadmap.md](../implementation/roadmap.md),
+  `design/COMPONENT_CATALOG.md` (earlier proposals; this file replaces its selector list)
+
+## 1. Rules for every component
+
+- **Native Angular.** Never paste Figma-generated React or Tailwind. Rebuild from the variant matrix, the tokens and
+  a screenshot.
+- Standalone, `ChangeDetectionStrategy.OnPush`, `input()` / `output()` / `model()`, selector prefix `atlas-`,
+  class name without a `Component` suffix (for example `AtlasStatusBadge`, file `status-badge.ts`).
+- **Presentational components take view models through inputs.** They never inject a repository, never compute
+  progress or money, and never import mock data. Pages (containers) read signal stores (see
+  [frontend.md §6](../architecture/frontend.md#6-data-access-ports-mock-and-rest-adapters)).
+- **Figma variant properties become inputs with the same values** (`intent: 'primary' | 'secondary'`,
+  `status: AtlasStatusKey`, `viewport` → CSS container queries rather than an input).
+- `Viewport=Desktop/Tablet/Mobile` variants are one component. Layout changes come from container queries on the
+  host or from breakpoints, not from three components.
+- Interaction states (`Hover`, `Focus`, `Pressed`, `Disabled`, `Busy`, `Error`) are CSS and ARIA states, not inputs.
+  The exceptions are `disabled`, `busy`, `invalid` and `selected`, which are inputs.
+- Use Material or CDK where they give behaviour and accessibility for free (overlay, dialog, focus trap, listbox,
+  tabs, snackbar). Restyle them through tokens and Material system variables. Never use `::ng-deep`.
+- Each component ships with a Vitest component test (Angular Testing Library from F2-1a, D12), a `/_design` section in every state,
+  and axe coverage through the Playwright run on `/_design`.
+
+## 2. Icons
+
+`Atlas/V3/Icon` (`152:2139`): 36 Tabler glyphs, 24 px, **stroke 2**. Rendered by the existing `<atlas-icon>`
+(**exists**, `shared/icons/atlas-icon.ts`) with the semantic registry in `atlas-icons.ts`. Change
+`ATLAS_ICON_STROKE` to `2` (ADR-0005 amendment).
+
+| Figma glyph (node)                | Registry key                                 | Today                                                      | Proposed Tabler icon                       |
+| --------------------------------- | -------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------ |
+| compass (`152:2253`)              | `my-atlas`                                   | `compass`                                                  | unchanged                                  |
+| flag (`152:2183`)                 | `destinations`                               | `flag`                                                     | unchanged                                  |
+| map-pin (`152:2186`)              | `waypoints`                                  | `map-pin`                                                  | unchanged                                  |
+| list-checks (`152:2245`)          | `steps`                                      | `list-check`                                               | unchanged                                  |
+| network (`152:2216`)              | `connections`                                | `affiliate`                                                | `sitemap` (verify shape)                   |
+| route (`152:2248`)                | `journey-overview`                           | `route`                                                    | unchanged                                  |
+| award (`152:2201`)                | `milestone-awards`                           | `award`                                                    | unchanged                                  |
+| orbit (`152:2257`)                | `life-dimensions`                            | `circle-dot`                                               | `orbit`                                    |
+| career … family (`152:2140–2166`) | dimension keys                               | briefcase, wallet, heartbeat, heart, sparkles, users, home | unchanged                                  |
+| plus, arrow-right, check, lock    | `add`, `next` (new), `check` (new), `locked` | partly present                                             | `plus`, `arrow-right`, `check`, `lock`     |
+| alert (`152:2190`)                | `alert` (new)                                | none                                                       | `alert-circle`                             |
+| loading (`152:2198`)              | `loading` (new)                              | none                                                       | `loader-2` (spin off under reduced motion) |
+| chevron / down (`152:2205/2278`)  | `expand`, `collapse` (new)                   | `chevron-right`                                            | `chevron-right`, `chevron-down`            |
+| close, back, menu, search         | `close`, `back`, `menu`, `search`            | present                                                    | verify `back` arrow vs chevron             |
+| ellipsis (`152:2225`)             | `more`                                       | `dots-vertical`                                            | `dots`                                     |
+| filter (`152:2263`)               | `filter`                                     | `adjustments-horizontal`                                   | verify against node                        |
+| calendar (`152:2211`)             | `calendar`                                   | `calendar-event`                                           | verify against node                        |
+| grid / list (`152:2269/2275`)     | `view-grid`, `view-list` (new)               | none                                                       | `layout-grid`, `list`                      |
+| settings, help, bell, user        | present                                      | present                                                    | unchanged                                  |
+
+"Verify" means: compare the Figma glyph screenshot with Tabler before the icon PR. Life Dimension glyphs stay as in
+`design/svg/dimensions`. Icons next to text are `aria-hidden`; icon-only controls get an accessible name.
+
+## 3. Shell (`core/layout`)
+
+| Figma component (node)                                           | Angular                                 | Material / CDK basis                      | Notes                                                                                                                                                                                                                       | Backlog |
+| ---------------------------------------------------------------- | --------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| —                                                                | `AtlasAppShell` `<atlas-app-shell>`     | CDK `BreakpointObserver` / `LayoutModule` | Skip link, landmarks (`nav`, `header`, `main`), route outlet, one `h1` per page from the page header.                                                                                                                       | F1-14   |
+| `Atlas/V3/Sidebar` (`152:5175`; 8 areas × Desktop/Tablet)        | `AtlasSidebar` `<atlas-sidebar>`        | none (plain `nav` + `routerLinkActive`)   | 248 px expanded at ≥ 1024, 76 px rail at 768–1023. "YOUR ATLAS" group label, footer "PRIVATE SAMPLE WORKSPACE". Logo lockup at the top.                                                                                     | F1-14   |
+| `Atlas/V3/Navigation/Item` (`152:2587`)                          | `AtlasNavItem` `<atlas-nav-item>`       | `RouterLink`, `RouterLinkActive`          | Active: `--color-nav-active` surface + text/primary; dark adds the `--color-nav-active-accent` icon, light has no accent (verified, R-13); `aria-current="page"`. Rail: icon only, `aria-label` and tooltip with the label. | F1-14   |
+| `Atlas/V3/Topbar` (`152:5220`; Desktop 68, Tablet 68, Mobile 56) | `AtlasTopbar` `<atlas-topbar>`          | `MatToolbar` not needed                   | Title, "Search your atlas", Quick add, notifications, user menu. Mobile: logo + title + menu. Search and Quick add are not rendered until they work (roadmap R-14): Quick add with F3-1, global search after trade-off T-B. | F1-14   |
+| `Atlas/V3/BottomNavigation` (`152:5351`; 390 × 80)               | `AtlasBottomNav` `<atlas-bottom-nav>`   | none                                      | Below 768 px. My Atlas, Destinations, Journey, Awards, More. Safe-area padding (`env(safe-area-inset-bottom)`).                                                                                                             | F1-14   |
+| More sheet (page 05, "More of your Atlas")                       | `AtlasMoreSheet`                        | `MatBottomSheet`                          | Waypoints, Steps, Connections, Life Dimensions, Settings. Focus trapped, Esc closes, focus returns to "More".                                                                                                               | F1-14   |
+| `Atlas/V3/Brand/Symbol`, wordmark                                | `AtlasLogo` `<atlas-logo>` (**exists**) | none                                      | Update the SVG to the four-circle Venn symbol and the Manrope wordmark (page 01). Variants `symbol` / `horizontal`; tone follows the theme.                                                                                 | T-5     |
+
+## 4. Shared UI primitives (`shared/ui`)
+
+| Figma component (node)                          | Variants in Figma                                               | Angular                                                                                 | Material / CDK basis                                     | Inputs (proposal)                                                                                             | Backlog |
+| ----------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------- |
+| `Atlas/V3/Button` (`152:2307`)                  | Intent Primary/Secondary × Default/Hover/Focus/Pressed/Disabled | Material `matButton="filled"` / `"outlined"` with Atlas overrides; no wrapper component | `MatButton`                                              | — (use `disabled`, `aria-busy`)                                                                               | F2-1    |
+| `Atlas/V3/IconButton` (`152:5980`)              | Size 44/48 × 5 states                                           | `matIconButton` + `<atlas-icon>`                                                        | `MatIconButton`                                          | `aria-label` required (lint rule or test)                                                                     | F2-1    |
+| `Atlas/V3/Field/Text` (`152:6006`)              | Default/Focus/Error/Disabled/Filled                             | `mat-form-field` (outline) + `matInput` + `[formField]`                                 | `MatFormField`, Signal Forms `FormField`                 | label, hint, error text from the form schema                                                                  | F3-1    |
+| `Atlas/V3/SearchField` (`152:6047`)             | same 5 states                                                   | `AtlasSearchField` `<atlas-search-field>`                                               | `MatFormField` + `matPrefix` icon                        | `value` (model), `label`; `role="search"` wrapper                                                             | F2-1    |
+| `Atlas/V3/Select/Dropdown` (`152:6088`)         | same 5 states                                                   | `mat-select` inside `mat-form-field`                                                    | `MatSelect`                                              | options from view model                                                                                       | F3-1    |
+| `Atlas/V3/Tabs` (`152:6093`)                    | Selected True/False                                             | `mat-tab-nav-bar` (routes) or `mat-tab-group`                                           | `MatTabsModule`                                          | —                                                                                                             | F2-5    |
+| `Atlas/V3/FilterChip` (`152:6104`)              | Selected True/False                                             | `mat-chip-listbox` / `mat-chip-option`                                                  | `MatChipsModule`                                         | `selected` (model)                                                                                            | F2-7    |
+| `Atlas/V3/Breadcrumb` (`152:6111`)              | Default                                                         | `AtlasBreadcrumbs` `<atlas-breadcrumbs>`                                                | none (`nav aria-label="Breadcrumb"`, `ol`)               | `items: { label, link }[]`; last item `aria-current="page"`                                                   | F2-1    |
+| `Atlas/V3/PageHeader` (`152:6139`)              | Desktop/Tablet/Mobile                                           | `AtlasPageHeader` `<atlas-page-header>`                                                 | none                                                     | `title`, `subtitle`; projected actions and breadcrumbs                                                        | F2-1    |
+| `Atlas/V3/Badge/Status` (`152:2374`)            | Achieved, In progress, Upcoming, Blocked, At risk, Not started  | `AtlasStatusBadge` `<atlas-status-badge>`                                               | none                                                     | `status: AtlasStatusKey`; label from ADR-0006 ("Completed", not Figma's "Achieved", R-11); always icon + text | F2-1    |
+| `Atlas/V3/Badge/Dimension` (`152:2409`)         | 7 dimensions                                                    | `AtlasDimensionBadge` `<atlas-dimension-badge>`                                         | none                                                     | `dimension: LifeDimensionKey`; glyph + label                                                                  | F2-1    |
+| `Atlas/V3/Progress/Linear` (`152:2358`)         | Value 0/20/30/40/50/60/100                                      | `AtlasProgress` `<atlas-progress>`                                                      | none (`role="progressbar"`) or `MatProgressBar` restyled | `value` (0–100, **from backend**), `label`, `valueText`                                                       | F2-1    |
+| `Atlas/V3/FeedbackState` (`152:6913`)           | Empty, Loading, Error, Success                                  | `AtlasFeedbackState` `<atlas-feedback-state>`                                           | none; `role="status"` / `role="alert"`                   | `kind`, `title`, `message`; projected action (Retry, Create)                                                  | F2-1    |
+| —                                               | Loading skeleton on page 05                                     | `AtlasSkeleton`                                                                         | none                                                     | `shape`, `lines`; reduced motion = no shimmer                                                                 | F2-1    |
+| `Atlas/V3/Dialog/Confirmation` (`152:6945`)     | Default, Busy                                                   | `AtlasConfirmDialog` opened via `MatDialog`                                             | `MatDialog`                                              | data: `title`, `message`, `confirmLabel`, `destructive`; busy disables both buttons                           | F3-1    |
+| `Atlas/V3/Drawer/Sheet` (`152:6981`)            | Default, Busy                                                   | side sheet: CDK `Overlay`; mobile: `MatBottomSheet`                                     | CDK Overlay, `MatBottomSheet`                            | used for create/edit forms on mobile and the Connections detail                                               | F3-1    |
+| `Atlas/V3/Tooltip` (`152:6984`)                 | —                                                               | `matTooltip`                                                                            | `MatTooltip`                                             | never the only source of information                                                                          | F2-1    |
+| `Atlas/V3/Popover` (`152:6988`)                 | —                                                               | `AtlasPopover` on CDK `Overlay`                                                         | CDK Overlay, `cdkTrapFocus`                              | anchored, Esc closes, focus returns                                                                           | F2-6    |
+| Toast "Saved" (page 06 example)                 | prototype example                                               | `AtlasToastService` over `MatSnackBar`                                                  | `MatSnackBar` (`politeness: 'polite'`)                   | message, optional action                                                                                      | F3-1    |
+| `DateLabel` (no Figma component; used in cards) | Exact / Approximate                                             | `AtlasDateLabel` `<atlas-date-label>`                                                   | `Intl.DateTimeFormat`                                    | `date: PlannedDate`; never more precise than given                                                            | F2-1    |
+
+## 5. Cards and summaries (`shared/ui` or feature `components/`)
+
+Cards go in `shared/ui` when two features use them, otherwise in `features/<area>/components`.
+
+| Figma component (node)                                                                             | Angular                                           | Location                           | Inputs (view model)                                                                                                                        | Backlog     |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
+| `Atlas/V3/Hero` Desktop/Tablet/Mobile (`152:2600`, `152:5352`, `152:2613`)                         | `AtlasHero` `<atlas-hero>`                        | `features/atlas/components`        | greeting, headline, destination metric (count from backend), signature edge                                                                | F2-3        |
+| `Atlas/V3/Focus/NextWaypoint` (`152:2628`, `152:5367`, `152:2647`)                                 | `AtlasNextWaypoint` `<atlas-next-waypoint>`       | `shared/ui`                        | waypoint title, parent Destination, dimension, status, due `PlannedDate`, progress, link                                                   | F2-3        |
+| `Atlas/V3/Summary/At a glance` (`152:2665`, `152:5419`, `152:2676`)                                | `AtlasGlanceSummary` `<atlas-glance-summary>`     | `features/atlas/components`        | list of `{ label, value, icon }` (values from `/dashboard`)                                                                                | F2-3        |
+| `Atlas/V3/DestinationCard` (`152:2687`, `152:5385`, `152:2721`)                                    | `AtlasDestinationCard` `<atlas-destination-card>` | `shared/ui`                        | name, dimension(s), status, progress, next Waypoint, target period, award preview; whole card is one link                                  | F2-4        |
+| `Atlas/V3/CompanionCard` Compact/Expanded (`152:2755`, `152:2772`, `152:2789`)                     | `AtlasCompanionCard` `<atlas-companion-card>`     | `features/companion/components`    | **static, curated copy only**; no AI text; hidden when companion is off (see [frontend.md §9](../architecture/frontend.md#9-companion))    | P-C1        |
+| `Atlas/V3/AchievementCard` Planned / Illustrative complete (`152:2809`–`152:2851`)                 | `AtlasAwardCard` `<atlas-award-card>`             | `shared/ui`                        | reward title, linked Waypoint/Destination, state `planned \| earned \| redeemed`; finance shown as "Illustrative · unverified", no amounts | F2-8        |
+| `Atlas/V3/DimensionCard` (`152:2454`; 7 × Desktop/Mobile)                                          | `AtlasDimensionCard` `<atlas-dimension-card>`     | `features/dimensions/components`   | dimension, label, intention text, active Destination count, link                                                                           | F2-3 / P-D1 |
+| `Atlas/V3/WaypointCard` (`152:6398`; Active/Completed/Upcoming/Blocked × 3 viewports)              | `AtlasWaypointCard` `<atlas-waypoint-card>`       | `features/destinations/components` | title, status, availability (`LOCKED` → Blocked + reason text), Steps done/total (backend), due date, link                                 | F2-5 / F2-6 |
+| `Atlas/V3/StepRow` (`152:6702`; Completed/In progress/Not started/Skipped/Cancelled × 3 viewports) | `AtlasStepRow` `<atlas-step-row>`                 | `features/steps/components`        | title, status (GoalNode status), parent Waypoint, due date; status change emits an output, page calls the store; live-region announcement  | F2-7        |
+
+## 6. Visualisation (`shared/visualization`)
+
+Figma's graph and timeline need positioned nodes, styled connectors and markers. `project-instruction.md` §9 and
+ADR-0004 select ECharts and vis-timeline; a spike at the start of P-V1 compares them with native SVG against these
+Figma components (roadmap R-7, trade-off T-A). The rows below describe the required behaviour either way; the
+"Angular" column names the Atlas wrapper or component. The Waypoint route needs no library. Every visualisation has
+an equivalent list view.
+
+| Figma component (node)                                                                              | Angular                                                                                 | Inputs / behaviour                                                                                                                                                                                         | Backlog     |
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `Atlas/V3/GraphNode` (`152:6790`; Destination / Career / Finance × Default/Selected/Blocked)        | node rendering inside `AtlasConnectionGraph` (SVG `[atlasGraphNode]` or library series) | kind (destination or dimension), label, state; focusable (`tabindex`, `role="button"`), arrow-key navigation handled by the graph                                                                          | P-V1        |
+| `Atlas/V3/GraphConnector` (`152:6811`; Association, PossibleImpact, Dependency, Positive, Negative) | `[atlasGraphConnector]`                                                                 | maps `GoalLink.type`: Positive → `SUPPORTS`, Dependency → `DEPENDS_ON`, Negative → `CONFLICTS_WITH`, PossibleImpact → `AFFECTS`, Association → `RELATED_TO`. Line style + legend label, never colour alone | P-V1        |
+| Connections graph (page 09 `230:21653`)                                                             | `AtlasConnectionGraph` `<atlas-connection-graph>`                                       | layout from the library or a pure, unit-tested function (spike decides); selection → detail panel; "List" tab is the accessible alternative                                                                | P-V1        |
+| `Atlas/V3/TimelineMarker` (`152:6868`; Completed/Active/Upcoming/Blocked × Exact/Approximate)       | `[atlasTimelineMarker]`                                                                 | `PlannedDate.precision` ≠ `DAY` → Approximate style (open marker or range)                                                                                                                                 | P-V2        |
+| Journey timeline (page 10 `230:32816`)                                                              | `AtlasJourneyTimeline` `<atlas-journey-timeline>`                                       | ranges, Today marker, legend, filter, "Not placed yet" list; horizontal scroll with keyboard; list view below `md` and as an alternative                                                                   | F2-9 → P-V2 |
+| Waypoint route (page 07 `230:18296`)                                                                | `AtlasWaypointRoute` `<atlas-waypoint-route>`                                           | ordered Waypoints with connector line and states; `ol` semantics                                                                                                                                           | F2-5        |
+
+## 7. Pages (`features/<area>/pages`)
+
+| Area (Figma page)       | Page component                                                       | Route                                                   | Uses                                                                                |
+| ----------------------- | -------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| My Atlas (05)           | `AtlasOverviewPage`                                                  | `/atlas`                                                | Hero, NextWaypoint, GlanceSummary, DestinationCard, CompanionCard, FeedbackState    |
+| Destinations (06)       | `DestinationsPage`, `DestinationDetailPage`, `DestinationFormDialog` | `/destinations`, `/destinations/:goalId`                | PageHeader, FilterChip, DestinationCard, Tabs, WaypointRoute, Field, Select, Dialog |
+| Waypoints (07)          | `WaypointsPage`, `WaypointDetailPage`                                | `/waypoints`, `/destinations/:goalId/waypoints/:nodeId` | WaypointCard, WaypointRoute, Breadcrumbs, StepRow, Popover (lock reason)            |
+| Steps (08)              | `StepsPage`, `StepDetailPage`                                        | `/steps`, `/steps/:nodeId`                              | FilterChip, StepRow, StatusBadge, Drawer/Sheet                                      |
+| Connections (09)        | `ConnectionsPage`                                                    | `/connections`                                          | ConnectionGraph, GraphNode, GraphConnector, Tabs (Graph/List)                       |
+| Journey (10)            | `JourneyPage`                                                        | `/journey`                                              | JourneyTimeline, TimelineMarker, FilterChip                                         |
+| Awards (11)             | `AwardsPage`                                                         | `/awards`                                               | AwardCard, FeedbackState                                                            |
+| Life Dimensions (12)    | `DimensionsPage`, `DimensionDetailPage`                              | `/dimensions`, `/dimensions/:key`                       | DimensionCard, DestinationCard                                                      |
+| Getting started (14)    | `WelcomePage`, `OnboardingPage`                                      | `/welcome`                                              | Button, Field, DimensionBadge                                                       |
+| Companion settings (14) | `CompanionSettingsPage`                                              | `/settings/companion`                                   | toggles (`mat-slide-toggle`), CompanionCard preview                                 |
+
+Route details are in [frontend.md §5](../architecture/frontend.md#5-routing).
+
+## 8. Existing code to keep
+
+| Exists                                     | Change needed                                                                      |
+| ------------------------------------------ | ---------------------------------------------------------------------------------- |
+| `AtlasIcon`, `ATLAS_ICONS`                 | stroke 2, registry changes in §2                                                   |
+| `AtlasLogo`                                | new four-circle symbol and Manrope wordmark                                        |
+| `LIFE_DIMENSIONS`, `lifeDimensionByApiKey` | none (colours come from tokens)                                                    |
+| `ATLAS_STATUSES`                           | labels stay as in ADR-0006 (R-11); add `skipped` and `cancelled` (D14)             |
+| `AtlasTheme`                               | system preference until the user picks, stored choice (D1, R-5); sets `data-theme` |
+| `DesignFoundation`                         | moves to `/_design` (F1-14) and grows a section per component                      |

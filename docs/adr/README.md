@@ -16,6 +16,8 @@ icons, vocabulary, tokens) and the frontend-only ones.
 | [0006](0006-ui-vocabulary-and-domain-mapping.md)  | UI vocabulary and domain mapping                                                    | Accepted | 2026-11-12 |
 | [0007](0007-design-tokens-source-of-truth.md)     | Design tokens in JSON are the single source of truth                                | Accepted | 2026-11-12 |
 | [0008](0008-frontend-test-toolchain.md)           | Frontend test toolchain — Vitest via the Angular CLI, Playwright with axe-core      | Accepted | 2026-11-12 |
+| [0009](0009-signal-forms.md)                      | Use Angular Signal Forms for all forms                                              | Accepted | 2026-11-14 |
+| [0010](0010-figma-visual-source-of-truth.md)      | Figma V3 is the visual source of truth at design time only (amends 0005, 0007)      | Accepted | 2026-11-14 |
 
 Status meanings: **Proposed** (awaiting owner review), **Accepted** (owner decision or Phase 1 baseline implemented and
 verified), **Superseded by ADR-NNNN**.

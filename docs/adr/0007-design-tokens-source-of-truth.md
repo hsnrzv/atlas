@@ -1,6 +1,7 @@
 # ADR-0007: Design tokens in JSON are the single source of truth
 
-- Status: Accepted
+- Status: Accepted; amended by [ADR-0010](0010-figma-visual-source-of-truth.md) (Figma V3 is the visual source; the
+  JSON stays the single source in code; Manrope replaces DM Serif Display)
 - Date: 2026-11-12
 - Deciders: @hsnrzv (owner)
 

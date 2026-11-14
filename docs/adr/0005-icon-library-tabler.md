@@ -1,6 +1,6 @@
 # ADR-0005: Icon library — Tabler Icons behind a semantic `<atlas-icon>` registry
 
-- Status: Accepted
+- Status: Accepted; amended by [ADR-0010](0010-figma-visual-source-of-truth.md) (stroke 2, Figma V3 glyphs)
 - Date: 2026-11-12
 - Deciders: @hsnrzv (owner)
 
