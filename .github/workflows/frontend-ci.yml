@@ -81,9 +81,12 @@ jobs:
           path: playwright-report
           retention-days: 7
 
+  # GitHub supports dependency review on private repositories only with GitHub Advanced Security, which
+  # personal accounts cannot enable. The job runs once the repository is public; Dependabot alerts cover
+  # vulnerable dependencies until then.
   dependency-review:
     name: Dependency review
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && !github.event.repository.private
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

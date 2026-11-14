@@ -6,6 +6,10 @@ updates:
       interval: weekly
       day: monday
     open-pull-requests-limit: 10
+    ignore:
+      # @angular/build pins the supported TypeScript range; TypeScript moves with Angular (ng update), not alone.
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major', 'version-update:semver-minor']
     groups:
       angular:
         patterns: ['@angular/*', '@angular-devkit/*', 'angular-eslint', 'typescript']

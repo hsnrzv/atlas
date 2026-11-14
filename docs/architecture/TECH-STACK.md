@@ -102,7 +102,7 @@ flowchart LR
 | UI components      | Angular Material + CDK, Material 3 theme mapped to Atlas design tokens                          | 22.2                 | In place                                           |
 | Icons and fonts    | Tabler Icons · Inter Variable and DM Serif Display (Fontsource, self-hosted)                    | 3.51 · 5.3           | In place                                           |
 | Design tokens      | JSON tokens → Node generator → CSS custom properties, SCSS and TS; WCAG contrast gate           | n/a                  | In place                                           |
-| Styling            | SCSS (Sass via `@angular/build`), stylelint                                                     | stylelint 17         | In place                                           |
+| Styling            | SCSS (Sass via `@angular/build`), stylelint                                                     | stylelint 18         | In place                                           |
 | Build              | Angular CLI, `@angular/build` (esbuild, Vite dev server)                                        | 22.2                 | In place                                           |
 | Unit tests         | Vitest + jsdom                                                                                  | 5 · 30               | In place                                           |
 | E2E and a11y tests | Playwright + axe-core                                                                           | 1.65 · 4.14          | In place                                           |

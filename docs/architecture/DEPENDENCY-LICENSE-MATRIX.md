@@ -43,27 +43,27 @@ Enforcement:
 
 ### 3.1 `atlas` (frontend)
 
-| Component                                                                        | Version                                  | License                          | Scope                                  |
-| -------------------------------------------------------------------------------- | ---------------------------------------- | -------------------------------- | -------------------------------------- |
-| `@angular/core`, `common`, `compiler`, `forms`, `platform-browser`, `router`     | 22.2.6                                   | MIT                              | shipped                                |
-| `@angular/material`, `@angular/cdk`                                              | 22.2.7                                   | MIT                              | shipped                                |
-| `@capacitor/core`                                                                | 8.6.0                                    | MIT                              | shipped                                |
-| `@tabler/icons-angular`, `@tabler/icons`                                         | 3.51.0                                   | MIT                              | shipped                                |
-| `rxjs`                                                                           | 7.8.2                                    | Apache-2.0                       | shipped                                |
-| `tslib`                                                                          | 2.9.1                                    | 0BSD                             | shipped                                |
-| `@fontsource-variable/inter`, `@fontsource/dm-serif-display`                     | 5.3.0                                    | OFL-1.1                          | shipped                                |
-| `parse5`, `entities`, `zod`, `@standard-schema/spec`                             | 8.1.1, 9.0.0, 4.6.6, 1.1.0               | MIT, BSD-2-Clause, MIT, MIT      | shipped (transitive)                   |
-| `nginxinc/nginx-unprivileged:1.30-alpine`                                        | 1.30                                     | BSD-2-Clause (+ Alpine packages) | runtime image                          |
-| `node:26-alpine`                                                                 | 26                                       | MIT (+ bundled)                  | build stage only                       |
-| Angular CLI/build/compiler-cli, Capacitor CLI                                    | 22.2.6, 8.6.0                            | MIT                              | dev                                    |
-| TypeScript                                                                       | 6.0.3                                    | Apache-2.0                       | dev                                    |
-| Vitest, jsdom                                                                    | 5.1.0, 30.1.3                            | MIT                              | dev                                    |
-| Playwright                                                                       | 1.65.0                                   | Apache-2.0                       | dev                                    |
-| `@axe-core/playwright`, `axe-core`                                               | 4.14.0                                   | MPL-2.0                          | dev (tests, unmodified)                |
-| ESLint, angular-eslint, typescript-eslint, stylelint, prettier                   | 10.14.0, 22.6.0, 8.71.0, 17.16.0, 3.10.1 | MIT                              | dev                                    |
-| `sharp` / `@img/sharp-libvips-*`                                                 | 0.35.5 / 1.3.4                           | Apache-2.0 / LGPL-3.0-or-later   | dev tool (asset export), never shipped |
-| Actions: `checkout`, `setup-node`, `upload-artifact`, `dependency-review-action` | v7, v7, v7, v5                           | MIT                              | CI                                     |
-| Actions: `docker/setup-buildx-action`, `docker/build-push-action`                | v4, v7                                   | Apache-2.0                       | CI                                     |
+| Component                                                                        | Version                                 | License                          | Scope                                  |
+| -------------------------------------------------------------------------------- | --------------------------------------- | -------------------------------- | -------------------------------------- |
+| `@angular/core`, `common`, `compiler`, `forms`, `platform-browser`, `router`     | 22.2.6                                  | MIT                              | shipped                                |
+| `@angular/material`, `@angular/cdk`                                              | 22.2.7                                  | MIT                              | shipped                                |
+| `@capacitor/core`                                                                | 8.6.0                                   | MIT                              | shipped                                |
+| `@tabler/icons-angular`, `@tabler/icons`                                         | 3.51.0                                  | MIT                              | shipped                                |
+| `rxjs`                                                                           | 7.8.2                                   | Apache-2.0                       | shipped                                |
+| `tslib`                                                                          | 2.9.1                                   | 0BSD                             | shipped                                |
+| `@fontsource-variable/inter`, `@fontsource/dm-serif-display`                     | 5.3.0                                   | OFL-1.1                          | shipped                                |
+| `parse5`, `entities`, `zod`, `@standard-schema/spec`                             | 8.1.1, 9.0.0, 4.6.6, 1.1.0              | MIT, BSD-2-Clause, MIT, MIT      | shipped (transitive)                   |
+| `nginxinc/nginx-unprivileged:1.30-alpine`                                        | 1.30                                    | BSD-2-Clause (+ Alpine packages) | runtime image                          |
+| `node:26-alpine`                                                                 | 26                                      | MIT (+ bundled)                  | build stage only                       |
+| Angular CLI/build/compiler-cli, Capacitor CLI                                    | 22.2.6, 8.6.0                           | MIT                              | dev                                    |
+| TypeScript                                                                       | 6.0.3                                   | Apache-2.0                       | dev                                    |
+| Vitest, jsdom                                                                    | 5.1.0, 30.1.3                           | MIT                              | dev                                    |
+| Playwright                                                                       | 1.65.0                                  | Apache-2.0                       | dev                                    |
+| `@axe-core/playwright`, `axe-core`                                               | 4.14.0                                  | MPL-2.0                          | dev (tests, unmodified)                |
+| ESLint, angular-eslint, typescript-eslint, stylelint, prettier                   | 10.14.0, 22.6.0, 8.72.2, 18.0.0, 3.10.1 | MIT                              | dev                                    |
+| `sharp` / `@img/sharp-libvips-*`                                                 | 0.35.5 / 1.3.4                          | Apache-2.0 / LGPL-3.0-or-later   | dev tool (asset export), never shipped |
+| Actions: `checkout`, `setup-node`, `upload-artifact`, `dependency-review-action` | v7, v7, v7, v5                          | MIT                              | CI                                     |
+| Actions: `docker/setup-buildx-action`, `docker/build-push-action`                | v4, v7                                  | Apache-2.0                       | CI                                     |
 
 ### 3.2 `atlas-microservices` (backend)
 
