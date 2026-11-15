@@ -5,7 +5,13 @@ import { AtlasDataError } from '../data-error';
 import { MockDashboardRepository } from './mock-dashboard.repository';
 import { MockGoalRepository } from './mock-goal.repository';
 import { MOCK_LATENCY_MS, readMockMode } from './mock-responder';
-import { SAMPLE_GOAL_ID, SAMPLE_GOAL_TITLE, SAMPLE_NODES } from './sample-plan';
+import {
+  SAMPLE_GOAL_DRAFT,
+  SAMPLE_GOAL_ID,
+  SAMPLE_GOAL_TITLE,
+  SAMPLE_NODE_IDS as N,
+  SAMPLE_NODES,
+} from './sample-plan';
 import { ATLAS_MOCK_SENTINEL } from './sentinel';
 
 function setup(search = '') {
@@ -56,7 +62,7 @@ describe('mock repositories (dev only)', () => {
 
     expect(await settle(firstValueFrom(goals.list()))).toHaveLength(1);
     const tree = await settle(firstValueFrom(goals.tree(SAMPLE_GOAL_ID)));
-    expect(tree.nodes).toBe(SAMPLE_NODES);
+    expect(tree.nodes).toEqual(SAMPLE_NODES);
   });
 
   it('never invents a day for month or year precision', () => {
@@ -90,5 +96,163 @@ describe('mock repositories (dev only)', () => {
       (error: AtlasDataError) => error.reason,
     );
     expect(await settle(result)).toBe('not-found');
+  });
+
+  async function reason(promise: Promise<unknown>): Promise<string> {
+    return settle(
+      promise.then(() => 'ok').catch((error: AtlasDataError) => error.code ?? error.reason),
+    );
+  }
+
+  it('creates, filters, sorts, updates and deletes Destinations in the session', async () => {
+    const { goals } = setup();
+    const created = await settle(
+      firstValueFrom(
+        goals.create({ ...SAMPLE_GOAL_DRAFT, title: ' Learn Japanese ', reward: 'Trip' }),
+      ),
+    );
+    expect(created).toMatchObject({
+      title: 'Learn Japanese',
+      version: 1,
+      reward: { description: 'Trip', status: 'PLANNED' },
+      progress: { percent: '0.0' },
+    });
+
+    const titles = async (query = {}) =>
+      (await settle(firstValueFrom(goals.list(query)))).map((goal) => goal.title);
+    expect(await titles({ sort: 'title' })).toEqual([SAMPLE_GOAL_TITLE, 'Learn Japanese']);
+    expect(await titles({ q: 'japan' })).toEqual(['Learn Japanese']);
+    expect(await titles({ area: 'HEALTH' })).toEqual([]);
+
+    const updated = await settle(
+      firstValueFrom(goals.update(created.id, 1, { ...SAMPLE_GOAL_DRAFT, title: 'Learn Korean' })),
+    );
+    expect(updated).toMatchObject({ title: 'Learn Korean', version: 2 });
+    expect(await reason(firstValueFrom(goals.update(created.id, 1, SAMPLE_GOAL_DRAFT)))).toBe(
+      'VERSION_CONFLICT',
+    );
+
+    await settle(firstValueFrom(goals.remove(created.id, 2)));
+    expect(await titles()).toEqual([SAMPLE_GOAL_TITLE]);
+    await settle(firstValueFrom(goals.archive(SAMPLE_GOAL_ID)));
+    expect(await titles()).toEqual([]);
+  });
+
+  it('adds, moves and deletes Waypoints and Steps', async () => {
+    const { goals } = setup();
+    const waypoint = await settle(
+      firstValueFrom(
+        goals.createNode(SAMPLE_GOAL_ID, {
+          parentId: null,
+          nodeType: 'MILESTONE',
+          title: 'Prepare finances',
+          outcome: null,
+          description: null,
+          dueDate: null,
+        }),
+      ),
+    );
+    expect(waypoint).toMatchObject({ sortOrder: 8, childCount: 0, progress: null, version: 1 });
+    const step = await settle(
+      firstValueFrom(
+        goals.createNode(SAMPLE_GOAL_ID, {
+          parentId: waypoint.id,
+          nodeType: 'TASK',
+          title: 'Open savings plan',
+          outcome: null,
+          description: null,
+          dueDate: null,
+        }),
+      ),
+    );
+    expect(step.sortOrder).toBe(1);
+
+    await settle(
+      firstValueFrom(goals.updateNode(SAMPLE_GOAL_ID, waypoint.id, 1, { sortOrder: 1 })),
+    );
+    const tree = await settle(firstValueFrom(goals.tree(SAMPLE_GOAL_ID)));
+    const top = tree.nodes
+      .filter((node) => node.parentId === null)
+      .sort((a, b) => a.sortOrder - b.sortOrder);
+    expect(top[0].id).toBe(waypoint.id);
+    expect(top.map((node) => node.sortOrder)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(tree.nodes.find((node) => node.id === waypoint.id)?.childCount).toBe(1);
+
+    expect(
+      await reason(firstValueFrom(goals.removeNode(SAMPLE_GOAL_ID, waypoint.id, 2, false))),
+    ).toBe('NODE_HAS_CHILDREN');
+    await settle(firstValueFrom(goals.removeNode(SAMPLE_GOAL_ID, waypoint.id, 2, true)));
+    const after = await settle(firstValueFrom(goals.tree(SAMPLE_GOAL_ID)));
+    expect(after.nodes.some((node) => node.id === step.id)).toBe(false);
+  });
+
+  it('swaps in the Flow D values when the draft Step is completed and back on reopen', async () => {
+    const { goals, dashboard } = setup();
+    const done = await settle(firstValueFrom(goals.completeNode(SAMPLE_GOAL_ID, N.draftStatement)));
+    expect(done.status).toBe('COMPLETED');
+    const goal = await settle(firstValueFrom(goals.get(SAMPLE_GOAL_ID)));
+    expect(goal.progress).toMatchObject({ percent: '30.0', countedWeight: '3' });
+    const tree = await settle(firstValueFrom(goals.tree(SAMPLE_GOAL_ID)));
+    expect(tree.nodes.find((node) => node.id === N.submitApplication)?.progress).toMatchObject({
+      percent: '60.0',
+      countedWeight: '3',
+    });
+    const board = await settle(firstValueFrom(dashboard.dashboard()));
+    expect(board.lifeBalance.find((area) => area.areaKey === 'CAREER')?.progress?.percent).toBe(
+      '30.0',
+    );
+    expect(board.inProgress).toEqual([]);
+    expect(board.recentAchievements[0].nodeId).toBe(N.draftStatement);
+
+    const reopened = await settle(
+      firstValueFrom(goals.reopenNode(SAMPLE_GOAL_ID, N.draftStatement)),
+    );
+    expect(reopened.status).toBe('IN_PROGRESS');
+    expect((await settle(firstValueFrom(goals.get(SAMPLE_GOAL_ID)))).progress.percent).toBe('20.0');
+  });
+
+  it('refuses to complete a blocked Step and rejects dependency loops', async () => {
+    const { goals } = setup();
+    expect(
+      await reason(firstValueFrom(goals.completeNode(SAMPLE_GOAL_ID, N.submitTheApplication))),
+    ).toBe('NODE_LOCKED');
+    const deps = await settle(firstValueFrom(goals.dependencies(SAMPLE_GOAL_ID)));
+    expect(deps).toEqual([
+      expect.objectContaining({
+        prerequisiteNodeId: N.reviewChecklist,
+        dependentNodeId: N.submitTheApplication,
+      }),
+    ]);
+    expect(
+      await reason(
+        firstValueFrom(
+          goals.addDependency(SAMPLE_GOAL_ID, N.submitTheApplication, N.reviewChecklist),
+        ),
+      ),
+    ).toBe('DEPENDENCY_CYCLE');
+  });
+
+  it('keeps goal-level and node notes apart', async () => {
+    const { goals } = setup();
+    await settle(firstValueFrom(goals.addNote(SAMPLE_GOAL_ID, null, 'Goal note')));
+    const nodeNote = await settle(
+      firstValueFrom(goals.addNote(SAMPLE_GOAL_ID, N.draftStatement, 'Draft v2')),
+    );
+    expect(
+      (await settle(firstValueFrom(goals.notes(SAMPLE_GOAL_ID, null)))).map((n) => n.body),
+    ).toEqual(['Goal note']);
+    await settle(firstValueFrom(goals.updateNote(SAMPLE_GOAL_ID, nodeNote.id, 'Draft v3')));
+    expect(
+      (await settle(firstValueFrom(goals.notes(SAMPLE_GOAL_ID, N.draftStatement)))).map(
+        (n) => n.body,
+      ),
+    ).toEqual(['Draft v3']);
+    await settle(firstValueFrom(goals.removeNote(SAMPLE_GOAL_ID, nodeNote.id)));
+    expect(await settle(firstValueFrom(goals.notes(SAMPLE_GOAL_ID, N.draftStatement)))).toEqual([]);
+  });
+
+  it('never changes the session in error mode', async () => {
+    const { goals } = setup('?mock=error');
+    expect(await reason(firstValueFrom(goals.create(SAMPLE_GOAL_DRAFT)))).toBe('network');
   });
 });

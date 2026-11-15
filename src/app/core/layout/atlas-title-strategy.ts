@@ -20,4 +20,10 @@ export class AtlasTitleStrategy extends TitleStrategy {
     this.pageTitle.set(pageTitle);
     this.title.setTitle(pageTitle ? `${pageTitle} · ${APP_NAME}` : APP_NAME);
   }
+
+  /** Names the record a detail page shows, e.g. "Graduate · Waypoint · IKIGAI ATLAS" (WCAG 2.4.2). */
+  describePage(detail: string): void {
+    const page = this.pageTitle();
+    this.title.setTitle([detail, page, APP_NAME].filter(Boolean).join(' · '));
+  }
 }

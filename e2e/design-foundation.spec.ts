@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { expectNoAxeViolations, expectNoHorizontalOverflow } from './support/a11y';
+import { pressTab } from './support/keyboard';
 
 test.describe('design foundation (/_design)', () => {
   test.beforeEach(async ({ page }) => {
@@ -26,7 +27,7 @@ test.describe('design foundation (/_design)', () => {
   });
 
   test('exposes a skip link as the first focus stop that focuses main', async ({ page }) => {
-    await page.keyboard.press('Tab');
+    await pressTab(page);
     const skipLink = page.getByRole('link', { name: 'Skip to main content' });
     await expect(skipLink).toBeFocused();
     await expect(skipLink).toBeInViewport();
@@ -37,7 +38,9 @@ test.describe('design foundation (/_design)', () => {
 
   test('opens the popover and returns focus on Escape', async ({ page }) => {
     const trigger = page.getByRole('button', { name: 'How progress works' });
-    await trigger.click();
+    // Safari does not focus buttons on mouse click, so open from the keyboard to test focus return.
+    await trigger.focus();
+    await page.keyboard.press('Enter');
     await expect(page.getByRole('dialog', { name: 'How progress works' })).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog')).toBeHidden();

@@ -1,0 +1,24 @@
+<div class="head">
+  <atlas-icon name="locked" />
+  <p class="heading" role="heading" [attr.aria-level]="headingLevel()">{{ heading() }}</p>
+</div>
+<p>
+  This {{ kind() }} becomes available when
+  {{ reasons().length === 1 ? 'this prerequisite is' : 'these prerequisites are' }} complete. Its
+  own status does not change.
+</p>
+<ul class="reasons">
+  @for (reason of reasons(); track reason.id) {
+    <li class="reason">
+      <span>
+        <span class="reason-title">{{ reason.title }}</span>
+        <span class="atlas-caption atlas-text-secondary"> · {{ reason.status }}</span>
+      </span>
+      @if (reason.link; as link) {
+        <a [routerLink]="link">
+          View prerequisite<span class="atlas-visually-hidden">: {{ reason.title }}</span>
+        </a>
+      }
+    </li>
+  }
+</ul>

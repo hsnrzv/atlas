@@ -194,6 +194,21 @@ selectors drop the `Component` suffix, and the shell lives in `src/app/core/layo
   `button[atlasPopoverTrigger]` (CDK Overlay).
 - Material styling: `.atlas-tabs`, filter chips, tooltip and menu follow the Figma V3 components.
 
+## Built in implementation roadmap phases 4 and 5
+
+**Status: Implemented** (2026-11-15), in `src/app/shared/ui` unless noted. The mapping to Figma is in
+[component-mapping.md](../docs/design/component-mapping.md) §4–§5.
+
+- Cards: `atlas-next-waypoint-card`, `atlas-destination-card`, `atlas-dimension-card`; `atlas-hero` and
+  `atlas-glance-summary` in `features/atlas/components`.
+- Plan: `atlas-waypoint-route` (Waypoints in order, `ol`), `atlas-step-row` (row actions with `[stepRowAction]`),
+  `atlas-blocked-panel`, `atlas-destination-picker`, `atlas-plan-alert` (`role="alert"` for failed writes).
+- Forms and dialogs: `atlas-confirm-dialog` (`openConfirm()`), `atlas-node-form-dialog`, `atlas-notes-panel`,
+  `atlas-planned-date-fields`; `atlas-goal-form-dialog` in `features/destinations/components`. Every `mat-form-field` sets
+  `appearance="outline"` (enforced by lint).
+- `PlanEditor` (`core/plan`) opens these dialogs for the plan pages and reports each write as a toast or a
+  `PlanAlert`.
+
 ## Planned catalogue (design step 5)
 
 **Status: Specified.** These are proposals only. Rules from design-instructions §8:

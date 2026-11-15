@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { expectNoAxeViolations, expectNoHorizontalOverflow } from './support/a11y';
+import { pressTab } from './support/keyboard';
 
 /** Gate 3: the shell at the three Figma frame widths (page 04) in both themes. */
 const LAYOUTS = [
@@ -39,7 +40,7 @@ for (const layout of LAYOUTS) {
     });
 
     test('starts keyboard navigation with the skip link', async ({ page }) => {
-      await page.keyboard.press('Tab');
+      await pressTab(page);
       const skipLink = page.getByRole('link', { name: 'Skip to main content' });
       await expect(skipLink).toBeFocused();
       await expect(skipLink).toBeInViewport();
@@ -51,7 +52,7 @@ for (const layout of LAYOUTS) {
     test('moves focus to the new page heading after navigation', async ({ page }) => {
       await primaryNav(page).getByRole('link', { name: 'Destinations' }).click();
       await expect(page).toHaveURL(/\/destinations$/);
-      const heading = page.getByRole('heading', { level: 1, name: 'Destinations' });
+      const heading = page.getByRole('heading', { level: 1, name: 'Choose what matters' });
       await expect(heading).toBeFocused();
       await expect(page).toHaveTitle('Destinations · IKIGAI ATLAS');
       await expect(primaryNav(page).locator('[aria-current="page"]')).toHaveAccessibleName(

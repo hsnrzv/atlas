@@ -1,0 +1,86 @@
+@use 'abstracts' as atlas;
+
+:host {
+  @include atlas.stack;
+}
+
+.layout {
+  @include atlas.with-aside;
+}
+
+.main {
+  @include atlas.stack;
+}
+
+.toolbar {
+  @include atlas.stack(var(--space-3));
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.filter {
+  flex: 1 1 10rem;
+  min-width: 0;
+}
+
+.views {
+  display: flex;
+  gap: var(--space-1);
+
+  [aria-pressed='true'] {
+    border-color: var(--color-border-action);
+    box-shadow: inset 0 0 0 1px var(--color-border-action);
+  }
+}
+
+.count:empty {
+  display: none;
+}
+
+.cards {
+  display: grid;
+  gap: var(--space-4);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  @include atlas.up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  &.is-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  &[aria-busy='true'] {
+    opacity: 0.6;
+  }
+}
+
+.aside {
+  @include atlas.stack;
+}
+
+.aside-title {
+  @include atlas.style(h3);
+}
+
+.panel {
+  @include atlas.card;
+  @include atlas.stack(var(--space-2));
+}
+
+.panel-title {
+  @include atlas.style(label);
+
+  color: var(--color-text-secondary);
+}
+
+.panel-link {
+  @include atlas.style(label);
+}

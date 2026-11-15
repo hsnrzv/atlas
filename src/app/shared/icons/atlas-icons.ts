@@ -2,8 +2,10 @@ import type { TablerIcon } from '@tabler/icons-angular';
 import {
   IconAdjustmentsHorizontal,
   IconAlertCircle,
+  IconArrowDown,
   IconArrowLeft,
   IconArrowRight,
+  IconArrowUp,
   IconAward,
   IconBell,
   IconBriefcase,
@@ -98,6 +100,9 @@ export const ATLAS_ICONS = {
   'sidebar-expand': IconLayoutSidebarLeftExpand,
   'view-grid': IconLayoutGrid,
   'view-list': IconList,
+  // Not in Figma V3: reorder a Waypoint or Step among its siblings (F3-2).
+  'move-up': IconArrowUp,
+  'move-down': IconArrowDown,
 
   // Status (always paired with a text label; colour is never the only signal).
   // Glyphs follow the Figma V3 status chips (Foundations 214:1794).

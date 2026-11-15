@@ -17,6 +17,8 @@ const BY_KEY = new Map(ATLAS_STATUSES.map((status) => [status.key, status]));
 })
 export class AtlasStatusBadge {
   readonly status = input.required<AtlasStatusKey>();
+  /** Overrides the vocabulary label, e.g. "Draft" or "Paused" for a Destination. */
+  readonly label = input<string>();
 
   protected readonly meta = computed(() => BY_KEY.get(this.status()) ?? BY_KEY.get('not-started')!);
 }

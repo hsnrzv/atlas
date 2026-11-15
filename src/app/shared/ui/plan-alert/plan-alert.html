@@ -1,0 +1,11 @@
+<div class="alert" role="alert">
+  <atlas-icon name="alert" />
+  <p class="message">{{ message() }}</p>
+</div>
+<button
+  atlas-icon-button
+  type="button"
+  icon="close"
+  aria-label="Dismiss message"
+  (click)="dismissed.emit()"
+></button>

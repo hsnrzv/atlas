@@ -4,7 +4,9 @@ import { MockDashboardRepository } from './mock/mock-dashboard.repository';
 import { MockGoalRepository } from './mock/mock-goal.repository';
 import { DashboardRepository } from './ports/dashboard.repository';
 import { GoalRepository } from './ports/goal.repository';
+import { SAMPLE_GOAL_DRAFT } from './mock/sample-plan';
 import { ATLAS_SAMPLE_DATA } from './sample-data';
+import { ATLAS_SAMPLE_GOAL_DRAFT } from './sample-goal-draft';
 import {
   UnavailableDashboardRepository,
   UnavailableGoalRepository,
@@ -19,6 +21,7 @@ const useMock = () => inject(ATLAS_ENVIRONMENT).dataSource === 'mock';
 export function dataSourceProviders(): Provider[] {
   return [
     { provide: ATLAS_SAMPLE_DATA, useFactory: useMock },
+    { provide: ATLAS_SAMPLE_GOAL_DRAFT, useFactory: () => (useMock() ? SAMPLE_GOAL_DRAFT : null) },
     UnavailableDashboardRepository,
     UnavailableGoalRepository,
     {

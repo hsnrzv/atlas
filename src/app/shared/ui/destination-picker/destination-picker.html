@@ -1,0 +1,10 @@
+@if (options().length > 1) {
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Destination</mat-label>
+    <mat-select [value]="value()" (valueChange)="valueChange.emit($event)">
+      @for (option of options(); track option.id) {
+        <mat-option [value]="option.id">{{ option.title }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+}

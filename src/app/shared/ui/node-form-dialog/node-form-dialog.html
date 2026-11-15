@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>{{ heading() }}</h2>
+<form class="form" novalidate (submit)="save($event)">
+  <mat-dialog-content class="content">
+    <p class="context atlas-text-secondary">{{ data.context }}</p>
+    @if (data.mode === 'create') {
+      <mat-form-field appearance="outline">
+        <mat-label>Type</mat-label>
+        <mat-select [formField]="node.nodeType">
+          <mat-option value="MILESTONE">Waypoint</mat-option>
+          <mat-option value="TASK">Step</mat-option>
+        </mat-select>
+        <mat-hint>A Waypoint can hold Steps and smaller Waypoints. A Step is one action.</mat-hint>
+      </mat-form-field>
+    }
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput [formField]="node.title" />
+      @if (error(node.title); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label
+        >{{ model().nodeType === 'TASK' ? 'Ready when' : 'Target outcome' }} · optional</mat-label
+      >
+      <textarea matInput rows="2" [formField]="node.outcome"></textarea>
+      <mat-hint>Your own acceptance criteria.</mat-hint>
+      @if (error(node.outcome); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Description · optional</mat-label>
+      <textarea matInput rows="3" [formField]="node.description"></textarea>
+      @if (error(node.description); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+    <atlas-planned-date-fields [label]="'Due · optional'" [field]="node.due" />
+    @if (data.prerequisiteOptions.length) {
+      <mat-form-field appearance="outline">
+        <mat-label>Waits for · optional</mat-label>
+        <mat-select multiple [formField]="node.prerequisites">
+          @for (option of data.prerequisiteOptions; track option.id) {
+            <mat-option [value]="option.id">{{ option.title }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint>This {{ kind() }} is Blocked until these are completed.</mat-hint>
+      </mat-form-field>
+    }
+    <p class="form-error" role="alert">{{ formError() }}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancel</button>
+    <button mat-flat-button type="submit" [disabled]="saving()">Save</button>
+  </mat-dialog-actions>
+</form>

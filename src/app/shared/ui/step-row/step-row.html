@@ -1,0 +1,15 @@
+<div class="main">
+  <h3 class="title">
+    <a class="link" [routerLink]="step().link">{{ step().title }}</a>
+  </h3>
+  <p class="meta">{{ step().meta }}</p>
+</div>
+<div class="badges">
+  <atlas-status-badge [status]="step().status" />
+  @if (step().blocked) {
+    <atlas-status-badge status="blocked" />
+  }
+</div>
+<div class="actions">
+  <ng-content select="[stepRowAction]" />
+</div>

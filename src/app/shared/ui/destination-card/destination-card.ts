@@ -13,6 +13,8 @@ export interface DestinationCardVm {
   readonly title: string;
   readonly dimension: LifeDimensionKey;
   readonly status: AtlasStatusKey;
+  /** Overrides the status label, e.g. "Active" or "Paused" for a Destination. */
+  readonly statusLabel?: string;
   /** Backend percentage and its "2 of 10" detail. */
   readonly progress: { readonly value: number; readonly detail?: string };
   readonly nextWaypoint: string | null;

@@ -1,0 +1,176 @@
+<atlas-page-header
+  title="Take the next step"
+  description="Steps are the small actions that move a Waypoint forward."
+>
+  @if (vm(); as vm) {
+    <button
+      mat-flat-button
+      pageHeaderAction
+      type="button"
+      (click)="editor.add(vm.parent.id, 'TASK')"
+    >
+      <atlas-icon name="add" />
+      Add Step
+    </button>
+  }
+</atlas-page-header>
+
+@switch (state()) {
+  @case ('empty') {
+    <atlas-feedback-state
+      iconName="steps"
+      title="No Destinations yet"
+      description="Steps belong to a Waypoint of a Destination. Add a Destination first."
+    >
+      <a mat-flat-button [routerLink]="destinations.path">Go to Destinations</a>
+    </atlas-feedback-state>
+  }
+  @case ('no-waypoints') {
+    <atlas-feedback-state
+      iconName="waypoints"
+      title="No Waypoints yet"
+      description="Steps belong to a Waypoint. Plan the first Waypoint of this Destination."
+    >
+      <a
+        mat-flat-button
+        [routerLink]="waypoints.path"
+        [queryParams]="{ destination: store.goalId() }"
+      >
+        Go to Waypoints
+      </a>
+    </atlas-feedback-state>
+  }
+  @case ('not-found') {
+    <atlas-feedback-state
+      iconName="steps"
+      title="This Waypoint is not in this Destination"
+      description="It may have been deleted or moved."
+    >
+      <a mat-flat-button [routerLink]="destinations.path">Go to Destinations</a>
+    </atlas-feedback-state>
+  }
+  @case ('error') {
+    <atlas-feedback-state
+      kind="error"
+      title="Steps could not load"
+      description="A connection issue does not change your saved plan. Try again."
+    >
+      <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
+    </atlas-feedback-state>
+  }
+  @case ('ready') {
+    @if (vm(); as vm) {
+      <div class="pickers">
+        <atlas-destination-picker
+          [options]="options()"
+          [value]="vm.goal.id"
+          (valueChange)="chooseDestination($event)"
+        />
+        <mat-form-field appearance="outline" class="picker" subscriptSizing="dynamic">
+          <mat-label>Waypoint</mat-label>
+          <mat-select [value]="vm.parent.id" (valueChange)="chooseWaypoint($event)">
+            @for (option of waypointChoices(); track option.id) {
+              <mat-option [value]="option.id">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (editor.error(); as error) {
+        <atlas-plan-alert [message]="error" (dismissed)="editor.dismiss()" />
+      }
+
+      <div class="layout">
+        <div class="main">
+          <section class="summary" aria-labelledby="atlas-steps-waypoint">
+            <p class="atlas-caption atlas-text-secondary">{{ vm.goal.title }}</p>
+            <h2 class="summary-title" id="atlas-steps-waypoint">{{ vm.parent.title }}</h2>
+            <atlas-progress label="Waypoint progress" [value]="vm.percent" [detail]="vm.summary" />
+          </section>
+
+          <div class="filters" role="group" aria-label="Filter Steps">
+            <mat-form-field appearance="outline" class="filter" subscriptSizing="dynamic">
+              <mat-label>Status</mat-label>
+              <mat-select [value]="filters().status" (valueChange)="setFilter('status', $event)">
+                @for (option of statusOptions; track option.value) {
+                  <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="filter" subscriptSizing="dynamic">
+              <mat-label>Due</mat-label>
+              <mat-select [value]="filters().due" (valueChange)="setFilter('due', $event)">
+                @for (option of dueOptions; track option.value) {
+                  <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <p class="count atlas-caption atlas-text-secondary" role="status">{{ vm.countText }}</p>
+
+          @if (vm.rows.length) {
+            <ul class="rows" aria-label="Steps">
+              @for (row of vm.rows; track row.id) {
+                <li><atlas-step-row [step]="row" /></li>
+              }
+            </ul>
+          } @else if (vm.total) {
+            <atlas-feedback-state
+              iconName="search"
+              title="No Steps match these filters"
+              description="Change or clear the filters to see every Step of this Waypoint."
+            >
+              <button mat-stroked-button type="button" (click)="clearFilters()">
+                Clear filters
+              </button>
+            </atlas-feedback-state>
+          } @else {
+            <atlas-feedback-state
+              iconName="steps"
+              title="No Steps yet"
+              description="Add the first small action for this Waypoint."
+            >
+              <button mat-flat-button type="button" (click)="editor.add(vm.parent.id, 'TASK')">
+                Add Step
+              </button>
+            </atlas-feedback-state>
+          }
+        </div>
+
+        <aside class="aside" aria-label="Waypoint context">
+          <section class="panel" aria-labelledby="atlas-steps-parent">
+            <h2 class="panel-title" id="atlas-steps-parent">Parent waypoint and destination</h2>
+            <dl class="facts">
+              <div>
+                <dt>Waypoint</dt>
+                <dd>
+                  <a [routerLink]="vm.parentLink">{{ vm.parent.title }}</a> · {{ vm.due }}
+                </dd>
+              </div>
+              <div>
+                <dt>Destination</dt>
+                <dd>
+                  <a [routerLink]="vm.goalLink">{{ vm.goal.title }}</a> · {{ vm.goalTarget }}
+                </dd>
+              </div>
+            </dl>
+          </section>
+          @for (item of vm.blocked; track item.step.id) {
+            <atlas-blocked-panel
+              kind="Step"
+              [heading]="item.step.title + ' is blocked'"
+              [reasons]="item.reasons"
+            />
+          }
+        </aside>
+      </div>
+    }
+  }
+  @default {
+    <atlas-feedback-state
+      kind="loading"
+      title="Loading Steps"
+      description="Gathering the Steps of this Waypoint."
+    />
+  }
+}

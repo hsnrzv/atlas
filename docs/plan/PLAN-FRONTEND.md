@@ -113,7 +113,7 @@ Fontsource Inter/Manrope, rxjs, tslib. Planned: the Phase 5 visualization packag
 | Static                | ESLint (angular-eslint, typescript-eslint), Stylelint, Prettier, `tsc` strict + `strictTemplates` | code and style rules; no raw colours in `src/app`                                                                                        | CI `verify`  |
 | Design system         | `design:check`                                                                                    | tokens in sync, 85 WCAG contrast pairs, dimension icons and brand assets                                                                 | CI `verify`  |
 | Unit/component        | Vitest via `ng test` (jsdom)                                                                      | registries, view-model mappers, date-precision and currency formatting, components' inputs/outputs and accessible names, mock-data guard | CI `verify`  |
-| E2E                   | Playwright (desktop + Pixel 7 Chromium now; Firefox and WebKit from F2-10)                        | §17.1 flows as they arrive: navigation overview → Destination → Waypoint → nested and back; CRUD; unlock; onboarding; responsive layout  | CI `e2e`     |
+| E2E                   | Playwright (desktop + Pixel 7 Chromium, desktop Firefox and WebKit)                               | §17.1 flows as they arrive: navigation overview → Destination → Waypoint → nested and back; CRUD; unlock; onboarding; responsive layout  | CI `e2e`     |
 | Accessibility         | `@axe-core/playwright` (WCAG 2.0–2.2 A/AA), light and dark                                        | zero violations on every routed page; plus manual keyboard and screen-reader checks in the PR checklist                                  | CI `e2e`     |
 | Container             | `frontend-container.yml`                                                                          | build, `/healthz`, deep link, CSP header, `/api` 404, non-root                                                                           | CI           |
 | Integration (Phase 4) | Playwright against `atlas-infra/local` compose                                                    | real backend and database flows                                                                                                          | CI (Phase 4) |
@@ -258,18 +258,23 @@ content are built against Figma V3.
       Milestone Award preview; responsive grid. Done 2026-11-15 as roadmap F2-3a (hero, `NextWaypointCard`,
       `GlanceSummary`, `DimensionCard`, `DestinationCard`) and F2-3b (Overview, Empty, Loading and Error states of
       Figma page 05). The award preview and the companion card follow with their features (F2-8, P-C1).
-- [ ] **F2-4** Destinations list and `DestinationCard` (progress, next Waypoint, dimension, target period, award
-      preview).
-- [ ] **F2-5** Destination detail: Waypoint path (native SVG/CSS), progress breakdown (backend-provided values), notes
-      preview.
-- [ ] **F2-6** Waypoint focus and drill-down to any depth, breadcrumbs, lock/unlock visual state with explanation
-      text, deep links (`/destinations/:id/waypoints/:nodeId`).
-- [ ] **F2-7** Steps list/rows with status change through the repository port (mock), live-region announcement.
+- [x] **F2-4** Destinations list and `DestinationCard` (progress, next Waypoint, dimension, target period, award
+      preview). Done 2026-11-15 (roadmap phase 5): search, filters and sort in the URL, grid/list view, empty and
+      no-match states; the award preview follows with F2-8.
+- [x] **F2-5** Destination detail: Waypoint path (native SVG/CSS), progress breakdown (backend-provided values), notes
+      preview. Done 2026-11-15 (roadmap phase 5): `WaypointRoute`, backend progress, notes panel, one page without
+      tabs.
+- [x] **F2-6** Waypoint focus and drill-down to any depth, breadcrumbs, lock/unlock visual state with explanation
+      text, deep links (`/destinations/:id/waypoints/:nodeId`). Done 2026-11-15 (roadmap phase 5), plus the
+      `/waypoints` overview.
+- [x] **F2-7** Steps list/rows with status change through the repository port (mock), live-region announcement.
+      Done 2026-11-15 (roadmap phase 5): `/steps` with filters, Step detail page, blocked panel.
 - [ ] **F2-8** Milestone Award card states (planned/earned/redeemed), before and after achievement.
 - [ ] **F2-9** Journey Overview v0: accessible chronological list grouped by period (the interactive timeline comes in
       Phase 5).
 - [ ] **F2-10** E2E: overview → Destination → Waypoint → nested → back; responsive smoke at 390/768/1280; add
-      Firefox and WebKit projects; axe on every route.
+      Firefox and WebKit projects; axe on every route. Partly done 2026-11-15 (roadmap phase 5): the plan flows,
+      axe on the plan pages in both themes and the Firefox and WebKit projects (`e2e/plan.spec.ts`).
 - [ ] **F2-11** Supply-chain gates in `frontend-ci`: a production-tree license allow-list check (DEPENDENCY-LICENSE-MATRIX
       §1; tool and license to verify), a CycloneDX SBOM, and an image scan with the scanner chosen together with
       `atlas-infra` and the backend (BE-1.13).
@@ -278,10 +283,14 @@ content are built against Figma V3.
 
 ### Phase 3 — editing and onboarding (frontend, parallel to backend Phase 3)
 
-- [ ] **F3-1** Destination create/edit/archive/delete (Material forms, validation messages, confirm dialog).
-- [ ] **F3-2** Nested Waypoint/Step create/edit/reorder/delete; dependency picker (Connections within a Destination).
-- [ ] **F3-3** Notes panel for Destinations and Waypoints (backend stores Markdown text, BE-3.60; rendering per D13);
-      due dates with precision.
+- [x] **F3-0** Spike: Signal Forms with Material form fields (ADR-0009). Done 2026-11-15, no bridge needed.
+- [x] **F3-1** Destination create/edit/archive/delete (Material forms, validation messages, confirm dialog). Done
+      2026-11-15 (roadmap phase 5): `GoalFormDialog`, `ConfirmDialog`.
+- [x] **F3-2** Nested Waypoint/Step create/edit/reorder/delete; dependency picker (Connections within a Destination).
+      Done 2026-11-15 (roadmap phase 5): `NodeFormDialog`, `PlanEditor`, move up/down on Waypoint detail.
+- [x] **F3-3** Notes panel for Destinations and Waypoints (backend stores Markdown text, BE-3.60; rendering per D13);
+      due dates with precision. Done 2026-11-15 (roadmap phase 5): `NotesPanel` (plain text until D13),
+      `PlannedDateFields`.
 - [ ] **F3-4** Onboarding wizard (editable, skippable): profile basics, Life Dimension selection and labels, first
       Destination.
 - [ ] **F3-5** OpenAPI client spike against the backend's committed snapshot (`atlas-microservices/docs/api/openapi.json`,

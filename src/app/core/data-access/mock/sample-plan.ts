@@ -1,4 +1,5 @@
 import type { Goal } from '../../models/goal';
+import type { GoalDraft } from '../../models/goal-commands';
 import type { GoalNode, NodeAvailability } from '../../models/goal-node';
 import type { IsoDate } from '../../models/planned-date';
 import { SAMPLE_PROGRESS } from './sample-fixtures';
@@ -35,13 +36,24 @@ const AVAILABLE: NodeAvailability = { state: 'AVAILABLE', reasons: [], override:
 
 type NodeSeed = Pick<GoalNode, 'id' | 'nodeType' | 'title' | 'status'> &
   Partial<
-    Pick<GoalNode, 'parentId' | 'dueDate' | 'availability' | 'childCount' | 'progressWeight'>
+    Pick<
+      GoalNode,
+      | 'parentId'
+      | 'dueDate'
+      | 'availability'
+      | 'childCount'
+      | 'progressWeight'
+      | 'outcome'
+      | 'description'
+    >
   >;
 
 function node(seed: NodeSeed, sortOrder: number): GoalNode {
   return {
     goalId: SAMPLE_GOAL_ID,
     parentId: null,
+    outcome: null,
+    description: null,
     startDate: null,
     dueDate: null,
     progressWeight: '1',
@@ -73,12 +85,24 @@ export const SAMPLE_NODES: readonly GoalNode[] = [
       status: 'IN_PROGRESS',
       dueDate: { date: '2026-12-01', precision: 'MONTH' },
       childCount: 5,
+      // Figma page 07 Waypoint detail (230:19060).
+      outcome:
+        'Application submitted and confirmation saved. Refine this outcome for your own programme and application.',
     },
     1,
   ),
   step(N.confirmRequirements, 'Confirm programme requirements', 'COMPLETED', 1),
   step(N.gatherRecords, 'Gather academic records', 'COMPLETED', 2),
-  step(N.draftStatement, 'Draft personal statement', 'IN_PROGRESS', 3),
+  // Copy from Figma page 08 Step detail (230:15878): the user's own acceptance criteria, not university rules.
+  step(N.draftStatement, 'Draft personal statement', 'IN_PROGRESS', 3, {
+    description:
+      'Prepare a first draft that explains your interests in Computer Science / AI and why this destination matters to you.',
+    outcome: [
+      '1. I have explained my motivation for studying Computer Science / AI.',
+      '2. I have connected relevant experience to my learning goals.',
+      '3. I have reviewed the draft for clarity and saved a version to revisit.',
+    ].join('\n'),
+  }),
   step(N.reviewChecklist, 'Review application checklist', 'NOT_STARTED', 4),
   step(N.submitTheApplication, 'Submit the application', 'NOT_STARTED', 5, {
     availability: {
@@ -172,4 +196,15 @@ export const SAMPLE_GOAL: Goal = {
   createdAt: '2026-11-01T09:00:00Z',
   updatedAt: '2026-11-10T18:00:00Z',
   version: 1,
+};
+
+/** Values for the dev-only "Use sample details" button of the Destination form (Figma page 06, filled form). */
+export const SAMPLE_GOAL_DRAFT: GoalDraft = {
+  title: SAMPLE_GOAL.title,
+  outcome: SAMPLE_GOAL.outcome,
+  description: SAMPLE_GOAL.description,
+  primaryAreaKey: SAMPLE_GOAL.primaryAreaKey,
+  status: SAMPLE_GOAL.status,
+  targetDate: SAMPLE_GOAL.targetDate,
+  reward: SAMPLE_GOAL.reward?.description ?? null,
 };

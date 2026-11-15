@@ -6,6 +6,7 @@ import { lifeDimensionByApiKey } from '../../../shared/design-system/life-dimens
 import type { LifeDimensionKey } from '../../../shared/design-system/tokens.generated';
 import type { NextWaypointVm } from '../../../shared/ui/next-waypoint-card/next-waypoint-card';
 import { formatPlannedDate, precisionLabel } from '../../../shared/utils/planned-date-format';
+import { percentValue, progressDetail } from '../../../shared/utils/progress-format';
 
 /**
  * Display model for My Atlas (Figma page 05). Built from the dashboard response by formatting only: every number is
@@ -63,16 +64,6 @@ const NODE_TYPE_LABEL: Record<NodeType, string> = {
 };
 
 const plural = (count: number, one: string, many: string) => (count === 1 ? one : many);
-
-/** Backend percent string ("20.0") as a number for the progress bar; never recalculated. */
-export const percentValue = (progress: Progress | null | undefined): number =>
-  progress ? Number(progress.percent) || 0 : 0;
-
-/** "2 of 10", from the backend's counted and total weight. */
-export const progressDetail = (progress: Progress | null | undefined): string | undefined =>
-  progress?.countedWeight !== undefined && progress.totalWeight !== undefined
-    ? `${progress.countedWeight} of ${progress.totalWeight}`
-    : undefined;
 
 function keyDateText(keyDate: KeyDate, locale: string): string {
   if (!keyDate.date) {

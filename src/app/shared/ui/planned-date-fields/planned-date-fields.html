@@ -1,0 +1,23 @@
+<fieldset class="group">
+  <legend class="legend">{{ label() }}</legend>
+  <div class="row">
+    <mat-form-field appearance="outline" class="precision">
+      <mat-label>Precision</mat-label>
+      <mat-select [formField]="field().precision">
+        @for (option of options; track option.value) {
+          <mat-option [value]="option.value">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+      <mat-hint>{{ hint() }}</mat-hint>
+    </mat-form-field>
+    @if (hasPrecision()) {
+      <mat-form-field appearance="outline" class="date">
+        <mat-label>Date</mat-label>
+        <input matInput type="date" [formField]="field().date" />
+        @if (dateError(); as error) {
+          <mat-error>{{ error }}</mat-error>
+        }
+      </mat-form-field>
+    }
+  </div>
+</fieldset>

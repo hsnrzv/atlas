@@ -1,0 +1,54 @@
+<h2 class="heading" [id]="headingId">{{ heading() }}</h2>
+@if (loading()) {
+  <p class="atlas-text-secondary" role="status">Loading notes…</p>
+} @else if (notes().length) {
+  <ul class="notes" role="list" [attr.aria-labelledby]="headingId">
+    @for (note of notes(); track note.id) {
+      <li class="note">
+        @if (editingId() === note.id) {
+          <form class="edit" (submit)="saveEdit($event, note)">
+            <mat-form-field appearance="outline" class="field">
+              <mat-label>Edit note</mat-label>
+              <textarea matInput rows="3" [formField]="edit.body"></textarea>
+              @if (edit.body().touched() && edit.body().invalid()) {
+                <mat-error>{{ edit.body().errors()[0]?.message }}</mat-error>
+              }
+            </mat-form-field>
+            <div class="actions">
+              <button mat-flat-button type="submit" [disabled]="busy()">Save note</button>
+              <button mat-button type="button" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </form>
+        } @else {
+          <p class="body">{{ note.body }}</p>
+          <p class="meta">
+            Updated <time [attr.datetime]="note.updated.datetime">{{ note.updated.text }}</time>
+          </p>
+          <div class="actions">
+            <button mat-button type="button" [disabled]="busy()" (click)="startEdit(note)">
+              Edit<span class="atlas-visually-hidden"> note</span>
+            </button>
+            <button mat-button type="button" [disabled]="busy()" (click)="removeNote(note)">
+              Delete<span class="atlas-visually-hidden"> note</span>
+            </button>
+          </div>
+        }
+      </li>
+    }
+  </ul>
+} @else {
+  <p class="atlas-text-secondary">{{ emptyText() }}</p>
+}
+<form class="add" (submit)="addNote($event)">
+  <mat-form-field appearance="outline" class="field">
+    <mat-label>Add a note</mat-label>
+    <textarea matInput rows="3" [formField]="draft.body"></textarea>
+    @if (draft.body().touched() && draft.body().invalid()) {
+      <mat-error>{{ draft.body().errors()[0]?.message }}</mat-error>
+    }
+  </mat-form-field>
+  <div class="actions">
+    <button mat-stroked-button type="submit" [disabled]="busy()">Add note</button>
+  </div>
+</form>
+<p class="message" role="alert">{{ message() }}</p>

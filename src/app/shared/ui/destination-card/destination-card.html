@@ -1,6 +1,6 @@
 <div class="badges">
   <atlas-dimension-badge [dimension]="destination().dimension" />
-  <atlas-status-badge [status]="destination().status" />
+  <atlas-status-badge [status]="destination().status" [label]="destination().statusLabel" />
 </div>
 <h3 class="title">
   <a class="link" [routerLink]="destination().link">{{ destination().title }}</a>

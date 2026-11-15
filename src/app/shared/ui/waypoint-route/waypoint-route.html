@@ -1,0 +1,45 @@
+@if (legend() && legendItems().length) {
+  <ul class="legend" role="list" aria-label="Legend">
+    @for (status of legendItems(); track status) {
+      <li><atlas-status-badge [status]="status" /></li>
+    }
+  </ul>
+}
+<ol class="route" [attr.aria-label]="label()">
+  @for (stop of stops(); track stop.id) {
+    <li
+      class="stop"
+      [class.is-current]="stop.current"
+      [style.--atlas-stop-color]="color(stop.blocked ? 'blocked' : stop.status)"
+    >
+      <span class="marker" aria-hidden="true"><atlas-icon name="waypoints" size="sm" /></span>
+      <div class="content">
+        @if (stop.current) {
+          <p class="current">Next focus</p>
+        }
+        <h3 class="title">
+          <a
+            class="link"
+            [routerLink]="stop.link"
+            [attr.aria-current]="stop.current ? 'step' : null"
+          >
+            {{ stop.title }}
+          </a>
+        </h3>
+        <div class="badges">
+          <atlas-status-badge [status]="stop.status" />
+          @if (stop.blocked) {
+            <atlas-status-badge status="blocked" />
+          }
+        </div>
+        <p class="date">
+          <atlas-icon name="calendar" size="xs" />
+          {{ stop.dateText }}
+        </p>
+        @if (stop.detail; as detail) {
+          <p class="detail">{{ detail }}</p>
+        }
+      </div>
+    </li>
+  }
+</ol>

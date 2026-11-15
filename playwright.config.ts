@@ -4,8 +4,8 @@ const PORT = 4200;
 const BASE_URL = `http://localhost:${PORT}`;
 
 /**
- * Smoke + accessibility checks against the dev server. Chromium desktop and a mobile viewport
- * run in CI today; Firefox/WebKit projects are added with the first user flows (PLAN-FRONTEND).
+ * Smoke, accessibility and user-flow checks against the dev server: Chromium at desktop and mobile size, plus
+ * Firefox and WebKit at desktop size (the phase 5 gate runs flows B–D in all three engines).
  */
 export default defineConfig({
   testDir: './e2e',
@@ -21,6 +21,8 @@ export default defineConfig({
   projects: [
     { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'] } },
     { name: 'mobile-chromium', use: { ...devices['Pixel 7'] } },
+    { name: 'desktop-firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'desktop-webkit', use: { ...devices['Desktop Safari'] } },
   ],
   webServer: {
     command: `npx ng serve --port ${PORT}`,

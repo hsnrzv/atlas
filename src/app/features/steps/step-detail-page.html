@@ -1,0 +1,157 @@
+@switch (state()) {
+  @case ('not-found') {
+    <atlas-page-header title="Step not found" />
+    <atlas-feedback-state
+      iconName="steps"
+      title="This Step is not in this Destination"
+      description="It may have been deleted or moved."
+    >
+      <a mat-flat-button [routerLink]="destinations.path">Go to Destinations</a>
+    </atlas-feedback-state>
+  }
+  @case ('error') {
+    <atlas-page-header title="Step could not load" />
+    <atlas-feedback-state
+      kind="error"
+      title="Something went wrong"
+      description="A connection issue does not change your saved plan. Try again."
+    >
+      <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
+    </atlas-feedback-state>
+  }
+  @case ('ready') {
+    @if (vm(); as vm) {
+      <a class="back" [routerLink]="vm.back.link" [queryParams]="vm.back.query">
+        <atlas-icon name="back" />
+        {{ vm.back.label }}
+      </a>
+      <atlas-page-header [title]="vm.node.title" [description]="vm.context">
+        <atlas-breadcrumbs [items]="vm.breadcrumbs" />
+        <div class="header-actions" pageHeaderAction>
+          <button mat-stroked-button type="button" (click)="editor.edit(vm.node)">
+            <atlas-icon name="edit" />
+            Edit Step
+          </button>
+          <button
+            atlas-icon-button
+            type="button"
+            icon="more"
+            aria-label="More actions"
+            [matMenuTriggerFor]="more"
+          ></button>
+          <mat-menu #more="matMenu">
+            <button mat-menu-item type="button" class="is-destructive" (click)="remove(vm.node)">
+              Delete Step
+            </button>
+          </mat-menu>
+        </div>
+      </atlas-page-header>
+
+      @if (editor.error(); as error) {
+        <atlas-plan-alert [message]="error" (dismissed)="editor.dismiss()" />
+      }
+
+      <div class="layout">
+        <div class="main">
+          <section class="summary" aria-labelledby="atlas-step-status">
+            <h2 class="section-title" id="atlas-step-status">Status and availability</h2>
+            <div class="badges">
+              <atlas-status-badge [status]="vm.status" />
+              @if (vm.blocked) {
+                <atlas-status-badge status="blocked" />
+              }
+            </div>
+            <div class="actions">
+              @if (vm.completed) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  [disabled]="store.saving()"
+                  (click)="reopen(vm.node)"
+                >
+                  Reopen Step
+                </button>
+              } @else {
+                @if (!vm.blocked) {
+                  <button
+                    mat-flat-button
+                    type="button"
+                    [disabled]="store.saving()"
+                    (click)="complete(vm.node)"
+                  >
+                    <atlas-icon name="check" />
+                    Mark complete
+                  </button>
+                }
+                <mat-form-field appearance="outline" class="status" subscriptSizing="dynamic">
+                  <mat-label>Status</mat-label>
+                  <mat-select
+                    [value]="vm.node.status"
+                    [disabled]="store.saving()"
+                    (valueChange)="setStatus(vm.node, $event)"
+                  >
+                    @for (option of statusOptions; track option.value) {
+                      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              }
+            </div>
+            @if (update(); as update) {
+              <div class="update">
+                <p>{{ update.message }}</p>
+                <div class="update-links">
+                  @if (update.waypointLink; as link) {
+                    <a [routerLink]="link">View updated waypoint</a>
+                  }
+                  <a [routerLink]="update.destinationLink">View updated destination</a>
+                </div>
+              </div>
+            }
+          </section>
+
+          @if (vm.blocked) {
+            <atlas-blocked-panel kind="Step" [reasons]="vm.blockedReasons" />
+          }
+
+          @if (vm.node.description; as description) {
+            <section class="panel" aria-labelledby="atlas-step-about">
+              <h2 class="panel-title" id="atlas-step-about">About this Step</h2>
+              <p class="multiline">{{ description }}</p>
+            </section>
+          }
+          <section class="panel" aria-labelledby="atlas-step-ready">
+            <h2 class="panel-title" id="atlas-step-ready">Ready when</h2>
+            <p class="multiline">{{ vm.node.outcome ?? 'Not described yet.' }}</p>
+          </section>
+        </div>
+
+        <aside class="aside" aria-label="Step details">
+          <section class="panel" aria-labelledby="atlas-step-timing">
+            <h2 class="panel-title" id="atlas-step-timing">Timing</h2>
+            <dl class="facts">
+              <div>
+                <dt>Due</dt>
+                <dd>{{ vm.due }}</dd>
+              </div>
+            </dl>
+          </section>
+          <atlas-notes-panel
+            class="panel"
+            [notes]="notes()"
+            [handler]="store.notesHandler"
+            [loading]="store.notesLoading()"
+          />
+        </aside>
+      </div>
+    }
+  }
+  @default {
+    <atlas-page-header title="Opening Step" />
+    <atlas-feedback-state
+      kind="loading"
+      title="Loading Step"
+      description="Gathering its details."
+    />
+  }
+}

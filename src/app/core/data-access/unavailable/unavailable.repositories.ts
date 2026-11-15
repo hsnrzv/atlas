@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import type { Dashboard } from '../../models/dashboard';
 import type { Goal, GoalSummary } from '../../models/goal';
-import type { GoalTree } from '../../models/goal-node';
+import type { GoalDependency } from '../../models/goal-commands';
+import type { GoalNode, GoalTree } from '../../models/goal-node';
+import type { GoalNote } from '../../models/goal-note';
 import { AtlasDataError } from '../data-error';
 import { DashboardRepository } from '../ports/dashboard.repository';
 import { GoalRepository } from '../ports/goal.repository';
@@ -35,6 +37,70 @@ export class UnavailableGoalRepository extends GoalRepository {
   }
 
   tree(): Observable<GoalTree> {
+    return unavailable();
+  }
+
+  create(): Observable<Goal> {
+    return unavailable();
+  }
+
+  update(): Observable<Goal> {
+    return unavailable();
+  }
+
+  archive(): Observable<Goal> {
+    return unavailable();
+  }
+
+  remove(): Observable<void> {
+    return unavailable();
+  }
+
+  createNode(): Observable<GoalNode> {
+    return unavailable();
+  }
+
+  updateNode(): Observable<GoalNode> {
+    return unavailable();
+  }
+
+  removeNode(): Observable<void> {
+    return unavailable();
+  }
+
+  completeNode(): Observable<GoalNode> {
+    return unavailable();
+  }
+
+  reopenNode(): Observable<GoalNode> {
+    return unavailable();
+  }
+
+  dependencies(): Observable<readonly GoalDependency[]> {
+    return unavailable();
+  }
+
+  addDependency(): Observable<GoalDependency> {
+    return unavailable();
+  }
+
+  removeDependency(): Observable<void> {
+    return unavailable();
+  }
+
+  notes(): Observable<readonly GoalNote[]> {
+    return unavailable();
+  }
+
+  addNote(): Observable<GoalNote> {
+    return unavailable();
+  }
+
+  updateNote(): Observable<GoalNote> {
+    return unavailable();
+  }
+
+  removeNote(): Observable<void> {
     return unavailable();
   }
 }

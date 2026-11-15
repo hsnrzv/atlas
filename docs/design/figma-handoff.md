@@ -181,6 +181,23 @@ Accepted with Phase 4 (F2-3b), pending owner review at gate 4:
   only.
 - `FeedbackState` cards are limited to `--layout-dialog-width`.
 
+### 6.2 Destinations, Waypoints and Steps (pages 06–08): known deviations
+
+Accepted with Phase 5 (F2-4…F2-7, F3-0…F3-3), pending owner review at gate 5:
+
+- **Step detail** is a full page (`/destinations/:goalId/steps/:nodeId`) on every breakpoint, not a side sheet on
+  desktop. It keeps one URL per Step and one focus model.
+- **Create and edit** of Destinations, Waypoints and Steps open in dialogs (full-screen on mobile) over the current
+  page instead of separate routes. Destination detail is one scrolling page without tabs.
+- **Steps list** is a single column. The priority filter waits for FQ-11; the Due filter is "set" / "not set". Notes
+  count per Step (FQ-13) and the application date (FQ-7) are not shown.
+- **Blocked Steps:** each blocked Step shows its own blocked panel with the prerequisites that block it.
+- **Reorder** (move up / move down buttons) is on Waypoint detail only.
+- **Step status change** is announced through the live region with an inline message, not a toast, so the change is
+  not announced twice.
+- Waypoint and Step pages (`/destinations/…`) highlight "Destinations" in the navigation.
+- All form fields use the outline appearance; the filled field label in the dark theme measured 4.45:1.
+
 ## 7. Reading the file from code (MCP workflow)
 
 Inspection used the **Figma desktop MCP server** (`http://127.0.0.1:3845/mcp`) with these tools:

@@ -1,0 +1,155 @@
+@switch (store.state()) {
+  @case ('not-found') {
+    <atlas-page-header title="Destination not found" />
+    <atlas-feedback-state
+      iconName="destinations"
+      title="This Destination is not in your Atlas"
+      description="It may have been deleted or archived."
+    >
+      <a mat-flat-button [routerLink]="destinations.path">Back to Destinations</a>
+    </atlas-feedback-state>
+  }
+  @case ('error') {
+    <atlas-page-header title="Destination could not load" />
+    <atlas-feedback-state
+      kind="error"
+      title="Something went wrong"
+      description="A connection issue does not change your saved plan. Try again."
+    >
+      <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
+    </atlas-feedback-state>
+  }
+  @case ('ready') {
+    @if (vm(); as vm) {
+      <a class="back" [routerLink]="destinations.path">
+        <atlas-icon name="back" />
+        Back to Destinations
+      </a>
+      <atlas-page-header [title]="vm.goal.title" [description]="vm.goal.outcome ?? undefined">
+        <atlas-breadcrumbs [items]="vm.breadcrumbs" />
+        <div class="header-actions" pageHeaderAction>
+          <button mat-stroked-button type="button" (click)="edit(vm.goal)">
+            <atlas-icon name="edit" />
+            Edit destination
+          </button>
+          <button
+            atlas-icon-button
+            type="button"
+            icon="more"
+            aria-label="More actions"
+            [matMenuTriggerFor]="more"
+          ></button>
+          <mat-menu #more="matMenu">
+            <button mat-menu-item type="button" (click)="archive(vm.goal)">
+              Archive destination
+            </button>
+            <button mat-menu-item type="button" class="is-destructive" (click)="remove(vm.goal)">
+              Delete destination
+            </button>
+          </mat-menu>
+        </div>
+      </atlas-page-header>
+
+      @if (editor.error(); as error) {
+        <atlas-plan-alert [message]="error" (dismissed)="editor.dismiss()" />
+      }
+      <div class="layout">
+        <div class="main">
+          <section class="summary" aria-label="Destination summary">
+            <div class="badges">
+              <atlas-dimension-badge [dimension]="vm.dimension" />
+              <atlas-status-badge [status]="vm.status.status" [label]="vm.status.label" />
+            </div>
+            <atlas-progress
+              label="Destination progress"
+              [value]="vm.percent"
+              [detail]="vm.progressDetail"
+            />
+            @if (vm.excluded; as excluded) {
+              <p class="atlas-caption atlas-text-secondary">{{ excluded }}</p>
+            }
+          </section>
+
+          <section class="section" aria-labelledby="atlas-major-waypoints">
+            <div class="section-head">
+              <h2 class="section-title" id="atlas-major-waypoints">Major waypoints</h2>
+              <button mat-stroked-button type="button" (click)="editor.add(null, 'MILESTONE')">
+                <atlas-icon name="add" />
+                Add Waypoint
+              </button>
+            </div>
+            @if (vm.stops.length) {
+              <atlas-waypoint-route [stops]="vm.stops" label="Major waypoints" [legend]="true" />
+            } @else {
+              <p class="atlas-text-secondary">
+                No Waypoints yet. Add the first milestone on the way to this Destination.
+              </p>
+            }
+          </section>
+        </div>
+
+        <aside class="aside" aria-label="Destination details">
+          <section class="panel" aria-labelledby="atlas-purpose">
+            <h2 class="panel-title" id="atlas-purpose">Purpose and success</h2>
+            <dl class="facts">
+              <div>
+                <dt>Outcome</dt>
+                <dd>{{ vm.goal.outcome ?? 'Not provided yet.' }}</dd>
+              </div>
+              <div>
+                <dt>Why it matters</dt>
+                <dd>{{ vm.goal.description ?? 'Purpose not provided yet.' }}</dd>
+              </div>
+            </dl>
+          </section>
+          <section class="panel" aria-labelledby="atlas-dates">
+            <h2 class="panel-title" id="atlas-dates">Dates and commitments</h2>
+            <dl class="facts">
+              <div>
+                <dt>Target</dt>
+                <dd>{{ vm.target }}</dd>
+              </div>
+              @if (vm.start; as start) {
+                <div>
+                  <dt>Start</dt>
+                  <dd>{{ start }}</dd>
+                </div>
+              }
+              <div>
+                <dt>Financial values</dt>
+                <dd>Not set</dd>
+              </div>
+              <div>
+                <dt>Time commitments</dt>
+                <dd>Not set</dd>
+              </div>
+            </dl>
+          </section>
+          <section class="panel" aria-labelledby="atlas-reward">
+            <h2 class="panel-title" id="atlas-reward">Reward</h2>
+            @if (vm.reward; as reward) {
+              <p>{{ reward.title }}</p>
+              <p class="atlas-caption atlas-text-secondary">{{ reward.status }}</p>
+            } @else {
+              <p class="atlas-text-secondary">No reward planned.</p>
+            }
+          </section>
+          <atlas-notes-panel
+            class="panel"
+            [notes]="notes()"
+            [handler]="store.notesHandler"
+            [loading]="store.notesLoading()"
+          />
+        </aside>
+      </div>
+    }
+  }
+  @default {
+    <atlas-page-header title="Opening Destination" />
+    <atlas-feedback-state
+      kind="loading"
+      title="Loading Destination"
+      description="Gathering its Waypoints and notes."
+    />
+  }
+}

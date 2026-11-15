@@ -101,6 +101,17 @@ module.exports = defineConfig([
   {
     files: ['**/*.html'],
     extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
-    rules: {},
+    rules: {
+      // Figma fields are outlined (component-mapping §4). Set per field: an app-wide MAT_FORM_FIELD_DEFAULT_OPTIONS
+      // would pull Material form-field and @angular/forms into the initial bundle.
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            'Element[name="mat-form-field"]:not(:has(> TextAttribute[name="appearance"][value="outline"]))',
+          message: 'Set appearance="outline" on every mat-form-field (component-mapping §4).',
+        },
+      ],
+    },
   },
 ]);

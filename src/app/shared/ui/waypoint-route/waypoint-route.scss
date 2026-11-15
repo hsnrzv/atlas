@@ -1,0 +1,118 @@
+@use 'abstracts' as atlas;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.route {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+// Each stop: marker on the route line, content beside it. The line joins consecutive markers.
+.stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--size-touch-target-min) minmax(0, 1fr);
+  gap: var(--space-3);
+  padding-block-end: var(--space-6);
+
+  &:not(:last-child)::before {
+    position: absolute;
+    inset-block: var(--size-touch-target-min) 0;
+    inset-inline-start: calc(var(--size-touch-target-min) / 2 - 1px);
+    width: 2px;
+    content: '';
+    background: var(--color-border-subtle);
+  }
+
+  &:last-child {
+    padding-block-end: 0;
+  }
+}
+
+.marker {
+  display: grid;
+  place-items: center;
+  width: var(--size-touch-target-min);
+  height: var(--size-touch-target-min);
+  color: var(--atlas-stop-color, var(--color-text-secondary));
+  background: var(--color-surface-card);
+  border: 2px solid currentcolor;
+  border-radius: var(--radius-pill);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+  min-width: 0;
+  padding-block-start: var(--space-2);
+}
+
+.is-current .content {
+  @include atlas.card;
+
+  border-color: var(--color-border-action);
+}
+
+.current {
+  @include atlas.style(label);
+
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.title {
+  @include atlas.style(h4);
+}
+
+.link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-subtle);
+  text-underline-offset: 0.2em;
+
+  &:hover {
+    text-decoration-color: currentcolor;
+  }
+
+  &:focus-visible {
+    @include atlas.focus-ring;
+  }
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.date {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  color: var(--color-text-secondary);
+}
+
+.detail {
+  @include atlas.style(caption);
+
+  color: var(--color-text-secondary);
+}

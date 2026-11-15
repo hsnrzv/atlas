@@ -1,0 +1,116 @@
+<atlas-page-header
+  title="Move toward your goal"
+  description="Waypoints are the milestones on the way to a Destination."
+>
+  @if (state() === 'ready') {
+    <button mat-flat-button pageHeaderAction type="button" (click)="editor.add(null, 'MILESTONE')">
+      <atlas-icon name="add" />
+      Add Waypoint
+    </button>
+  }
+</atlas-page-header>
+
+@switch (state()) {
+  @case ('empty') {
+    <atlas-feedback-state
+      iconName="waypoints"
+      title="No Destinations yet"
+      description="Waypoints belong to a Destination. Add a Destination first, then plan its Waypoints."
+    >
+      <a mat-flat-button [routerLink]="destinations.path">Go to Destinations</a>
+    </atlas-feedback-state>
+  }
+  @case ('not-found') {
+    <atlas-feedback-state
+      iconName="destinations"
+      title="This Destination is not in your Atlas"
+      description="It may have been deleted or archived."
+    >
+      <a mat-flat-button [routerLink]="destinations.path">Go to Destinations</a>
+    </atlas-feedback-state>
+  }
+  @case ('error') {
+    <atlas-feedback-state
+      kind="error"
+      title="Waypoints could not load"
+      description="A connection issue does not change your saved plan. Try again."
+    >
+      <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
+    </atlas-feedback-state>
+  }
+  @case ('ready') {
+    @if (vm(); as vm) {
+      <atlas-destination-picker
+        [options]="options()"
+        [value]="vm.goal.id"
+        (valueChange)="choose($event)"
+      />
+      @if (editor.error(); as error) {
+        <atlas-plan-alert [message]="error" (dismissed)="editor.dismiss()" />
+      }
+      <div class="layout">
+        <div class="main">
+          <section class="summary" aria-labelledby="atlas-waypoints-destination">
+            <p class="atlas-caption atlas-text-secondary">Destination</p>
+            <h2 class="summary-title" id="atlas-waypoints-destination">
+              <a [routerLink]="vm.link">{{ vm.goal.title }}</a>
+            </h2>
+            <atlas-progress
+              label="Destination progress"
+              [value]="vm.percent"
+              [detail]="vm.progressDetail"
+            />
+          </section>
+
+          <section class="section" aria-labelledby="atlas-waypoints-route">
+            <h2 class="section-title" id="atlas-waypoints-route">{{ vm.countText }}</h2>
+            @if (vm.stops.length) {
+              <atlas-waypoint-route [stops]="vm.stops" label="Major waypoints" [legend]="true" />
+            } @else {
+              <p class="atlas-text-secondary">
+                No Waypoints yet. Add the first milestone on the way to this Destination.
+              </p>
+            }
+          </section>
+        </div>
+
+        <aside class="aside" aria-label="Waypoint planning context">
+          <section class="panel" aria-labelledby="atlas-next-focus">
+            <h2 class="panel-title" id="atlas-next-focus">Next focus</h2>
+            @if (vm.next; as next) {
+              <p>{{ next.title }}</p>
+              <a [routerLink]="next.link">Explore next waypoint</a>
+            } @else {
+              <p class="atlas-text-secondary">No Waypoint is available right now.</p>
+            }
+          </section>
+          <section class="panel" aria-labelledby="atlas-precision">
+            <h2 class="panel-title" id="atlas-precision">Dates keep their precision</h2>
+            <p class="atlas-text-secondary">
+              A month stays a month and an approximate date stays approximate.
+            </p>
+            <ul class="dates">
+              @for (stop of vm.stops; track stop.id) {
+                <li>{{ stop.title }}: {{ stop.dateText }}</li>
+              }
+            </ul>
+          </section>
+          <section class="panel" aria-labelledby="atlas-availability">
+            <h2 class="panel-title" id="atlas-availability">Availability is not status</h2>
+            <p class="atlas-text-secondary">
+              A Blocked Waypoint keeps its own status. It becomes available when the Waypoints and
+              Steps it waits for are complete.
+            </p>
+          </section>
+        </aside>
+      </div>
+    }
+  }
+  @default {
+    <atlas-feedback-state
+      kind="loading"
+      title="Loading Waypoints"
+      description="Gathering the route to your Destination."
+    />
+  }
+}

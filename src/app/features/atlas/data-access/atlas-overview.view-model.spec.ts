@@ -1,5 +1,5 @@
 import { testDashboard, testGoal } from '../testing/dashboard.fixture';
-import { percentValue, progressDetail, toAtlasOverviewVm } from './atlas-overview.view-model';
+import { toAtlasOverviewVm } from './atlas-overview.view-model';
 
 const options = { locale: 'en-US', sample: false };
 
@@ -120,14 +120,5 @@ describe('toAtlasOverviewVm', () => {
       '50% · 1 of 2 Steps of Finish a half marathon',
       '1 active Destination · 1 Waypoint achieved',
     ]);
-  });
-});
-
-describe('progress helpers', () => {
-  it('reads the backend percent and weight as given', () => {
-    expect(percentValue({ percent: '42.5' })).toBe(42.5);
-    expect(percentValue(null)).toBe(0);
-    expect(progressDetail({ percent: '0', countedWeight: '0', totalWeight: '4' })).toBe('0 of 4');
-    expect(progressDetail({ percent: '0' })).toBeUndefined();
   });
 });

@@ -64,12 +64,16 @@ Rules:
 src/app/
   app.ts, app.config.ts, app.routes.ts
   core/
-    layout/            app-shell, sidebar, nav-item, topbar, bottom-nav, navigation, title strategy, route focus
+    layout/            app-shell, sidebar, nav-item, topbar, bottom-nav, navigation, title strategy, route focus,
+                       plan-links (UI routes for a Goal or GoalNode)
     data-access/
       ports/           goal.repository.ts, dashboard.repository.ts, profile.repository.ts, …
       http/            http-goal.repository.ts, problem-details.ts, interceptors
-      mock/            mock-goal.repository.ts, sample-plan.ts, sample-fixtures.ts   (dev only, §6)
+      mock/            mock-goal.repository.ts, mock-plan-state.ts, sample-plan.ts, sample-fixtures.ts (dev only, §6)
+      testing/         plan-testing.ts: providers for specs (mock responder, mock goal repository, en-US)
+      goal-plan.store.ts                 one Destination's plan; shared by the Destination, Waypoint and Step pages
       data-access.providers.ts           provideAtlasData() switches adapters
+    plan/              PlanEditor: opens the plan dialogs and confirmations, reports write results
     models/            goal.ts, goal-node.ts, planned-date.ts, money.ts, life-dimension.ts, status-for-node.ts
     theme/             atlas-theme (light / dark / match device)
     companion/         companion-preferences.store.ts (§9)
@@ -98,26 +102,26 @@ All feature routes are lazy (`loadChildren` → `feature.routes.ts`, `loadCompon
 `withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })`, `withViewTransitions()` only when reduced motion
 is off. A `TitleStrategy` and a focus handler move focus to the page `h1` after navigation.
 
-| Route                                             | Page                                    | Figma area         | Notes                                                               |
-| ------------------------------------------------- | --------------------------------------- | ------------------ | ------------------------------------------------------------------- |
-| `/` → `/atlas`                                    | redirect                                | —                  | `/welcome` instead when onboarding is incomplete (guard, F3-4)      |
-| `/atlas`                                          | `AtlasOverviewPage`                     | 05 My Atlas        |                                                                     |
-| `/destinations`                                   | `DestinationsPage`                      | 06                 | filters as query params                                             |
-| `/destinations/new`, `/destinations/:goalId/edit` | form dialog over list/detail            | 06                 | dialog on desktop, full-screen sheet on mobile; deep-linkable       |
-| `/destinations/:goalId`                           | `DestinationDetailPage`                 | 06                 | tabs: Overview, Waypoints, Notes, Award                             |
-| `/destinations/:goalId/waypoints/:nodeId`         | `WaypointDetailPage`                    | 07                 | any depth: `:nodeId` is the focused node; breadcrumbs from ancestry |
-| `/waypoints`                                      | `WaypointsPage`                         | 07                 | across Destinations                                                 |
-| `/steps`, `/steps/:nodeId`                        | `StepsPage`, `StepDetailPage`           | 08                 | detail is a side sheet on desktop                                   |
-| `/connections`                                    | `ConnectionsPage`                       | 09                 | `?view=graph\|list`, `?selected=`                                   |
-| `/journey`                                        | `JourneyPage`                           | 10                 | `?range=3m\|6m\|1y\|3y\|all`, `?dimension=`                         |
-| `/awards`                                         | `AwardsPage`                            | 11                 |                                                                     |
-| `/dimensions`, `/dimensions/:key`                 | `DimensionsPage`, `DimensionDetailPage` | 12                 | `:key` is the `LifeDimensionKey`                                    |
-| `/welcome`                                        | `WelcomePage` → `OnboardingPage`        | 14 Getting started | skippable                                                           |
-| `/settings`, `/settings/companion`                | settings pages                          | 14 Companion       |                                                                     |
-| `/profile`, `/help`                               | placeholder pages                       | 04 (profile menu)  | reached from the profile menu and More                              |
-| `/more`                                           | `MorePage`                              | 04 mobile          | lists the areas that are not in the bottom nav                      |
-| `/_design`                                        | `DesignFoundation`                      | 02/03              | dev builds only (D2); `canMatch` on `devTools`; outside the shell   |
-| `**`                                              | `NotFoundPage`                          | —                  | uses `FeedbackState`                                                |
+| Route                                     | Page                                    | Figma area         | Notes                                                               |
+| ----------------------------------------- | --------------------------------------- | ------------------ | ------------------------------------------------------------------- |
+| `/` → `/atlas`                            | redirect                                | —                  | `/welcome` instead when onboarding is incomplete (guard, F3-4)      |
+| `/atlas`                                  | `AtlasOverviewPage`                     | 05 My Atlas        |                                                                     |
+| `/destinations`                           | `DestinationsPage`                      | 06                 | filters as query params                                             |
+| `/destinations/:goalId`                   | `DestinationDetailPage`                 | 06                 | one page: purpose, route, Steps, notes, reward; create/edit dialogs |
+| `/destinations/:goalId/waypoints/:nodeId` | `WaypointDetailPage`                    | 07                 | any depth: `:nodeId` is the focused node; breadcrumbs from ancestry |
+| `/destinations/:goalId/steps/:nodeId`     | `StepDetailPage`                        | 08                 | full page; a Milestone id redirects to the Waypoint page            |
+| `/waypoints`                              | `WaypointsPage`                         | 07                 | `?destination=`                                                     |
+| `/steps`                                  | `StepsPage`                             | 08                 | `?destination=&waypoint=&status=&due=`                              |
+| `/connections`                            | `ConnectionsPage`                       | 09                 | `?view=graph\|list`, `?selected=`                                   |
+| `/journey`                                | `JourneyPage`                           | 10                 | `?range=3m\|6m\|1y\|3y\|all`, `?dimension=`                         |
+| `/awards`                                 | `AwardsPage`                            | 11                 |                                                                     |
+| `/dimensions`, `/dimensions/:key`         | `DimensionsPage`, `DimensionDetailPage` | 12                 | `:key` is the `LifeDimensionKey`                                    |
+| `/welcome`                                | `WelcomePage` → `OnboardingPage`        | 14 Getting started | skippable                                                           |
+| `/settings`, `/settings/companion`        | settings pages                          | 14 Companion       |                                                                     |
+| `/profile`, `/help`                       | placeholder pages                       | 04 (profile menu)  | reached from the profile menu and More                              |
+| `/more`                                   | `MorePage`                              | 04 mobile          | lists the areas that are not in the bottom nav                      |
+| `/_design`                                | `DesignFoundation`                      | 02/03              | dev builds only (D2); `canMatch` on `devTools`; outside the shell   |
+| `**`                                      | `NotFoundPage`                          | —                  | uses `FeedbackState`                                                |
 
 The spec's API paths (`/goals/:goalId/nodes/:nodeId`) are API addresses, not UI routes. UI routes use the UI
 vocabulary.
@@ -191,9 +195,9 @@ The fixtures are deleted with the mock (F4-7).
 - "Use sample details" (form) and "Explore sample plan" (onboarding) exist only in dev builds, behind the same
   environment flag.
 
-### 6.5 Proposed contract additions (frontend questions FQ-1 … FQ-6)
+### 6.5 Proposed contract additions (frontend questions FQ-1 … FQ-13)
 
-Figma page 05 shows values that the draft `GET /api/v1/dashboard` contract (API-CONTRACT §9.1) does not provide.
+Figma pages 05–08 show values that the draft `GET /api/v1/dashboard` contract (API-CONTRACT §9.1) does not provide.
 Only the backend can derive them (roadmap R-12), so the frontend models them as **proposed** additions
 (marked "Proposed (FQ-n)" in `core/models/dashboard.ts` and `progress.ts`). The mock serves Figma's values for them.
 The backend owner decides each question before F4-1. If one is rejected, its UI element is removed. The frontend
@@ -208,6 +212,19 @@ never derives it.
 | FQ-5 | `progress.excludedNodes[]`                                                                       | Progress policy caption ("… is excluded from progress")     |
 | FQ-6 | `activeGoals[].keyDates[]` (later Waypoints with their planned date or `null`)                   | Timing line ("Receive admission decision · date not set …") |
 
+Pages 06–08 (Phase 5) raise further questions. Until they are decided, the UI leaves the element out or uses the
+contract's existing field, as listed:
+
+| ID    | Question                                                               | Until decided                                             |
+| ----- | ---------------------------------------------------------------------- | --------------------------------------------------------- |
+| FQ-7  | Destination application date (Figma form field) is not in the contract | not in the form                                           |
+| FQ-8  | How archived Destinations are returned and shown                       | `archive` is called; lists show active Destinations only  |
+| FQ-9  | Note text field name (`body` proposed)                                 | `GoalNote.body`, shown as plain text (D13)                |
+| FQ-10 | Status a Step returns to when it is reopened                           | the mock restores the previous status, else `IN_PROGRESS` |
+| FQ-11 | Node priority (Figma Steps filter)                                     | no priority filter                                        |
+| FQ-12 | Waypoints achieved on a Destination outside the dashboard              | not shown on Destination detail                           |
+| FQ-13 | Notes count per Step (Figma Step row "No notes")                       | not shown in the Step row                                 |
+
 ## 7. State
 
 - **Signal stores per feature**, written as `@Injectable()` classes provided on the feature route (not root), with
@@ -221,6 +238,10 @@ never derives it.
   failed refresh shows the Error state beside "Last saved plan" instead of discarding it.
 - Writes: store method → port → on success, update local state from the **server response** (no client-side
   re-derivation). Optimistic UI only for Step status toggles, with rollback on error (F4-3).
+- Plan pages (Phase 5): `GoalPlanStore` is provided per route and loads one Destination with its nodes, notes and
+  progress. `scopeTo(goalId)` drives it from the route input. After every write it reloads the plan and progress
+  from the port, so progress and availability always come from the backend. `PlanEditor` (`core/plan`) opens the
+  dialogs and confirmations and turns write results into a toast or an inline `PlanAlert`.
 - Cross-cutting state in `core`: theme, companion preferences, current user (later).
 
 ## 8. Forms
@@ -231,12 +252,15 @@ signal (fits the stores), validation is a schema next to the model, and it is no
 [ADR-0009](../adr/0009-signal-forms.md) (accepted 2026-11-14, roadmap R-1) records this and replaces "typed reactive
 forms".
 
-- Field wrappers: `mat-form-field` + `matInput` / `mat-select` with `[formField]`. A first spike (roadmap phase 5)
-  checks error-state matching and `aria-describedby` with Material; if it fails, a thin `AtlasFieldErrors` directive
-  bridges the gap.
+- Field wrappers: `mat-form-field` + `matInput` / `mat-select` with `[formField]`. The phase 5 spike (F3-0,
+  ADR-0009) confirmed error-state matching and `aria-describedby` with Material.
+- Every `mat-form-field` sets `appearance="outline"` (component-mapping §4); a template lint rule enforces it. The
+  filled appearance put the dark-theme label below 4.5:1 contrast. There is no app-wide
+  `MAT_FORM_FIELD_DEFAULT_OPTIONS`: importing it in `app.config.ts` would move Material form-field and
+  `@angular/forms` into the initial bundle.
 - Server validation: Problem Details `errors[]` map to field errors through the schema's server-error API.
 - Destination form fields from Figma: Name (required), Outcome, Dimension, Status, Target date (`PlannedDate` with
-  precision), Application date, Why it matters, Reward.
+  precision), Why it matters, Reward. Application date waits for FQ-7.
 
 ## 9. Companion
 
@@ -324,18 +348,32 @@ WCAG 2.2 AA is a release gate:
 
 ## 16. Testing
 
-| Level     | Tool                                                          | What                                                                               |
-| --------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Unit      | Vitest                                                        | mappers, view-model builders, layout functions, `statusForNode`, environment flags |
-| Component | Vitest + Angular Testing Library (from F2-1a, D12)            | every shared component in each Figma state; inputs/outputs; ARIA                   |
-| Store     | Vitest with a fake port                                       | loading/empty/error transitions, writes use server responses                       |
-| E2E       | Playwright (Chromium, Pixel 7; Firefox and WebKit from F2-10) | Figma flows A–H, 390/768/1440, dark and light, keyboard only, axe                  |
-| Visual    | Playwright screenshots of `/_design` (proposal)               | catches token/regression drift; compared manually with Figma screenshots           |
-| Contract  | F3-5 OpenAPI snapshot diff                                    | models match the backend contract                                                  |
+| Level     | Tool                                                     | What                                                                               |
+| --------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Unit      | Vitest                                                   | mappers, view-model builders, layout functions, `statusForNode`, environment flags |
+| Component | Vitest + Angular Testing Library (from F2-1a, D12)       | every shared component in each Figma state; inputs/outputs; ARIA                   |
+| Store     | Vitest with a fake port                                  | loading/empty/error transitions, writes use server responses                       |
+| E2E       | Playwright (Chromium, Pixel 7 Chromium, Firefox, WebKit) | Figma flows A–H, 390/768/1440, dark and light, keyboard only, axe                  |
+| Visual    | Playwright screenshots of `/_design` (proposal)          | catches token/regression drift; compared manually with Figma screenshots           |
+| Contract  | F3-5 OpenAPI snapshot diff                               | models match the backend contract                                                  |
+
+Browser notes for the e2e suite (`e2e/support/`):
+
+- WebKit skips links on Tab (the macOS default), so keyboard tests use `pressTab()` (Alt+Tab in WebKit). WebKit does
+  not focus a button on click, so focus-return tests open overlays from the keyboard.
+- Playwright's Firefox build crashes when axe reads the ARIA element reflection properties
+  (`ariaLabelledByElements`, …) on a Material `mat-select`. `expectNoAxeViolations()` hides those properties in
+  Firefox only, so axe falls back to the `aria-*` id attributes. The audit rules stay the same.
+- Firefox may not launch on managed macOS machines. Run it locally through the Playwright server container
+  (`PW_TEST_CONNECT_WS_ENDPOINT`); CI runs it natively on Linux.
 
 ## 17. Performance budgets
 
 - Initial JS ≤ 500 kB warning / 1 MB error (current `angular.json`); target ≤ 250 kB for the shell + My Atlas.
+  Measured after phase 5: 510 kB raw / 128 kB transfer (budget warning). The shell's Material menu, tooltip and
+  ripple import CDK overlay and a11y, and esbuild keeps every export the lazy pages use from those modules in the
+  initial chunk (dialogs, focus trap, `LiveAnnouncer`). App code adds about 1 kB. Reducing it means a lighter shell
+  menu and tooltip; tracked in production-readiness §1.5.
 - Component styles ≤ 4 kB warning / 8 kB error.
 - Fonts: Inter + Manrope variable, Latin subset, `font-display: swap`, preload only the heading weight used above the
   fold.

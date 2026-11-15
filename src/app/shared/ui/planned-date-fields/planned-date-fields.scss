@@ -1,0 +1,29 @@
+@use 'abstracts' as atlas;
+
+:host {
+  display: block;
+}
+
+.group {
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.legend {
+  @include atlas.style(label);
+
+  padding: 0;
+  margin-block-end: var(--space-2);
+  color: var(--color-text-secondary);
+}
+
+.row {
+  display: grid;
+  gap: 0 var(--space-4);
+
+  @include atlas.up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

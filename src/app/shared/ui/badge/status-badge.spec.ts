@@ -16,4 +16,12 @@ describe('AtlasStatusBadge', () => {
     );
     expect(host.querySelector('atlas-icon')?.getAttribute('aria-hidden')).toBe('true');
   });
+
+  it('accepts a label override', async () => {
+    const fixture = TestBed.createComponent(AtlasStatusBadge);
+    fixture.componentRef.setInput('status', 'not-started');
+    fixture.componentRef.setInput('label', 'Draft');
+    await fixture.whenStable();
+    expect((fixture.nativeElement as HTMLElement).textContent?.trim()).toBe('Draft');
+  });
 });

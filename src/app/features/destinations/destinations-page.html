@@ -1,0 +1,155 @@
+<atlas-page-header title="Choose what matters" [description]="description()">
+  <button mat-flat-button pageHeaderAction type="button" (click)="add()">
+    <atlas-icon name="add" />
+    Add destination
+  </button>
+</atlas-page-header>
+
+<div class="layout">
+  <div class="main">
+    <div class="toolbar">
+      <atlas-search-field
+        class="search"
+        label="Search destinations"
+        placeholder="Search destinations"
+        [value]="filters().q"
+        (valueChange)="setFilter('q', $event)"
+      />
+      <div class="controls" role="group" aria-label="Filters and view">
+        <mat-form-field appearance="outline" class="filter" subscriptSizing="dynamic">
+          <mat-label>Dimension</mat-label>
+          <mat-select [value]="filters().dimension" (valueChange)="setFilter('dimension', $event)">
+            @for (option of dimensionOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="filter" subscriptSizing="dynamic">
+          <mat-label>Status</mat-label>
+          <mat-select [value]="filters().status" (valueChange)="setFilter('status', $event)">
+            @for (option of statusOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="filter" subscriptSizing="dynamic">
+          <mat-label>Timeframe</mat-label>
+          <mat-select [value]="filters().timeframe" (valueChange)="setFilter('timeframe', $event)">
+            @for (option of timeframeOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="filter" subscriptSizing="dynamic">
+          <mat-label>Sort</mat-label>
+          <mat-select [value]="filters().sort" (valueChange)="setFilter('sort', $event)">
+            @for (option of sortOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <div class="views">
+          <button
+            atlas-icon-button
+            type="button"
+            icon="view-grid"
+            aria-label="Grid view"
+            [attr.aria-pressed]="layout() === 'grid'"
+            (click)="setView('grid')"
+          ></button>
+          <button
+            atlas-icon-button
+            type="button"
+            icon="view-list"
+            aria-label="List view"
+            [attr.aria-pressed]="layout() === 'list'"
+            (click)="setView('list')"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <p class="count atlas-text-secondary" role="status">
+      @if (store.state() === 'ready' || store.state() === 'no-results') {
+        {{ count() }}
+      }
+    </p>
+
+    @switch (store.state()) {
+      @case ('loading') {
+        <atlas-feedback-state
+          kind="loading"
+          title="Loading Destinations"
+          description="Gathering your saved Destinations."
+        />
+      }
+      @case ('error') {
+        <atlas-feedback-state
+          kind="error"
+          title="Destinations could not load"
+          description="A connection issue does not change your saved plan. Try again."
+        >
+          <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
+        </atlas-feedback-state>
+      }
+      @case ('empty') {
+        <atlas-feedback-state
+          iconName="destinations"
+          title="No Destinations yet"
+          description="Choose what matters to you and create your first Destination."
+        >
+          <button mat-flat-button type="button" (click)="add()">Add destination</button>
+        </atlas-feedback-state>
+      }
+      @case ('no-results') {
+        <atlas-feedback-state
+          iconName="search"
+          title="No Destinations match"
+          description="Try another search or clear the filters."
+        >
+          <button mat-stroked-button type="button" (click)="clearFilters()">Clear filters</button>
+        </atlas-feedback-state>
+      }
+      @case ('ready') {
+        <ul
+          class="cards"
+          [class.is-list]="layout() === 'list'"
+          [attr.aria-busy]="store.searching()"
+        >
+          @for (card of cards(); track card.id) {
+            <li><atlas-destination-card [destination]="card" /></li>
+          }
+        </ul>
+      }
+    }
+  </div>
+
+  @if (context(); as context) {
+    <aside class="aside" aria-labelledby="atlas-destination-context">
+      <h2 class="aside-title" id="atlas-destination-context">Destination context</h2>
+      <section class="panel" aria-labelledby="atlas-context-next">
+        <h3 class="panel-title" id="atlas-context-next">Next waypoint</h3>
+        @if (context.next; as next) {
+          <p>{{ next.title }}</p>
+          <a class="panel-link" [routerLink]="next.link">Explore next waypoint</a>
+        } @else {
+          <p class="atlas-text-secondary">No Waypoint is available yet.</p>
+        }
+      </section>
+      <section class="panel" aria-labelledby="atlas-context-why">
+        <h3 class="panel-title" id="atlas-context-why">Why it matters</h3>
+        <p class="atlas-text-secondary">Purpose and success details live on the Destination.</p>
+        <a class="panel-link" [routerLink]="context.link">Open {{ context.title }}</a>
+      </section>
+      <section class="panel" aria-labelledby="atlas-context-reward">
+        <h3 class="panel-title" id="atlas-context-reward">Reward</h3>
+        @if (context.reward; as reward) {
+          <p>{{ reward.title }}</p>
+          <p class="atlas-caption atlas-text-secondary">{{ reward.status }}</p>
+        } @else {
+          <p class="atlas-text-secondary">No reward planned.</p>
+        }
+      </section>
+    </aside>
+  }
+</div>

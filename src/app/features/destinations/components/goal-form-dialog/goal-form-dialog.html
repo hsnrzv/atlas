@@ -1,0 +1,73 @@
+<h2 mat-dialog-title>{{ heading() }}</h2>
+<form class="form" novalidate (submit)="save($event)">
+  <mat-dialog-content class="content">
+    @if (data.mode === 'create' && data.sample) {
+      <div class="sample">
+        <p class="atlas-text-secondary">Sample mode: fill the form with the sample Destination.</p>
+        <button mat-stroked-button type="button" (click)="useSample()">Use sample details</button>
+      </div>
+    }
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput [formField]="goal.title" />
+      @if (error(goal.title); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Outcome · optional</mat-label>
+      <textarea matInput rows="2" [formField]="goal.outcome"></textarea>
+      <mat-hint>What will be true when you arrive?</mat-hint>
+      @if (error(goal.outcome); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Life Dimension</mat-label>
+        <mat-select [formField]="goal.primaryAreaKey">
+          @for (option of dimensionOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+        @if (error(goal.primaryAreaKey); as message) {
+          <mat-error>{{ message }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [formField]="goal.status">
+          @for (option of statusOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <atlas-planned-date-fields [label]="'Target · optional'" [field]="goal.target" />
+    <mat-form-field appearance="outline">
+      <mat-label>Why it matters · optional</mat-label>
+      <textarea matInput rows="3" [formField]="goal.description"></textarea>
+      @if (error(goal.description); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Reward · optional</mat-label>
+      <input matInput [formField]="goal.reward" />
+      <mat-hint>A celebration you plan for when you arrive.</mat-hint>
+      @if (error(goal.reward); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+    <p class="atlas-caption atlas-text-secondary">
+      Financial values and time commitments are not set here yet.
+    </p>
+    <p class="form-error" role="alert">{{ formError() }}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancel</button>
+    <button mat-flat-button type="submit" [disabled]="saving()">
+      {{ data.mode === 'create' ? 'Create destination' : 'Save changes' }}
+    </button>
+  </mat-dialog-actions>
+</form>

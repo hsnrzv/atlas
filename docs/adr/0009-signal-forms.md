@@ -30,6 +30,14 @@ validation as a schema, so stores and forms share one reactive model.
   with Signal Forms before F3-1. If a gap is found, a small `atlas` directive bridges it; we do not fall back to
   Reactive Forms without amending this ADR.
 
+## Spike result (F3-0, 2026-11-15)
+
+`src/app/shared/forms/signal-forms-material.spec.ts` binds `[formField]` to `matInput` and `mat-select`. Material's
+error state, `aria-invalid` and the `aria-describedby` link to `mat-error` work without a bridge, so no `atlas`
+directive was added. Empty required controls expose `aria-required` instead of `aria-invalid` (Material behaviour).
+Planned dates use a native `input type="date"` inside `mat-form-field` (`PlannedDateFields`), so `mat-datepicker`
+was not needed.
+
 ## Consequences
 
 - One reactive model (signals) across stores and forms; less RxJS in components.

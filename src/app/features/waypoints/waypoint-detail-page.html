@@ -1,0 +1,239 @@
+@switch (state()) {
+  @case ('not-found') {
+    <atlas-page-header title="Waypoint not found" />
+    <atlas-feedback-state
+      iconName="waypoints"
+      title="This Waypoint is not in this Destination"
+      description="It may have been deleted or moved."
+    >
+      <a mat-flat-button [routerLink]="destinations.path">Go to Destinations</a>
+    </atlas-feedback-state>
+  }
+  @case ('error') {
+    <atlas-page-header title="Waypoint could not load" />
+    <atlas-feedback-state
+      kind="error"
+      title="Something went wrong"
+      description="A connection issue does not change your saved plan. Try again."
+    >
+      <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
+    </atlas-feedback-state>
+  }
+  @case ('ready') {
+    @if (vm(); as vm) {
+      <a class="back" [routerLink]="vm.back.link" [queryParams]="vm.back.query">
+        <atlas-icon name="back" />
+        {{ vm.back.label }}
+      </a>
+      <atlas-page-header [title]="vm.node.title" [description]="'Waypoint in ' + vm.goal.title">
+        <atlas-breadcrumbs [items]="vm.breadcrumbs" />
+        <div class="header-actions" pageHeaderAction>
+          <button mat-stroked-button type="button" (click)="editor.edit(vm.node)">
+            <atlas-icon name="edit" />
+            Edit Waypoint
+          </button>
+          <button
+            atlas-icon-button
+            type="button"
+            icon="more"
+            aria-label="More actions"
+            [matMenuTriggerFor]="more"
+          ></button>
+          <mat-menu #more="matMenu">
+            <button mat-menu-item type="button" class="is-destructive" (click)="remove(vm.node)">
+              Delete Waypoint
+            </button>
+          </mat-menu>
+        </div>
+      </atlas-page-header>
+
+      @if (editor.error(); as error) {
+        <atlas-plan-alert [message]="error" (dismissed)="editor.dismiss()" />
+      }
+
+      <div class="layout">
+        <div class="main">
+          <section class="summary" aria-label="Waypoint summary">
+            <div class="badges">
+              <atlas-status-badge [status]="vm.status" />
+              @if (vm.blocked) {
+                <atlas-status-badge status="blocked" />
+              }
+            </div>
+            <p class="progress-caption atlas-label atlas-text-secondary" aria-hidden="true">
+              Destination progress
+            </p>
+            <atlas-progress label="Destination progress" [value]="vm.goalPercent" />
+            <p class="progress-caption atlas-label atlas-text-secondary" aria-hidden="true">
+              Waypoint progress
+            </p>
+            <atlas-progress
+              label="Waypoint progress"
+              [value]="vm.percent"
+              [detail]="vm.progressDetail"
+            />
+            <div class="outcome">
+              <h2 class="label">Target outcome</h2>
+              <p>{{ vm.node.outcome ?? 'Target outcome not set yet.' }}</p>
+              @if (vm.node.description; as description) {
+                <p class="atlas-text-secondary">{{ description }}</p>
+              }
+            </div>
+            <a
+              class="open-steps"
+              mat-stroked-button
+              [routerLink]="stepsPath"
+              [queryParams]="vm.stepsQuery"
+            >
+              <atlas-icon name="steps" />
+              Open Steps
+            </a>
+          </section>
+
+          @if (vm.blocked) {
+            <atlas-blocked-panel kind="Waypoint" [reasons]="vm.blockedReasons" />
+          }
+
+          <section class="section" aria-labelledby="atlas-waypoint-steps">
+            <div class="section-head">
+              <h2 class="section-title" id="atlas-waypoint-steps">Steps</h2>
+              <button mat-stroked-button type="button" (click)="editor.add(vm.node.id, 'TASK')">
+                <atlas-icon name="add" />
+                Add Step
+              </button>
+            </div>
+            @if (vm.steps.length) {
+              <ul class="rows">
+                @for (step of vm.steps; track step.row.id) {
+                  <li>
+                    <atlas-step-row [step]="step.row">
+                      <button
+                        stepRowAction
+                        atlas-icon-button
+                        type="button"
+                        icon="move-up"
+                        [aria-label]="'Move ' + step.row.title + ' up'"
+                        [disabled]="step.first"
+                        (click)="editor.move(step.node, -1)"
+                      ></button>
+                      <button
+                        stepRowAction
+                        atlas-icon-button
+                        type="button"
+                        icon="move-down"
+                        [aria-label]="'Move ' + step.row.title + ' down'"
+                        [disabled]="step.last"
+                        (click)="editor.move(step.node, 1)"
+                      ></button>
+                      <button
+                        stepRowAction
+                        atlas-icon-button
+                        type="button"
+                        icon="edit"
+                        [aria-label]="'Edit ' + step.row.title"
+                        (click)="editor.edit(step.node)"
+                      ></button>
+                      <button
+                        stepRowAction
+                        atlas-icon-button
+                        type="button"
+                        icon="delete"
+                        [aria-label]="'Delete ' + step.row.title"
+                        (click)="editor.remove(step.node)"
+                      ></button>
+                    </atlas-step-row>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="atlas-text-secondary">No Steps yet. Add the first small action.</p>
+            }
+          </section>
+
+          <section class="section" aria-labelledby="atlas-waypoint-children">
+            <div class="section-head">
+              <h2 class="section-title" id="atlas-waypoint-children">Waypoints inside</h2>
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="editor.add(vm.node.id, 'MILESTONE')"
+              >
+                <atlas-icon name="add" />
+                Add Waypoint
+              </button>
+            </div>
+            @if (vm.stops.length) {
+              <atlas-waypoint-route [stops]="vm.stops" label="Waypoints inside" />
+            } @else {
+              <p class="atlas-text-secondary">
+                No nested Waypoints. Add one to break this milestone down further.
+              </p>
+            }
+          </section>
+        </div>
+
+        <aside class="aside" aria-label="Waypoint details">
+          <section class="panel" aria-labelledby="atlas-waypoint-dates">
+            <h2 class="panel-title" id="atlas-waypoint-dates">Timing</h2>
+            <dl class="facts">
+              <div>
+                <dt>Due</dt>
+                <dd>{{ vm.due }}</dd>
+              </div>
+              @if (vm.start; as start) {
+                <div>
+                  <dt>Start</dt>
+                  <dd>{{ start }}</dd>
+                </div>
+              }
+            </dl>
+          </section>
+          <section class="panel" aria-labelledby="atlas-waypoint-waits">
+            <h2 class="panel-title" id="atlas-waypoint-waits">Waits for</h2>
+            @if (vm.waitsFor.length) {
+              <ul class="links">
+                @for (item of vm.waitsFor; track item.id) {
+                  <li>
+                    <a [routerLink]="item.link">{{ item.title }}</a>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="atlas-text-secondary">No prerequisites. Edit the Waypoint to add some.</p>
+            }
+          </section>
+          <section class="panel" aria-labelledby="atlas-waypoint-reward">
+            <h2 class="panel-title" id="atlas-waypoint-reward">Reward</h2>
+            @if (vm.reward; as reward) {
+              <p>{{ reward.title }}</p>
+              <p class="atlas-caption atlas-text-secondary">{{ reward.status }}</p>
+            } @else {
+              <p class="atlas-text-secondary">No reward planned.</p>
+            }
+          </section>
+          <atlas-notes-panel
+            class="panel"
+            [notes]="notes()"
+            [handler]="store.notesHandler"
+            [loading]="store.notesLoading()"
+          />
+          <section class="panel" aria-labelledby="atlas-waypoint-policy">
+            <h2 class="panel-title" id="atlas-waypoint-policy">Progress policy</h2>
+            <p class="atlas-text-secondary">
+              Progress comes from completed Steps. Skipped and cancelled Steps are excluded, and
+              Blocked never changes a status.
+            </p>
+          </section>
+        </aside>
+      </div>
+    }
+  }
+  @default {
+    <atlas-page-header title="Opening Waypoint" />
+    <atlas-feedback-state
+      kind="loading"
+      title="Loading Waypoint"
+      description="Gathering its Steps and notes."
+    />
+  }
+}

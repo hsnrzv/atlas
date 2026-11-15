@@ -38,6 +38,8 @@ export interface GoalNode {
   readonly parentId: NodeId | null;
   readonly nodeType: NodeType;
   readonly title: string;
+  readonly outcome: string | null;
+  readonly description: string | null;
   readonly status: NodeStatus;
   readonly startDate: PlannedDate | null;
   readonly dueDate: PlannedDate | null;

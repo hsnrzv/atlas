@@ -1,0 +1,78 @@
+@use 'abstracts' as atlas;
+
+:host {
+  @include atlas.stack;
+}
+
+.pickers,
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.picker,
+atlas-destination-picker {
+  flex: 1 1 16rem;
+  max-inline-size: var(--layout-dialog-width);
+}
+
+.filter {
+  flex: 0 1 12rem;
+}
+
+.layout {
+  @include atlas.with-aside;
+}
+
+.main,
+.aside {
+  @include atlas.stack;
+}
+
+.summary {
+  @include atlas.feature-card;
+  @include atlas.stack(var(--space-2));
+}
+
+.summary-title {
+  @include atlas.style(h3);
+}
+
+.count {
+  margin: 0;
+}
+
+.rows {
+  @include atlas.stack(var(--space-2));
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.panel {
+  @include atlas.card;
+  @include atlas.stack(var(--space-2));
+}
+
+.panel-title {
+  @include atlas.style(h4);
+}
+
+.facts {
+  @include atlas.stack(var(--space-2));
+
+  margin: 0;
+
+  dt {
+    @include atlas.style(label);
+
+    color: var(--color-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+  }
+}

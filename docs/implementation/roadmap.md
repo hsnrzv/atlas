@@ -1,7 +1,7 @@
 # Implementation roadmap — Figma V3 to production
 
-- Status: approved by the owner on 2026-11-14 with the decisions in §4. Phases 1–3 are complete and approved;
-  phase 4 is implemented and gate 4 awaits owner approval.
+- Status: approved by the owner on 2026-11-14 with the decisions in §4. Phases 1–4 are complete and approved;
+  phase 5 is implemented and gate 5 awaits owner approval.
 - Purpose: turn the approved Figma V3 design into the production Angular app, in small reviewed PRs.
 - Maps the nine implementation phases of the production brief onto the existing backlog in
   [PLAN-FRONTEND.md](../plan/PLAN-FRONTEND.md) (`F…` IDs) and the cross-repository phases in
@@ -78,11 +78,11 @@ shared UI component.
 
 ### Phase 4 — My Atlas with mock data
 
-| ID    | Item                                                                                                                             | Status                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| ----- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| F2-2  | Models, `statusForNode` (D14), ports, `MockGoalRepository` with the single §10.5 sample and fixture progress (R-6), bundle guard | done 2026-11-15: `Dashboard`/`Goal`/`GoalNode` models, `DashboardRepository` and `GoalRepository` ports, `?mock=sample\|empty\|loading\|error\|refresh-error`, `Unavailable*Repository` in production until F4-1, `npm run bundle:check` in `verify` and CI. Fields beyond the draft contract are proposed as FQ-1 … FQ-6 ([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-6)) |
-| F2-3a | My Atlas cards: `Hero`, `NextWaypoint`, `GlanceSummary`, `DestinationCard`                                                       | done 2026-11-15: plus `DimensionCard`; shared cards in `shared/ui`, page-only parts in `features/atlas/components`; all shown on `/_design`                                                                                                                                                                                                                                                                                              |
-| F2-3b | My Atlas page: Overview, Empty, Loading, Error states (Figma page 05), mobile More page wired                                    | done 2026-11-15: `AtlasOverviewStore` (`rxResource`) keeps the last saved plan when a refresh fails; focus stays on the page heading when the state changes. Deviations from Figma are listed in [figma-handoff.md §6](../design/figma-handoff.md#6-sample-data-shown-in-figma)                                                                                                                                                          |
+| ID    | Item                                                                                                                             | Status                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F2-2  | Models, `statusForNode` (D14), ports, `MockGoalRepository` with the single §10.5 sample and fixture progress (R-6), bundle guard | done 2026-11-15: `Dashboard`/`Goal`/`GoalNode` models, `DashboardRepository` and `GoalRepository` ports, `?mock=sample\|empty\|loading\|error\|refresh-error`, `Unavailable*Repository` in production until F4-1, `npm run bundle:check` in `verify` and CI. Fields beyond the draft contract are proposed as FQ-1 … FQ-6 ([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-13)) |
+| F2-3a | My Atlas cards: `Hero`, `NextWaypoint`, `GlanceSummary`, `DestinationCard`                                                       | done 2026-11-15: plus `DimensionCard`; shared cards in `shared/ui`, page-only parts in `features/atlas/components`; all shown on `/_design`                                                                                                                                                                                                                                                                                               |
+| F2-3b | My Atlas page: Overview, Empty, Loading, Error states (Figma page 05), mobile More page wired                                    | done 2026-11-15: `AtlasOverviewStore` (`rxResource`) keeps the last saved plan when a refresh fails; focus stays on the page heading when the state changes. Deviations from Figma are listed in [figma-handoff.md §6](../design/figma-handoff.md#6-sample-data-shown-in-figma)                                                                                                                                                           |
 
 **Gate 4:** My Atlas matches page 05 in all states; the production bundle contains no mock (guard green).
 Verified 2026-11-15 and awaiting owner approval. Compared with Figma: Overview desktop dark and light (`214:2602`,
@@ -94,21 +94,29 @@ projects, plus the Overview at 768 px. Visual-regression screenshots (D11) are s
 
 ### Phase 5 — Destinations, Waypoints and Steps
 
-| ID   | Item                                                                                                           |
-| ---- | -------------------------------------------------------------------------------------------------------------- |
-| F2-4 | Destinations overview with filters                                                                             |
-| F2-5 | Destination detail, tabs, `WaypointRoute`                                                                      |
-| F2-6 | Waypoints overview and detail; drill-down to any depth; Blocked availability with reason                       |
-| F2-7 | Steps overview, `StepRow`, Step detail (side sheet), Blocked Step; status change through the port; live region |
-| F3-0 | Signal Forms + Material spike (frontend.md §8)                                                                 |
-| F3-1 | Destination create/edit/archive/delete: form dialog/sheet, confirmation dialog, Saved toast                    |
-| F3-2 | Nested Waypoint/Step create/edit/reorder/delete; dependency picker                                             |
-| F3-3 | Notes (plain text, D13) and dates with precision                                                               |
+| ID   | Item                                                                                                           | Status                                                                                                                                                                              |
+| ---- | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F2-4 | Destinations overview with filters                                                                             | done 2026-11-15: search, Dimension, Status, Timeframe and Sort filters, grid and list views, context panel                                                                          |
+| F2-5 | Destination detail, tabs, `WaypointRoute`                                                                      | done 2026-11-15: one scrolling page instead of tabs (purpose, success, route, Steps, notes, reward); `WaypointRoute` in `shared/ui`                                                 |
+| F2-6 | Waypoints overview and detail; drill-down to any depth; Blocked availability with reason                       | done 2026-11-15: `/destinations/:goalId/waypoints/:nodeId` at any depth with breadcrumbs; `BlockedPanel` names the unmet prerequisites                                              |
+| F2-7 | Steps overview, `StepRow`, Step detail (side sheet), Blocked Step; status change through the port; live region | done 2026-11-15: Step detail is a full page, not a side sheet; status changes go through `GoalRepository` and are announced through `LiveAnnouncer` plus an inline message (flow D) |
+| F3-0 | Signal Forms + Material spike (frontend.md §8)                                                                 | done 2026-11-15: [ADR-0009](../adr/0009-signal-forms.md)                                                                                                                            |
+| F3-1 | Destination create/edit/archive/delete: form dialog/sheet, confirmation dialog, Saved toast                    | done 2026-11-15: `GoalFormDialog`, `ConfirmDialog`, toast after each write; archive uses the port's `archive`, how archived Destinations are listed is FQ-8                         |
+| F3-2 | Nested Waypoint/Step create/edit/reorder/delete; dependency picker                                             | done 2026-11-15: `NodeFormDialog` with a prerequisite picker that excludes the node and its descendants; move up/down on Waypoint detail; cascade-delete confirmation               |
+| F3-3 | Notes (plain text, D13) and dates with precision                                                               | done 2026-11-15: `NotesPanel` (plain text, FQ-9) and `PlannedDateFields` (year, month or day precision)                                                                             |
 
 F3-* items may start after F2-5 in parallel with F2-6/F2-7. Figma flows B, C and D become Playwright journeys here.
 
 **Gate 5:** flows B–D pass e2e at all widths and both themes; repo phase-2 gate met (overview → Destination → Waypoint
 → nested → back, Chromium/Firefox/WebKit, zero axe violations).
+Verified 2026-11-15 and awaiting owner approval. `npm run verify` passes. `npm run e2e` (`e2e/plan.spec.ts`) covers
+flow B (create a Destination), flow C (Destination → Waypoint → Step → back), nested Waypoint create and back, Step
+add and edit, flow D (mark complete, updated Waypoint progress) and the Blocked Step. Every Phase 5 page passes axe
+WCAG 2.2 AA with no horizontal overflow in both themes, plus the three empty states. Playwright now runs desktop
+Chromium, Pixel 7 Chromium, desktop Firefox and desktop WebKit (CI installs all three engines). Deviations from Figma
+are listed in [figma-handoff.md §6.2](../design/figma-handoff.md#62-destinations-waypoints-and-steps-pages-0608-known-deviations). The initial bundle grew from 460 kB to 510 kB raw (128 kB transfer) and now triggers the 500 kB
+budget warning ([frontend.md §17](../architecture/frontend.md#17-performance-budgets)). Backend-owned rules
+stay open as FQ-7 … FQ-13 ([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-13)).
 
 ### Phase 6 — Connections, Journey, Awards, Life Dimensions, onboarding and companion
 

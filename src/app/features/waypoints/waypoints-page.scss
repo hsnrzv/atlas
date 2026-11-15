@@ -1,0 +1,47 @@
+@use 'abstracts' as atlas;
+
+:host {
+  @include atlas.stack;
+}
+
+.layout {
+  @include atlas.with-aside;
+}
+
+.main,
+.aside {
+  @include atlas.stack;
+}
+
+.summary {
+  @include atlas.feature-card;
+  @include atlas.stack(var(--space-2));
+}
+
+.summary-title {
+  @include atlas.style(h3);
+}
+
+.section {
+  @include atlas.stack(var(--space-3));
+}
+
+.section-title {
+  @include atlas.style(h3);
+}
+
+.panel {
+  @include atlas.card;
+  @include atlas.stack(var(--space-2));
+}
+
+.panel-title {
+  @include atlas.style(h4);
+}
+
+.dates {
+  @include atlas.stack(var(--space-1));
+
+  margin: 0;
+  padding-inline-start: var(--space-4);
+}
