@@ -48,6 +48,9 @@ jobs:
       - name: Production build (type-check + budgets)
         run: npm run build
 
+      - name: Bundle guard (no mock data in the production bundle)
+        run: npm run bundle:check
+
       - uses: actions/upload-artifact@v7
         with:
           name: frontend-dist

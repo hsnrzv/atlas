@@ -150,15 +150,27 @@ precision }`, `Money { amount: string, currency }`, statuses and link types as s
 
 - `HttpGoalRepository` (F4-1) uses `HttpClient` with a base path from `API_BASE_URL` (`/api/v1`, same origin), maps
   Problem Details to typed errors, and sends `If-Match` / `Idempotency-Key` where the contract requires.
-- `MockGoalRepository` (F2-2) serves **only** the single sample from `project-instruction.md` §10.5 (described in
-  [figma-handoff.md §6](../design/figma-handoff.md#6-sample-data-shown-in-figma)). It adds small latency and can
-  simulate empty, loading and error states through a dev toolbar or query flag (`?mock=empty|error`), so the Figma
-  states can be reviewed.
-- `provideAtlasData()` picks the adapter. `src/environments/environment.development.ts` sets `dataSource: 'mock'`;
-  production sets `'http'`. `angular.json` uses `fileReplacements` so the production build never references
-  `core/data-access/mock/**`.
-- **Bundle guard (CI):** after `ng build`, a script fails if the production bundle contains a sentinel string from the
-  mock folder (`ATLAS_MOCK_SENTINEL`) or the sample Destination title.
+- `MockDashboardRepository` and `MockGoalRepository` (F2-2) serve **only** the single sample from
+  `project-instruction.md` §10.5 (described in
+  [figma-handoff.md §6](../design/figma-handoff.md#6-sample-data-shown-in-figma)). `MockResponder` adds 400 ms latency
+  and reads a query flag once at start-up, so every Figma state can be reviewed and the mode survives in-app
+  navigation: `?mock=sample` (default), `empty`, `loading` (never answers), `error` (every request fails) and
+  `refresh-error` (the first request succeeds, later ones fail: the Error state with the last saved plan).
+- `provideAtlasData()` registers the adapters from `core/data-access/data-source.ts`. In development builds
+  `angular.json` `fileReplacements` swaps in `data-source.development.ts`, which picks the mock when
+  `environment.dataSource` is `'mock'`. The production file never references `core/data-access/mock/**`. Until the
+  HTTP adapters land (F4-1), production uses `Unavailable*Repository`: every call fails with an `AtlasDataError` of
+  kind `unavailable`, so pages show their Error state.
+- `ATLAS_SAMPLE_DATA` (root token, `false` by default) is `true` only while the mock serves the sample. Pages use it
+  for the "Sample plan ·" label from Figma.
+- `/_design` lives in `src/app/dev-routes.development.ts`. Production builds use the empty `dev-routes.ts`, so the
+  design page and its sample copy never ship.
+- The ESLint boundaries allow imports of `core/data-access/mock/**` only from `core/data-access`. `shared/**` and
+  `features/*/components/**` must not import data access. Feature specs use their own fixtures
+  (`features/*/testing/`).
+- **Bundle guard (CI):** `npm run bundle:check` (`scripts/check-bundle-no-mock.mjs`, part of `npm run verify` and
+  the CI build job) fails if the production bundle contains the mock sentinel (`ATLAS_MOCK_SENTINEL`) or the sample
+  Destination title.
 
 ### 6.3 Derived values in the mock
 
@@ -179,6 +191,23 @@ The fixtures are deleted with the mock (F4-7).
 - "Use sample details" (form) and "Explore sample plan" (onboarding) exist only in dev builds, behind the same
   environment flag.
 
+### 6.5 Proposed contract additions (frontend questions FQ-1 … FQ-6)
+
+Figma page 05 shows values that the draft `GET /api/v1/dashboard` contract (API-CONTRACT §9.1) does not provide.
+Only the backend can derive them (roadmap R-12), so the frontend models them as **proposed** additions
+(marked "Proposed (FQ-n)" in `core/models/dashboard.ts` and `progress.ts`). The mock serves Figma's values for them.
+The backend owner decides each question before F4-1. If one is rejected, its UI element is removed. The frontend
+never derives it.
+
+| ID   | Proposed field                                                                                   | Shown on page 05                                            |
+| ---- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| FQ-1 | `activeGoals[].nextNode` gains `nodeType`, `status`, `availability.state`, `dueDate`, `progress` | Next Waypoint card: status chip, planned date, progress     |
+| FQ-2 | `lifeBalance[].progress` (`null` when the area has no active Destination)                        | Life dimension cards                                        |
+| FQ-3 | `summary { activeGoals, achievedWaypoints }`, `activeGoals[].achievedWaypoints`                  | At a glance; hero "Waypoints achieved"                      |
+| FQ-4 | `inProgress[]` (Steps in progress); `recentAchievements[].nodeType`                              | Recent progress ("Completed · Step", "In progress")         |
+| FQ-5 | `progress.excludedNodes[]`                                                                       | Progress policy caption ("… is excluded from progress")     |
+| FQ-6 | `activeGoals[].keyDates[]` (later Waypoints with their planned date or `null`)                   | Timing line ("Receive admission decision · date not set …") |
+
 ## 7. State
 
 - **Signal stores per feature**, written as `@Injectable()` classes provided on the feature route (not root), with
@@ -186,6 +215,10 @@ The fixtures are deleted with the mock (F4-7).
   (debounced search). No NgRx (no need yet; revisit if cross-feature state appears).
 - Store shape: `{ status: 'idle'|'loading'|'ready'|'error', data, error }` exposed as read-only signals plus view-model
   `computed`s. Pages render `FeedbackState` for loading/empty/error with Retry.
+- First implementation (F2-3b): `AtlasOverviewStore` loads the dashboard with `rxResource` and exposes
+  `state: 'loading' | 'empty' | 'ready' | 'error'`, a display `overview` (from the pure
+  `atlas-overview.view-model.ts`, formatting only) and `refreshing`. A `linkedSignal` keeps the last saved plan, so a
+  failed refresh shows the Error state beside "Last saved plan" instead of discarding it.
 - Writes: store method → port → on success, update local state from the **server response** (no client-side
   re-derivation). Optimistic UI only for Step status toggles, with rollback on error (F4-3).
 - Cross-cutting state in `core`: theme, companion preferences, current user (later).
@@ -262,6 +295,9 @@ WCAG 2.2 AA is a release gate:
 
 - Landmarks, one `h1` per page, skip link, focus moved to `h1` after navigation, `aria-current` on nav and
   breadcrumbs.
+- When a page swaps its state template (Loading → Overview, Error after Retry), each state renders its own `h1`. If
+  the old `h1` had focus, the page moves focus to the new one after render (`AtlasOverviewPage`), so keyboard and
+  screen-reader users do not lose their place (WCAG 2.4.3). Loading regions set `aria-busy`.
 - Focus ring 2 px outside (`--color-focus-ring`), visible in both themes.
 - Status = icon + text; dimension = glyph + label; connector type = line style + legend.
 - Live region announcements for Step completion, saves and errors.

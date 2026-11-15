@@ -22,7 +22,9 @@ for (const layout of LAYOUTS) {
       );
       await page.goto('/');
       await expect(page).toHaveURL(/\/atlas$/);
-      await expect(page.getByRole('heading', { level: 1, name: 'My Atlas' })).toBeVisible();
+      await expect(
+        page.getByRole('heading', { level: 1, name: 'Your next chapter.' }),
+      ).toBeVisible();
     });
 
     test('renders the landmarks for this layout', async ({ page }) => {

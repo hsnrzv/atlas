@@ -267,6 +267,25 @@ section {
   }
 }
 
+.cards {
+  display: grid;
+  gap: var(--space-6);
+  align-items: start;
+
+  @include atlas.up(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.dimension-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
 .brand {
   padding: var(--space-8);
   background: var(--color-surface-card);

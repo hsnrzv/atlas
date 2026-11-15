@@ -22,10 +22,11 @@ describe('AtlasFeedbackState', () => {
     expect((await render('error')).getAttribute('role')).toBe('alert');
   });
 
-  it('shows skeleton bars and a hidden message while loading', async () => {
+  it('shows the message and skeleton bars while loading', async () => {
     const host = await render('loading');
     expect(host.getAttribute('aria-busy')).toBe('true');
-    expect(host.querySelector('.atlas-visually-hidden')?.textContent).toBe('No Destinations yet');
+    expect(host.querySelector('h2')?.textContent).toBe('No Destinations yet');
+    expect(host.querySelector('.action')).toBeNull();
     expect(host.querySelector('atlas-skeleton')?.getAttribute('aria-hidden')).toBe('true');
     expect(host.querySelectorAll('.bar')).toHaveLength(3);
   });

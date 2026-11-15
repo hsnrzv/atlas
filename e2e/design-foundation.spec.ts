@@ -13,8 +13,12 @@ test.describe('design foundation (/_design)', () => {
     for (const label of ['Career / Profession', 'Finance', 'Health', 'Love / Partnership']) {
       await expect(page.getByText(label, { exact: true }).first()).toBeVisible();
     }
-    await expect(page.getByRole('progressbar', { name: 'Destination progress' })).toBeVisible();
+    await expect(
+      page.getByRole('progressbar', { name: 'Destination progress' }).first(),
+    ).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toBeVisible();
+    await expect(page.locator('atlas-destination-card')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Explore next waypoint' })).toBeVisible();
   });
 
   test('has no horizontal overflow', async ({ page }) => {

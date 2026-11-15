@@ -1,0 +1,55 @@
+@use 'abstracts' as atlas;
+
+// Figma Atlas/V3/DimensionCard: card surface, radius/feature, padding 16, gap 12, 6 px track.
+:host {
+  @include atlas.feature-card(var(--space-4));
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.icon {
+  align-self: flex-start;
+  color: var(--atlas-dimension-color);
+}
+
+.name {
+  @include atlas.style(h4);
+}
+
+.count {
+  @include atlas.style(caption);
+
+  color: var(--color-text-secondary);
+}
+
+.value {
+  @include atlas.tabular-numbers;
+
+  font-weight: var(--typescale-control-font-weight);
+}
+
+.track {
+  block-size: var(--size-progress-height);
+  overflow: hidden;
+  background: var(--color-progress-track);
+  border-radius: var(--radius-pill);
+}
+
+.fill {
+  block-size: 100%;
+  background: var(--color-progress-fill);
+  border-radius: inherit;
+}
+
+@media (forced-colors: active) {
+  .track {
+    border: 1px solid CanvasText;
+  }
+
+  .fill {
+    background: Highlight;
+  }
+}

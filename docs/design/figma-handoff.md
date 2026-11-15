@@ -161,6 +161,26 @@ Figma uses exactly the one sample Destination required by `project-instruction.m
 This data lives only in the dev-only mock adapter, never in components
 ([frontend.md §6](../architecture/frontend.md#6-data-access-ports-mock-and-rest-adapters)).
 
+### 6.1 My Atlas (page 05): known deviations
+
+Accepted with Phase 4 (F2-3b), pending owner review at gate 4:
+
+- **Timing line:** composed from `keyDates` (FQ-6), so it reads "Start studying · 2027 · year precision" instead of
+  "Fall 2027". The contract has no season precision (`PlannedDate.precision` is `DAY`/`MONTH`/`QUARTER`/`YEAR`/
+  `APPROXIMATE`).
+- **Recent progress:** the in-progress Step reads "Draft personal statement · In progress". The progress-policy
+  caption is built from backend values ("2 of 10 Steps complete (20%) … is excluded from progress. Progress reflects
+  completed Steps.").
+- **Error state, last saved plan:** "40% · 2 of 5 Steps of Submit application" (Figma: "2 of 5 application Steps").
+  The "Last saved plan" label is sentence case.
+- **Date format:** follows `LOCALE_ID` (en-US: "November 12, 2026"; Figma: en-GB "12 November 2026") until the
+  profile locale arrives (D7).
+- **Not yet built:** the companion card (P-C1) and the search, Quick add and notifications in the top bar (with their
+  features).
+- "Sample plan ·" appears only while the mock serves the sample (`ATLAS_SAMPLE_DATA`); a real plan shows the date
+  only.
+- `FeedbackState` cards are limited to `--layout-dialog-width`.
+
 ## 7. Reading the file from code (MCP workflow)
 
 Inspection used the **Figma desktop MCP server** (`http://127.0.0.1:3845/mcp`) with these tools:

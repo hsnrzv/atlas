@@ -4,6 +4,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { App } from './app';
 import { routes } from './app.routes';
 import { ATLAS_ENVIRONMENT, AtlasEnvironment } from './core/config/atlas-environment';
+import { provideAtlasData } from './core/data-access/data-access.providers';
 
 function setup(devTools: boolean) {
   const environment: AtlasEnvironment = { dataSource: 'mock', devTools, companionArt: false };
@@ -12,6 +13,7 @@ function setup(devTools: boolean) {
     providers: [
       provideRouter(routes, withComponentInputBinding()),
       { provide: ATLAS_ENVIRONMENT, useValue: environment },
+      provideAtlasData(),
     ],
   });
 }
@@ -26,7 +28,10 @@ describe('App routes', () => {
     setup(true);
     const harness = await RouterTestingHarness.create('/');
     const root = harness.fixture.nativeElement as HTMLElement;
-    expect(root.querySelector('main h1')?.textContent).toContain('My Atlas');
+    expect(root.querySelector('atlas-overview-page')).not.toBeNull();
+    expect(root.querySelector('main h1')?.textContent).toMatch(
+      /Opening your Atlas\.|Your next chapter\./,
+    );
     expect(root.querySelector('atlas-app-shell')).not.toBeNull();
   });
 

@@ -302,6 +302,18 @@
           />
         </div>
       </div>
+
+      <div class="shared-block">
+        <h3 class="atlas-label">Cards</h3>
+        <div class="cards">
+          <atlas-next-waypoint-card [waypoint]="sampleWaypoint" />
+          <atlas-destination-card [destination]="sampleDestination" />
+          <ul class="dimension-cards" role="list">
+            <li><atlas-dimension-card dimension="career" [destinations]="1" [progress]="20" /></li>
+            <li><atlas-dimension-card dimension="health" /></li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 

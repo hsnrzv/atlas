@@ -13,21 +13,21 @@ const ICONS: Record<Exclude<AtlasFeedbackKind, 'loading'>, AtlasIconName> = {
 
 /**
  * Empty, loading, error and success panels (Figma Atlas/V3/FeedbackState 152:6913). Errors are announced as
- * alerts, the other kinds as polite status messages. Project an optional action button.
+ * alerts, the other kinds as polite status messages. Loading adds skeleton bars (page 05 Loading). Project an
+ * optional action button.
  */
 @Component({
   selector: 'atlas-feedback-state',
   imports: [AtlasIcon, AtlasSkeleton],
   template: `
+    <atlas-icon class="icon" [name]="icon()" size="lg" />
+    <h2 class="title">{{ title() }}</h2>
+    @if (description(); as description) {
+      <p class="description">{{ description }}</p>
+    }
     @if (kind() === 'loading') {
-      <p class="atlas-visually-hidden">{{ title() }}</p>
       <atlas-skeleton [lines]="3" />
     } @else {
-      <atlas-icon class="icon" [name]="icon()" size="lg" />
-      <h2 class="title">{{ title() }}</h2>
-      @if (description(); as description) {
-        <p class="description">{{ description }}</p>
-      }
       <div class="action">
         <ng-content />
       </div>

@@ -1,0 +1,214 @@
+@use 'abstracts' as atlas;
+
+// Figma page 05 content: 16 px between blocks; 24 px between columns from 768 px.
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+atlas-page-header {
+  margin-block-end: 0;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.eyebrow {
+  @include atlas.style(label);
+
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+// Focus row: Destination + Next Waypoint (720) beside At a glance (384) on desktop; stacked below 1024 px.
+.focus-row {
+  display: grid;
+  gap: var(--space-4);
+
+  @include atlas.up(lg) {
+    grid-template-columns: minmax(0, 15fr) minmax(0, 8fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+}
+
+.destination {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.identity-title {
+  @include atlas.style(h4);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.section-title {
+  @include atlas.style(h3);
+}
+
+// Seven Life Dimensions: 2-up on mobile and tablet, 4-up on desktop (page 05).
+.dimensions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  @include atlas.up(md) {
+    gap: var(--space-6);
+  }
+
+  @include atlas.up(lg) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  li {
+    display: grid;
+  }
+}
+
+.recent {
+  display: grid;
+  gap: var(--space-3) var(--space-6);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  @include atlas.up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.recent-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.recent-kind {
+  @include atlas.style(label);
+
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  color: var(--color-status-success);
+}
+
+.recent-title {
+  font-weight: var(--typescale-control-font-weight);
+}
+
+.timing {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+// Empty, Loading and Error: the feedback card is centred above the page content.
+.state {
+  display: flex;
+  justify-content: center;
+}
+
+.feedback {
+  max-width: var(--layout-dialog-width);
+}
+
+.panel {
+  @include atlas.card;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.panel-title {
+  @include atlas.style(h3);
+}
+
+.panel-progress {
+  max-width: var(--layout-popover-width);
+}
+
+.saved-label {
+  @include atlas.style(label);
+
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.saved-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  color: var(--color-text-secondary);
+  list-style: none;
+}
+
+.skeleton-panels {
+  display: grid;
+  gap: var(--space-4);
+
+  @include atlas.up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.skeleton-panel {
+  @include atlas.card;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.bar {
+  display: block;
+  inline-size: 94%;
+  block-size: var(--space-3);
+  background: var(--color-border-subtle);
+  border-radius: var(--radius-card);
+  animation: atlas-overview-pulse 1.4s var(--easing-standard) infinite alternate;
+
+  &.is-title {
+    inline-size: 83%;
+    block-size: var(--space-4);
+  }
+
+  &.is-short {
+    inline-size: 88%;
+  }
+}
+
+@keyframes atlas-overview-pulse {
+  to {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    animation: none;
+  }
+}

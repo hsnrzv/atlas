@@ -20,8 +20,17 @@ import { AtlasDimensionBadge } from '../shared/ui/badge/dimension-badge';
 import { AtlasStatusBadge } from '../shared/ui/badge/status-badge';
 import { AtlasBreadcrumbs } from '../shared/ui/breadcrumbs/breadcrumbs';
 import { AtlasDateLabel, PlannedDate } from '../shared/ui/date-label/date-label';
+import {
+  AtlasDestinationCard,
+  type DestinationCardVm,
+} from '../shared/ui/destination-card/destination-card';
+import { AtlasDimensionCard } from '../shared/ui/dimension-card/dimension-card';
 import { AtlasFeedbackState } from '../shared/ui/feedback-state/feedback-state';
 import { AtlasIconButton } from '../shared/ui/icon-button/icon-button';
+import {
+  AtlasNextWaypointCard,
+  type NextWaypointVm,
+} from '../shared/ui/next-waypoint-card/next-waypoint-card';
 import { AtlasPageHeader } from '../shared/ui/page-header/page-header';
 import { AtlasPopover, AtlasPopoverTrigger } from '../shared/ui/popover/popover';
 import { AtlasProgress } from '../shared/ui/progress/progress';
@@ -95,11 +104,14 @@ function swatches(group: string, scale: Record<string, string>): Swatch[] {
   imports: [
     AtlasBreadcrumbs,
     AtlasDateLabel,
+    AtlasDestinationCard,
     AtlasDimensionBadge,
+    AtlasDimensionCard,
     AtlasFeedbackState,
     AtlasIcon,
     AtlasIconButton,
     AtlasLogo,
+    AtlasNextWaypointCard,
     AtlasPageHeader,
     AtlasPopover,
     AtlasPopoverTrigger,
@@ -164,6 +176,28 @@ export class DesignFoundation {
     { date: '2030-01-01', precision: 'YEAR' },
     { date: '2027-09-15', precision: 'APPROXIMATE' },
   ];
+
+  /** Illustrative card content; on real pages every value comes from the backend. */
+  protected readonly sampleWaypoint: NextWaypointVm = {
+    id: 'demo-waypoint',
+    title: 'Submit application',
+    dimension: 'career',
+    status: 'in-progress',
+    plannedDate: { date: '2026-12-01', precision: 'MONTH' },
+    progress: { value: 40, detail: '2 of 5' },
+    link: '/_design',
+  };
+
+  protected readonly sampleDestination: DestinationCardVm = {
+    id: 'demo-destination',
+    title: 'Complete an online Master’s degree',
+    dimension: 'career',
+    status: 'in-progress',
+    progress: { value: 20, detail: '2 of 10' },
+    nextWaypoint: 'Submit application',
+    targetDate: { date: '2030-01-01', precision: 'YEAR' },
+    link: '/_design',
+  };
 
   private readonly document = inject(DOCUMENT);
 

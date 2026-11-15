@@ -1,0 +1,60 @@
+@use 'abstracts' as atlas;
+
+// Figma Atlas/V3/Focus/NextWaypoint: card surface, radius/feature, padding 24, gap 16.
+:host {
+  @include atlas.feature-card;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.eyebrow {
+  @include atlas.style(label);
+
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+// Page 05: the badge sits below the title and the action spans the card on mobile and tablet;
+// from 1024 px the badge moves beside the title and the action keeps its natural width.
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2) var(--space-4);
+  align-items: flex-start;
+  align-self: stretch;
+
+  @include atlas.up(lg) {
+    flex-flow: row wrap;
+  }
+}
+
+.title {
+  @include atlas.style(h3);
+
+  min-width: 0;
+
+  @include atlas.up(lg) {
+    flex: 1 1 16rem;
+  }
+}
+
+.planned {
+  color: var(--color-text-secondary);
+}
+
+.progress {
+  align-self: stretch;
+  max-width: 20rem;
+}
+
+.action {
+  align-self: stretch;
+
+  @include atlas.up(lg) {
+    align-self: flex-start;
+  }
+}

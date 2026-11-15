@@ -1,6 +1,4 @@
-import { inject } from '@angular/core';
 import { Route, Routes } from '@angular/router';
-import { ATLAS_ENVIRONMENT } from './core/config/atlas-environment';
 import { AtlasAppShell } from './core/layout/app-shell/app-shell';
 import {
   AWARDS,
@@ -17,6 +15,7 @@ import {
   STEPS,
   WAYPOINTS,
 } from './core/layout/navigation';
+import { devRoutes } from './dev-routes';
 
 /** Temporary page for an area until its feature lands (F1-14); route data feeds the page inputs. */
 function placeholder(link: AtlasNavLink, description: string): Route {
@@ -30,19 +29,16 @@ function placeholder(link: AtlasNavLink, description: string): Route {
 }
 
 export const routes: Routes = [
-  {
-    path: '_design',
-    title: 'Design foundation',
-    canMatch: [() => inject(ATLAS_ENVIRONMENT).devTools],
-    loadComponent: () =>
-      import('./design-system/design-foundation').then((m) => m.DesignFoundation),
-  },
+  ...devRoutes,
   {
     path: '',
     component: AtlasAppShell,
     children: [
       { path: '', pathMatch: 'full', redirectTo: MY_ATLAS.path.slice(1) },
-      placeholder(MY_ATLAS, 'Your Life Dimensions, active Destinations and next Waypoints.'),
+      {
+        path: MY_ATLAS.path.slice(1),
+        loadChildren: () => import('./features/atlas/atlas.routes').then((m) => m.ATLAS_ROUTES),
+      },
       placeholder(DESTINATIONS, 'The long-term outcomes you are working towards.'),
       placeholder(WAYPOINTS, 'The milestones on the way to each Destination.'),
       placeholder(STEPS, 'The small actions that move a Waypoint forward.'),

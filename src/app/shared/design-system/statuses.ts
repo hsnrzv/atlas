@@ -1,7 +1,8 @@
+import type { UiStatus } from '../../core/models/status-for-node';
 import type { AtlasIconName } from '../icons/atlas-icons';
-import { statusColors } from './tokens.generated';
 
-export type AtlasStatusKey = keyof typeof statusColors;
+/** Map a backend node to a key with `statusForNode` (core/models). */
+export type AtlasStatusKey = UiStatus;
 
 /** Semantic progress status. Always render the label; colour and icon are reinforcement only. */
 export interface AtlasStatus {
@@ -21,6 +22,23 @@ const LABELS: Record<AtlasStatusKey, string> = {
   'at-risk': 'At risk',
   blocked: 'Blocked',
   'not-started': 'Not started',
+  skipped: 'Skipped',
+  cancelled: 'Cancelled',
+};
+
+/**
+ * Skipped and cancelled have no colour of their own in Figma V3 (roadmap R-13), so they reuse the neutral
+ * not-started tokens and are told apart by icon and label.
+ */
+const COLOR_TOKEN: Record<AtlasStatusKey, string> = {
+  success: 'success',
+  'in-progress': 'in-progress',
+  upcoming: 'upcoming',
+  'at-risk': 'at-risk',
+  blocked: 'blocked',
+  'not-started': 'not-started',
+  skipped: 'not-started',
+  cancelled: 'not-started',
 };
 
 export const ATLAS_STATUSES: readonly AtlasStatus[] = (Object.keys(LABELS) as AtlasStatusKey[]).map(
@@ -28,7 +46,7 @@ export const ATLAS_STATUSES: readonly AtlasStatus[] = (Object.keys(LABELS) as At
     key,
     label: LABELS[key],
     icon: `status-${key}`,
-    color: `var(--color-status-${key})`,
-    tint: `var(--color-status-${key}-tint)`,
+    color: `var(--color-status-${COLOR_TOKEN[key]})`,
+    tint: `var(--color-status-${COLOR_TOKEN[key]}-tint)`,
   }),
 );

@@ -11,6 +11,7 @@ import {
   IconCheck,
   IconChevronDown,
   IconChevronRight,
+  IconCircleX,
   IconCompass,
   IconDots,
   IconFlag,
@@ -30,6 +31,7 @@ import {
   IconNotebook,
   IconOrbit,
   IconPencil,
+  IconPlayerSkipForward,
   IconPlus,
   IconRoute,
   IconSearch,
@@ -105,6 +107,9 @@ export const ATLAS_ICONS = {
   'status-at-risk': IconAlertCircle,
   'status-blocked': IconLock,
   'status-not-started': IconFlag,
+  // Not in Figma V3: neutral glyphs for the stored SKIPPED and CANCELLED work states (D14).
+  'status-skipped': IconPlayerSkipForward,
+  'status-cancelled': IconCircleX,
 } as const satisfies Record<string, TablerIcon>;
 
 export type AtlasIconName = keyof typeof ATLAS_ICONS;

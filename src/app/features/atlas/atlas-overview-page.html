@@ -1,0 +1,162 @@
+@switch (store.state()) {
+  @case ('loading') {
+    <atlas-page-header
+      title="Opening your Atlas."
+      description="Please wait while your plan loads."
+    />
+    <div class="state">
+      <atlas-feedback-state
+        class="feedback"
+        kind="loading"
+        title="Loading your Atlas"
+        description="Gathering your saved Destinations and Waypoints."
+      />
+    </div>
+    <div class="skeleton-panels" aria-hidden="true">
+      @for (panel of skeletonPanels; track panel) {
+        <div class="skeleton-panel">
+          <span class="bar is-title"></span>
+          <span class="bar"></span>
+          <span class="bar is-short"></span>
+        </div>
+      }
+    </div>
+  }
+
+  @case ('empty') {
+    <atlas-page-header title="Your next chapter." description="A fresh start, on your terms." />
+    <div class="state">
+      <atlas-feedback-state
+        class="feedback"
+        iconName="destinations"
+        title="No Destinations yet"
+        description="Choose what matters to you and create your first Destination."
+      >
+        <a mat-flat-button [routerLink]="destinations.path">Create Destination</a>
+      </atlas-feedback-state>
+    </div>
+    <section class="panel" aria-labelledby="atlas-starting-point">
+      <h2 class="panel-title" id="atlas-starting-point">Your starting point</h2>
+      <p class="atlas-text-secondary">0 Destinations · 0% progress</p>
+      <atlas-progress
+        class="panel-progress"
+        label="Overall progress"
+        [value]="0"
+        detail="No Steps yet"
+      />
+      <p class="atlas-text-secondary">
+        No completed Steps or achieved Waypoints yet. Begin with one meaningful intention.
+      </p>
+    </section>
+  }
+
+  @case ('error') {
+    <atlas-page-header
+      title="Your plan is still yours."
+      description="A connection issue does not change your saved plan."
+    />
+    <div class="state">
+      <atlas-feedback-state
+        class="feedback"
+        kind="error"
+        title="We couldn’t refresh your Atlas"
+        description="Your saved plan is unchanged. Check your connection and try again."
+      >
+        <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
+      </atlas-feedback-state>
+    </div>
+    @if (store.overview(); as saved) {
+      <section class="panel" aria-labelledby="atlas-last-saved">
+        <p class="saved-label">Last saved plan</p>
+        <h2 class="panel-title" id="atlas-last-saved">{{ saved.destination.title }}</h2>
+        <ul class="saved-lines" role="list">
+          @for (line of saved.savedLines; track line) {
+            <li>{{ line }}</li>
+          }
+        </ul>
+        <p class="atlas-caption atlas-text-muted">Showing saved information, not a new update.</p>
+      </section>
+    }
+  }
+
+  @case ('ready') {
+    @if (store.overview(); as vm) {
+      <header class="heading">
+        <h1 class="atlas-h1">Your next chapter.</h1>
+        <p class="atlas-caption atlas-text-secondary">
+          @if (vm.sample) {
+            Sample plan ·
+          }
+          <time [attr.datetime]="vm.today.datetime">{{ vm.today.text }}</time>
+        </p>
+      </header>
+
+      <atlas-hero
+        [percent]="vm.destination.percent"
+        [percentText]="vm.destination.percentText"
+        [detail]="vm.destination.detail"
+        [achieved]="vm.achievedText"
+      />
+
+      <div class="focus-row">
+        <section class="destination" aria-labelledby="atlas-destination-title">
+          <div class="identity">
+            <p class="eyebrow">Your destination · {{ vm.destination.dimensionLabel }}</p>
+            <h2 class="identity-title" id="atlas-destination-title">{{ vm.destination.title }}</h2>
+          </div>
+          @if (vm.nextWaypoint; as next) {
+            <atlas-next-waypoint-card [waypoint]="next" />
+          }
+        </section>
+        <atlas-glance-summary class="glance" [items]="vm.glance" />
+      </div>
+
+      <section class="section" aria-labelledby="atlas-dimensions-title">
+        <h2 class="section-title" id="atlas-dimensions-title">Life dimensions</h2>
+        <ul class="dimensions" role="list">
+          @for (dimension of vm.dimensions; track dimension.key) {
+            <li>
+              <atlas-dimension-card
+                [dimension]="dimension.key"
+                [destinations]="dimension.destinations"
+                [progress]="dimension.progress"
+              />
+            </li>
+          }
+        </ul>
+      </section>
+
+      <section class="section" aria-labelledby="atlas-recent-title">
+        <h2 class="section-title" id="atlas-recent-title">Recent progress</h2>
+        @if (vm.recent.length) {
+          <ul class="recent" role="list">
+            @for (item of vm.recent; track item.id) {
+              <li class="recent-item">
+                <span class="recent-kind">
+                  <atlas-icon name="status-success" size="xs" />
+                  {{ item.kind }}
+                </span>
+                <span class="recent-title">{{ item.title }}</span>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="atlas-text-secondary">No completed Steps yet.</p>
+        }
+        @for (line of vm.inProgress; track line) {
+          <p class="atlas-text-secondary">{{ line }}</p>
+        }
+      </section>
+
+      <footer class="timing">
+        @if (vm.timing; as timing) {
+          <p class="atlas-text-secondary">{{ timing }}</p>
+        }
+        <p class="atlas-caption atlas-text-secondary">{{ vm.progressCaption }}</p>
+        @if (vm.policyCaption; as policy) {
+          <p class="atlas-caption atlas-text-muted">{{ policy }}</p>
+        }
+      </footer>
+    }
+  }
+}

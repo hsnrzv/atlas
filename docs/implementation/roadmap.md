@@ -1,7 +1,7 @@
 # Implementation roadmap — Figma V3 to production
 
-- Status: approved by the owner on 2026-11-14 with the decisions in §4. Phase 1 is complete (gate 1 met 2026-11-14);
-  phase 2 is implemented and gate 2 awaits owner approval.
+- Status: approved by the owner on 2026-11-14 with the decisions in §4. Phases 1–3 are complete and approved;
+  phase 4 is implemented and gate 4 awaits owner approval.
 - Purpose: turn the approved Figma V3 design into the production Angular app, in small reviewed PRs.
 - Maps the nine implementation phases of the production brief onto the existing backlog in
   [PLAN-FRONTEND.md](../plan/PLAN-FRONTEND.md) (`F…` IDs) and the cross-repository phases in
@@ -78,13 +78,19 @@ shared UI component.
 
 ### Phase 4 — My Atlas with mock data
 
-| ID    | Item                                                                                                                             |
-| ----- | -------------------------------------------------------------------------------------------------------------------------------- |
-| F2-2  | Models, `statusForNode` (D14), ports, `MockGoalRepository` with the single §10.5 sample and fixture progress (R-6), bundle guard |
-| F2-3a | My Atlas cards: `Hero`, `NextWaypoint`, `GlanceSummary`, `DestinationCard`                                                       |
-| F2-3b | My Atlas page: Overview, Empty, Loading, Error states (Figma page 05), mobile More page wired                                    |
+| ID    | Item                                                                                                                             | Status                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F2-2  | Models, `statusForNode` (D14), ports, `MockGoalRepository` with the single §10.5 sample and fixture progress (R-6), bundle guard | done 2026-11-15: `Dashboard`/`Goal`/`GoalNode` models, `DashboardRepository` and `GoalRepository` ports, `?mock=sample\|empty\|loading\|error\|refresh-error`, `Unavailable*Repository` in production until F4-1, `npm run bundle:check` in `verify` and CI. Fields beyond the draft contract are proposed as FQ-1 … FQ-6 ([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-6)) |
+| F2-3a | My Atlas cards: `Hero`, `NextWaypoint`, `GlanceSummary`, `DestinationCard`                                                       | done 2026-11-15: plus `DimensionCard`; shared cards in `shared/ui`, page-only parts in `features/atlas/components`; all shown on `/_design`                                                                                                                                                                                                                                                                                              |
+| F2-3b | My Atlas page: Overview, Empty, Loading, Error states (Figma page 05), mobile More page wired                                    | done 2026-11-15: `AtlasOverviewStore` (`rxResource`) keeps the last saved plan when a refresh fails; focus stays on the page heading when the state changes. Deviations from Figma are listed in [figma-handoff.md §6](../design/figma-handoff.md#6-sample-data-shown-in-figma)                                                                                                                                                          |
 
 **Gate 4:** My Atlas matches page 05 in all states; the production bundle contains no mock (guard green).
+Verified 2026-11-15 and awaiting owner approval. Compared with Figma: Overview desktop dark and light (`214:2602`,
+`214:2646`), tablet dark (`230:7469`) and mobile light (`214:2738`); Empty (`230:11876`), Loading (`230:12578`) and
+Error (`230:13412`) at desktop size, dark. `npm run verify` passes, including `bundle:check` against the production build.
+`npm run e2e` (`e2e/my-atlas.spec.ts`) covers every state, Retry, the saved plan after a failed refresh, focus
+handling, and axe WCAG 2.2 AA plus no horizontal overflow for every state in both themes on the desktop and mobile
+projects, plus the Overview at 768 px. Visual-regression screenshots (D11) are still deferred.
 
 ### Phase 5 — Destinations, Waypoints and Steps
 

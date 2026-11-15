@@ -1,0 +1,65 @@
+@use 'abstracts' as atlas;
+
+:host {
+  @include atlas.card(var(--space-6));
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  transition: border-color var(--duration-micro) var(--easing-standard);
+
+  &:hover {
+    border-color: var(--color-border-action);
+  }
+
+  &:has(.link:focus-visible) {
+    @include atlas.focus-ring;
+  }
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.title {
+  @include atlas.style(h4);
+}
+
+// Stretched link: the pseudo-element makes the whole card the target while the heading stays its name.
+.link {
+  color: inherit;
+  text-decoration: none;
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    border-radius: inherit;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--space-3) var(--space-4);
+  margin: 0;
+
+  dt {
+    @include atlas.style(caption);
+
+    color: var(--color-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+    font-weight: var(--typescale-control-font-weight);
+  }
+}
