@@ -1,20 +1,19 @@
-// Proportions mirror the horizontal lockup master (283 × 64): wordmark cap height ≈ 0.29 × symbol,
-// 14/64 gap between symbol and wordmark.
+// Proportions mirror the Figma lockup Atlas/V3/Brand/Lockup/*/Horizontal (214:1744, 214:1766):
+// 48 px symbol, 12 px gap, wordmark Manrope 700 22/30 with 1 px tracking (Atlas/V3/Wordmark).
 :host {
-  --atlas-logo-ink: var(--color-brand-midnight-900);
+  --atlas-logo-ink: var(--color-text-primary);
   --atlas-logo-blend: multiply;
   --atlas-logo-opacity: 0.72;
 
   display: inline-flex;
-  gap: calc(var(--atlas-logo-size) * 0.22);
+  gap: calc(var(--atlas-logo-size) * 0.25);
   align-items: center;
   line-height: 1;
   color: var(--atlas-logo-ink);
 }
 
-:host([data-tone='inverse']),
+// The ink follows the theme through text/primary; only the blend changes on dark surfaces.
 :host-context([data-theme='dark']) {
-  --atlas-logo-ink: var(--color-brand-ivory-100);
   --atlas-logo-blend: screen;
   --atlas-logo-opacity: 0.82;
 }
@@ -48,13 +47,13 @@
 }
 
 .wordmark {
-  font-family: var(--font-sans);
-  font-size: calc(var(--atlas-logo-size) * 0.406);
-  font-weight: 600;
+  font-family: var(--typescale-wordmark-font-family);
+  font-size: calc(var(--atlas-logo-size) * 22 / 48);
+  font-weight: var(--typescale-wordmark-font-weight);
 
-  // Matches the master's textLength (203/64 of symbol height); trailing tracking cancelled.
-  letter-spacing: 0.12em;
-  margin-inline-end: -0.12em;
+  // 1 px at 22 px, scaled with the symbol; trailing tracking cancelled.
+  letter-spacing: calc(1em / 22);
+  margin-inline-end: calc(-1em / 22);
   white-space: nowrap;
 }
 

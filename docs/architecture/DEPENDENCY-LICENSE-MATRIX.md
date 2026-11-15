@@ -48,10 +48,10 @@ Enforcement:
 | `@angular/core`, `common`, `compiler`, `forms`, `platform-browser`, `router`     | 22.2.6                                  | MIT                              | shipped                                |
 | `@angular/material`, `@angular/cdk`                                              | 22.2.7                                  | MIT                              | shipped                                |
 | `@capacitor/core`                                                                | 8.6.0                                   | MIT                              | shipped                                |
-| `@tabler/icons-angular`, `@tabler/icons`                                         | 3.51.0                                  | MIT                              | shipped                                |
+| `@tabler/icons-angular` (+ transitive `@tabler/icons`)                           | 3.51.0                                  | MIT                              | shipped                                |
 | `rxjs`                                                                           | 7.8.2                                   | Apache-2.0                       | shipped                                |
 | `tslib`                                                                          | 2.9.1                                   | 0BSD                             | shipped                                |
-| `@fontsource-variable/inter`, `@fontsource/dm-serif-display`                     | 5.3.0                                   | OFL-1.1                          | shipped                                |
+| `@fontsource-variable/inter`, `@fontsource-variable/manrope`                     | 5.3.0                                   | OFL-1.1                          | shipped                                |
 | `parse5`, `entities`, `zod`, `@standard-schema/spec`                             | 8.1.1, 9.0.0, 4.6.6, 1.1.0              | MIT, BSD-2-Clause, MIT, MIT      | shipped (transitive)                   |
 | `nginxinc/nginx-unprivileged:1.30-alpine`                                        | 1.30                                    | BSD-2-Clause (+ Alpine packages) | runtime image                          |
 | `node:26-alpine`                                                                 | 26                                      | MIT (+ bundled)                  | build stage only                       |

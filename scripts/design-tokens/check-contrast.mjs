@@ -19,7 +19,11 @@ const rows = pairs.map((pair) => {
   return { ...pair, fgHex: fg, bgHex: bg, ratio, pass };
 });
 
-const label = (ref) => refOf(ref).replace(/^color\./, '');
+const label = (ref) =>
+  refOf(ref)
+    .replace(/^semantic\.(light|dark)\.color\./, '$1 ')
+    .replace(/^color\./, '')
+    .replace(/\.DEFAULT$/, '');
 const failures = rows.filter((r) => r.level !== 'info' && !r.pass);
 
 if (markdown) {

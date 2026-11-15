@@ -1,6 +1,7 @@
 # PLAN-FRONTEND — `atlas` (Angular 22 + Capacitor 8)
 
-- Status: **Phase 0 plan for owner review.** Phase 1 foundations are partly delivered (2026-11-12, uncommitted).
+- Status: **Phase 0 plan for owner review.** Phase 1 foundations are on `main` with green CI (2026-11-14); F1-14 is
+  open. The Figma V3 order is set by the [implementation roadmap](../implementation/roadmap.md).
 - Scope owner: `atlas` repository. Cross-repo sequencing: [IMPLEMENTATION-ROADMAP](IMPLEMENTATION-ROADMAP.md).
 - Sources: `project-instruction.md` §3, §9–§10, §13, §16–§19; `design-instructions.md` §0–§16; ADR-0002…0008.
 
@@ -43,7 +44,7 @@ backlog for what was delivered and what remains.
 Delivered structure in **bold**. Everything else is created only when its backlog item starts (no empty folders).
 
 ```text
-design/                         **tokens/*.json, svg/logo, svg/dimensions, exports/**, README + docs (design package)
+design/                         **tokens/*.json, svg/logo, exports/**, README + docs (design package)
 scripts/                        **design-tokens/, assets/, check-lockfile-registry.mjs**
 src/styles.scss                 **fonts → tokens → Material theme → base layers**
 src/styles/                     **abstracts/ base/ material/ tokens/(generated)**; platform/capacitor partial (F2)
@@ -87,7 +88,7 @@ unit test and a bundle grep in CI assert.
 | Owner decisions D1–D14 below                                                         | as listed                           | open                                       |
 
 Runtime npm dependencies today: Angular 22.2, Material/CDK 22.2, Capacitor core 8.6, Tabler Icons Angular 3.51,
-Fontsource Inter/DM Serif Display, rxjs, tslib. Planned: the Phase 5 visualization packages (ADR-0004), and possibly
+Fontsource Inter/Manrope, rxjs, tslib. Planned: the Phase 5 visualization packages (ADR-0004), and possibly
 `@angular/service-worker` (D6), Angular Testing Library (ADR-0008) and an OpenAPI type generator (D3). See
 [DEPENDENCY-LICENSE-MATRIX](../architecture/DEPENDENCY-LICENSE-MATRIX.md).
 
@@ -193,8 +194,7 @@ field-level messages. The production bundle contains no mock code (CI check).
 
 ## 11. Backlog (PR-sized)
 
-Legend: `[x]` delivered in this session (uncommitted, verified locally) · `[ ]` open. IDs are referenced from the
-roadmap.
+Legend: `[x]` delivered on `main` · `[ ]` open. IDs are referenced from the roadmap.
 
 ### Phase 1 — foundations
 
@@ -223,8 +223,20 @@ roadmap.
       `TopBar`, `MobileBottomNavigation` (My Atlas, Destinations, Journey, Awards, More), placeholder pages for the eight
       areas, skip link, route titles, the design-foundation page moved to the dev-only `/_design` route, and the theme
       preference (D1). e2e: no overflow at 390/768/1280, keyboard navigation, axe.
-- [ ] **F1-15** First push and PR: confirm the workflows run green on GitHub, enable branch protection and
-      security settings (SECURITY.md), and publish GHCR images once `atlas-infra` ADR-0007 is accepted.
+- [x] **F1-15** First push: `main` pushed and the workflows green on GitHub (2026-11-14). Still open as owner
+      settings: branch protection and the security settings in SECURITY.md. GHCR publishing moved to F2-12.
+
+### Figma V3 alignment (implementation roadmap phases 1–2)
+
+The [implementation roadmap](../implementation/roadmap.md) adds these items before the shell (F1-14) and Phase 2
+content are built against Figma V3.
+
+- [x] **S-1** Owner decisions R-1…R-14 recorded; ADR-0009 (Signal Forms) and ADR-0010 (Figma visual source) accepted.
+- [x] **S-2** `src/environments` and the typed `ATLAS_ENVIRONMENT` token; ESLint layer boundaries.
+- [x] **T-1** Quiet Tide colour tokens in both themes, contrast pairs, Material palette from jade.
+- [x] **T-2** Manrope headings and wordmark; DM Serif Display removed.
+- [x] **T-3** Icon stroke 2 and the registry glyphs of `Atlas/V3/Icon`; ADR-0005 amendment.
+- [x] **T-5** Brand assets checked against Figma pages 01/15; `AtlasLogo` wordmark.
 
 ### Phase 2 — shell content and one sample Destination (mock-backed)
 

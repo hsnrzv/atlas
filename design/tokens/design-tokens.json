@@ -13,7 +13,7 @@
   ],
   "themes": {
     "light": { "selector": ":root", "status": "stable" },
-    "dark": { "selector": "[data-theme='dark']", "status": "draft" }
+    "dark": { "selector": "[data-theme='dark']", "status": "stable" }
   },
   "outputs": [
     "src/styles/tokens/_tokens.generated.scss",

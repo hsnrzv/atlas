@@ -1,7 +1,6 @@
 import { Component, input } from '@angular/core';
 
 export type AtlasLogoVariant = 'symbol' | 'horizontal';
-export type AtlasLogoTone = 'default' | 'inverse';
 
 /** Cardinal Ikigai Venn circles (design/svg/logo/ikigai-atlas-symbol.svg): N, W, E, S on a 64 grid. */
 const CIRCLES = [
@@ -13,7 +12,7 @@ const CIRCLES = [
 
 /**
  * In-app IKIGAI ATLAS logo. The symbol is inlined so it can follow the theme; the wordmark is live
- * text set in the app's Inter font. Exported/brand files live in `design/svg/logo/` (served at /brand).
+ * text set in the app's Manrope font. Exported/brand files live in `design/svg/logo/` (served at /brand).
  */
 @Component({
   selector: 'atlas-logo',
@@ -37,14 +36,11 @@ const CIRCLES = [
     '[attr.role]': 'decorative() ? null : "img"',
     '[attr.aria-label]': 'decorative() ? null : "IKIGAI ATLAS"',
     '[attr.aria-hidden]': 'decorative() ? "true" : null',
-    '[attr.data-tone]': 'tone()',
     '[style.--atlas-logo-size.px]': 'size()',
   },
 })
 export class AtlasLogo {
   readonly variant = input<AtlasLogoVariant>('horizontal');
-  /** `inverse` for navy surfaces (sidebar, splash). The dark theme switches to it automatically. */
-  readonly tone = input<AtlasLogoTone>('default');
   /** Symbol height in px; the wordmark scales with it. */
   readonly size = input(32);
   /** Set when an adjacent element already names the product. */

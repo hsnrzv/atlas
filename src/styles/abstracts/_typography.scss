@@ -2,7 +2,7 @@
 // so a single source drives both the global classes and component styles.
 // Usage in a component: `@use 'abstracts' as atlas;  .title { @include atlas.style(h3); }`
 
-$styles: display, h1, h2, h3, h4, body-large, body, label, caption, metric;
+$styles: display, h1, h2, h3, h4, body-large, body, label, control, caption, metric;
 
 @mixin style($name) {
   font-family: var(--typescale-#{$name}-font-family);
@@ -10,11 +10,6 @@ $styles: display, h1, h2, h3, h4, body-large, body, label, caption, metric;
   font-weight: var(--typescale-#{$name}-font-weight);
   line-height: var(--typescale-#{$name}-line-height);
   letter-spacing: var(--typescale-#{$name}-letter-spacing);
-
-  @if $name == display {
-    // DM Serif Display ships one weight; never synthesise bold/italic.
-    font-synthesis: none;
-  }
 
   @if $name == metric {
     font-variant-numeric: tabular-nums;

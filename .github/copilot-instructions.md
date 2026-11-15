@@ -29,8 +29,8 @@ Read these before changing code. They are binding.
   `@use 'abstracts' as atlas;`. No hard-coded colours, spacing or font sizes. Token values follow the Figma variables
   (design-time translation in `docs/design/design-tokens.md` §6); change them in `design/tokens/*.json` and run
   `npm run tokens:build`. Never edit `*.generated.*` files.
-- Icons: Tabler through the `AtlasIcon` component and its registry (`src/app/shared/icons`); Life Dimension
-  icons from `design/svg/dimensions`.
+- Icons: Tabler through the `AtlasIcon` component and its registry (`src/app/shared/icons`), Life Dimension
+  icons included (glyph names in `design/tokens/design-tokens.json → lifeDimensions.icons`). No icon webfont.
 - Accessibility: WCAG 2.2 AA. Every interactive element is keyboard-reachable with a visible focus ring and an
   accessible name. Never use colour alone to convey meaning. Respect `prefers-reduced-motion`.
 - Security: no tokens in `localStorage`/`sessionStorage`; no inline scripts or `eval` (the CSP allows

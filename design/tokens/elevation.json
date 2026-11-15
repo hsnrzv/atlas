@@ -1,5 +1,5 @@
 {
-  "$description": "IKIGAI ATLAS elevation tokens (design-instructions §4.3). Prefer borders and surface contrast; shadows are restrained and tinted with midnight-950.",
+  "$description": "IKIGAI ATLAS elevation tokens (design-instructions §4.3). Prefer borders and surface contrast; shadows are restrained, tinted navy in light and black in dark (dark override in colors.json semantic.dark.shadow), and reserved for overlays (Figma V3 is flat).",
   "shadow": {
     "0": { "$type": "shadow", "$value": "none", "$description": "Level 0" },
     "1": {

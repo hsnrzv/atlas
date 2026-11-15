@@ -33,7 +33,7 @@ Verified on 2026-11-12 (npm registry): `@angular/core` 22.2.6, `@angular/materia
   fonts, tokens, the Material theme and base layers (reset, typography classes, accessibility, platform safe areas).
   Components consume tokens; Stylelint forbids raw colour literals under `src/app`. **No Tailwind or other utility
   framework**, no Ionic UI, no PrimeNG/PrimeUI.
-- **Fonts are self-hosted** through Fontsource packages (Inter Variable, DM Serif Display 400) and bundled by the
+- **Fonts are self-hosted** through Fontsource packages (Inter Variable and, since ADR-0010, Manrope Variable; DM Serif Display was removed) and bundled by the
   Angular build. No Google Fonts CDN: this keeps the strict CSP (`font-src 'self'`), avoids a third-party request, and
   works offline in Capacitor.
 - **Capacitor 8.6** (`@capacitor/core`, `@capacitor/cli`) provides native packaging. App id `dev.myatlas.app`,

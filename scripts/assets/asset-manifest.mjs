@@ -2,6 +2,8 @@
 // Used by export-assets.mjs (generation) and validate-assets.mjs (verification).
 export const LOGO = 'design/svg/logo';
 export const EXPORTS = 'design/exports';
+/** App icon, splash and adaptive-icon background: Figma V3 tide space (pages 01/15). */
+export const APP_BACKGROUND = '#0B1020';
 
 /**
  * alpha: 'none' = must be opaque RGB without alpha channel (App Store),
@@ -40,7 +42,7 @@ export const RASTER_EXPORTS = [
     platform: '@capacitor/assets Android adaptive foreground',
   },
   {
-    solid: '#14243A',
+    solid: APP_BACKGROUND,
     out: `${EXPORTS}/capacitor/icon-background.png`,
     size: 1024,
     alpha: 'none',

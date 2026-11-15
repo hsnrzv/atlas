@@ -16,7 +16,7 @@ Automated tools do not replace manual keyboard and screen-reader testing.
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | Contrast                      | Every declared foreground/background pair is checked in CI. Text ≥ 4.5:1, large text ≥ 3:1, non-text ≥ 3:1.                   | Implemented                                             |
 | Colour is not the only signal | Status = icon + text label. Dimension = icon + name. Links are underlined.                                                    | Implemented (primitives); Specified (components)        |
-| Focus                         | 2px ring, 2px offset, gold on inverse surfaces, `Highlight` in forced colours, Material strong focus indicators               | Implemented                                             |
+| Focus                         | 2px ring, 2px offset, `--color-focus-ring` per theme, `Highlight` in forced colours, Material strong focus indicators         | Implemented                                             |
 | Keyboard                      | Skip link is the first Tab stop. Logical order. No keyboard traps. Dialogs trap focus and close on Escape.                    | Skip link Implemented (foundation page); rest Specified |
 | Reduced motion                | Duration tokens are zeroed and animations clamped under `prefers-reduced-motion: reduce`                                      | Implemented                                             |
 | Touch targets                 | ≥ 44 × 44 CSS px (`--size-touch-target-min`), 48 preferred                                                                    | Token and mixin Implemented; usage Specified            |
@@ -31,8 +31,8 @@ Automated tools do not replace manual keyboard and screen-reader testing.
 
 ### Method
 
-- **Source:** `design/tokens/contrast-pairs.json` declares every foreground/background pair the UI uses. There are 85
-  pairs, covering the light theme and the dark draft.
+- **Source:** `design/tokens/contrast-pairs.json` declares every foreground/background pair the UI uses. There are 123
+  pairs, covering the Figma V3 light and dark themes, the Life Dimension and status colours, and the brand primitives.
 - **Script:** `scripts/design-tokens/check-contrast.mjs` resolves the token references and computes the WCAG
   relative-luminance contrast ratio (`(L1 + 0.05) / (L2 + 0.05)`, sRGB linearisation). It compares the result with the
   pair's level:
@@ -49,7 +49,7 @@ Automated tools do not replace manual keyboard and screen-reader testing.
     fails.
   - `node scripts/design-tokens/check-contrast.mjs --markdown` prints the table below.
 
-**Result at the time of writing:** 85 pairs, **0 failing**. Eleven pairs are `info` rows that document limitations.
+**Result at the time of writing:** 123 pairs, **0 failing**. Nine pairs are `info` rows that document limitations.
 
 ### Generated table
 
@@ -60,123 +60,166 @@ Regenerate it whenever `colors.json` or `contrast-pairs.json` changes.
 <!-- prettier-ignore-start -->
 | Use | Foreground | Background | Ratio | Required | Result |
 | --- | --- | --- | ---: | ---: | --- |
-| Primary text on card | `neutral.900` #252B33 | `white` #FFFFFF | 14.27:1 | 4.5:1 (text) | Pass |
-| Primary text on page | `neutral.900` #252B33 | `brand.ivory.50` #FBF9F4 | 13.56:1 | 4.5:1 (text) | Pass |
-| Primary text on subtle surface | `neutral.900` #252B33 | `brand.ivory.100` #F5F0E6 | 12.56:1 | 4.5:1 (text) | Pass |
-| Primary text on achievement surface | `neutral.900` #252B33 | `brand.gold.200` #EBD9B9 | 10.30:1 | 4.5:1 (text) | Pass |
-| Secondary text on card | `neutral.700` #4D5661 | `white` #FFFFFF | 7.45:1 | 4.5:1 (text) | Pass |
-| Secondary text on page | `neutral.700` #4D5661 | `brand.ivory.50` #FBF9F4 | 7.08:1 | 4.5:1 (text) | Pass |
-| Secondary text on subtle surface | `neutral.700` #4D5661 | `brand.ivory.100` #F5F0E6 | 6.56:1 | 4.5:1 (text) | Pass |
-| Muted text on card | `neutral.600` #5F6873 | `white` #FFFFFF | 5.65:1 | 4.5:1 (text) | Pass |
-| Muted text on page | `neutral.600` #5F6873 | `brand.ivory.50` #FBF9F4 | 5.37:1 | 4.5:1 (text) | Pass |
-| Muted text on subtle surface | `neutral.600` #5F6873 | `brand.ivory.100` #F5F0E6 | 4.98:1 | 4.5:1 (text) | Pass |
-| neutral-500 as small text: NOT allowed (use neutral-600) | `neutral.500` #747E89 | `white` #FFFFFF | 4.13:1 | info | Documented limitation |
-| Control border on card | `neutral.500` #747E89 | `white` #FFFFFF | 4.13:1 | 3:1 (non-text) | Pass |
-| Control border on page | `neutral.500` #747E89 | `brand.ivory.50` #FBF9F4 | 3.92:1 | 3:1 (non-text) | Pass |
-| Link on card | `brand.midnight.800` #203650 | `white` #FFFFFF | 12.32:1 | 4.5:1 (text) | Pass |
-| Link on page | `brand.midnight.800` #203650 | `brand.ivory.50` #FBF9F4 | 11.71:1 | 4.5:1 (text) | Pass |
-| Primary button label | `white` #FFFFFF | `brand.midnight.900` #14243A | 15.63:1 | 4.5:1 (text) | Pass |
-| Primary button label (hover) | `white` #FFFFFF | `brand.midnight.800` #203650 | 12.32:1 | 4.5:1 (text) | Pass |
-| Focus ring / secondary button border on page | `brand.midnight.900` #14243A | `brand.ivory.50` #FBF9F4 | 14.86:1 | 3:1 (non-text) | Pass |
-| Navigation label on sidebar | `brand.ivory.100` #F5F0E6 | `brand.midnight.900` #14243A | 13.77:1 | 4.5:1 (text) | Pass |
-| Active navigation label | `brand.ivory.100` #F5F0E6 | `brand.midnight.800` #203650 | 10.84:1 | 4.5:1 (text) | Pass |
-| Text on dark hero | `brand.ivory.100` #F5F0E6 | `brand.midnight.950` #101D32 | 14.86:1 | 4.5:1 (text) | Pass |
-| Secondary text on sidebar | `neutral.300` #D4D8DC | `brand.midnight.900` #14243A | 10.91:1 | 4.5:1 (text) | Pass |
-| Active nav indicator / focus ring on sidebar | `brand.gold.500` #D5AD70 | `brand.midnight.900` #14243A | 7.48:1 | 3:1 (non-text) | Pass |
-| Gold text on dark | `brand.gold.500` #D5AD70 | `brand.midnight.900` #14243A | 7.48:1 | 4.5:1 (text) | Pass |
-| Small gold text on card | `brand.gold.800` #805B2F | `white` #FFFFFF | 6.08:1 | 4.5:1 (text) | Pass |
-| Small gold text on page | `brand.gold.800` #805B2F | `brand.ivory.50` #FBF9F4 | 5.78:1 | 4.5:1 (text) | Pass |
-| Gold title on achievement surface | `brand.gold.800` #805B2F | `brand.gold.200` #EBD9B9 | 4.39:1 | 3:1 (large) | Pass |
-| Large gold emphasis on card | `brand.gold.700` #A77C43 | `white` #FFFFFF | 3.75:1 | 3:1 (large) | Pass |
-| Gold icon / selection on card | `brand.gold.700` #A77C43 | `white` #FFFFFF | 3.75:1 | 3:1 (non-text) | Pass |
-| Achievement gold: decorative only on light surfaces | `brand.gold.600` #B88D52 | `white` #FFFFFF | 3.01:1 | info | Documented limitation |
-| Success icon/dot on card | `status.success` #4F8064 | `white` #FFFFFF | 4.56:1 | 3:1 (non-text) | Pass |
-| Success icon/dot on page | `status.success` #4F8064 | `brand.ivory.50` #FBF9F4 | 4.33:1 | 3:1 (non-text) | Pass |
-| In-progress icon/dot on card | `status.in-progress` #426D9B | `white` #FFFFFF | 5.40:1 | 3:1 (non-text) | Pass |
-| In-progress icon/dot on page | `status.in-progress` #426D9B | `brand.ivory.50` #FBF9F4 | 5.13:1 | 3:1 (non-text) | Pass |
-| Upcoming icon/dot on card | `status.upcoming` #9A7A43 | `white` #FFFFFF | 4.01:1 | 3:1 (non-text) | Pass |
-| Upcoming icon/dot on page | `status.upcoming` #9A7A43 | `brand.ivory.50` #FBF9F4 | 3.81:1 | 3:1 (non-text) | Pass |
-| At-risk icon/dot on card | `status.at-risk` #B56B45 | `white` #FFFFFF | 4.07:1 | 3:1 (non-text) | Pass |
-| At-risk icon/dot on page | `status.at-risk` #B56B45 | `brand.ivory.50` #FBF9F4 | 3.87:1 | 3:1 (non-text) | Pass |
-| Blocked icon/dot on card | `status.blocked` #A65353 | `white` #FFFFFF | 5.27:1 | 3:1 (non-text) | Pass |
-| Blocked icon/dot on page | `status.blocked` #A65353 | `brand.ivory.50` #FBF9F4 | 5.01:1 | 3:1 (non-text) | Pass |
-| Not-started icon/dot on card | `status.not-started` #747E89 | `white` #FFFFFF | 4.13:1 | 3:1 (non-text) | Pass |
-| Not-started icon/dot on page | `status.not-started` #747E89 | `brand.ivory.50` #FBF9F4 | 3.92:1 | 3:1 (non-text) | Pass |
-| Destructive button label | `white` #FFFFFF | `status.blocked` #A65353 | 5.27:1 | 4.5:1 (text) | Pass |
-| Upcoming as text: not allowed; label uses text-secondary | `status.upcoming` #9A7A43 | `white` #FFFFFF | 4.01:1 | info | Documented limitation |
-| At-risk as text: not allowed; label uses text-secondary | `status.at-risk` #B56B45 | `white` #FFFFFF | 4.07:1 | info | Documented limitation |
-| Career chip label | `dimension.career.strong` #426D9B | `dimension.career.tint` #EAF1F8 | 4.74:1 | 4.5:1 (text) | Pass |
-| Finance chip label | `dimension.finance.strong` #805B2F | `dimension.finance.tint` #F6EFE3 | 5.32:1 | 4.5:1 (text) | Pass |
-| Health chip label | `dimension.health.strong` #52765B | `dimension.health.tint` #EDF3EE | 4.55:1 | 4.5:1 (text) | Pass |
-| Love chip label | `dimension.love.strong` #965B4A | `dimension.love.tint` #F8EEEA | 4.73:1 | 4.5:1 (text) | Pass |
-| Passion chip label | `dimension.passion.strong` #6F5C98 | `dimension.passion.tint` #F1EEF7 | 5.00:1 | 4.5:1 (text) | Pass |
-| Friendship chip label | `dimension.friendship.strong` #3F7776 | `dimension.friendship.tint` #EAF3F2 | 4.52:1 | 4.5:1 (text) | Pass |
-| Family chip label | `dimension.family.strong` #80683E | `dimension.family.tint` #F5F0E5 | 4.66:1 | 4.5:1 (text) | Pass |
-| Career label on card | `dimension.career.strong` #426D9B | `white` #FFFFFF | 5.40:1 | 4.5:1 (text) | Pass |
-| Finance label on card | `dimension.finance.strong` #805B2F | `white` #FFFFFF | 6.08:1 | 4.5:1 (text) | Pass |
-| Health label on card | `dimension.health.strong` #52765B | `white` #FFFFFF | 5.12:1 | 4.5:1 (text) | Pass |
-| Love label on card | `dimension.love.strong` #965B4A | `white` #FFFFFF | 5.40:1 | 4.5:1 (text) | Pass |
-| Passion label on card | `dimension.passion.strong` #6F5C98 | `white` #FFFFFF | 5.74:1 | 4.5:1 (text) | Pass |
-| Friendship label on card | `dimension.friendship.strong` #3F7776 | `white` #FFFFFF | 5.11:1 | 4.5:1 (text) | Pass |
-| Family label on card | `dimension.family.strong` #80683E | `white` #FFFFFF | 5.29:1 | 4.5:1 (text) | Pass |
-| Career accent on dark navigation | `dimension.career` #759ECA | `brand.midnight.900` #14243A | 5.58:1 | 3:1 (non-text) | Pass |
-| Finance accent on dark navigation | `dimension.finance` #D5AD70 | `brand.midnight.900` #14243A | 7.48:1 | 3:1 (non-text) | Pass |
-| Health accent on dark navigation | `dimension.health` #91AD99 | `brand.midnight.900` #14243A | 6.43:1 | 3:1 (non-text) | Pass |
-| Love accent on dark navigation | `dimension.love` #CA8A76 | `brand.midnight.900` #14243A | 5.52:1 | 3:1 (non-text) | Pass |
-| Passion accent on dark navigation | `dimension.passion` #A99ACB | `brand.midnight.900` #14243A | 6.08:1 | 3:1 (non-text) | Pass |
-| Friendship accent on dark navigation | `dimension.friendship` #78AFAE | `brand.midnight.900` #14243A | 6.36:1 | 3:1 (non-text) | Pass |
-| Family accent on dark navigation | `dimension.family` #C5A66D | `brand.midnight.900` #14243A | 6.74:1 | 3:1 (non-text) | Pass |
-| Career accent on light: decorative fill; pair with strong stroke + text label | `dimension.career` #759ECA | `white` #FFFFFF | 2.80:1 | info | Documented limitation |
-| Finance accent on light: decorative fill | `dimension.finance` #D5AD70 | `white` #FFFFFF | 2.09:1 | info | Documented limitation |
-| Health accent on light: decorative fill | `dimension.health` #91AD99 | `white` #FFFFFF | 2.43:1 | info | Documented limitation |
-| Love accent on light: decorative fill | `dimension.love` #CA8A76 | `white` #FFFFFF | 2.83:1 | info | Documented limitation |
-| Passion accent on light: decorative fill | `dimension.passion` #A99ACB | `white` #FFFFFF | 2.57:1 | info | Documented limitation |
-| Friendship accent on light: decorative fill | `dimension.friendship` #78AFAE | `white` #FFFFFF | 2.46:1 | info | Documented limitation |
-| Family accent on light: decorative fill | `dimension.family` #C5A66D | `white` #FFFFFF | 2.32:1 | info | Documented limitation |
-| Dark draft: primary text on card | `brand.ivory.100` #F5F0E6 | `brand.midnight.900` #14243A | 13.77:1 | 4.5:1 (text) | Pass |
-| Dark draft: secondary text on page | `brand.ivory.200` #EAE2D4 | `brand.midnight.950` #101D32 | 13.13:1 | 4.5:1 (text) | Pass |
-| Dark draft: muted text on subtle surface | `neutral.300` #D4D8DC | `brand.midnight.800` #203650 | 8.60:1 | 4.5:1 (text) | Pass |
-| Dark draft: primary button label | `brand.midnight.950` #101D32 | `brand.gold.500` #D5AD70 | 8.07:1 | 4.5:1 (text) | Pass |
-| Dark draft: success label | `status-on-dark.success` #9CB6A5 | `brand.midnight.800` #203650 | 5.66:1 | 4.5:1 (text) | Pass |
-| Dark draft: in-progress label | `status-on-dark.in-progress` #95ACC3 | `brand.midnight.800` #203650 | 5.26:1 | 4.5:1 (text) | Pass |
-| Dark draft: upcoming label | `status-on-dark.upcoming` #C6B393 | `brand.midnight.800` #203650 | 6.02:1 | 4.5:1 (text) | Pass |
-| Dark draft: at-risk label | `status-on-dark.at-risk` #D5AB94 | `brand.midnight.800` #203650 | 5.91:1 | 4.5:1 (text) | Pass |
-| Dark draft: blocked label | `status-on-dark.blocked` #CC9E9B | `brand.midnight.800` #203650 | 5.24:1 | 4.5:1 (text) | Pass |
-| Dark draft: not-started label | `status-on-dark.not-started` #B1B5B9 | `brand.midnight.800` #203650 | 5.97:1 | 4.5:1 (text) | Pass |
-| Dark draft: control border on card | `neutral.500` #747E89 | `brand.midnight.900` #14243A | 3.79:1 | 3:1 (non-text) | Pass |
-| Dark draft: focus ring on page | `brand.gold.500` #D5AD70 | `brand.midnight.950` #101D32 | 8.07:1 | 3:1 (non-text) | Pass |
+| Light: primary text on page | `light text.primary` #1D2935 | `light surface.page` #F5F7FA | 13.77:1 | 4.5:1 (text) | Pass |
+| Light: primary text on navigation | `light text.primary` #1D2935 | `light surface.navigation` #FFFFFF | 14.78:1 | 4.5:1 (text) | Pass |
+| Light: primary text on card | `light text.primary` #1D2935 | `light surface.card` #FFFFFF | 14.78:1 | 4.5:1 (text) | Pass |
+| Light: primary text on raised | `light text.primary` #1D2935 | `light surface.raised` #EAF0F4 | 12.86:1 | 4.5:1 (text) | Pass |
+| Light: primary text on subtle | `light text.primary` #1D2935 | `light surface.subtle` #E8F1EE | 12.84:1 | 4.5:1 (text) | Pass |
+| Light: primary text on hero | `light text.primary` #1D2935 | `light surface.hero` #FFFFFF | 14.78:1 | 4.5:1 (text) | Pass |
+| Light: secondary and muted text on page | `light text.secondary` #586578 | `light surface.page` #F5F7FA | 5.52:1 | 4.5:1 (text) | Pass |
+| Light: secondary and muted text on navigation | `light text.secondary` #586578 | `light surface.navigation` #FFFFFF | 5.92:1 | 4.5:1 (text) | Pass |
+| Light: secondary and muted text on card | `light text.secondary` #586578 | `light surface.card` #FFFFFF | 5.92:1 | 4.5:1 (text) | Pass |
+| Light: secondary and muted text on raised | `light text.secondary` #586578 | `light surface.raised` #EAF0F4 | 5.15:1 | 4.5:1 (text) | Pass |
+| Light: secondary and muted text on subtle | `light text.secondary` #586578 | `light surface.subtle` #E8F1EE | 5.14:1 | 4.5:1 (text) | Pass |
+| Light: primary text on achievement surface | `light text.primary` #1D2935 | `light surface.achievement` #F4EFE5 | 12.90:1 | 4.5:1 (text) | Pass |
+| Light: achievement text on achievement surface | `light text.achievement` #765728 | `light surface.achievement` #F4EFE5 | 5.79:1 | 4.5:1 (text) | Pass |
+| Light: achievement text on card | `light text.achievement` #765728 | `light surface.card` #FFFFFF | 6.64:1 | 4.5:1 (text) | Pass |
+| Light: active navigation label | `light text.primary` #1D2935 | `light nav.active` #E8F1EE | 12.84:1 | 4.5:1 (text) | Pass |
+| Light: button label on primary | `light action.on-primary` #FFFFFF | `light action.primary` #2D6A61 | 6.28:1 | 4.5:1 (text) | Pass |
+| Light: button label on primary-hover | `light action.on-primary` #FFFFFF | `light action.primary-hover` #205D55 | 7.61:1 | 4.5:1 (text) | Pass |
+| Light: button label on primary-pressed | `light action.on-primary` #FFFFFF | `light action.primary-pressed` #123F3C | 11.65:1 | 4.5:1 (text) | Pass |
+| Light: disabled button label (exempt, SC 1.4.3) | `light action.on-disabled` #586578 | `light action.disabled` #EAF0F4 | 5.15:1 | info | Documented limitation |
+| Light: label on destructive action | `light action.on-destructive` #FFFFFF | `light action.destructive` #924D53 | 6.16:1 | 4.5:1 (text) | Pass |
+| Light: filled button boundary on card (label identifies the control, SC 1.4.11) | `light action.primary` #2D6A61 | `light surface.card` #FFFFFF | 6.28:1 | info | Documented limitation |
+| Light: primary button outline on card (Figma border/action) | `light border.action` #2D6A61 | `light surface.card` #FFFFFF | 6.28:1 | 3:1 (non-text) | Pass |
+| Light: inline link underline on page (link text is text/primary) | `light border.action` #2D6A61 | `light surface.page` #F5F7FA | 5.85:1 | 3:1 (non-text) | Pass |
+| Light: inline link underline on card (link text is text/primary) | `light border.action` #2D6A61 | `light surface.card` #FFFFFF | 6.28:1 | 3:1 (non-text) | Pass |
+| Light: form control and secondary button boundary on card | `light border.control` #798B88 | `light surface.card` #FFFFFF | 3.58:1 | 3:1 (non-text) | Pass |
+| Light: form control boundary on page | `light border.control` #798B88 | `light surface.page` #F5F7FA | 3.34:1 | 3:1 (non-text) | Pass |
+| Light: form control boundary on raised | `light border.control` #798B88 | `light surface.raised` #EAF0F4 | 3.12:1 | 3:1 (non-text) | Pass |
+| Light: focus ring on page | `light focus.ring` #65518C | `light surface.page` #F5F7FA | 6.29:1 | 3:1 (non-text) | Pass |
+| Light: focus ring on card | `light focus.ring` #65518C | `light surface.card` #FFFFFF | 6.75:1 | 3:1 (non-text) | Pass |
+| Light: focus ring on raised | `light focus.ring` #65518C | `light surface.raised` #EAF0F4 | 5.88:1 | 3:1 (non-text) | Pass |
+| Light: focus ring on navigation | `light focus.ring` #65518C | `light surface.navigation` #FFFFFF | 6.75:1 | 3:1 (non-text) | Pass |
+| Light: progress fill on track | `light progress.fill` #2D6A61 | `light progress.track` #DCE4E9 | 4.88:1 | 3:1 (non-text) | Pass |
+| Light: progress fill on card | `light progress.fill` #2D6A61 | `light surface.card` #FFFFFF | 6.28:1 | 3:1 (non-text) | Pass |
+| Light: success badge label on its tint | `light status.success` #2D6A61 | `light status.success.tint` #E8F1EE | 5.45:1 | 4.5:1 (text) | Pass |
+| Light: success icon on card | `light status.success` #2D6A61 | `light surface.card` #FFFFFF | 6.28:1 | 3:1 (non-text) | Pass |
+| Light: in-progress badge label on its tint | `light status.in-progress` #426D9B | `light status.in-progress.tint` #EAF1F8 | 4.74:1 | 4.5:1 (text) | Pass |
+| Light: in-progress icon on card | `light status.in-progress` #426D9B | `light surface.card` #FFFFFF | 5.40:1 | 3:1 (non-text) | Pass |
+| Light: upcoming badge label on its tint | `light status.upcoming` #765728 | `light status.upcoming.tint` #F4EFE5 | 5.79:1 | 4.5:1 (text) | Pass |
+| Light: upcoming icon on card | `light status.upcoming` #765728 | `light surface.card` #FFFFFF | 6.64:1 | 3:1 (non-text) | Pass |
+| Light: at-risk badge label on its tint | `light status.at-risk` #8F5D36 | `light status.at-risk.tint` #F4EFE5 | 4.84:1 | 4.5:1 (text) | Pass |
+| Light: at-risk icon on card | `light status.at-risk` #8F5D36 | `light surface.card` #FFFFFF | 5.55:1 | 3:1 (non-text) | Pass |
+| Light: blocked badge label on its tint | `light status.blocked` #924D53 | `light status.blocked.tint` #F8EEEA | 5.40:1 | 4.5:1 (text) | Pass |
+| Light: blocked icon on card | `light status.blocked` #924D53 | `light surface.card` #FFFFFF | 6.16:1 | 3:1 (non-text) | Pass |
+| Light: not-started badge label on its tint | `light status.not-started` #586578 | `light status.not-started.tint` #EAF0F4 | 5.15:1 | 4.5:1 (text) | Pass |
+| Light: not-started icon on card | `light status.not-started` #586578 | `light surface.card` #FFFFFF | 5.92:1 | 3:1 (non-text) | Pass |
+| Light: career chip label on its tint | `light dimension.career` #426D9B | `light dimension.career.tint` #EAF1F8 | 4.74:1 | 4.5:1 (text) | Pass |
+| Light: career icon on card | `light dimension.career` #426D9B | `light surface.card` #FFFFFF | 5.40:1 | 3:1 (non-text) | Pass |
+| Light: finance chip label on its tint | `light dimension.finance` #805B2F | `light dimension.finance.tint` #F6EFE3 | 5.32:1 | 4.5:1 (text) | Pass |
+| Light: finance icon on card | `light dimension.finance` #805B2F | `light surface.card` #FFFFFF | 6.08:1 | 3:1 (non-text) | Pass |
+| Light: health chip label on its tint | `light dimension.health` #52765B | `light dimension.health.tint` #EDF3EE | 4.55:1 | 4.5:1 (text) | Pass |
+| Light: health icon on card | `light dimension.health` #52765B | `light surface.card` #FFFFFF | 5.12:1 | 3:1 (non-text) | Pass |
+| Light: love chip label on its tint | `light dimension.love` #965B4A | `light dimension.love.tint` #F8EEEA | 4.73:1 | 4.5:1 (text) | Pass |
+| Light: love icon on card | `light dimension.love` #965B4A | `light surface.card` #FFFFFF | 5.40:1 | 3:1 (non-text) | Pass |
+| Light: passion chip label on its tint | `light dimension.passion` #6F5C98 | `light dimension.passion.tint` #F1EEF7 | 5.00:1 | 4.5:1 (text) | Pass |
+| Light: passion icon on card | `light dimension.passion` #6F5C98 | `light surface.card` #FFFFFF | 5.74:1 | 3:1 (non-text) | Pass |
+| Light: friendship chip label on its tint | `light dimension.friendship` #3F7776 | `light dimension.friendship.tint` #EAF3F2 | 4.52:1 | 4.5:1 (text) | Pass |
+| Light: friendship icon on card | `light dimension.friendship` #3F7776 | `light surface.card` #FFFFFF | 5.11:1 | 3:1 (non-text) | Pass |
+| Light: family chip label on its tint | `light dimension.family` #80683E | `light dimension.family.tint` #F5F0E5 | 4.66:1 | 4.5:1 (text) | Pass |
+| Light: family icon on card | `light dimension.family` #80683E | `light surface.card` #FFFFFF | 5.29:1 | 3:1 (non-text) | Pass |
+| Dark: primary text on page | `dark text.primary` #F5F7FC | `dark surface.page` #0B1020 | 17.66:1 | 4.5:1 (text) | Pass |
+| Dark: primary text on navigation | `dark text.primary` #F5F7FC | `dark surface.navigation` #151B35 | 15.80:1 | 4.5:1 (text) | Pass |
+| Dark: primary text on card | `dark text.primary` #F5F7FC | `dark surface.card` #202A46 | 13.23:1 | 4.5:1 (text) | Pass |
+| Dark: primary text on raised | `dark text.primary` #F5F7FC | `dark surface.raised` #273452 | 11.53:1 | 4.5:1 (text) | Pass |
+| Dark: primary text on subtle | `dark text.primary` #F5F7FC | `dark surface.subtle` #151B35 | 15.80:1 | 4.5:1 (text) | Pass |
+| Dark: primary text on hero | `dark text.primary` #F5F7FC | `dark surface.hero` #151B35 | 15.80:1 | 4.5:1 (text) | Pass |
+| Dark: secondary and muted text on page | `dark text.secondary` #A8B4CC | `dark surface.page` #0B1020 | 9.07:1 | 4.5:1 (text) | Pass |
+| Dark: secondary and muted text on navigation | `dark text.secondary` #A8B4CC | `dark surface.navigation` #151B35 | 8.12:1 | 4.5:1 (text) | Pass |
+| Dark: secondary and muted text on card | `dark text.secondary` #A8B4CC | `dark surface.card` #202A46 | 6.80:1 | 4.5:1 (text) | Pass |
+| Dark: secondary and muted text on raised | `dark text.secondary` #A8B4CC | `dark surface.raised` #273452 | 5.92:1 | 4.5:1 (text) | Pass |
+| Dark: secondary and muted text on subtle | `dark text.secondary` #A8B4CC | `dark surface.subtle` #151B35 | 8.12:1 | 4.5:1 (text) | Pass |
+| Dark: primary text on achievement surface | `dark text.primary` #F5F7FC | `dark surface.achievement` #2E2B27 | 13.14:1 | 4.5:1 (text) | Pass |
+| Dark: achievement text on achievement surface | `dark text.achievement` #D4B477 | `dark surface.achievement` #2E2B27 | 7.11:1 | 4.5:1 (text) | Pass |
+| Dark: achievement text on card | `dark text.achievement` #D4B477 | `dark surface.card` #202A46 | 7.15:1 | 4.5:1 (text) | Pass |
+| Dark: active navigation label | `dark text.primary` #F5F7FC | `dark nav.active` #1B302C | 13.01:1 | 4.5:1 (text) | Pass |
+| Dark: button label on primary | `dark action.on-primary` #F5F7FC | `dark action.primary` #205D55 | 7.10:1 | 4.5:1 (text) | Pass |
+| Dark: button label on primary-hover | `dark action.on-primary` #F5F7FC | `dark action.primary-hover` #2D7266 | 5.28:1 | 4.5:1 (text) | Pass |
+| Dark: button label on primary-pressed | `dark action.on-primary` #F5F7FC | `dark action.primary-pressed` #123F3C | 10.87:1 | 4.5:1 (text) | Pass |
+| Dark: disabled button label (exempt, SC 1.4.3) | `dark action.on-disabled` #A8B4CC | `dark action.disabled` #273452 | 5.92:1 | info | Documented limitation |
+| Dark: label on destructive action | `dark action.on-destructive` #0B1020 | `dark action.destructive` #DBA6A6 | 9.03:1 | 4.5:1 (text) | Pass |
+| Dark: filled button boundary on card (label identifies the control, SC 1.4.11) | `dark action.primary` #205D55 | `dark surface.card` #202A46 | 1.86:1 | info | Documented limitation |
+| Dark: primary button outline on card (Figma border/action) | `dark border.action` #4B9387 | `dark surface.card` #202A46 | 3.93:1 | 3:1 (non-text) | Pass |
+| Dark: inline link underline on page (link text is text/primary) | `dark border.action` #4B9387 | `dark surface.page` #0B1020 | 5.25:1 | 3:1 (non-text) | Pass |
+| Dark: inline link underline on card (link text is text/primary) | `dark border.action` #4B9387 | `dark surface.card` #202A46 | 3.93:1 | 3:1 (non-text) | Pass |
+| Dark: form control and secondary button boundary on card | `dark border.control` #8290AA | `dark surface.card` #202A46 | 4.40:1 | 3:1 (non-text) | Pass |
+| Dark: form control boundary on page | `dark border.control` #8290AA | `dark surface.page` #0B1020 | 5.88:1 | 3:1 (non-text) | Pass |
+| Dark: form control boundary on raised | `dark border.control` #8290AA | `dark surface.raised` #273452 | 3.84:1 | 3:1 (non-text) | Pass |
+| Dark: focus ring on page | `dark focus.ring` #B8A5D0 | `dark surface.page` #0B1020 | 8.41:1 | 3:1 (non-text) | Pass |
+| Dark: focus ring on card | `dark focus.ring` #B8A5D0 | `dark surface.card` #202A46 | 6.30:1 | 3:1 (non-text) | Pass |
+| Dark: focus ring on raised | `dark focus.ring` #B8A5D0 | `dark surface.raised` #273452 | 5.49:1 | 3:1 (non-text) | Pass |
+| Dark: focus ring on navigation | `dark focus.ring` #B8A5D0 | `dark surface.navigation` #151B35 | 7.52:1 | 3:1 (non-text) | Pass |
+| Dark: progress fill on track | `dark progress.fill` #4B9387 | `dark progress.track` #273452 | 3.43:1 | 3:1 (non-text) | Pass |
+| Dark: progress fill on card | `dark progress.fill` #4B9387 | `dark surface.card` #202A46 | 3.93:1 | 3:1 (non-text) | Pass |
+| Dark: success badge label on its tint | `dark status.success` #9BBBA7 | `dark status.success.tint` #1B302C | 6.68:1 | 4.5:1 (text) | Pass |
+| Dark: success icon on card | `dark status.success` #9BBBA7 | `dark surface.card` #202A46 | 6.79:1 | 3:1 (non-text) | Pass |
+| Dark: in-progress badge label on its tint | `dark status.in-progress` #A6C3DF | `dark status.in-progress.tint` #1B2D44 | 7.63:1 | 4.5:1 (text) | Pass |
+| Dark: in-progress icon on card | `dark status.in-progress` #A6C3DF | `dark surface.card` #202A46 | 7.76:1 | 3:1 (non-text) | Pass |
+| Dark: upcoming badge label on its tint | `dark status.upcoming` #D4B477 | `dark status.upcoming.tint` #2E2B27 | 7.11:1 | 4.5:1 (text) | Pass |
+| Dark: upcoming icon on card | `dark status.upcoming` #D4B477 | `dark surface.card` #202A46 | 7.15:1 | 3:1 (non-text) | Pass |
+| Dark: at-risk badge label on its tint | `dark status.at-risk` #D6AE8F | `dark status.at-risk.tint` #2E2B27 | 6.91:1 | 4.5:1 (text) | Pass |
+| Dark: at-risk icon on card | `dark status.at-risk` #D6AE8F | `dark surface.card` #202A46 | 6.96:1 | 3:1 (non-text) | Pass |
+| Dark: blocked badge label on its tint | `dark status.blocked` #DBA6A6 | `dark status.blocked.tint` #35242E | 6.94:1 | 4.5:1 (text) | Pass |
+| Dark: blocked icon on card | `dark status.blocked` #DBA6A6 | `dark surface.card` #202A46 | 6.76:1 | 3:1 (non-text) | Pass |
+| Dark: not-started badge label on its tint | `dark status.not-started` #A8B4CC | `dark status.not-started.tint` #273452 | 5.92:1 | 4.5:1 (text) | Pass |
+| Dark: not-started icon on card | `dark status.not-started` #A8B4CC | `dark surface.card` #202A46 | 6.80:1 | 3:1 (non-text) | Pass |
+| Dark: career chip label on its tint | `dark dimension.career` #A6C3DF | `dark dimension.career.tint` #1B2D44 | 7.63:1 | 4.5:1 (text) | Pass |
+| Dark: career icon on card | `dark dimension.career` #A6C3DF | `dark surface.card` #202A46 | 7.76:1 | 3:1 (non-text) | Pass |
+| Dark: finance chip label on its tint | `dark dimension.finance` #D4B477 | `dark dimension.finance.tint` #302A24 | 7.15:1 | 4.5:1 (text) | Pass |
+| Dark: finance icon on card | `dark dimension.finance` #D4B477 | `dark surface.card` #202A46 | 7.15:1 | 3:1 (non-text) | Pass |
+| Dark: health chip label on its tint | `dark dimension.health` #9BBBA7 | `dark dimension.health.tint` #1B302C | 6.68:1 | 4.5:1 (text) | Pass |
+| Dark: health icon on card | `dark dimension.health` #9BBBA7 | `dark surface.card` #202A46 | 6.79:1 | 3:1 (non-text) | Pass |
+| Dark: love chip label on its tint | `dark dimension.love` #D5A498 | `dark dimension.love.tint` #35242E | 6.65:1 | 4.5:1 (text) | Pass |
+| Dark: love icon on card | `dark dimension.love` #D5A498 | `dark surface.card` #202A46 | 6.48:1 | 3:1 (non-text) | Pass |
+| Dark: passion chip label on its tint | `dark dimension.passion` #B8A5D0 | `dark dimension.passion.tint` #2C263D | 6.43:1 | 4.5:1 (text) | Pass |
+| Dark: passion icon on card | `dark dimension.passion` #B8A5D0 | `dark surface.card` #202A46 | 6.30:1 | 3:1 (non-text) | Pass |
+| Dark: friendship chip label on its tint | `dark dimension.friendship` #9AC2BC | `dark dimension.friendship.tint` #193337 | 6.89:1 | 4.5:1 (text) | Pass |
+| Dark: friendship icon on card | `dark dimension.friendship` #9AC2BC | `dark surface.card` #202A46 | 7.30:1 | 3:1 (non-text) | Pass |
+| Dark: family chip label on its tint | `dark dimension.family` #C6B184 | `dark dimension.family.tint` #302C25 | 6.63:1 | 4.5:1 (text) | Pass |
+| Dark: family icon on card | `dark dimension.family` #C6B184 | `dark surface.card` #202A46 | 6.77:1 | 3:1 (non-text) | Pass |
+| Primitive: light-gold on white is decorative or large text only | `gold.light` #A17A3F | `light.card` #FFFFFF | 3.91:1 | info | Documented limitation |
+| Logo circle blue on white (decorative, paired with wordmark) | `brand.venn.blue` #5685B5 | `light.card` #FFFFFF | 3.88:1 | info | Documented limitation |
+| Logo circle teal on white (decorative, paired with wordmark) | `brand.venn.teal` #348F84 | `light.card` #FFFFFF | 3.88:1 | info | Documented limitation |
+| Logo circle violet on white (decorative, paired with wordmark) | `brand.venn.violet` #8A73BB | `light.card` #FFFFFF | 4.00:1 | info | Documented limitation |
+| Logo circle rose on white (decorative, paired with wordmark) | `brand.venn.rose` #B17D9E | `light.card` #FFFFFF | 3.34:1 | info | Documented limitation |
 <!-- prettier-ignore-end -->
 <!-- contrast-table:end -->
 
 ### Documented limitations and mitigations
 
-| Limitation (`info` rows)                                                       | Rule                                                                                                                                                                                                                                                                   |
-| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `neutral-500` is 4.13:1 on white                                               | Never use it for text. Muted text uses `neutral-600` (`--color-text-muted`, ≥ 4.98:1). `neutral-500` is for control borders, disabled states and the not-started icon only. ([DD-07](DESIGN_DECISIONS.md#dd-07-muted-text-uses-neutral-600))                           |
-| Upcoming (4.01:1) and at-risk (4.07:1) status colours are below 4.5:1 for text | Status colours are for icons and dots only, which need ≥ 3:1. Status labels use `--color-text-secondary`. ([DD-08](DESIGN_DECISIONS.md#dd-08-status-is-never-conveyed-by-colour-alone))                                                                                |
-| Dimension accents are 2.09–2.83:1 on white                                     | On light surfaces accents are decorative: fills, tints and chart areas. Meaningful marks use `--color-dimension-*-strong` (≥ 4.5:1 on white and on the tint) and a text label. ([DD-09](DESIGN_DECISIONS.md#dd-09-dimension-accents-are-decorative-on-light-surfaces)) |
-| `gold-600` is 3.01:1 on white                                                  | Decorative only on light surfaces. Small gold text uses `gold-800`, and large gold text or non-text marks use `gold-700`. ([DD-11](DESIGN_DECISIONS.md#dd-11-gold-usage-tiers))                                                                                        |
+| Limitation (`info` rows)                        | Rule                                                                                                                                                                            |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Disabled button label on the disabled surface   | Disabled controls are exempt from SC 1.4.3. The pair is reported (5.15:1 light, 5.92:1 dark) so a regression is visible.                                                        |
+| Dark filled button boundary on a card is 1.86:1 | SC 1.4.11 does not require a visible boundary when the label identifies the control. The label (`--color-action-on-primary`) passes 4.5:1 on every action state in both themes. |
+| `color.gold.light` `#A17A3F` is 3.91:1 on white | Decorative or large text only. Small achievement text uses `--color-text-achievement` (`#765728` light, 5.79:1 on the achievement surface).                                     |
+| Logo circles are 3.34–4.00:1 on white           | The Venn colours are decorative, belong to the logo only and are always paired with the wordmark or an accessible name. Never use them to convey meaning.                       |
 
 ### Colour rules (summary)
 
-1. Body text uses `--color-text-primary` or `--color-text-secondary`. Metadata uses `--color-text-muted`. Disabled text
-   uses `--color-text-disabled`, which is exempt under WCAG 1.4.3.
-2. **Status = icon + label.** Get both from `ATLAS_STATUSES`. In-progress `#426D9B` is the same colour as Career strong,
-   so never rely on hue to tell them apart ([DD-10](DESIGN_DECISIONS.md#dd-10-in-progress-status-equals-career-strong)).
+1. Body text uses `--color-text-primary` or `--color-text-secondary`. Metadata uses `--color-text-muted`. Disabled
+   controls use `--color-action-on-disabled` on `--color-action-disabled`, which is exempt under WCAG 1.4.3.
+2. **Status = icon + label.** Get both from `ATLAS_STATUSES`. Labels use the status foreground on its `-tint`
+   background, which passes 4.5:1 in both themes. In-progress is the same colour as the Career foreground in both
+   themes (`#426D9B` light, `#A6C3DF` dark), so never rely on hue to tell them apart
+   ([DD-10](DESIGN_DECISIONS.md#dd-10-in-progress-status-equals-career-strong)).
 3. **Life Dimension = icon + name**, using the colours from `LIFE_DIMENSIONS`.
-4. Links use `--color-text-link` and are always underlined.
+4. Links use `--color-text-primary` text and are always underlined with `--color-border-action`. Teal link text would
+   be only 3.93:1 on a dark card.
 5. Selected states combine tint, border, icon and text (design-instructions §15). They never rely on colour alone.
-6. Chart series use dimension accents with direct labels or a legend that carries text. Gridlines are minimal, and
-   colour-vision-ambiguous pairs (for example Health and Friendship) are never the only distinction.
-7. On navy surfaces, use the `inverse` text tokens and the `status-on-dark` colours.
+6. Chart series use the dimension foregrounds (`--color-dimension-<key>`) with direct labels or a legend that carries
+   text. Gridlines are minimal, and colour-vision-ambiguous pairs (for example Health and Friendship) are never the
+   only distinction.
+7. Use the semantic tokens only. Every surface, text, border, status and dimension token has its own light and dark
+   value (`[data-theme='dark']`), so the same token is correct in both themes. There are no inverse surfaces or
+   `status-on-dark` colours any more.
 
 ## Focus
 
 - **Global ring** (`src/styles/base/_accessibility.scss`): `:focus-visible` draws a `--size-focus-ring-width` (2px)
-  solid outline at `--size-focus-ring-offset` (2px) in `--color-focus-ring`. That is midnight-900 in light (14.86:1 on
-  ivory) and gold-500 in dark.
-- **Inverse surfaces:** any container with `data-surface="inverse"` (sidebar, hero, bottom navigation) switches to
-  `--color-focus-ring-inverse`, gold-500 at 7.48:1 on midnight-900.
+  solid outline at `--size-focus-ring-offset` (2px) in `--color-focus-ring`. That is violet `#65518C` in light (6.29:1
+  on the page) and violet accent `#B8A5D0` in dark (8.41:1 on the page). The same ring is used on every surface,
+  including the sidebar, hero and bottom navigation; there is no inverse variant.
 - **Forced colours:** under `@media (forced-colors: active)` the outline colour is `Highlight`. `<atlas-logo>` has a
   forced-colours fallback.
 - **Material:** `mat.strong-focus-indicators` draws a 2px solid indicator with a 4px radius.
@@ -213,7 +256,7 @@ animations for Milestone Awards must be skippable and must not run at all under 
   `--size-touch-target-preferred` is 48 px.
 - **Mixin:** `@include atlas.touch-target;` sets the minimum width and height without changing the visual size.
 - The wireframe `mockups/app-shell-mobile.svg` places top-bar actions on a 44 px grid and uses a 64 px bottom
-  navigation.
+  navigation. Figma V3 and `--layout-bottom-nav-height` use 80 px.
 
 ## Icons and images
 
@@ -235,8 +278,8 @@ Implemented by `<atlas-icon>` (`src/app/shared/icons/atlas-icon.ts`):
 `ATLAS_STATUSES` (`src/app/shared/design-system/statuses.ts`) defines, for every status:
 
 - a **label**: Completed, In progress, Upcoming, At risk, Blocked, Not started;
-- an **icon**: `circle-check`, `progress`, `hourglass`, `alert-triangle`, `ban`, `circle-dashed`;
-- a **colour token**.
+- an **icon** (Tabler outline, stroke 2): `check`, `loader-2`, `calendar-week`, `alert-circle`, `lock`, `flag`;
+- a theme-aware **colour token** and a `-tint` background token.
 
 Any status display must render the label, either visibly or as the accessible name of a labelled icon. The
 design-foundation page demonstrates this.

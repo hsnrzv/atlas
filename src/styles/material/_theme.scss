@@ -8,7 +8,7 @@
 $_system-overrides: (
   primary: var(--color-action-primary),
   on-primary: var(--color-action-on-primary),
-  // Containers (tonal buttons, chips, FABs) use warm Atlas surfaces instead of generated tints.
+  // Containers (tonal buttons, chips, FABs) use Atlas surfaces instead of generated tints.
   primary-container: var(--color-surface-subtle),
   on-primary-container: var(--color-text-primary),
   secondary-container: var(--color-surface-subtle),
@@ -28,17 +28,18 @@ $_system-overrides: (
   on-surface: var(--color-text-primary),
   on-surface-variant: var(--color-text-secondary),
   outline: var(--color-border-control),
-  outline-variant: var(--color-border-default),
+  outline-variant: var(--color-border-subtle),
   error: var(--color-action-destructive),
   on-error: var(--color-action-on-destructive),
-  inverse-surface: var(--color-surface-inverse),
-  inverse-on-surface: var(--color-text-inverse),
-  inverse-primary: var(--color-brand-gold-500),
-  shadow: var(--color-brand-midnight-950),
+  // V3 has no inverse role: snack bars and tooltips use the raised surface of the active theme.
+  inverse-surface: var(--color-surface-raised),
+  inverse-on-surface: var(--color-text-primary),
+  inverse-primary: var(--color-action-primary),
+  shadow: var(--color-tide-space),
 );
 $_typography: (
   plain-family: var(--font-sans),
-  brand-family: var(--font-sans),
+  brand-family: var(--font-heading),
   bold-weight: 600,
   medium-weight: 500,
   regular-weight: 400,
@@ -53,6 +54,25 @@ $_typography: (
       protected-container-shape: var(--radius-sm),
       text-container-shape: var(--radius-sm),
       tonal-container-shape: var(--radius-sm),
+      // Figma Atlas/V3/Button (152:2307): 48 px controls, Control text style; the secondary (outlined) button
+      // has a text/primary label on a border/control outline. Teal labels fail 4.5:1 on dark cards.
+      filled-container-height: var(--size-control-height),
+      outlined-container-height: var(--size-control-height),
+      text-container-height: var(--size-control-height),
+      tonal-container-height: var(--size-control-height),
+      filled-label-text-size: var(--typescale-control-font-size),
+      outlined-label-text-size: var(--typescale-control-font-size),
+      text-label-text-size: var(--typescale-control-font-size),
+      tonal-label-text-size: var(--typescale-control-font-size),
+      filled-label-text-weight: var(--typescale-control-font-weight),
+      outlined-label-text-weight: var(--typescale-control-font-weight),
+      text-label-text-weight: var(--typescale-control-font-weight),
+      tonal-label-text-weight: var(--typescale-control-font-weight),
+      outlined-label-text-color: var(--color-text-primary),
+      outlined-outline-color: var(--color-border-control),
+      outlined-state-layer-color: var(--color-text-primary),
+      text-label-text-color: var(--color-text-primary),
+      text-state-layer-color: var(--color-text-primary),
     )
   );
   @include mat.card-overrides(
@@ -98,8 +118,8 @@ $_typography: (
     );
   }
 
-  // Dark theme preview: switchable on the design foundation page, not yet offered to users
-  // (see design/DESIGN_DECISIONS.md).
+  // Dark theme: first-class in Figma V3. The user-facing switch and system-preference default
+  // arrive with the app shell (F1-14).
   html[data-theme='dark'] {
     color-scheme: dark;
 

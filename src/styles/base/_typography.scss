@@ -44,8 +44,11 @@ h4 {
   text-wrap: balance;
 }
 
+// Links keep the text colour (always AA) and carry the action colour on the underline, which is the
+// non-colour cue (SC 1.4.1). Teal link text would fail on dark cards (3.93:1).
 a {
-  color: var(--color-text-link);
+  color: var(--color-text-primary);
+  text-decoration-color: var(--color-border-action);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
 }

@@ -5,11 +5,6 @@
   @include a11y.focus-ring;
 }
 
-// Inverse (navy) surfaces such as the sidebar use the gold ring for contrast.
-[data-surface='inverse'] :focus-visible {
-  @include a11y.focus-ring(var(--color-focus-ring-inverse));
-}
-
 .atlas-visually-hidden {
   @include a11y.visually-hidden;
 }

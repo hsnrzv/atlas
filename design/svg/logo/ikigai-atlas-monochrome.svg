@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283 64" width="283" height="64" role="img" aria-labelledby="ia-title">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 232 48" width="232" height="48" role="img" aria-labelledby="ia-title">
   <title id="ia-title">IKIGAI ATLAS</title>
   <!-- Single colour horizontal lockup via currentColor. -->
-  <!-- Cardinal Ikigai Venn (Figma V3 brand symbol): four r19.2 circles on a 64 grid, centres N/W/E/S;
-       the shared centre is formed by overlap only. Source: Figma "15.Export Assets", scaled 0.4 from 160px. -->
-  <g fill="none" stroke="currentColor" stroke-width="2">
-    <circle cx="32" cy="20.8" r="18.2" />
-    <circle cx="20.8" cy="32" r="18.2" />
-    <circle cx="43.2" cy="32" r="18.2" />
-    <circle cx="32" cy="43.2" r="18.2" />
+  <g transform="scale(0.75)">
+    <!-- Cardinal Ikigai Venn (Figma V3 Atlas/V3/Brand/Symbol): four r19.2 circles on a 64 grid, centres N/W/E/S;
+         the shared centre is formed by overlap only. Source: Figma "15.Export Assets", scaled 0.4 from 160px. -->
+    <g fill="none" stroke="currentColor" stroke-width="1.28">
+      <circle cx="32" cy="20.8" r="18.56" />
+      <circle cx="20.8" cy="32" r="18.56" />
+      <circle cx="43.2" cy="32" r="18.56" />
+      <circle cx="32" cy="43.2" r="18.56" />
+    </g>
   </g>
-  <!-- Editable wordmark. Font dependency: Inter SemiBold (600), SIL OFL 1.1. Do not outline in this master. -->
-  <text x="78" y="41.45" fill="currentColor" font-family="Inter, 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="26" font-weight="600" textLength="203" lengthAdjust="spacing">IKIGAI ATLAS</text>
+  <!-- Editable wordmark (Figma Atlas/V3/Wordmark): Manrope Bold 700, 22/30, +1 px tracking, SIL OFL 1.1. Do not outline in this master. -->
+  <text x="60" y="32.4" fill="currentColor" font-family="'Manrope Variable', Manrope, 'Inter Variable', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="1">IKIGAI ATLAS</text>
 </svg>

@@ -28,34 +28,36 @@
 
 ## 2. Icons
 
-`Atlas/V3/Icon` (`152:2139`): 36 Tabler glyphs, 24 px, **stroke 2**. Rendered by the existing `<atlas-icon>`
-(**exists**, `shared/icons/atlas-icon.ts`) with the semantic registry in `atlas-icons.ts`. Change
-`ATLAS_ICON_STROKE` to `2` (ADR-0005 amendment).
+`Atlas/V3/Icon` (`152:2139`): 36 glyphs, 24 px, **stroke 2**. Rendered by the existing `<atlas-icon>`
+(`shared/icons/atlas-icon.ts`) with the semantic registry in `atlas-icons.ts`. `ATLAS_ICON_STROKE` is `2`
+(ADR-0005 amendment). **Done in T-3.** The Figma glyph descriptions credit Lucide; per ADR-0005 and R-4 each glyph is
+the closest Tabler outline, chosen by a side-by-side visual comparison.
 
-| Figma glyph (node)                | Registry key                                 | Today                                                      | Proposed Tabler icon                       |
-| --------------------------------- | -------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------ |
-| compass (`152:2253`)              | `my-atlas`                                   | `compass`                                                  | unchanged                                  |
-| flag (`152:2183`)                 | `destinations`                               | `flag`                                                     | unchanged                                  |
-| map-pin (`152:2186`)              | `waypoints`                                  | `map-pin`                                                  | unchanged                                  |
-| list-checks (`152:2245`)          | `steps`                                      | `list-check`                                               | unchanged                                  |
-| network (`152:2216`)              | `connections`                                | `affiliate`                                                | `sitemap` (verify shape)                   |
-| route (`152:2248`)                | `journey-overview`                           | `route`                                                    | unchanged                                  |
-| award (`152:2201`)                | `milestone-awards`                           | `award`                                                    | unchanged                                  |
-| orbit (`152:2257`)                | `life-dimensions`                            | `circle-dot`                                               | `orbit`                                    |
-| career … family (`152:2140–2166`) | dimension keys                               | briefcase, wallet, heartbeat, heart, sparkles, users, home | unchanged                                  |
-| plus, arrow-right, check, lock    | `add`, `next` (new), `check` (new), `locked` | partly present                                             | `plus`, `arrow-right`, `check`, `lock`     |
-| alert (`152:2190`)                | `alert` (new)                                | none                                                       | `alert-circle`                             |
-| loading (`152:2198`)              | `loading` (new)                              | none                                                       | `loader-2` (spin off under reduced motion) |
-| chevron / down (`152:2205/2278`)  | `expand`, `collapse` (new)                   | `chevron-right`                                            | `chevron-right`, `chevron-down`            |
-| close, back, menu, search         | `close`, `back`, `menu`, `search`            | present                                                    | verify `back` arrow vs chevron             |
-| ellipsis (`152:2225`)             | `more`                                       | `dots-vertical`                                            | `dots`                                     |
-| filter (`152:2263`)               | `filter`                                     | `adjustments-horizontal`                                   | verify against node                        |
-| calendar (`152:2211`)             | `calendar`                                   | `calendar-event`                                           | verify against node                        |
-| grid / list (`152:2269/2275`)     | `view-grid`, `view-list` (new)               | none                                                       | `layout-grid`, `list`                      |
-| settings, help, bell, user        | present                                      | present                                                    | unchanged                                  |
+| Figma glyph (node)                    | Registry key                                 | Before T-3                                                            | Tabler icon (implemented)                                            |
+| ------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| compass (`152:2253`)                  | `my-atlas`                                   | `compass`                                                             | `compass`                                                            |
+| flag (`152:2183`)                     | `destinations`                               | `flag`                                                                | `flag`                                                               |
+| map-pin (`152:2186`)                  | `waypoints`                                  | `map-pin`                                                             | `map-pin`                                                            |
+| list-checks (`152:2245`)              | `steps`                                      | `list-check`                                                          | `list-check`                                                         |
+| network (`152:2216`)                  | `connections`                                | `affiliate`                                                           | `sitemap`                                                            |
+| route (`152:2248`)                    | `journey-overview`                           | `route`                                                               | `route`                                                              |
+| award (`152:2201`)                    | `milestone-awards`                           | `award`                                                               | `award`                                                              |
+| orbit (`152:2257`)                    | `life-dimensions`                            | `circle-dot`                                                          | `orbit`                                                              |
+| career … family (`152:2140–2166`)     | dimension keys                               | briefcase, wallet, heartbeat, heart, sparkles, users, home            | unchanged                                                            |
+| plus, arrow-right, check, lock        | `add`, `next` (new), `check` (new), `locked` | partly present                                                        | `plus`, `arrow-right`, `check`, `lock`                               |
+| alert (`152:2190`)                    | `alert` (new)                                | none                                                                  | `alert-circle`                                                       |
+| loading (`152:2198`)                  | `loading` (new)                              | none                                                                  | `loader-2` (static; any spin stops under reduced motion)             |
+| chevron / down (`152:2205/2278`)      | `expand`, `collapse` (new)                   | `chevron-right`                                                       | `chevron-right`, `chevron-down`                                      |
+| close, back, menu, search             | `close`, `back`, `menu`, `search`            | present                                                               | `x`, `arrow-left`, `menu-2`, `search`                                |
+| ellipsis (`152:2225`)                 | `more`                                       | `dots-vertical`                                                       | `dots`                                                               |
+| filter (`152:2263`)                   | `filter`                                     | `adjustments-horizontal`                                              | `adjustments-horizontal`                                             |
+| calendar (`152:2211`)                 | `calendar`                                   | `calendar-event`                                                      | `calendar-week` (Figma shows a dot grid)                             |
+| grid / list (`152:2269/2275`)         | `view-grid`, `view-list` (new)               | none                                                                  | `layout-grid`, `list`                                                |
+| settings, help, bell, user            | present                                      | present                                                               | unchanged                                                            |
+| status chips (Foundations `214:1794`) | `status-*`                                   | circle-check, progress, hourglass, alert-triangle, ban, circle-dashed | `check`, `loader-2`, `calendar-week`, `alert-circle`, `lock`, `flag` |
 
-"Verify" means: compare the Figma glyph screenshot with Tabler before the icon PR. Life Dimension glyphs stay as in
-`design/svg/dimensions`. Icons next to text are `aria-hidden`; icon-only controls get an accessible name.
+Life Dimension glyphs stay as in `design-tokens.json → lifeDimensions.icons` (rendered via `<atlas-icon>`). Icons next to text are `aria-hidden`; icon-only controls get
+an accessible name.
 
 ## 3. Shell (`core/layout`)
 
@@ -67,7 +69,7 @@
 | `Atlas/V3/Topbar` (`152:5220`; Desktop 68, Tablet 68, Mobile 56) | `AtlasTopbar` `<atlas-topbar>`          | `MatToolbar` not needed                   | Title, "Search your atlas", Quick add, notifications, user menu. Mobile: logo + title + menu. Search and Quick add are not rendered until they work (roadmap R-14): Quick add with F3-1, global search after trade-off T-B. | F1-14   |
 | `Atlas/V3/BottomNavigation` (`152:5351`; 390 × 80)               | `AtlasBottomNav` `<atlas-bottom-nav>`   | none                                      | Below 768 px. My Atlas, Destinations, Journey, Awards, More. Safe-area padding (`env(safe-area-inset-bottom)`).                                                                                                             | F1-14   |
 | More sheet (page 05, "More of your Atlas")                       | `AtlasMoreSheet`                        | `MatBottomSheet`                          | Waypoints, Steps, Connections, Life Dimensions, Settings. Focus trapped, Esc closes, focus returns to "More".                                                                                                               | F1-14   |
-| `Atlas/V3/Brand/Symbol`, wordmark                                | `AtlasLogo` `<atlas-logo>` (**exists**) | none                                      | Update the SVG to the four-circle Venn symbol and the Manrope wordmark (page 01). Variants `symbol` / `horizontal`; tone follows the theme.                                                                                 | T-5     |
+| `Atlas/V3/Brand/Symbol`, wordmark                                | `AtlasLogo` `<atlas-logo>` (**exists**) | none                                      | Done in T-5: four-circle Venn symbol and Manrope wordmark (page 01). Variants `symbol` / `horizontal`; the `tone` input was removed, the blend follows the theme.                                                           | T-5     |
 
 ## 4. Shared UI primitives (`shared/ui`)
 
@@ -148,8 +150,8 @@ Route details are in [frontend.md §5](../architecture/frontend.md#5-routing).
 
 | Exists                                     | Change needed                                                                      |
 | ------------------------------------------ | ---------------------------------------------------------------------------------- |
-| `AtlasIcon`, `ATLAS_ICONS`                 | stroke 2, registry changes in §2                                                   |
-| `AtlasLogo`                                | new four-circle symbol and Manrope wordmark                                        |
+| `AtlasIcon`, `ATLAS_ICONS`                 | done (T-3): stroke 2, registry changes in §2                                       |
+| `AtlasLogo`                                | done (T-5): four-circle symbol and Manrope wordmark                                |
 | `LIFE_DIMENSIONS`, `lifeDimensionByApiKey` | none (colours come from tokens)                                                    |
 | `ATLAS_STATUSES`                           | labels stay as in ADR-0006 (R-11); add `skipped` and `cancelled` (D14)             |
 | `AtlasTheme`                               | system preference until the user picks, stored choice (D1, R-5); sets `data-theme` |

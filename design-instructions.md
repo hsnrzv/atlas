@@ -339,7 +339,7 @@ Conventions:
 
 The area, action and state glyph mapping (Figma node → registry key → Tabler icon) is in `docs/design/component-mapping.md` §2. Primary areas: My Atlas `compass`, Destinations `flag`, Waypoints `map-pin`, Steps `list-check`, Connections (network glyph, Tabler equivalent to verify), Journey Overview `route`, Milestone Awards `award`, Life Dimensions `orbit`.
 
-Life Dimension icons come from `design/svg/dimensions`: 24 × 24 viewBox, consistent stroke, `currentColor`, no embedded color.
+Life Dimension icons are Tabler outline glyphs rendered through `<atlas-icon>` (names in `design/tokens/design-tokens.json → lifeDimensions.icons`): 24 × 24 grid, consistent stroke, `currentColor`, no embedded color.
 
 ## 5.2 Illustration style
 

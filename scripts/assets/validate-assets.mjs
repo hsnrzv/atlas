@@ -3,8 +3,8 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import sharp from 'sharp';
-import { ROOT, loadManifest } from '../design-tokens/lib.mjs';
-import { FAVICON, LOGO, RASTER_EXPORTS } from './asset-manifest.mjs';
+import { ROOT } from '../design-tokens/lib.mjs';
+import { APP_BACKGROUND, FAVICON, LOGO, RASTER_EXPORTS } from './asset-manifest.mjs';
 
 const errors = [];
 const ok = (msg) => console.log(`✓ ${msg}`);
@@ -70,27 +70,11 @@ for (const name of readdirSync(abs(LOGO)).filter((f) => f.endsWith('.svg'))) {
 const appIcon = readFileSync(abs(`${LOGO}/ikigai-atlas-app-icon-master.svg`), 'utf8');
 if (!appIcon.includes('viewBox="0 0 1024 1024"'))
   fail('app icon master must use a 1024×1024 viewBox');
-if (!/<rect width="1024" height="1024" fill="#14243A"/.test(appIcon))
-  fail('app icon master must have an opaque #14243A background');
+if (!appIcon.includes(`<rect width="1024" height="1024" fill="${APP_BACKGROUND}"`))
+  fail(`app icon master must have an opaque ${APP_BACKGROUND} background`);
 if (!errors.length) ok(`${LOGO}: masters present, editable and self-contained`);
 
-// 2. Life Dimension icons.
-const { lifeDimensions } = loadManifest();
-for (const key of lifeDimensions.order) {
-  const file = `design/svg/dimensions/${key}.svg`;
-  if (!existsSync(abs(file))) {
-    fail(`${file} is missing`);
-    continue;
-  }
-  const svg = readFileSync(abs(file), 'utf8');
-  checkSvgSafety(file, svg);
-  if (!svg.includes('viewBox="0 0 24 24"')) fail(`${file}: must use a 24×24 viewBox`);
-  if (!svg.includes('stroke="currentColor"')) fail(`${file}: must use currentColor`);
-  if (/#[0-9a-f]{3,8}\b/i.test(svg)) fail(`${file}: must not hard-code colours`);
-}
-ok('design/svg/dimensions: 7 currentColor icons on a 24px grid');
-
-// 3. Derived rasters.
+// 2. Derived rasters.
 for (const spec of RASTER_EXPORTS) {
   if (!existsSync(abs(spec.out))) {
     fail(`${spec.out} is missing (run npm run assets:export)`);
@@ -108,11 +92,23 @@ for (const spec of RASTER_EXPORTS) {
     problems.push('has transparent pixels');
   if (spec.alpha === 'required' && (!meta.hasAlpha || stats.isOpaque))
     problems.push('must be transparent');
+  if (spec.alpha !== 'required') {
+    // Opaque exports are full-bleed on the app background; a stale export keeps an old colour in the corner.
+    const data = await sharp(abs(spec.out))
+      .extract({ left: 0, top: 0, width: 1, height: 1 })
+      .removeAlpha()
+      .raw()
+      .toBuffer();
+    const corner =
+      `#${[...data].map((c) => c.toString(16).padStart(2, '0')).join('')}`.toUpperCase();
+    if (corner !== APP_BACKGROUND)
+      problems.push(`background ${corner}, expected ${APP_BACKGROUND} (run npm run assets:export)`);
+  }
   if (problems.length) fail(`${spec.out}: ${problems.join(', ')}`);
   else ok(`${spec.out}  ${spec.size}×${spec.size} sRGB alpha:${spec.alpha}`);
 }
 
-// 4. Favicons.
+// 3. Favicons.
 if (readFileSync(abs(FAVICON.svgOut), 'utf8') !== readFileSync(abs(FAVICON.svgSource), 'utf8')) {
   fail(`${FAVICON.svgOut} differs from ${FAVICON.svgSource} (run npm run assets:export)`);
 }

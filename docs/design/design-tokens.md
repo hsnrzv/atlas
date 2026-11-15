@@ -1,6 +1,7 @@
 # Design tokens — Figma V3 to code
 
-- Status: approved 2026-11-14 (roadmap §4); token files change in phase 2 (T-1…T-3)
+- Status: approved 2026-11-14 (roadmap §4); **implemented 2026-11-14** in phase 2 (T-1 colours, T-2 Manrope, T-3
+  icons). The tables below describe the shipped tokens; "Change" columns record what changed from the pre-V3 set.
 - Source: Figma file `zlFVZJ57AYBHUBhoIsT030`, page 02 Foundations (`214:1720`), variables read with
   `get_variable_defs` on 2026-11-14 in both modes (light values re-verified on `214:2435`, `230:8180` and
   `230:25490`)
@@ -102,10 +103,12 @@ CSS variable names keep the existing `--color-<group>-<role>` pattern. "New" mea
 
 The generator also emits `--gradient-signature-edge` as a `linear-gradient(90deg, …)` built from these stops.
 
-**To retire** after migration: `--color-brand-midnight-*`, `--color-brand-ivory-*`, `--color-brand-gold-*`,
+**Retired in T-1** (no longer emitted): `--color-brand-midnight-*`, `--color-brand-ivory-*`, `--color-brand-gold-*`,
 `--color-neutral-*`, `--color-surface-inverse*`, `--color-surface-sunken`, `--color-text-inverse*`, `--color-text-link`
-(links use `--color-action-primary` / `--color-border-action`), `--color-nav-indicator`, `--color-status-on-dark-*`.
-`_theme.scss` (Material mapping) and `design-foundation` are updated in the same PR.
+(links use `--color-text-primary` with a `--color-border-action` underline, because teal link text on a
+dark card is only 3.93:1), `--color-nav-indicator`, `--color-status-on-dark-*`.
+`_theme.scss` (Material mapping) and `design-foundation` were updated in the same change; `[data-surface='inverse']`
+and the `<atlas-logo>` `tone` input were removed because both themes now have their own surfaces.
 
 ## 4. Life Dimension and state colours
 
@@ -123,8 +126,8 @@ are theme-aware, so the separate `status-on-dark` primitives go away.
 | family     | `--color-dimension-family`                 | `#C6B184` / `#302C25` | `#80683E` / `#F5F0E5` |
 
 The light values equal today's `…-strong` / `…-tint`. Change: `--color-dimension-<key>` becomes the theme-aware
-foreground (today it is the lighter light-mode accent such as `#759ECA`). `…-strong` stays as an alias for one
-release, then is removed. Chart series use the foreground.
+foreground (today it is the lighter light-mode accent such as `#759ECA`). `…-strong` is still emitted as an alias for
+one release, then is removed. Chart series use the foreground.
 
 | Figma state | CSS key (unchanged)          | Badge label | Dark fg / bg          | Light fg / bg         |
 | ----------- | ---------------------------- | ----------- | --------------------- | --------------------- |
@@ -247,5 +250,5 @@ in `contrast-pairs.json`.
    with jade `#205D55` as the primary seed), regenerate, update `design-foundation` and the Playwright/axe checks.
 3. One PR (T-2): Manrope font, `font.heading`, `font-weight.bold`, `typescale.control`, remove DM Serif; update
    notices and the license matrix.
-4. One PR (T-3): `size.icon-stroke: 2`, the registry glyph changes in [component-mapping.md §2](component-mapping.md#2-icons),
-   `icons:sync`.
+4. One PR (T-3): `size.icon-stroke: 2`, the registry glyph changes in [component-mapping.md §2](component-mapping.md#2-icons).
+   (The `icons:sync` step was retired with the dimension SVG copies on 2026-11-14.)

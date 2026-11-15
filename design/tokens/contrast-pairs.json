@@ -2,529 +2,742 @@
   "$description": "Color pairs verified by scripts/design-tokens/check-contrast.mjs (WCAG 2.2 relative luminance). Levels: text = 4.5:1 (SC 1.4.3), large = 3:1 (large text, SC 1.4.3), non-text = 3:1 (SC 1.4.11), info = reported only (documents a known limitation and the mitigation in design/ACCESSIBILITY.md). A failing text/large/non-text pair fails CI.",
   "pairs": [
     {
-      "fg": "{color.neutral.900}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.text.primary}",
+      "bg": "{semantic.light.color.surface.page}",
       "level": "text",
-      "use": "Primary text on card"
+      "use": "Light: primary text on page"
     },
     {
-      "fg": "{color.neutral.900}",
-      "bg": "{color.brand.ivory.50}",
+      "fg": "{semantic.light.color.text.primary}",
+      "bg": "{semantic.light.color.surface.navigation}",
       "level": "text",
-      "use": "Primary text on page"
+      "use": "Light: primary text on navigation"
     },
     {
-      "fg": "{color.neutral.900}",
-      "bg": "{color.brand.ivory.100}",
+      "fg": "{semantic.light.color.text.primary}",
+      "bg": "{semantic.light.color.surface.card}",
       "level": "text",
-      "use": "Primary text on subtle surface"
+      "use": "Light: primary text on card"
     },
     {
-      "fg": "{color.neutral.900}",
-      "bg": "{color.brand.gold.200}",
+      "fg": "{semantic.light.color.text.primary}",
+      "bg": "{semantic.light.color.surface.raised}",
       "level": "text",
-      "use": "Primary text on achievement surface"
+      "use": "Light: primary text on raised"
     },
     {
-      "fg": "{color.neutral.700}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.text.primary}",
+      "bg": "{semantic.light.color.surface.subtle}",
       "level": "text",
-      "use": "Secondary text on card"
+      "use": "Light: primary text on subtle"
     },
     {
-      "fg": "{color.neutral.700}",
-      "bg": "{color.brand.ivory.50}",
+      "fg": "{semantic.light.color.text.primary}",
+      "bg": "{semantic.light.color.surface.hero}",
       "level": "text",
-      "use": "Secondary text on page"
+      "use": "Light: primary text on hero"
     },
     {
-      "fg": "{color.neutral.700}",
-      "bg": "{color.brand.ivory.100}",
+      "fg": "{semantic.light.color.text.secondary}",
+      "bg": "{semantic.light.color.surface.page}",
       "level": "text",
-      "use": "Secondary text on subtle surface"
+      "use": "Light: secondary and muted text on page"
     },
     {
-      "fg": "{color.neutral.600}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.text.secondary}",
+      "bg": "{semantic.light.color.surface.navigation}",
       "level": "text",
-      "use": "Muted text on card"
+      "use": "Light: secondary and muted text on navigation"
     },
     {
-      "fg": "{color.neutral.600}",
-      "bg": "{color.brand.ivory.50}",
+      "fg": "{semantic.light.color.text.secondary}",
+      "bg": "{semantic.light.color.surface.card}",
       "level": "text",
-      "use": "Muted text on page"
+      "use": "Light: secondary and muted text on card"
     },
     {
-      "fg": "{color.neutral.600}",
-      "bg": "{color.brand.ivory.100}",
+      "fg": "{semantic.light.color.text.secondary}",
+      "bg": "{semantic.light.color.surface.raised}",
       "level": "text",
-      "use": "Muted text on subtle surface"
+      "use": "Light: secondary and muted text on raised"
     },
     {
-      "fg": "{color.neutral.500}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.text.secondary}",
+      "bg": "{semantic.light.color.surface.subtle}",
+      "level": "text",
+      "use": "Light: secondary and muted text on subtle"
+    },
+    {
+      "fg": "{semantic.light.color.text.primary}",
+      "bg": "{semantic.light.color.surface.achievement}",
+      "level": "text",
+      "use": "Light: primary text on achievement surface"
+    },
+    {
+      "fg": "{semantic.light.color.text.achievement}",
+      "bg": "{semantic.light.color.surface.achievement}",
+      "level": "text",
+      "use": "Light: achievement text on achievement surface"
+    },
+    {
+      "fg": "{semantic.light.color.text.achievement}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "text",
+      "use": "Light: achievement text on card"
+    },
+    {
+      "fg": "{semantic.light.color.text.primary}",
+      "bg": "{semantic.light.color.nav.active}",
+      "level": "text",
+      "use": "Light: active navigation label"
+    },
+    {
+      "fg": "{semantic.light.color.action.on-primary}",
+      "bg": "{semantic.light.color.action.primary}",
+      "level": "text",
+      "use": "Light: button label on primary"
+    },
+    {
+      "fg": "{semantic.light.color.action.on-primary}",
+      "bg": "{semantic.light.color.action.primary-hover}",
+      "level": "text",
+      "use": "Light: button label on primary-hover"
+    },
+    {
+      "fg": "{semantic.light.color.action.on-primary}",
+      "bg": "{semantic.light.color.action.primary-pressed}",
+      "level": "text",
+      "use": "Light: button label on primary-pressed"
+    },
+    {
+      "fg": "{semantic.light.color.action.on-disabled}",
+      "bg": "{semantic.light.color.action.disabled}",
       "level": "info",
-      "use": "neutral-500 as small text: NOT allowed (use neutral-600)"
+      "use": "Light: disabled button label (exempt, SC 1.4.3)"
     },
     {
-      "fg": "{color.neutral.500}",
-      "bg": "{color.white}",
-      "level": "non-text",
-      "use": "Control border on card"
-    },
-    {
-      "fg": "{color.neutral.500}",
-      "bg": "{color.brand.ivory.50}",
-      "level": "non-text",
-      "use": "Control border on page"
-    },
-    {
-      "fg": "{color.brand.midnight.800}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.action.on-destructive}",
+      "bg": "{semantic.light.color.action.destructive}",
       "level": "text",
-      "use": "Link on card"
+      "use": "Light: label on destructive action"
     },
     {
-      "fg": "{color.brand.midnight.800}",
-      "bg": "{color.brand.ivory.50}",
-      "level": "text",
-      "use": "Link on page"
-    },
-    {
-      "fg": "{color.white}",
-      "bg": "{color.brand.midnight.900}",
-      "level": "text",
-      "use": "Primary button label"
-    },
-    {
-      "fg": "{color.white}",
-      "bg": "{color.brand.midnight.800}",
-      "level": "text",
-      "use": "Primary button label (hover)"
-    },
-    {
-      "fg": "{color.brand.midnight.900}",
-      "bg": "{color.brand.ivory.50}",
-      "level": "non-text",
-      "use": "Focus ring / secondary button border on page"
-    },
-    {
-      "fg": "{color.brand.ivory.100}",
-      "bg": "{color.brand.midnight.900}",
-      "level": "text",
-      "use": "Navigation label on sidebar"
-    },
-    {
-      "fg": "{color.brand.ivory.100}",
-      "bg": "{color.brand.midnight.800}",
-      "level": "text",
-      "use": "Active navigation label"
-    },
-    {
-      "fg": "{color.brand.ivory.100}",
-      "bg": "{color.brand.midnight.950}",
-      "level": "text",
-      "use": "Text on dark hero"
-    },
-    {
-      "fg": "{color.neutral.300}",
-      "bg": "{color.brand.midnight.900}",
-      "level": "text",
-      "use": "Secondary text on sidebar"
-    },
-    {
-      "fg": "{color.brand.gold.500}",
-      "bg": "{color.brand.midnight.900}",
-      "level": "non-text",
-      "use": "Active nav indicator / focus ring on sidebar"
-    },
-    {
-      "fg": "{color.brand.gold.500}",
-      "bg": "{color.brand.midnight.900}",
-      "level": "text",
-      "use": "Gold text on dark"
-    },
-    {
-      "fg": "{color.brand.gold.800}",
-      "bg": "{color.white}",
-      "level": "text",
-      "use": "Small gold text on card"
-    },
-    {
-      "fg": "{color.brand.gold.800}",
-      "bg": "{color.brand.ivory.50}",
-      "level": "text",
-      "use": "Small gold text on page"
-    },
-    {
-      "fg": "{color.brand.gold.800}",
-      "bg": "{color.brand.gold.200}",
-      "level": "large",
-      "use": "Gold title on achievement surface"
-    },
-    {
-      "fg": "{color.brand.gold.700}",
-      "bg": "{color.white}",
-      "level": "large",
-      "use": "Large gold emphasis on card"
-    },
-    {
-      "fg": "{color.brand.gold.700}",
-      "bg": "{color.white}",
-      "level": "non-text",
-      "use": "Gold icon / selection on card"
-    },
-    {
-      "fg": "{color.brand.gold.600}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.action.primary}",
+      "bg": "{semantic.light.color.surface.card}",
       "level": "info",
-      "use": "Achievement gold: decorative only on light surfaces"
+      "use": "Light: filled button boundary on card (label identifies the control, SC 1.4.11)"
     },
-
     {
-      "fg": "{color.status.success}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.border.action}",
+      "bg": "{semantic.light.color.surface.card}",
       "level": "non-text",
-      "use": "Success icon/dot on card"
+      "use": "Light: primary button outline on card (Figma border/action)"
     },
     {
-      "fg": "{color.status.success}",
-      "bg": "{color.brand.ivory.50}",
+      "fg": "{semantic.light.color.border.action}",
+      "bg": "{semantic.light.color.surface.page}",
       "level": "non-text",
-      "use": "Success icon/dot on page"
+      "use": "Light: inline link underline on page (link text is text/primary)"
     },
     {
-      "fg": "{color.status.in-progress}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.border.action}",
+      "bg": "{semantic.light.color.surface.card}",
       "level": "non-text",
-      "use": "In-progress icon/dot on card"
+      "use": "Light: inline link underline on card (link text is text/primary)"
     },
     {
-      "fg": "{color.status.in-progress}",
-      "bg": "{color.brand.ivory.50}",
+      "fg": "{semantic.light.color.border.control}",
+      "bg": "{semantic.light.color.surface.card}",
       "level": "non-text",
-      "use": "In-progress icon/dot on page"
+      "use": "Light: form control and secondary button boundary on card"
     },
     {
-      "fg": "{color.status.upcoming}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.border.control}",
+      "bg": "{semantic.light.color.surface.page}",
       "level": "non-text",
-      "use": "Upcoming icon/dot on card"
+      "use": "Light: form control boundary on page"
     },
     {
-      "fg": "{color.status.upcoming}",
-      "bg": "{color.brand.ivory.50}",
+      "fg": "{semantic.light.color.border.control}",
+      "bg": "{semantic.light.color.surface.raised}",
       "level": "non-text",
-      "use": "Upcoming icon/dot on page"
+      "use": "Light: form control boundary on raised"
     },
     {
-      "fg": "{color.status.at-risk}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.focus.ring}",
+      "bg": "{semantic.light.color.surface.page}",
       "level": "non-text",
-      "use": "At-risk icon/dot on card"
+      "use": "Light: focus ring on page"
     },
     {
-      "fg": "{color.status.at-risk}",
-      "bg": "{color.brand.ivory.50}",
+      "fg": "{semantic.light.color.focus.ring}",
+      "bg": "{semantic.light.color.surface.card}",
       "level": "non-text",
-      "use": "At-risk icon/dot on page"
+      "use": "Light: focus ring on card"
     },
     {
-      "fg": "{color.status.blocked}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.focus.ring}",
+      "bg": "{semantic.light.color.surface.raised}",
       "level": "non-text",
-      "use": "Blocked icon/dot on card"
+      "use": "Light: focus ring on raised"
     },
     {
-      "fg": "{color.status.blocked}",
-      "bg": "{color.brand.ivory.50}",
+      "fg": "{semantic.light.color.focus.ring}",
+      "bg": "{semantic.light.color.surface.navigation}",
       "level": "non-text",
-      "use": "Blocked icon/dot on page"
+      "use": "Light: focus ring on navigation"
     },
     {
-      "fg": "{color.status.not-started}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.progress.fill}",
+      "bg": "{semantic.light.color.progress.track}",
       "level": "non-text",
-      "use": "Not-started icon/dot on card"
+      "use": "Light: progress fill on track"
     },
     {
-      "fg": "{color.status.not-started}",
-      "bg": "{color.brand.ivory.50}",
+      "fg": "{semantic.light.color.progress.fill}",
+      "bg": "{semantic.light.color.surface.card}",
       "level": "non-text",
-      "use": "Not-started icon/dot on page"
+      "use": "Light: progress fill on card"
     },
     {
-      "fg": "{color.white}",
-      "bg": "{color.status.blocked}",
+      "fg": "{semantic.light.color.status.success.DEFAULT}",
+      "bg": "{semantic.light.color.status.success.tint}",
       "level": "text",
-      "use": "Destructive button label"
+      "use": "Light: success badge label on its tint"
     },
     {
-      "fg": "{color.status.upcoming}",
-      "bg": "{color.white}",
+      "fg": "{semantic.light.color.status.success.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: success icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.status.in-progress.DEFAULT}",
+      "bg": "{semantic.light.color.status.in-progress.tint}",
+      "level": "text",
+      "use": "Light: in-progress badge label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.status.in-progress.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: in-progress icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.status.upcoming.DEFAULT}",
+      "bg": "{semantic.light.color.status.upcoming.tint}",
+      "level": "text",
+      "use": "Light: upcoming badge label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.status.upcoming.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: upcoming icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.status.at-risk.DEFAULT}",
+      "bg": "{semantic.light.color.status.at-risk.tint}",
+      "level": "text",
+      "use": "Light: at-risk badge label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.status.at-risk.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: at-risk icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.status.blocked.DEFAULT}",
+      "bg": "{semantic.light.color.status.blocked.tint}",
+      "level": "text",
+      "use": "Light: blocked badge label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.status.blocked.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: blocked icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.status.not-started.DEFAULT}",
+      "bg": "{semantic.light.color.status.not-started.tint}",
+      "level": "text",
+      "use": "Light: not-started badge label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.status.not-started.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: not-started icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.career.DEFAULT}",
+      "bg": "{semantic.light.color.dimension.career.tint}",
+      "level": "text",
+      "use": "Light: career chip label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.career.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: career icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.finance.DEFAULT}",
+      "bg": "{semantic.light.color.dimension.finance.tint}",
+      "level": "text",
+      "use": "Light: finance chip label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.finance.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: finance icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.health.DEFAULT}",
+      "bg": "{semantic.light.color.dimension.health.tint}",
+      "level": "text",
+      "use": "Light: health chip label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.health.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: health icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.love.DEFAULT}",
+      "bg": "{semantic.light.color.dimension.love.tint}",
+      "level": "text",
+      "use": "Light: love chip label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.love.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: love icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.passion.DEFAULT}",
+      "bg": "{semantic.light.color.dimension.passion.tint}",
+      "level": "text",
+      "use": "Light: passion chip label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.passion.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: passion icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.friendship.DEFAULT}",
+      "bg": "{semantic.light.color.dimension.friendship.tint}",
+      "level": "text",
+      "use": "Light: friendship chip label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.friendship.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: friendship icon on card"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.family.DEFAULT}",
+      "bg": "{semantic.light.color.dimension.family.tint}",
+      "level": "text",
+      "use": "Light: family chip label on its tint"
+    },
+    {
+      "fg": "{semantic.light.color.dimension.family.DEFAULT}",
+      "bg": "{semantic.light.color.surface.card}",
+      "level": "non-text",
+      "use": "Light: family icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.text.primary}",
+      "bg": "{semantic.dark.color.surface.page}",
+      "level": "text",
+      "use": "Dark: primary text on page"
+    },
+    {
+      "fg": "{semantic.dark.color.text.primary}",
+      "bg": "{semantic.dark.color.surface.navigation}",
+      "level": "text",
+      "use": "Dark: primary text on navigation"
+    },
+    {
+      "fg": "{semantic.dark.color.text.primary}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "text",
+      "use": "Dark: primary text on card"
+    },
+    {
+      "fg": "{semantic.dark.color.text.primary}",
+      "bg": "{semantic.dark.color.surface.raised}",
+      "level": "text",
+      "use": "Dark: primary text on raised"
+    },
+    {
+      "fg": "{semantic.dark.color.text.primary}",
+      "bg": "{semantic.dark.color.surface.subtle}",
+      "level": "text",
+      "use": "Dark: primary text on subtle"
+    },
+    {
+      "fg": "{semantic.dark.color.text.primary}",
+      "bg": "{semantic.dark.color.surface.hero}",
+      "level": "text",
+      "use": "Dark: primary text on hero"
+    },
+    {
+      "fg": "{semantic.dark.color.text.secondary}",
+      "bg": "{semantic.dark.color.surface.page}",
+      "level": "text",
+      "use": "Dark: secondary and muted text on page"
+    },
+    {
+      "fg": "{semantic.dark.color.text.secondary}",
+      "bg": "{semantic.dark.color.surface.navigation}",
+      "level": "text",
+      "use": "Dark: secondary and muted text on navigation"
+    },
+    {
+      "fg": "{semantic.dark.color.text.secondary}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "text",
+      "use": "Dark: secondary and muted text on card"
+    },
+    {
+      "fg": "{semantic.dark.color.text.secondary}",
+      "bg": "{semantic.dark.color.surface.raised}",
+      "level": "text",
+      "use": "Dark: secondary and muted text on raised"
+    },
+    {
+      "fg": "{semantic.dark.color.text.secondary}",
+      "bg": "{semantic.dark.color.surface.subtle}",
+      "level": "text",
+      "use": "Dark: secondary and muted text on subtle"
+    },
+    {
+      "fg": "{semantic.dark.color.text.primary}",
+      "bg": "{semantic.dark.color.surface.achievement}",
+      "level": "text",
+      "use": "Dark: primary text on achievement surface"
+    },
+    {
+      "fg": "{semantic.dark.color.text.achievement}",
+      "bg": "{semantic.dark.color.surface.achievement}",
+      "level": "text",
+      "use": "Dark: achievement text on achievement surface"
+    },
+    {
+      "fg": "{semantic.dark.color.text.achievement}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "text",
+      "use": "Dark: achievement text on card"
+    },
+    {
+      "fg": "{semantic.dark.color.text.primary}",
+      "bg": "{semantic.dark.color.nav.active}",
+      "level": "text",
+      "use": "Dark: active navigation label"
+    },
+    {
+      "fg": "{semantic.dark.color.action.on-primary}",
+      "bg": "{semantic.dark.color.action.primary}",
+      "level": "text",
+      "use": "Dark: button label on primary"
+    },
+    {
+      "fg": "{semantic.dark.color.action.on-primary}",
+      "bg": "{semantic.dark.color.action.primary-hover}",
+      "level": "text",
+      "use": "Dark: button label on primary-hover"
+    },
+    {
+      "fg": "{semantic.dark.color.action.on-primary}",
+      "bg": "{semantic.dark.color.action.primary-pressed}",
+      "level": "text",
+      "use": "Dark: button label on primary-pressed"
+    },
+    {
+      "fg": "{semantic.dark.color.action.on-disabled}",
+      "bg": "{semantic.dark.color.action.disabled}",
       "level": "info",
-      "use": "Upcoming as text: not allowed; label uses text-secondary"
+      "use": "Dark: disabled button label (exempt, SC 1.4.3)"
     },
     {
-      "fg": "{color.status.at-risk}",
-      "bg": "{color.white}",
+      "fg": "{semantic.dark.color.action.on-destructive}",
+      "bg": "{semantic.dark.color.action.destructive}",
+      "level": "text",
+      "use": "Dark: label on destructive action"
+    },
+    {
+      "fg": "{semantic.dark.color.action.primary}",
+      "bg": "{semantic.dark.color.surface.card}",
       "level": "info",
-      "use": "At-risk as text: not allowed; label uses text-secondary"
-    },
-
-    {
-      "fg": "{color.dimension.career.strong}",
-      "bg": "{color.dimension.career.tint}",
-      "level": "text",
-      "use": "Career chip label"
+      "use": "Dark: filled button boundary on card (label identifies the control, SC 1.4.11)"
     },
     {
-      "fg": "{color.dimension.finance.strong}",
-      "bg": "{color.dimension.finance.tint}",
-      "level": "text",
-      "use": "Finance chip label"
-    },
-    {
-      "fg": "{color.dimension.health.strong}",
-      "bg": "{color.dimension.health.tint}",
-      "level": "text",
-      "use": "Health chip label"
-    },
-    {
-      "fg": "{color.dimension.love.strong}",
-      "bg": "{color.dimension.love.tint}",
-      "level": "text",
-      "use": "Love chip label"
-    },
-    {
-      "fg": "{color.dimension.passion.strong}",
-      "bg": "{color.dimension.passion.tint}",
-      "level": "text",
-      "use": "Passion chip label"
-    },
-    {
-      "fg": "{color.dimension.friendship.strong}",
-      "bg": "{color.dimension.friendship.tint}",
-      "level": "text",
-      "use": "Friendship chip label"
-    },
-    {
-      "fg": "{color.dimension.family.strong}",
-      "bg": "{color.dimension.family.tint}",
-      "level": "text",
-      "use": "Family chip label"
-    },
-    {
-      "fg": "{color.dimension.career.strong}",
-      "bg": "{color.white}",
-      "level": "text",
-      "use": "Career label on card"
-    },
-    {
-      "fg": "{color.dimension.finance.strong}",
-      "bg": "{color.white}",
-      "level": "text",
-      "use": "Finance label on card"
-    },
-    {
-      "fg": "{color.dimension.health.strong}",
-      "bg": "{color.white}",
-      "level": "text",
-      "use": "Health label on card"
-    },
-    {
-      "fg": "{color.dimension.love.strong}",
-      "bg": "{color.white}",
-      "level": "text",
-      "use": "Love label on card"
-    },
-    {
-      "fg": "{color.dimension.passion.strong}",
-      "bg": "{color.white}",
-      "level": "text",
-      "use": "Passion label on card"
-    },
-    {
-      "fg": "{color.dimension.friendship.strong}",
-      "bg": "{color.white}",
-      "level": "text",
-      "use": "Friendship label on card"
-    },
-    {
-      "fg": "{color.dimension.family.strong}",
-      "bg": "{color.white}",
-      "level": "text",
-      "use": "Family label on card"
-    },
-    {
-      "fg": "{color.dimension.career}",
-      "bg": "{color.brand.midnight.900}",
+      "fg": "{semantic.dark.color.border.action}",
+      "bg": "{semantic.dark.color.surface.card}",
       "level": "non-text",
-      "use": "Career accent on dark navigation"
+      "use": "Dark: primary button outline on card (Figma border/action)"
     },
     {
-      "fg": "{color.dimension.finance}",
-      "bg": "{color.brand.midnight.900}",
+      "fg": "{semantic.dark.color.border.action}",
+      "bg": "{semantic.dark.color.surface.page}",
       "level": "non-text",
-      "use": "Finance accent on dark navigation"
+      "use": "Dark: inline link underline on page (link text is text/primary)"
     },
     {
-      "fg": "{color.dimension.health}",
-      "bg": "{color.brand.midnight.900}",
+      "fg": "{semantic.dark.color.border.action}",
+      "bg": "{semantic.dark.color.surface.card}",
       "level": "non-text",
-      "use": "Health accent on dark navigation"
+      "use": "Dark: inline link underline on card (link text is text/primary)"
     },
     {
-      "fg": "{color.dimension.love}",
-      "bg": "{color.brand.midnight.900}",
+      "fg": "{semantic.dark.color.border.control}",
+      "bg": "{semantic.dark.color.surface.card}",
       "level": "non-text",
-      "use": "Love accent on dark navigation"
+      "use": "Dark: form control and secondary button boundary on card"
     },
     {
-      "fg": "{color.dimension.passion}",
-      "bg": "{color.brand.midnight.900}",
+      "fg": "{semantic.dark.color.border.control}",
+      "bg": "{semantic.dark.color.surface.page}",
       "level": "non-text",
-      "use": "Passion accent on dark navigation"
+      "use": "Dark: form control boundary on page"
     },
     {
-      "fg": "{color.dimension.friendship}",
-      "bg": "{color.brand.midnight.900}",
+      "fg": "{semantic.dark.color.border.control}",
+      "bg": "{semantic.dark.color.surface.raised}",
       "level": "non-text",
-      "use": "Friendship accent on dark navigation"
+      "use": "Dark: form control boundary on raised"
     },
     {
-      "fg": "{color.dimension.family}",
-      "bg": "{color.brand.midnight.900}",
+      "fg": "{semantic.dark.color.focus.ring}",
+      "bg": "{semantic.dark.color.surface.page}",
       "level": "non-text",
-      "use": "Family accent on dark navigation"
+      "use": "Dark: focus ring on page"
     },
     {
-      "fg": "{color.dimension.career}",
-      "bg": "{color.white}",
+      "fg": "{semantic.dark.color.focus.ring}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: focus ring on card"
+    },
+    {
+      "fg": "{semantic.dark.color.focus.ring}",
+      "bg": "{semantic.dark.color.surface.raised}",
+      "level": "non-text",
+      "use": "Dark: focus ring on raised"
+    },
+    {
+      "fg": "{semantic.dark.color.focus.ring}",
+      "bg": "{semantic.dark.color.surface.navigation}",
+      "level": "non-text",
+      "use": "Dark: focus ring on navigation"
+    },
+    {
+      "fg": "{semantic.dark.color.progress.fill}",
+      "bg": "{semantic.dark.color.progress.track}",
+      "level": "non-text",
+      "use": "Dark: progress fill on track"
+    },
+    {
+      "fg": "{semantic.dark.color.progress.fill}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: progress fill on card"
+    },
+    {
+      "fg": "{semantic.dark.color.status.success.DEFAULT}",
+      "bg": "{semantic.dark.color.status.success.tint}",
+      "level": "text",
+      "use": "Dark: success badge label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.status.success.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: success icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.status.in-progress.DEFAULT}",
+      "bg": "{semantic.dark.color.status.in-progress.tint}",
+      "level": "text",
+      "use": "Dark: in-progress badge label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.status.in-progress.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: in-progress icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.status.upcoming.DEFAULT}",
+      "bg": "{semantic.dark.color.status.upcoming.tint}",
+      "level": "text",
+      "use": "Dark: upcoming badge label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.status.upcoming.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: upcoming icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.status.at-risk.DEFAULT}",
+      "bg": "{semantic.dark.color.status.at-risk.tint}",
+      "level": "text",
+      "use": "Dark: at-risk badge label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.status.at-risk.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: at-risk icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.status.blocked.DEFAULT}",
+      "bg": "{semantic.dark.color.status.blocked.tint}",
+      "level": "text",
+      "use": "Dark: blocked badge label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.status.blocked.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: blocked icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.status.not-started.DEFAULT}",
+      "bg": "{semantic.dark.color.status.not-started.tint}",
+      "level": "text",
+      "use": "Dark: not-started badge label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.status.not-started.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: not-started icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.career.DEFAULT}",
+      "bg": "{semantic.dark.color.dimension.career.tint}",
+      "level": "text",
+      "use": "Dark: career chip label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.career.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: career icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.finance.DEFAULT}",
+      "bg": "{semantic.dark.color.dimension.finance.tint}",
+      "level": "text",
+      "use": "Dark: finance chip label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.finance.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: finance icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.health.DEFAULT}",
+      "bg": "{semantic.dark.color.dimension.health.tint}",
+      "level": "text",
+      "use": "Dark: health chip label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.health.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: health icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.love.DEFAULT}",
+      "bg": "{semantic.dark.color.dimension.love.tint}",
+      "level": "text",
+      "use": "Dark: love chip label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.love.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: love icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.passion.DEFAULT}",
+      "bg": "{semantic.dark.color.dimension.passion.tint}",
+      "level": "text",
+      "use": "Dark: passion chip label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.passion.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: passion icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.friendship.DEFAULT}",
+      "bg": "{semantic.dark.color.dimension.friendship.tint}",
+      "level": "text",
+      "use": "Dark: friendship chip label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.friendship.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: friendship icon on card"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.family.DEFAULT}",
+      "bg": "{semantic.dark.color.dimension.family.tint}",
+      "level": "text",
+      "use": "Dark: family chip label on its tint"
+    },
+    {
+      "fg": "{semantic.dark.color.dimension.family.DEFAULT}",
+      "bg": "{semantic.dark.color.surface.card}",
+      "level": "non-text",
+      "use": "Dark: family icon on card"
+    },
+    {
+      "fg": "{color.gold.light}",
+      "bg": "{color.light.card}",
       "level": "info",
-      "use": "Career accent on light: decorative fill; pair with strong stroke + text label"
+      "use": "Primitive: light-gold on white is decorative or large text only"
     },
     {
-      "fg": "{color.dimension.finance}",
-      "bg": "{color.white}",
+      "fg": "{color.brand.venn.blue}",
+      "bg": "{color.light.card}",
       "level": "info",
-      "use": "Finance accent on light: decorative fill"
+      "use": "Logo circle blue on white (decorative, paired with wordmark)"
     },
     {
-      "fg": "{color.dimension.health}",
-      "bg": "{color.white}",
+      "fg": "{color.brand.venn.teal}",
+      "bg": "{color.light.card}",
       "level": "info",
-      "use": "Health accent on light: decorative fill"
+      "use": "Logo circle teal on white (decorative, paired with wordmark)"
     },
     {
-      "fg": "{color.dimension.love}",
-      "bg": "{color.white}",
+      "fg": "{color.brand.venn.violet}",
+      "bg": "{color.light.card}",
       "level": "info",
-      "use": "Love accent on light: decorative fill"
+      "use": "Logo circle violet on white (decorative, paired with wordmark)"
     },
     {
-      "fg": "{color.dimension.passion}",
-      "bg": "{color.white}",
+      "fg": "{color.brand.venn.rose}",
+      "bg": "{color.light.card}",
       "level": "info",
-      "use": "Passion accent on light: decorative fill"
-    },
-    {
-      "fg": "{color.dimension.friendship}",
-      "bg": "{color.white}",
-      "level": "info",
-      "use": "Friendship accent on light: decorative fill"
-    },
-    {
-      "fg": "{color.dimension.family}",
-      "bg": "{color.white}",
-      "level": "info",
-      "use": "Family accent on light: decorative fill"
-    },
-
-    {
-      "fg": "{color.brand.ivory.100}",
-      "bg": "{color.brand.midnight.900}",
-      "level": "text",
-      "use": "Dark draft: primary text on card",
-      "theme": "dark"
-    },
-    {
-      "fg": "{color.brand.ivory.200}",
-      "bg": "{color.brand.midnight.950}",
-      "level": "text",
-      "use": "Dark draft: secondary text on page",
-      "theme": "dark"
-    },
-    {
-      "fg": "{color.neutral.300}",
-      "bg": "{color.brand.midnight.800}",
-      "level": "text",
-      "use": "Dark draft: muted text on subtle surface",
-      "theme": "dark"
-    },
-    {
-      "fg": "{color.brand.midnight.950}",
-      "bg": "{color.brand.gold.500}",
-      "level": "text",
-      "use": "Dark draft: primary button label",
-      "theme": "dark"
-    },
-    {
-      "fg": "{color.status-on-dark.success}",
-      "bg": "{color.brand.midnight.800}",
-      "level": "text",
-      "use": "Dark draft: success label",
-      "theme": "dark"
-    },
-    {
-      "fg": "{color.status-on-dark.in-progress}",
-      "bg": "{color.brand.midnight.800}",
-      "level": "text",
-      "use": "Dark draft: in-progress label",
-      "theme": "dark"
-    },
-    {
-      "fg": "{color.status-on-dark.upcoming}",
-      "bg": "{color.brand.midnight.800}",
-      "level": "text",
-      "use": "Dark draft: upcoming label",
-      "theme": "dark"
-    },
-    {
-      "fg": "{color.status-on-dark.at-risk}",
-      "bg": "{color.brand.midnight.800}",
-      "level": "text",
-      "use": "Dark draft: at-risk label",
-      "theme": "dark"
-    },
-    {
-      "fg": "{color.status-on-dark.blocked}",
-      "bg": "{color.brand.midnight.800}",
-      "level": "text",
-      "use": "Dark draft: blocked label",
-      "theme": "dark"
-    },
-    {
-      "fg": "{color.status-on-dark.not-started}",
-      "bg": "{color.brand.midnight.800}",
-      "level": "text",
-      "use": "Dark draft: not-started label",
-      "theme": "dark"
-    },
-    {
-      "fg": "{color.neutral.500}",
-      "bg": "{color.brand.midnight.900}",
-      "level": "non-text",
-      "use": "Dark draft: control border on card",
-      "theme": "dark"
-    },
-    {
-      "fg": "{color.brand.gold.500}",
-      "bg": "{color.brand.midnight.950}",
-      "level": "non-text",
-      "use": "Dark draft: focus ring on page",
-      "theme": "dark"
+      "use": "Logo circle rose on white (decorative, paired with wordmark)"
     }
   ]
 }

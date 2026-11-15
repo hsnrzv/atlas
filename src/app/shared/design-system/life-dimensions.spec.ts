@@ -14,9 +14,10 @@ describe('LIFE_DIMENSIONS', () => {
   });
 
   it('resolves backend enum values and rejects unknown ones', () => {
-    expect(lifeDimensionByApiKey('HEALTH')?.color.strong).toBe(
-      'var(--color-dimension-health-strong)',
-    );
+    expect(lifeDimensionByApiKey('HEALTH')?.color).toEqual({
+      foreground: 'var(--color-dimension-health)',
+      tint: 'var(--color-dimension-health-tint)',
+    });
     expect(lifeDimensionByApiKey('health')).toBeUndefined();
   });
 });

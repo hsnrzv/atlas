@@ -1,6 +1,7 @@
 # Implementation roadmap — Figma V3 to production
 
-- Status: approved by the owner on 2026-11-14 with the decisions in §4. Phase 1 is in progress.
+- Status: approved by the owner on 2026-11-14 with the decisions in §4. Phase 1 is complete (gate 1 met 2026-11-14);
+  phase 2 is implemented and gate 2 awaits owner approval.
 - Purpose: turn the approved Figma V3 design into the production Angular app, in small reviewed PRs.
 - Maps the nine implementation phases of the production brief onto the existing backlog in
   [PLAN-FRONTEND.md](../plan/PLAN-FRONTEND.md) (`F…` IDs) and the cross-repository phases in
@@ -23,31 +24,42 @@
 
 ## 2. Phases
 
-New IDs introduced here (approved 2026-11-14): `T-*` tokens and assets, `P-V*` visualisation, `P-D*` Life Dimensions, `P-C*` companion,
-`P-N*` native. They are added to PLAN-FRONTEND once this roadmap is approved.
+New IDs introduced here (approved 2026-11-14): `S-*` setup, `T-*` tokens and assets, `P-V*` visualisation, `P-D*` Life
+Dimensions, `P-C*` companion, `P-N*` native. PLAN-FRONTEND lists them under "Figma V3 alignment".
 
 ### Phase 1 — Setup and alignment (repo P1 finish)
 
-| ID      | Item                                                                                                                                                                     | Status                                                                                                                                                                                                            |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| F1-1…13 | Scaffold, tokens pipeline, brand assets, theme, icons, CI, container, docs                                                                                               | done                                                                                                                                                                                                              |
-| F1-15   | First push, green CI on GitHub, branch protection                                                                                                                        | **owner action**: the remote `hsnrzv/atlas` is empty and needs the owner's account (push, settings)                                                                                                               |
-| S-1     | Record the decisions in §4; accept ADR-0009 (Signal Forms) and ADR-0010 (Figma visual source, design time only)                                                          | done 2026-11-14                                                                                                                                                                                                   |
-| S-2     | `src/environments` (`dataSource`, `devTools`, `companionArt`) with `fileReplacements`; ESLint import boundaries ([frontend.md §3](../architecture/frontend.md#3-layers)) | done 2026-11-14: typed `ATLAS_ENVIRONMENT` token; the flags separate `ng serve` from the production build only, so all deployed environments share one image (D4). Angular Testing Library stays with F2-1a (D12) |
+| ID      | Item                                                                                                                                                                     | Status                                                                                                                                                                                                                                                   |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F1-1…13 | Scaffold, tokens pipeline, brand assets, theme, icons, CI, container, docs                                                                                               | done                                                                                                                                                                                                                                                     |
+| F1-15   | First push, green CI on GitHub, branch protection                                                                                                                        | done 2026-11-14: `main` pushed and all workflows green after the Dependabot fixes (stylelint 18, TypeScript follows Angular, dependency review skipped while the repository is private). Branch protection and security settings remain an owner setting |
+| S-1     | Record the decisions in §4; accept ADR-0009 (Signal Forms) and ADR-0010 (Figma visual source, design time only)                                                          | done 2026-11-14                                                                                                                                                                                                                                          |
+| S-2     | `src/environments` (`dataSource`, `devTools`, `companionArt`) with `fileReplacements`; ESLint import boundaries ([frontend.md §3](../architecture/frontend.md#3-layers)) | done 2026-11-14: typed `ATLAS_ENVIRONMENT` token; the flags separate `ng serve` from the production build only, so all deployed environments share one image (D4). Angular Testing Library stays with F2-1a (D12)                                        |
 
-**Gate 1:** decisions approved (done); CI green on GitHub (waits for F1-15).
+**Gate 1:** met 2026-11-14: decisions approved; CI green on GitHub.
 
 ### Phase 2 — Tokens, typography, icons and assets
 
-| ID  | Item                                                                                                                                                                                                                       |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| T-1 | Quiet Tide colour tokens (both themes), new semantic roles, contrast pairs, Material palette regenerated from jade, `design-foundation` updated ([design-tokens.md §8](../design/design-tokens.md#8-implementation-order)) |
-| T-2 | Manrope replaces DM Serif Display; `font.heading`, `bold`, `control`, `wordmark` styles; notices and licence matrix                                                                                                        |
-| T-3 | Icon stroke 2 and registry glyph changes ([component-mapping.md §2](../design/component-mapping.md#2-icons)); ADR-0005 amendment                                                                                           |
-| T-4 | Withdrawn (R-2): no Figma snapshots, mapping file or diff script; Figma-to-code stays a reviewed development-time activity                                                                                                 |
-| T-5 | Brand assets from Figma pages 01/15: four-circle symbol masters, lockups, app icons (dark/light), favicon/PWA/Capacitor exports; `AtlasLogo` update                                                                        |
+| ID  | Item                                                                                                                                                                                                                       | Status                                                                                                                                                                                                                                                                                                  |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| T-1 | Quiet Tide colour tokens (both themes), new semantic roles, contrast pairs, Material palette regenerated from jade, `design-foundation` updated ([design-tokens.md §8](../design/design-tokens.md#8-implementation-order)) | done 2026-11-14: 123 contrast pairs pass. Retired tokens and `[data-surface='inverse']` removed. Links use text/primary with a border/action underline (teal text on a dark card is 3.93:1). Material buttons follow `Atlas/V3/Button`: 48 px, Control style, secondary and text labels in text/primary |
+| T-2 | Manrope replaces DM Serif Display; `font.heading`, `bold`, `control`, `wordmark` styles; notices and licence matrix                                                                                                        | done 2026-11-14: `@fontsource-variable/manrope` 5.3.0 (OFL-1.1), self-hosted; DM Serif Display removed                                                                                                                                                                                                  |
+| T-3 | Icon stroke 2 and registry glyph changes ([component-mapping.md §2](../design/component-mapping.md#2-icons)); ADR-0005 amendment                                                                                           | done 2026-11-14: Figma credits the glyphs to Lucide; Tabler is kept (R-4) and each glyph is the closest Tabler match. Status glyphs follow Foundations `214:1794`                                                                                                                                       |
+| T-4 | Withdrawn (R-2): no Figma snapshots, mapping file or diff script; Figma-to-code stays a reviewed development-time activity                                                                                                 | withdrawn                                                                                                                                                                                                                                                                                               |
+| T-5 | Brand assets from Figma pages 01/15: four-circle symbol masters, lockups, app icons (dark/light), favicon/PWA/Capacitor exports; `AtlasLogo` update                                                                        | done 2026-11-14: masters regenerated (Manrope wordmark, Figma proportions); app icon, splash and `theme-color` on tide space `#0B1020`; `AtlasLogo` `tone` input removed. One dark app-icon master is kept; the light Figma variant (`#F5F7FA`) is not exported because stores take a single icon       |
 
-**Gate 2:** `/_design` matches Figma page 02 foundations in both themes; contrast gate green.
+**Gate 2:** verified 2026-11-14 and awaiting owner approval. `/_design` was compared with Figma page 02 Foundations
+(`214:1794`) in both themes. `npm run verify` passes: contrast gate, icons, assets, lint, unit tests and build.
+`npm run e2e` passes: axe WCAG 2.2 AA in both themes on desktop and mobile.
+
+Owner review fixes (2026-11-14):
+
+- The duplicate `design/svg/dimensions` SVG copies and `icons:sync`/`icons:check` were removed. Life Dimension icons
+  render through `<atlas-icon>` (ADR-0005 amendment). No icon webfont is used.
+- The stale `google-play-512.png` was re-exported. `assets:validate` now fails if an opaque export's background is not
+  `#0B1020`.
+- The signature edge stays token-driven. Tabler's `card-gradient` belongs to Tabler UI (Bootstrap) and is excluded by
+  ADR-0003.
 
 ### Phase 3 — Shared UI and the application shell
 

@@ -5,7 +5,7 @@ import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import sharp from 'sharp';
 import { ROOT } from '../design-tokens/lib.mjs';
-import { FAVICON, RASTER_EXPORTS } from './asset-manifest.mjs';
+import { APP_BACKGROUND, FAVICON, RASTER_EXPORTS } from './asset-manifest.mjs';
 
 const abs = (p) => join(ROOT, p);
 
@@ -22,8 +22,8 @@ async function exportOne(spec) {
         create: { width: spec.size, height: spec.size, channels: 3, background: spec.solid },
       })
     : await renderSvg(spec.source, spec.size);
-  if (spec.alpha === 'none') img = img.flatten({ background: '#14243A' }).removeAlpha();
-  if (spec.alpha === 'opaque') img = img.flatten({ background: '#14243A' }).ensureAlpha(1);
+  if (spec.alpha === 'none') img = img.flatten({ background: APP_BACKGROUND }).removeAlpha();
+  if (spec.alpha === 'opaque') img = img.flatten({ background: APP_BACKGROUND }).ensureAlpha(1);
   mkdirSync(dirname(abs(spec.out)), { recursive: true });
   await img
     .toColourspace('srgb')

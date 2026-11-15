@@ -1,15 +1,15 @@
 {
-  "$description": "IKIGAI ATLAS typography tokens (design-instructions §3). Fonts are bundled locally via @fontsource packages (SIL OFL 1.1); no runtime font CDN.",
+  "$description": "IKIGAI ATLAS typography tokens (Figma V3 text styles `Atlas/V3/*`, docs/design/design-tokens.md §5.1). Fonts are self-hosted via @fontsource packages (SIL OFL 1.1); no runtime font CDN.",
   "font": {
     "sans": {
       "$type": "fontFamily",
       "$value": "\"Inter Variable\", \"Inter\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
-      "$description": "Primary UI typeface"
+      "$description": "Inter: body, labels, controls, metrics and data"
     },
-    "display": {
+    "heading": {
       "$type": "fontFamily",
-      "$value": "\"DM Serif Display\", Georgia, serif",
-      "$description": "Editorial hero moments and selected award titles only; never dense data, controls or small text"
+      "$value": "\"Manrope Variable\", \"Manrope\", \"Inter Variable\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "$description": "Manrope: headings and the wordmark; never body text, controls or data"
     },
     "mono": {
       "$type": "fontFamily",
@@ -18,61 +18,103 @@
     }
   },
   "font-weight": {
-    "regular": { "$type": "fontWeight", "$value": 400 },
-    "medium": { "$type": "fontWeight", "$value": 500 },
-    "semibold": { "$type": "fontWeight", "$value": 600 }
+    "regular": {
+      "$type": "fontWeight",
+      "$value": 400
+    },
+    "medium": {
+      "$type": "fontWeight",
+      "$value": 500
+    },
+    "semibold": {
+      "$type": "fontWeight",
+      "$value": 600
+    },
+    "bold": {
+      "$type": "fontWeight",
+      "$value": 700
+    }
   },
   "typescale": {
     "$description": "Composite type styles. 'mobile' applies below the md breakpoint (768px); 'desktop' from md upwards.",
     "display": {
       "$type": "typography",
-      "$description": "DM Serif Display ships a single 400 weight; synthetic bolding is disabled, so the spec's 500-600 range is realised by the face's own contrast.",
       "$value": {
-        "fontFamily": "{font.display}",
-        "fontWeight": 400,
+        "fontFamily": "{font.heading}",
+        "fontWeight": 700,
         "letterSpacing": "-0.01em",
-        "mobile": { "fontSize": "36px", "lineHeight": "42px" },
-        "desktop": { "fontSize": "48px", "lineHeight": "56px" }
+        "mobile": {
+          "fontSize": "36px",
+          "lineHeight": "42px"
+        },
+        "desktop": {
+          "fontSize": "48px",
+          "lineHeight": "56px"
+        }
       }
     },
     "h1": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "{font.sans}",
-        "fontWeight": 600,
+        "fontFamily": "{font.heading}",
+        "fontWeight": 700,
         "letterSpacing": "-0.015em",
-        "mobile": { "fontSize": "30px", "lineHeight": "38px" },
-        "desktop": { "fontSize": "36px", "lineHeight": "44px" }
+        "mobile": {
+          "fontSize": "30px",
+          "lineHeight": "38px"
+        },
+        "desktop": {
+          "fontSize": "36px",
+          "lineHeight": "44px"
+        }
       }
     },
     "h2": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "{font.sans}",
+        "fontFamily": "{font.heading}",
         "fontWeight": 600,
         "letterSpacing": "-0.01em",
-        "mobile": { "fontSize": "24px", "lineHeight": "32px" },
-        "desktop": { "fontSize": "28px", "lineHeight": "36px" }
+        "mobile": {
+          "fontSize": "24px",
+          "lineHeight": "32px"
+        },
+        "desktop": {
+          "fontSize": "28px",
+          "lineHeight": "36px"
+        }
       }
     },
     "h3": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "{font.sans}",
+        "fontFamily": "{font.heading}",
         "fontWeight": 600,
         "letterSpacing": "-0.005em",
-        "mobile": { "fontSize": "20px", "lineHeight": "28px" },
-        "desktop": { "fontSize": "22px", "lineHeight": "30px" }
+        "mobile": {
+          "fontSize": "20px",
+          "lineHeight": "28px"
+        },
+        "desktop": {
+          "fontSize": "22px",
+          "lineHeight": "30px"
+        }
       }
     },
     "h4": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "{font.sans}",
+        "fontFamily": "{font.heading}",
         "fontWeight": 600,
         "letterSpacing": "0",
-        "mobile": { "fontSize": "18px", "lineHeight": "26px" },
-        "desktop": { "fontSize": "18px", "lineHeight": "26px" }
+        "mobile": {
+          "fontSize": "18px",
+          "lineHeight": "26px"
+        },
+        "desktop": {
+          "fontSize": "18px",
+          "lineHeight": "26px"
+        }
       }
     },
     "body-large": {
@@ -81,8 +123,14 @@
         "fontFamily": "{font.sans}",
         "fontWeight": 400,
         "letterSpacing": "0",
-        "mobile": { "fontSize": "16px", "lineHeight": "24px" },
-        "desktop": { "fontSize": "16px", "lineHeight": "26px" }
+        "mobile": {
+          "fontSize": "16px",
+          "lineHeight": "24px"
+        },
+        "desktop": {
+          "fontSize": "16px",
+          "lineHeight": "26px"
+        }
       }
     },
     "body": {
@@ -91,8 +139,14 @@
         "fontFamily": "{font.sans}",
         "fontWeight": 400,
         "letterSpacing": "0",
-        "mobile": { "fontSize": "14px", "lineHeight": "22px" },
-        "desktop": { "fontSize": "14px", "lineHeight": "22px" }
+        "mobile": {
+          "fontSize": "14px",
+          "lineHeight": "22px"
+        },
+        "desktop": {
+          "fontSize": "14px",
+          "lineHeight": "22px"
+        }
       }
     },
     "label": {
@@ -101,8 +155,31 @@
         "fontFamily": "{font.sans}",
         "fontWeight": 600,
         "letterSpacing": "0.01em",
-        "mobile": { "fontSize": "12px", "lineHeight": "16px" },
-        "desktop": { "fontSize": "12px", "lineHeight": "16px" }
+        "mobile": {
+          "fontSize": "12px",
+          "lineHeight": "16px"
+        },
+        "desktop": {
+          "fontSize": "12px",
+          "lineHeight": "16px"
+        }
+      }
+    },
+    "control": {
+      "$type": "typography",
+      "$description": "Button, tab and input labels",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontWeight": 600,
+        "letterSpacing": "0",
+        "mobile": {
+          "fontSize": "14px",
+          "lineHeight": "22px"
+        },
+        "desktop": {
+          "fontSize": "14px",
+          "lineHeight": "22px"
+        }
       }
     },
     "caption": {
@@ -111,8 +188,14 @@
         "fontFamily": "{font.sans}",
         "fontWeight": 400,
         "letterSpacing": "0.01em",
-        "mobile": { "fontSize": "11px", "lineHeight": "16px" },
-        "desktop": { "fontSize": "11px", "lineHeight": "16px" }
+        "mobile": {
+          "fontSize": "11px",
+          "lineHeight": "16px"
+        },
+        "desktop": {
+          "fontSize": "11px",
+          "lineHeight": "16px"
+        }
       }
     },
     "metric": {
@@ -122,8 +205,31 @@
         "fontFamily": "{font.sans}",
         "fontWeight": 600,
         "letterSpacing": "-0.01em",
-        "mobile": { "fontSize": "28px", "lineHeight": "34px" },
-        "desktop": { "fontSize": "32px", "lineHeight": "38px" }
+        "mobile": {
+          "fontSize": "28px",
+          "lineHeight": "34px"
+        },
+        "desktop": {
+          "fontSize": "32px",
+          "lineHeight": "38px"
+        }
+      }
+    },
+    "wordmark": {
+      "$type": "typography",
+      "$description": "IKIGAI ATLAS wordmark in the sidebar lockup (Figma 214:2435)",
+      "$value": {
+        "fontFamily": "{font.heading}",
+        "fontWeight": 700,
+        "letterSpacing": "1px",
+        "mobile": {
+          "fontSize": "22px",
+          "lineHeight": "30px"
+        },
+        "desktop": {
+          "fontSize": "22px",
+          "lineHeight": "30px"
+        }
       }
     }
   }

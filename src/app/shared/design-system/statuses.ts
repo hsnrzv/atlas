@@ -8,8 +8,10 @@ export interface AtlasStatus {
   readonly key: AtlasStatusKey;
   readonly label: string;
   readonly icon: AtlasIconName;
-  /** Icon/indicator colour (CSS custom property). Labels use `--color-text-secondary`. */
+  /** Theme-aware foreground for the icon and the badge label (CSS custom property). */
   readonly color: string;
+  /** Theme-aware badge background (CSS custom property). */
+  readonly tint: string;
 }
 
 const LABELS: Record<AtlasStatusKey, string> = {
@@ -27,5 +29,6 @@ export const ATLAS_STATUSES: readonly AtlasStatus[] = (Object.keys(LABELS) as At
     label: LABELS[key],
     icon: `status-${key}`,
     color: `var(--color-status-${key})`,
+    tint: `var(--color-status-${key}-tint)`,
   }),
 );

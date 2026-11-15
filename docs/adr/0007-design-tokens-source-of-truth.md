@@ -31,7 +31,7 @@ Angular Material theme (ADR-0003) needs palettes derived from the same colours. 
   (`--space-*`), radius, shadows, motion, layout and z-index. Components use **semantic** tokens.
 - **Gates (CI, `npm run design:check`):** `tokens:check` fails if the generated files differ from the JSON.
   `contrast:check` evaluates every pair in `contrast-pairs.json` against WCAG thresholds (85 pairs, 2026-11-12): 4.5:1 for
-  text, 3:1 for large text and non-text UI; `info` pairs are reported only. Pairs cover light and dark. `icons:check` and `assets:validate` cover the dimension SVGs and raster exports.
+  text, 3:1 for large text and non-text UI; `info` pairs are reported only. Pairs cover light and dark. `assets:validate` covers the logo masters and raster exports.
   Stylelint forbids raw colours in `src/app`.
 - **Theme switching:** `html[data-theme='dark']`, set by the `AtlasTheme` service. The user-preference policy (system,
   stored choice, default) is an open decision for the app shell phase.

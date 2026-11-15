@@ -15,7 +15,7 @@ hand-edited sources. Every raster and platform file is **derived** by a script a
 | Export script  | `scripts/assets/export-assets.mjs`. Its manifest is `scripts/assets/asset-manifest.mjs`, the single list of outputs used by both the export and the validation.                                              |
 | Rendering      | Each SVG is rendered at the target density (`density = 72 × size / viewBoxWidth`), so there is no upscaling blur, then resized to exactly `size × size`.                                                     |
 | Colour         | Converted to sRGB (`toColourspace('srgb')`), PNG compression level 9 with adaptive filtering. No ICC profile is embedded (to verify whether any store requires one).                                         |
-| Alpha policies | `none`: flatten onto `#14243A`, then `removeAlpha()`, giving RGB with no alpha channel. `opaque`: flatten, then `ensureAlpha(1)`, giving 32-bit RGBA that is fully opaque. `required`: transparency is kept. |
+| Alpha policies | `none`: flatten onto `#0B1020`, then `removeAlpha()`, giving RGB with no alpha channel. `opaque`: flatten, then `ensureAlpha(1)`, giving 32-bit RGBA that is fully opaque. `required`: transparency is kept. |
 | Validation     | `scripts/assets/validate-assets.mjs` (`npm run assets:validate`)                                                                                                                                             |
 
 ### Commands
@@ -23,9 +23,7 @@ hand-edited sources. Every raster and platform file is **derived** by a script a
 ```bash
 npm run assets:export     # regenerate every output listed below (overwrites)
 npm run assets:validate   # SVG safety and structure, plus raster size, colour space and alpha checks
-npm run icons:sync        # re-copy the 7 Life Dimension icons from @tabler/icons into design/svg/dimensions
-npm run icons:check       # fail if design/svg/dimensions is out of sync
-npm run -s design:check   # tokens:check + contrast:check + icons:check + assets:validate (CI gate)
+npm run -s design:check   # tokens:check + contrast:check + assets:validate (CI gate)
 ```
 
 Outputs are reproducible from the masters but **not byte-identical** across platforms or library versions, because
@@ -38,19 +36,19 @@ The source masters are in `design/svg/logo/`. Every row below is produced by `np
 `npm run assets:validate`, which looks at the PNG format, the exact size, the sRGB colour space and the alpha policy.
 The last validation run passed for every row.
 
-| Output                                           | Source master                          | Size (px)   | Alpha                  | Destination / consumer                                                                                      |
-| ------------------------------------------------ | -------------------------------------- | ----------- | ---------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `design/exports/app-icon/ios-app-store-1024.png` | `ikigai-atlas-app-icon-master.svg`     | 1024 × 1024 | none (RGB)             | iOS `AppIcon.appiconset` single-size source and the App Store Connect marketing icon                        |
-| `design/exports/app-icon/google-play-512.png`    | `ikigai-atlas-app-icon-master.svg`     | 512 × 512   | opaque (32-bit RGBA)   | Google Play Console listing icon. This is separate from the launcher icons.                                 |
-| `design/exports/capacitor/icon-only.png`         | `ikigai-atlas-app-icon-master.svg`     | 1024 × 1024 | none                   | `@capacitor/assets` icon source (iOS, Android legacy, PWA)                                                  |
-| `design/exports/capacitor/icon-foreground.png`   | `ikigai-atlas-app-icon-foreground.svg` | 1024 × 1024 | required (transparent) | `@capacitor/assets` Android adaptive-icon foreground                                                        |
-| `design/exports/capacitor/icon-background.png`   | solid `#14243A` (generated)            | 1024 × 1024 | none                   | `@capacitor/assets` Android adaptive-icon background                                                        |
-| `design/exports/capacitor/splash.png`            | `ikigai-atlas-splash.svg`              | 2732 × 2732 | none                   | `@capacitor/assets` splash (light)                                                                          |
-| `design/exports/capacitor/splash-dark.png`       | `ikigai-atlas-splash.svg`              | 2732 × 2732 | none                   | `@capacitor/assets` splash (dark). It uses the same navy master, because the splash is navy in both themes. |
-| `design/exports/social/avatar-400.png`           | `ikigai-atlas-app-icon-master.svg`     | 400 × 400   | none                   | Social profile avatar, symbol only (§13)                                                                    |
-| `public/apple-touch-icon.png`                    | `ikigai-atlas-app-icon-master.svg`     | 180 × 180   | none                   | iOS Safari home screen (`<link rel="apple-touch-icon">`)                                                    |
-| `public/icons/icon-192.png`                      | `ikigai-atlas-app-icon-master.svg`     | 192 × 192   | none                   | Web app manifest                                                                                            |
-| `public/icons/icon-512.png`                      | `ikigai-atlas-app-icon-master.svg`     | 512 × 512   | none                   | Web app manifest                                                                                            |
+| Output                                           | Source master                          | Size (px)   | Alpha                  | Destination / consumer                                                                                            |
+| ------------------------------------------------ | -------------------------------------- | ----------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `design/exports/app-icon/ios-app-store-1024.png` | `ikigai-atlas-app-icon-master.svg`     | 1024 × 1024 | none (RGB)             | iOS `AppIcon.appiconset` single-size source and the App Store Connect marketing icon                              |
+| `design/exports/app-icon/google-play-512.png`    | `ikigai-atlas-app-icon-master.svg`     | 512 × 512   | opaque (32-bit RGBA)   | Google Play Console listing icon. This is separate from the launcher icons.                                       |
+| `design/exports/capacitor/icon-only.png`         | `ikigai-atlas-app-icon-master.svg`     | 1024 × 1024 | none                   | `@capacitor/assets` icon source (iOS, Android legacy, PWA)                                                        |
+| `design/exports/capacitor/icon-foreground.png`   | `ikigai-atlas-app-icon-foreground.svg` | 1024 × 1024 | required (transparent) | `@capacitor/assets` Android adaptive-icon foreground                                                              |
+| `design/exports/capacitor/icon-background.png`   | solid `#0B1020` (generated)            | 1024 × 1024 | none                   | `@capacitor/assets` Android adaptive-icon background                                                              |
+| `design/exports/capacitor/splash.png`            | `ikigai-atlas-splash.svg`              | 2732 × 2732 | none                   | `@capacitor/assets` splash (light)                                                                                |
+| `design/exports/capacitor/splash-dark.png`       | `ikigai-atlas-splash.svg`              | 2732 × 2732 | none                   | `@capacitor/assets` splash (dark). It uses the same tide-space master, because the splash is dark in both themes. |
+| `design/exports/social/avatar-400.png`           | `ikigai-atlas-app-icon-master.svg`     | 400 × 400   | none                   | Social profile avatar, symbol only (§13)                                                                          |
+| `public/apple-touch-icon.png`                    | `ikigai-atlas-app-icon-master.svg`     | 180 × 180   | none                   | iOS Safari home screen (`<link rel="apple-touch-icon">`)                                                          |
+| `public/icons/icon-192.png`                      | `ikigai-atlas-app-icon-master.svg`     | 192 × 192   | none                   | Web app manifest                                                                                                  |
+| `public/icons/icon-512.png`                      | `ikigai-atlas-app-icon-master.svg`     | 512 × 512   | none                   | Web app manifest                                                                                                  |
 
 ### Favicons
 
@@ -65,7 +63,7 @@ The last validation run passed for every row.
 - `favicon.svg` (`image/svg+xml`);
 - `apple-touch-icon.png`;
 - `manifest.webmanifest`;
-- `<meta name="theme-color" content="#14243A">`.
+- `<meta name="theme-color" content="#0B1020">` (tide space).
 
 ### Web app manifest
 
@@ -76,11 +74,11 @@ The last validation run passed for every row.
 | `name` / `short_name`              | "IKIGAI ATLAS" / "Atlas"                                                           |
 | `description`                      | "See the whole. Shape what matters."                                               |
 | `display`, `start_url`, `scope`    | `standalone`, `/`, `/`                                                             |
-| `background_color` / `theme_color` | `#FBF9F4` (ivory-50) / `#14243A` (midnight-900)                                    |
+| `background_color` / `theme_color` | `#F5F7FA` (light page) / `#0B1020` (tide space)                                    |
 | `icons`                            | `icons/icon-192.png`, `icons/icon-512.png` and `favicon.svg`, all `purpose: "any"` |
 
 There is **no maskable icon** and no service worker. PWA installability is to verify. A maskable variant would need the
-foreground safe zone; it could be derived from `icon-foreground.png` on navy. See [Pending](#pending).
+foreground safe zone; it could be derived from `icon-foreground.png` on tide space. See [Pending](#pending).
 
 ### Brand SVGs served by the app
 
@@ -90,7 +88,7 @@ is applied.
 
 ## Vector masters and their checks
 
-`npm run assets:validate` applies these checks to every SVG in `design/svg/logo/` and `design/svg/dimensions/`:
+`npm run assets:validate` applies these checks to every SVG in `design/svg/logo/`:
 
 | Check        | Rule                                                                                                                                                                                                                                |
 | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -98,19 +96,22 @@ is applied.
 | Required set | Symbol (+ on-dark, monochrome, dimensions), wordmark (+ on-dark), horizontal lockup (+ on-dark), stacked lockup (+ on-dark), monochrome (+ on-light, on-dark), app-icon master, app-icon foreground, splash and favicon must exist. |
 | Editability  | Wordmark, lockup and monochrome files keep `<text>IKIGAI ATLAS</text>` as live, editable text.                                                                                                                                      |
 | No text      | App icon and splash contain no `<text>` (§12.1).                                                                                                                                                                                    |
-| App icon     | The viewBox is `0 0 1024 1024` with a full-bleed `#14243A` background.                                                                                                                                                              |
-| Dimensions   | The 7 files in `design/svg/dimensions/` use a 24 × 24 viewBox, `stroke="currentColor"` and no hard-coded colours. They are generated by `npm run icons:sync` from Tabler 3.51 (MIT, attribution comment in each file).              |
+| App icon     | The viewBox is `0 0 1024 1024` with a full-bleed `#0B1020` background.                                                                                                                                                              |
 
 The wireframes in `design/mockups/` are documentation, not assets. They are deliberately not part of the manifest, but
 they follow the same safety rules.
 
 ### Icon geometry (verified against the masters)
 
-| Master                                        | Composition                                                                                                                                                                                                                                                                    |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ikigai-atlas-app-icon-master.svg` (1024)     | A full-bleed navy rectangle with the Venn symbol scaled ×10: a 640 px symbol box with a 192 px inset, as in the Figma app-icon master (160 px on 256 px, exported at 4×). Circles use `screen` at 82 %. No text. The store masks the corners itself, so it is not pre-rounded. |
-| `ikigai-atlas-app-icon-foreground.svg` (1024) | A transparent background with the symbol scaled ×10. The mark radius is 304 px, inside the 313 px safe radius (66 dp of 108 dp), so it survives circle, squircle and rounded-square masks (§12.3).                                                                             |
-| `ikigai-atlas-splash.svg` (2732)              | Solid `#14243A` with the symbol centred and scaled ×13 (about 790 px, about 29 % of the width). No text.                                                                                                                                                                       |
+| Master                                        | Composition                                                                                                                                                                                                                                                                                      |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ikigai-atlas-app-icon-master.svg` (1024)     | A full-bleed tide-space (`#0B1020`) rectangle with the Venn symbol scaled ×10: a 640 px symbol box with a 192 px inset, as in the Figma app-icon master (160 px on 256 px, exported at 4×). Circles use `screen` at 82 %. No text. The store masks the corners itself, so it is not pre-rounded. |
+| `ikigai-atlas-app-icon-foreground.svg` (1024) | A transparent background with the symbol scaled ×10. The mark radius is 304 px, inside the 313 px safe radius (66 dp of 108 dp), so it survives circle, squircle and rounded-square masks (§12.3).                                                                                               |
+| `ikigai-atlas-splash.svg` (2732)              | Solid `#0B1020` with the symbol centred and scaled ×13 (about 790 px, about 29 % of the width). No text.                                                                                                                                                                                         |
+
+The Figma file also shows a light app-icon variant on `#F5F7FA`. It is not exported: one dark master serves every
+platform, and `splash.png` and `splash-dark.png` share the same dark source
+([DD-34](DESIGN_DECISIONS.md#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2)).
 
 ## Mapping to the spec's deliverable structure
 

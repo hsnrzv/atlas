@@ -38,7 +38,8 @@ Device classes are only a guide. Add a content-driven breakpoint where a layout 
 | `--layout-sidebar-collapsed`             | 76                                             | Collapsed sidebar and tablet rail                                                                                               |
 | `--layout-topbar-height`                 | 68                                             | Desktop top bar                                                                                                                 |
 | `--layout-topbar-height-compact`         | 56                                             | Compact and mobile top bar (plus `--safe-area-top`)                                                                             |
-| `--layout-bottom-nav-height`             | 64                                             | Mobile bottom navigation (plus `--safe-area-bottom`)                                                                            |
+| `--layout-bottom-nav-height`             | 80                                             | Mobile bottom navigation (plus `--safe-area-bottom`); Figma V3 frame is 390 × 80                                                |
+| `--layout-dialog-width`                  | 560                                            | Default dialog width (Figma V3)                                                                                                 |
 | `--layout-gutter-mobile`                 | 16                                             | Horizontal page padding below `md`                                                                                              |
 | `--layout-gutter-tablet`                 | 24                                             | `md`                                                                                                                            |
 | `--layout-gutter-desktop-narrow`         | 24                                             | `lg`                                                                                                                            |
@@ -49,24 +50,27 @@ Device classes are only a guide. Add a content-driven breakpoint where a layout 
 | `--size-touch-target-min/preferred`      | 44 / 48                                        | Interactive targets                                                                                                             |
 
 All values are in px. Values come from design-instructions §4.1, except `bottom-nav-height` and the z-index scale,
-which are Atlas additions ([DD-22](DESIGN_DECISIONS.md#dd-22-layout-token-additions)).
+which are Atlas additions ([DD-22](DESIGN_DECISIONS.md#dd-22-layout-token-additions)). Figma V3 sets the bottom
+navigation to 80 px and adds the dialog width
+([DD-34](DESIGN_DECISIONS.md#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2)).
 
 ## Shell behaviour per breakpoint (Specified, step 4)
 
-| Range               | Navigation                                                                                                                                                                                                                   | Top bar                                                                                                                       | Content                                                                                                                                                                           |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `xs`–`sm` (< 768)   | **Bottom navigation**, navy, 64 px plus the bottom safe area. Items: My Atlas, Destinations, Journey, Awards, More. More opens a sheet with Waypoints, Steps, Connections, Life Dimensions, then Settings, Profile and Help. | Compact, 56 px plus the top safe area. Shows the symbol or a back button, the page title, then search, quick add and profile. | One column, 16 px gutters, 4-column grid. Big picture first: the next Waypoint comes before analytics. Carousels for dimension cards. List alternatives for graphs and timelines. |
-| `md` (768–1023)     | **Compact rail** (76 px, icons with tooltips and accessible names). It can expand to 248 px as an overlay drawer (`--z-drawer`). No bottom navigation.                                                                       | 68 px (to verify during step 4; 56 is the alternative). Title or breadcrumb, search, quick add, profile.                      | One or two columns, 24 px gutters, 8-column grid. Dense timelines and graphs scroll horizontally or switch to a list.                                                             |
-| `lg` (1024–1279)    | **Sidebar**, 248 px, sticky, collapsible to 76 px.                                                                                                                                                                           | 68 px. Breadcrumb, global search, quick add, notifications, profile.                                                          | 12 columns, 24 px gutters. An optional secondary insight panel stacks below the main content.                                                                                     |
-| `xl`–`2xl` (≥ 1280) | Sidebar, 248 px.                                                                                                                                                                                                             | 68 px.                                                                                                                        | 12 columns, 32 px gutters, content max 1440 px. Optional right-hand insight panel. Detail text max 840 px.                                                                        |
+| Range               | Navigation                                                                                                                                                                                                                                           | Top bar                                                                                                                       | Content                                                                                                                                                                           |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `xs`–`sm` (< 768)   | **Bottom navigation**, `--color-surface-navigation`, 80 px plus the bottom safe area. Items: My Atlas, Destinations, Journey, Awards, More. More opens a sheet with Waypoints, Steps, Connections, Life Dimensions, then Settings, Profile and Help. | Compact, 56 px plus the top safe area. Shows the symbol or a back button, the page title, then search, quick add and profile. | One column, 16 px gutters, 4-column grid. Big picture first: the next Waypoint comes before analytics. Carousels for dimension cards. List alternatives for graphs and timelines. |
+| `md` (768–1023)     | **Compact rail** (76 px, icons with tooltips and accessible names). It can expand to 248 px as an overlay drawer (`--z-drawer`). No bottom navigation.                                                                                               | 68 px (to verify during step 4; 56 is the alternative). Title or breadcrumb, search, quick add, profile.                      | One or two columns, 24 px gutters, 8-column grid. Dense timelines and graphs scroll horizontally or switch to a list.                                                             |
+| `lg` (1024–1279)    | **Sidebar**, 248 px, sticky, collapsible to 76 px.                                                                                                                                                                                                   | 68 px. Breadcrumb, global search, quick add, notifications, profile.                                                          | 12 columns, 24 px gutters. An optional secondary insight panel stacks below the main content.                                                                                     |
+| `xl`–`2xl` (≥ 1280) | Sidebar, 248 px.                                                                                                                                                                                                                                     | 68 px.                                                                                                                        | 12 columns, 32 px gutters, content max 1440 px. Optional right-hand insight panel. Detail text max 840 px.                                                                        |
 
 The sidebar contents follow design-instructions §6.1:
 
-- At the top: the symbol and the "IKIGAI ATLAS" wordmark (`<atlas-logo tone="inverse">`).
+- At the top: the symbol and the "IKIGAI ATLAS" wordmark (`<atlas-logo>`; the blend follows the theme).
 - Then the eight primary items in the fixed order My Atlas, Destinations, Waypoints, Steps, Connections, Journey
   Overview, Milestone Awards, Life Dimensions.
 - At the bottom, separated from the primary items: Settings, Profile and Help.
-- The active state is a narrow gold indicator (`--color-nav-indicator`) on a lighter navy surface (midnight-800).
+- The sidebar uses `--color-surface-navigation`. The active item uses `--color-nav-active`; in the dark theme it also
+  gets a teal accent bar (`--color-nav-active-accent`). `aria-current="page"` and the label carry the state, not colour.
 
 Navigation behaviour (§6.5):
 
@@ -105,18 +109,21 @@ The type scale switches at **`md` (768 px)**. Below it the mobile sizes apply; f
 generated SCSS overrides the `--typescale-*` variables inside `@media (min-width: 768px)`, so components never need
 their own media query for type.
 
-| Style      | Mobile (< 768) | Desktop (≥ 768) | Weight                 |
-| ---------- | -------------- | --------------- | ---------------------- |
-| Display    | 36 / 42        | 48 / 56         | 400 (DM Serif Display) |
-| H1         | 30 / 38        | 36 / 44         | 600                    |
-| H2         | 24 / 32        | 28 / 36         | 600                    |
-| H3         | 20 / 28        | 22 / 30         | 600                    |
-| H4         | 18 / 26        | 18 / 26         | 600                    |
-| Body large | 16 / 24        | 16 / 26         | 400                    |
-| Body       | 14 / 22        | 14 / 22         | 400                    |
-| Label      | 12 / 16        | 12 / 16         | 600                    |
-| Caption    | 11 / 16        | 11 / 16         | 400                    |
-| Metric     | 28 / 34        | 32 / 38         | 600, tabular numerals  |
+| Style      | Mobile (< 768) | Desktop (≥ 768) | Weight                |
+| ---------- | -------------- | --------------- | --------------------- |
+| Display    | 36 / 42        | 48 / 56         | 700 (Manrope)         |
+| H1         | 30 / 38        | 36 / 44         | 700 (Manrope)         |
+| H2         | 24 / 32        | 28 / 36         | 600 (Manrope)         |
+| H3         | 20 / 28        | 22 / 30         | 600 (Manrope)         |
+| H4         | 18 / 26        | 18 / 26         | 600 (Manrope)         |
+| Body large | 16 / 24        | 16 / 26         | 400                   |
+| Body       | 14 / 22        | 14 / 22         | 400                   |
+| Label      | 12 / 16        | 12 / 16         | 600                   |
+| Control    | 14 / 22        | 14 / 22         | 600                   |
+| Caption    | 11 / 16        | 11 / 16         | 400                   |
+| Metric     | 28 / 34        | 32 / 38         | 600, tabular numerals |
+
+Display and H1–H4 use Manrope Variable; the other styles use Inter Variable.
 
 All sizes are in px (size / line height). The type uses px values and does not scale with the browser's default
 font-size setting. Page zoom still scales it. Whether to move to `rem` for user font-size preferences is to verify

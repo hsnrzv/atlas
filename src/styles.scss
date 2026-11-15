@@ -2,7 +2,7 @@
 // fonts → generated tokens → Material theme → reset → base → platform.
 // Components must consume semantic tokens (var(--color-…)), never raw hex values.
 @use '@fontsource-variable/inter';
-@use '@fontsource/dm-serif-display/400.css' as dm-serif-display;
+@use '@fontsource-variable/manrope';
 @use 'tokens/tokens.generated';
 @use 'material/theme' as atlas-material;
 @use 'base/reset';

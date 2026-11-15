@@ -39,7 +39,7 @@ describe('AtlasIcon', () => {
   it('renders the token icon size and stroke', async () => {
     const { fixture, svg } = await render();
     expect(svg.getAttribute('width')).toBe('24');
-    expect(svg.getAttribute('stroke-width')).toBe('1.75');
+    expect(svg.getAttribute('stroke-width')).toBe('2');
 
     fixture.componentInstance.size.set('xs');
     await fixture.whenStable();

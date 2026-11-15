@@ -13,16 +13,16 @@ These packages, or parts of them, end up in the browser bundle, the container im
 license requires keeping its copyright notice, so the full license texts must be included in release artifacts
 (see "Distribution obligations" below).
 
-| Package                                                                      | Version | License    | Copyright / source                                                                      |
-| ---------------------------------------------------------------------------- | ------- | ---------- | --------------------------------------------------------------------------------------- |
-| `@angular/core`, `common`, `compiler`, `forms`, `platform-browser`, `router` | 22.2.6  | MIT        | © 2010-2026 Google LLC — <https://github.com/angular/angular>                           |
-| `@angular/material`, `@angular/cdk`                                          | 22.2.7  | MIT        | © 2026 Google LLC — <https://github.com/angular/components>                             |
-| `@capacitor/core`                                                            | 8.6.0   | MIT        | © 2017-present Drifty Co. — <https://github.com/ionic-team/capacitor>                   |
-| `@tabler/icons-angular`, `@tabler/icons`                                     | 3.51.0  | MIT        | © 2020-2026 Paweł Kuna — <https://github.com/tabler/tabler-icons>                       |
-| `rxjs`                                                                       | 7.8.2   | Apache-2.0 | <https://github.com/reactivex/rxjs>                                                     |
-| `tslib`                                                                      | 2.9.1   | 0BSD       | © Microsoft Corporation — <https://github.com/Microsoft/tslib>                          |
-| `@fontsource-variable/inter` (Inter variable font)                           | 5.3.0   | OFL-1.1    | © 2016 The Inter Project Authors — <https://github.com/rsms/inter>                      |
-| `@fontsource/dm-serif-display` (DM Serif Display 400)                        | 5.3.0   | OFL-1.1    | © 2014-2017 Adobe Systems Incorporated (Reserved Font Name "Source"), © 2019 Google LLC |
+| Package                                                                      | Version | License    | Copyright / source                                                         |
+| ---------------------------------------------------------------------------- | ------- | ---------- | -------------------------------------------------------------------------- |
+| `@angular/core`, `common`, `compiler`, `forms`, `platform-browser`, `router` | 22.2.6  | MIT        | © 2010-2026 Google LLC — <https://github.com/angular/angular>              |
+| `@angular/material`, `@angular/cdk`                                          | 22.2.7  | MIT        | © 2026 Google LLC — <https://github.com/angular/components>                |
+| `@capacitor/core`                                                            | 8.6.0   | MIT        | © 2017-present Drifty Co. — <https://github.com/ionic-team/capacitor>      |
+| `@tabler/icons-angular` (+ transitive `@tabler/icons`)                       | 3.51.0  | MIT        | © 2020-2026 Paweł Kuna — <https://github.com/tabler/tabler-icons>          |
+| `rxjs`                                                                       | 7.8.2   | Apache-2.0 | <https://github.com/reactivex/rxjs>                                        |
+| `tslib`                                                                      | 2.9.1   | 0BSD       | © Microsoft Corporation — <https://github.com/Microsoft/tslib>             |
+| `@fontsource-variable/inter` (Inter variable font)                           | 5.3.0   | OFL-1.1    | © 2016 The Inter Project Authors — <https://github.com/rsms/inter>         |
+| `@fontsource-variable/manrope` (Manrope variable font)                       | 5.3.0   | OFL-1.1    | © 2019 The Manrope Project Authors — <https://github.com/sharanda/manrope> |
 
 Transitive production packages pulled in by Angular. Today they are not part of the browser bundle, but they are
 listed for completeness:
@@ -34,11 +34,9 @@ listed for completeness:
 | `zod`                   | 4.6.6   | MIT          | `@angular/forms`            |
 | `@standard-schema/spec` | 1.1.0   | MIT          | `@angular/forms`            |
 
-**Brand assets.** The IKIGAI ATLAS logo, symbol and lockups in `design/svg/logo/` are project artwork. The seven Life
-Dimension icons in `design/svg/dimensions/` are Tabler Icons 3.51.0 (MIT) path data. They are normalised only to the
-Atlas convention (`currentColor`, stroke 1.75) by `scripts/assets/sync-dimension-icons.mjs`, and each file keeps the
-Tabler attribution comment. The wordmark is live text set in Inter SemiBold (OFL-1.1). The editable masters
-deliberately do not outline it, so viewing them needs Inter installed or a fallback font. The raster exports in
+**Brand assets.** The IKIGAI ATLAS logo, symbol and lockups in `design/svg/logo/` are project artwork. Life Dimension
+icons are not shipped as separate files; they render from `@tabler/icons-angular` (MIT, listed above). The wordmark is live text set in Manrope Bold (OFL-1.1). The editable masters
+deliberately do not outline it, so viewing them needs Manrope installed or a fallback font. The raster exports in
 `design/exports/` are rendered from these masters.
 
 ## Container base image

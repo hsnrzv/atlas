@@ -31,9 +31,28 @@ exports one tree-shakable icon object per glyph (for example `IconCompass`), wit
   `sparkles`; Friendship `users`; Family `home`; plus action and status icons (`plus`, `pencil`, `trash`,
   `notebook`, `calendar-event`, `adjustments-horizontal`, `search`, `settings`, `lock`, `circle-check`,
   `alert-triangle`, …).
-- **Life Dimension SVGs** for design and export use (`design/svg/dimensions/*.svg`) are generated from the same Tabler
-  release by `npm run icons:sync`. The glyph names live in `design/tokens/design-tokens.json → lifeDimensions.icons`.
-  `npm run icons:check` (CI) fails on drift, and a unit test asserts that the runtime registry uses the same glyphs.
+- **Life Dimension icons** use the same registry. The glyph names live in
+  `design/tokens/design-tokens.json → lifeDimensions.icons`, and a unit test asserts that the runtime registry uses the
+  same glyphs. (Superseded 2026-11-14: the `design/svg/dimensions` copies were removed; see the amendment below.)
+
+## Amendment 2026-11-14 (Figma V3, roadmap T-3)
+
+- **Stroke 2** (`ATLAS_ICON_STROKE`), matching the Figma `Atlas/V3/Icon` component set (152:2139). Sizes are unchanged.
+- **Glyph provenance.** The Figma glyph descriptions credit **Lucide** (ISC). This ADR, `project-instruction.md` §9.1
+  and owner decision R-4 keep **Tabler**, so each Figma glyph was matched to its closest Tabler outline after a visual
+  side-by-side comparison. Switching to Lucide would need a new owner decision and a superseding ADR.
+- **Registry changes:** Connections `affiliate` → `sitemap`; Life Dimensions `circle-dot` → `orbit`; calendar
+  `calendar-event` → `calendar-week` (Figma shows a dot grid); more `dots-vertical` → `dots`. New semantic names:
+  `next` (`arrow-right`), `check` (`check`), `alert` (`alert-circle`), `loading` (`loader-2`), `collapse`
+  (`chevron-down`), `view-grid` (`layout-grid`), `view-list` (`list`).
+- **Status glyphs** follow Figma Foundations (214:1794): success `check`, in progress `loader-2`, upcoming
+  `calendar-week`, at risk `alert-circle`, blocked `lock`, not started `flag`. Status is never shown by colour alone;
+  each chip pairs its glyph with a text label.
+- **No duplicate SVG copies** (owner review, Phase 2). `design/svg/dimensions/*.svg`, `scripts/assets/sync-dimension-icons.mjs`,
+  `icons:sync`/`icons:check` and the direct `@tabler/icons` devDependency were removed. Life Dimension icons render
+  through `<atlas-icon>` like every other icon, so Tabler is the single source.
+- **No icon webfont.** `<i class="ti ti-…">` needs `@tabler/icons-webfont`, which ships every glyph as one font file
+  (no tree-shaking), adds a font request and gives no type-checked names. The tree-shakable Angular components stay.
 
 ## Consequences
 
@@ -41,7 +60,7 @@ exports one tree-shakable icon object per glyph (for example `IconCompass`), wit
 - The design document's Lucide names do not apply directly. The mapping above, and `design/` docs that cite Tabler
   names, are the reference.
 - Adding an icon is a one-line registry change plus a review that it fits the outline family.
-- If Tabler ever changes a glyph, `icons:check` shows it during a Dependabot update.
+- If Tabler ever changes a glyph, it shows in the visual review of the Dependabot update (`/_design`).
 
 ## Alternatives considered
 

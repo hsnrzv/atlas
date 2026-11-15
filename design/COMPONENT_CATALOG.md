@@ -24,13 +24,14 @@ Class names follow the Angular style guide used in the repo, without a `Componen
 
 `src/app/shared/icons/atlas-icon.ts` wraps `<tabler-icon>` from `@tabler/icons-angular` 3.51. The choice of library is
 recorded in [DD-05](DESIGN_DECISIONS.md#dd-05-tabler-icons-instead-of-lucide) and
-[ADR-0005](../docs/adr/0005-icon-library-tabler.md).
+[ADR-0005](../docs/adr/0005-icon-library-tabler.md); the Figma V3 stroke and glyphs are in
+[DD-34](DESIGN_DECISIONS.md#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2).
 
 | Input    | Type                           | Default | Notes                                                                                                    |
 | -------- | ------------------------------ | ------- | -------------------------------------------------------------------------------------------------------- |
 | `name`   | `AtlasIconName` (required)     | —       | A semantic name from `ATLAS_ICONS`. It is never a Tabler name.                                           |
 | `size`   | `'xs' \| 'sm' \| 'md' \| 'lg'` | `'md'`  | 16 / 18 / 20 / 24 px (`ATLAS_ICON_SIZES`, which mirrors `--size-icon-*`)                                 |
-| `stroke` | `number`                       | `1.75`  | `ATLAS_ICON_STROKE`, which mirrors `--size-icon-stroke`                                                  |
+| `stroke` | `number`                       | `2`     | `ATLAS_ICON_STROKE`, which mirrors `--size-icon-stroke`                                                  |
 | `label`  | `string`                       | none    | Without a label the icon is `aria-hidden="true"`. With a label it gets `role="img"` and an `aria-label`. |
 
 - Colour follows `currentColor`.
@@ -38,12 +39,12 @@ recorded in [DD-05](DESIGN_DECISIONS.md#dd-05-tabler-icons-instead-of-lucide) an
 
 The registry (`src/app/shared/icons/atlas-icons.ts`, `ATLAS_ICONS`) maps semantic names to Tabler icons:
 
-| Group           | Semantic names → Tabler icon                                                                                                                                                                                                                                                                                                                                                                         |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Navigation      | `my-atlas` compass · `destinations` flag · `waypoints` map-pin · `steps` list-check · `connections` affiliate · `journey-overview` route · `milestone-awards` award · `life-dimensions` circle-dot                                                                                                                                                                                                   |
-| Life Dimensions | `career` briefcase · `finance` wallet · `health` heartbeat · `love` heart · `passion` sparkles · `friendship` users · `family` home                                                                                                                                                                                                                                                                  |
-| Actions         | `add` plus · `edit` pencil · `delete` trash · `notes` notebook · `calendar` calendar-event · `filter` adjustments-horizontal · `search` · `settings` · `profile` user · `help` · `notifications` bell · `expand` chevron-right · `back` arrow-left · `close` x · `menu` menu-2 · `more` dots-vertical · `locked` lock · `sidebar-collapse` / `sidebar-expand` layout-sidebar-left-collapse / -expand |
-| Status          | `status-success` circle-check · `status-in-progress` progress · `status-upcoming` hourglass · `status-at-risk` alert-triangle · `status-blocked` ban · `status-not-started` circle-dashed                                                                                                                                                                                                            |
+| Group           | Semantic names → Tabler icon                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Navigation      | `my-atlas` compass · `destinations` flag · `waypoints` map-pin · `steps` list-check · `connections` sitemap · `journey-overview` route · `milestone-awards` award · `life-dimensions` orbit                                                                                                                                                                                                                                                                                                                                                  |
+| Life Dimensions | `career` briefcase · `finance` wallet · `health` heartbeat · `love` heart · `passion` sparkles · `friendship` users · `family` home                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Actions         | `add` plus · `edit` pencil · `delete` trash · `notes` notebook · `calendar` calendar-week · `filter` adjustments-horizontal · `search` · `settings` · `profile` user · `help` · `notifications` bell · `next` arrow-right · `check` · `alert` alert-circle · `loading` loader-2 · `expand` chevron-right · `collapse` chevron-down · `back` arrow-left · `close` x · `menu` menu-2 · `more` dots · `locked` lock · `sidebar-collapse` / `sidebar-expand` layout-sidebar-left-collapse / -expand · `view-grid` layout-grid · `view-list` list |
+| Status          | `status-success` check · `status-in-progress` loader-2 · `status-upcoming` calendar-week · `status-at-risk` alert-circle · `status-blocked` lock · `status-not-started` flag                                                                                                                                                                                                                                                                                                                                                                 |
 
 To add an icon, see [README › Add or change an icon](README.md#add-or-change-an-icon). Unit tests are in
 `atlas-icon.spec.ts`.
@@ -65,14 +66,14 @@ To add an icon, see [README › Add or change an icon](README.md#add-or-change-a
 
 | Input        | Type                       | Default        | Notes                                                                                                                                        |
 | ------------ | -------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `variant`    | `'symbol' \| 'horizontal'` | `'horizontal'` | `horizontal` adds the "IKIGAI ATLAS" wordmark (Inter 600, 0.406 × the symbol height, 0.12 em tracking).                                      |
-| `tone`       | `'default' \| 'inverse'`   | `'default'`    | Use `inverse` on navy surfaces (sidebar, splash). Under `[data-theme='dark']` the logo switches to inverse automatically.                    |
+| `variant`    | `'symbol' \| 'horizontal'` | `'horizontal'` | `horizontal` adds the "IKIGAI ATLAS" wordmark (Manrope 700, 22/48 of the symbol height, 1 px tracking at 22 px).                             |
 | `size`       | `number`                   | `32`           | Symbol height in px, set as `--atlas-logo-size`. The minimum is 24 in UI ([minimum sizes](BRAND_GUIDELINES.md#minimum-sizes)).               |
 | `decorative` | `boolean`                  | `false`        | `false` gives `role="img"` and `aria-label="IKIGAI ATLAS"`. `true` gives `aria-hidden`; use it when adjacent text already names the product. |
 
 - In `forced-colors` mode the circles become `CanvasText` outlines.
 - Geometry is shared with `design/svg/logo/ikigai-atlas-symbol.svg`: four r 19.2 circles (Figma V3 Venn). Colours come
-  from the `--color-brand-venn-*` tokens; the blend is `multiply` (72 %) by default and `screen` (82 %) when inverse.
+  from the `--color-brand-venn-*` tokens. The blend follows the theme: `multiply` (72 %) in light and `screen` (82 %)
+  under `[data-theme='dark']`. The wordmark uses `--color-text-primary`. There is no `tone` input.
 - Tests are in `atlas-logo.spec.ts`.
 
 ### AtlasTheme (service)
@@ -92,37 +93,36 @@ The preference is not persisted and is not offered to users yet
 `src/app/shared/design-system/life-dimensions.ts`. It is built from the generated `LIFE_DIMENSION_KEYS` and
 `lifeDimensionMeta`, which come from `design/tokens/design-tokens.json → lifeDimensions`.
 
-| Field                                | Example (Career)                                                                  |
-| ------------------------------------ | --------------------------------------------------------------------------------- |
-| `key`                                | `'career'` (token and icon key, lowercase)                                        |
-| `apiKey`                             | `'CAREER'` (backend enum)                                                         |
-| `label` / `longLabel`                | from `lifeDimensionMeta`                                                          |
-| `icon`                               | `'career'` (`AtlasIconName`)                                                      |
-| `color.accent` / `.strong` / `.tint` | `var(--color-dimension-career)` / `…-strong` / `…-tint`, so they follow the theme |
+| Field                        | Example (Career)                                                     |
+| ---------------------------- | -------------------------------------------------------------------- |
+| `key`                        | `'career'` (token and icon key, lowercase)                           |
+| `apiKey`                     | `'CAREER'` (backend enum)                                            |
+| `label` / `longLabel`        | from `lifeDimensionMeta`                                             |
+| `icon`                       | `'career'` (`AtlasIconName`)                                         |
+| `color.foreground` / `.tint` | `var(--color-dimension-career)` / `…-tint`, so they follow the theme |
 
 - The array is in canonical order: Career, Finance, Health, Love, Passion, Friendship, Family.
 - `lifeDimensionByApiKey(apiKey)` returns the dimension or `undefined`.
-- Rules from [DD-09](DESIGN_DECISIONS.md#dd-09-dimension-accents-are-decorative-on-light-surfaces):
-  - `accent` is decorative on light surfaces.
-  - Use `strong` for text and icons.
-  - Always show a label.
+- `foreground` is for text, icons, strokes and chart series; it passes 4.5:1 on its tint in both themes.
+  `--color-dimension-<key>-strong` is still emitted as an alias for one release; do not use it in new code.
+- Always show a label.
 
 ### ATLAS_STATUSES
 
 `src/app/shared/design-system/statuses.ts`.
 
-| Key           | Label       | Icon                 | Colour                            |
-| ------------- | ----------- | -------------------- | --------------------------------- |
-| `success`     | Completed   | `status-success`     | `var(--color-status-success)`     |
-| `in-progress` | In progress | `status-in-progress` | `var(--color-status-in-progress)` |
-| `upcoming`    | Upcoming    | `status-upcoming`    | `var(--color-status-upcoming)`    |
-| `at-risk`     | At risk     | `status-at-risk`     | `var(--color-status-at-risk)`     |
-| `blocked`     | Blocked     | `status-blocked`     | `var(--color-status-blocked)`     |
-| `not-started` | Not started | `status-not-started` | `var(--color-status-not-started)` |
+| Key           | Label       | Icon                 | Colour / tint                                            |
+| ------------- | ----------- | -------------------- | -------------------------------------------------------- |
+| `success`     | Completed   | `status-success`     | `var(--color-status-success)` / `…-success-tint`         |
+| `in-progress` | In progress | `status-in-progress` | `var(--color-status-in-progress)` / `…-in-progress-tint` |
+| `upcoming`    | Upcoming    | `status-upcoming`    | `var(--color-status-upcoming)` / `…-upcoming-tint`       |
+| `at-risk`     | At risk     | `status-at-risk`     | `var(--color-status-at-risk)` / `…-at-risk-tint`         |
+| `blocked`     | Blocked     | `status-blocked`     | `var(--color-status-blocked)` / `…-blocked-tint`         |
+| `not-started` | Not started | `status-not-started` | `var(--color-status-not-started)` / `…-not-started-tint` |
 
-- Status colours are for icons and indicators only. The label uses `--color-text-secondary`
+- Both tokens are theme-aware. The foreground colours the icon and the badge label on the tint (≥ 4.5:1 in both
+  themes). Always render the label; colour is never the only signal
   ([DD-08](DESIGN_DECISIONS.md#dd-08-status-is-never-conveyed-by-colour-alone)).
-- On navy surfaces use `--color-status-on-dark-*`.
 - **Open mapping (to decide in step 5):** the domain node statuses are `NOT_STARTED`, `IN_PROGRESS`, `COMPLETED`,
   `SKIPPED` and `CANCELLED`, but the UI statuses add the derived `upcoming`, `at-risk` and `blocked` and have no
   skipped or cancelled presentation. A `statusForNode()` adapter, unit-tested, should own this mapping (PLAN-FRONTEND D14 has the proposed default).
@@ -131,35 +131,34 @@ The preference is not persisted and is not offered to users yet
 
 `src/app/shared/design-system/tokens.generated.ts` is generated by `npm run tokens:build`. Do not edit it.
 
-| Export                                    | Content                                                                                                         |
-| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `LIFE_DIMENSION_KEYS`, `LifeDimensionKey` | The seven keys in canonical order                                                                               |
-| `lifeDimensionMeta`                       | apiKey, label, longLabel (e.g. "Career / Profession") and the Tabler icon name (e.g. `briefcase`) per dimension |
-| `colorPrimitives`, `semanticColors`       | Raw values for non-CSS consumers, such as chart options. Use the CSS variables in templates.                    |
-| `dimensionColors`, `statusColors`         | Accent, strong and tint per dimension, and the status colours                                                   |
-| `breakpoints`                             | `{ xs: 0, sm: 480, md: 768, lg: 1024, xl: 1280, '2xl': 1536 }`                                                  |
-| `durations`, `easings`                    | Motion values in ms, for animations driven from TypeScript                                                      |
+| Export                                    | Content                                                                                                                                                  |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LIFE_DIMENSION_KEYS`, `LifeDimensionKey` | The seven keys in canonical order                                                                                                                        |
+| `lifeDimensionMeta`                       | apiKey, label, longLabel (e.g. "Career / Profession") and the Tabler icon name (e.g. `briefcase`) per dimension                                          |
+| `colorPrimitives`, `semanticColors`       | Raw values for non-CSS consumers, such as chart options; `semanticColors` has `light` and `dark` (incl. dimensions). Use the CSS variables in templates. |
+| `statusColors`                            | Light-theme status foreground and tint                                                                                                                   |
+| `breakpoints`                             | `{ xs: 0, sm: 480, md: 768, lg: 1024, xl: 1280, '2xl': 1536 }`                                                                                           |
+| `durations`, `easings`                    | Motion values in ms, for animations driven from TypeScript                                                                                               |
 
 ### Sass abstracts and global classes
 
 Import the abstracts with `@use 'abstracts' as atlas;`. The include path is configured in `angular.json`.
 
-| API                                                                          | Purpose                                                                                                                                                                      |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `atlas.up($bp)`, `atlas.down($bp)`, `atlas.between($a, $b)`, `atlas.bp($bp)` | Breakpoint media queries ([RESPONSIVE_BEHAVIOR.md](RESPONSIVE_BEHAVIOR.md#sass-usage-mobile-first))                                                                          |
-| `atlas.style($name)`                                                         | Applies a type style (`display`, `h1`–`h4`, `body-large`, `body`, `label`, `caption`, `metric`). It adds `font-synthesis: none` for display and tabular numerals for metric. |
-| `atlas.tabular-numbers`, `atlas.truncate`                                    | Numeric alignment, and single-line ellipsis                                                                                                                                  |
-| `atlas.focus-ring($color)`                                                   | A 2 px outline with a 2 px offset. The default colour is `--color-focus-ring`.                                                                                               |
-| `atlas.visually-hidden`                                                      | Hides content visually but keeps it available to screen readers                                                                                                              |
-| `atlas.touch-target`                                                         | Minimum 44 × 44 px hit area                                                                                                                                                  |
+| API                                                                          | Purpose                                                                                                                                          |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `atlas.up($bp)`, `atlas.down($bp)`, `atlas.between($a, $b)`, `atlas.bp($bp)` | Breakpoint media queries ([RESPONSIVE_BEHAVIOR.md](RESPONSIVE_BEHAVIOR.md#sass-usage-mobile-first))                                              |
+| `atlas.style($name)`                                                         | Applies a type style (`display`, `h1`–`h4`, `body-large`, `body`, `label`, `control`, `caption`, `metric`). It adds tabular numerals for metric. |
+| `atlas.tabular-numbers`, `atlas.truncate`                                    | Numeric alignment, and single-line ellipsis                                                                                                      |
+| `atlas.focus-ring($color)`                                                   | A 2 px outline with a 2 px offset. The default colour is `--color-focus-ring`.                                                                   |
+| `atlas.visually-hidden`                                                      | Hides content visually but keeps it available to screen readers                                                                                  |
+| `atlas.touch-target`                                                         | Minimum 44 × 44 px hit area                                                                                                                      |
 
 Global classes (from `src/styles/base`):
 
 - type: `.atlas-display`, `.atlas-h1` … `.atlas-h4`, `.atlas-body-large`, `.atlas-body`, `.atlas-label`,
-  `.atlas-caption`, `.atlas-metric`;
+  `.atlas-control`, `.atlas-caption`, `.atlas-metric`;
 - `.atlas-tabular`, `.atlas-text-secondary`, `.atlas-text-muted`;
-- `.atlas-visually-hidden` and `.atlas-skip-link`;
-- the `[data-surface='inverse']` attribute, which switches the focus ring to gold.
+- `.atlas-visually-hidden` and `.atlas-skip-link`.
 
 ### Angular Material theme
 
@@ -168,11 +167,12 @@ Global classes (from `src/styles/base`):
 - `mat.theme` (M3, density 0) uses palettes from `_theme-colors.scss`. M3 system roles are then overridden with Atlas
   CSS variables:
   - primary maps to `--color-action-primary`;
-  - containers map to warm surfaces;
+  - containers map to the subtle and achievement surfaces;
+  - the inverse roles map to the raised surface, because V3 has no inverse surface;
   - surfaces map to card and page;
   - outlines map to the border tokens;
   - error maps to destructive.
-- Buttons use `--radius-sm`, cards `--radius-md` and dialogs `--radius-lg`.
+- Buttons use `--radius-sm` and `--size-control-height` (48 px), cards `--radius-md` and dialogs `--radius-lg`.
 - `mat.strong-focus-indicators` draws a 2 px solid indicator with a 4 px radius.
 - Dark is applied under `html[data-theme='dark']`.
 - `prefers-contrast: more` applies the high-contrast overrides in light mode.
@@ -195,9 +195,11 @@ loading, empty and error.
 
 Shared patterns from §15:
 
-- Primary button: navy fill with an ivory label.
-- Secondary button: transparent or ivory, with a navy border and navy text.
-- Tertiary action: text button.
+- Buttons follow Figma `Atlas/V3/Button` (`152:2307`): 48 px high (`--size-control-height`), radius 8, `control` text
+  style (Inter 600 14/22). Disabled buttons use `--color-action-disabled` with `--color-action-on-disabled`.
+- Primary button: filled `--color-action-primary` with a `--color-action-on-primary` label.
+- Secondary button: outlined, with a `--color-text-primary` label on a `--color-border-control` outline.
+- Tertiary action: text button with a `--color-text-primary` label.
 - Destructive action: destructive colour plus confirmation.
 - Selected dimension: tint + border + icon + text.
 - Progress: a neutral track, with a dimension or status fill.
@@ -205,15 +207,15 @@ Shared patterns from §15:
 
 ### Shell and navigation
 
-| Spec name / proposed selector                           | Inputs → outputs                                                                      | States and accessibility                                                                                                                                  | Tokens                                                                    | Built on                                   |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------ |
-| `AppShellComponent` → `atlas-app-shell`                 | `navItems`, `user`; content projection → `quickAdd`                                   | Landmarks: `header`, `nav` (labelled "Primary"), `main#main`. The skip link is the first focus stop. Switches layout at `md` and `lg`.                    | `--layout-*`, `--safe-area-*`, `--z-navigation`, `--z-topbar`             | CDK `BreakpointObserver`, router outlet    |
-| `DesktopSidebarComponent` → `atlas-sidebar`             | `items`, `activeRoute`, `collapsed` (model)                                           | `aria-current="page"` on the active item. The collapse button has an accessible name. Collapsed items keep their names and show tooltips. Gold indicator. | `--color-surface-inverse*`, `--color-nav-indicator`, `--layout-sidebar-*` | `routerLink`, `MatTooltip`                 |
-| `MobileBottomNavigationComponent` → `atlas-bottom-nav`  | `items` (at most 5), `activeRoute` → `more`                                           | Icons always have text labels. Targets ≥ 48 px. Pads by `--safe-area-bottom`. More opens a sheet.                                                         | `--layout-bottom-nav-height`, `--size-touch-target-preferred`             | `routerLink`, `MatBottomSheet`             |
-| `TopBarComponent` → `atlas-top-bar`                     | `title`, `breadcrumbs`, `showBack` → `search`, `quickAdd`, `notifications`, `profile` | Icon-only buttons have `aria-label`. Compact under `md`. Pads by `--safe-area-top`.                                                                       | `--layout-topbar-height(-compact)`, `--z-topbar`                          | `MatToolbar` (optional), `MatMenu`         |
-| `PageHeaderComponent` → `atlas-page-header`             | `title`, `subtitle`, `dimension?`, `status?`; projected actions                       | Exactly one `h1` per page. Actions stay visible on mobile, with overflow into a menu.                                                                     | `atlas.style(h1)`, `--space-*`                                            | —                                          |
-| `BreadcrumbsComponent` → `atlas-breadcrumbs`            | `items: {label, link}[]`                                                              | `nav` labelled "Breadcrumb" with an ordered list. The last item has `aria-current="page"`. On mobile it collapses to the parent plus a back link.         | `--color-text-secondary`, `--color-text-link`                             | `routerLink`                               |
-| `ResponsiveDrawerComponent` → `atlas-responsive-drawer` | `open` (model), `position` → `closed`                                                 | A side panel at `lg` and above; a modal sheet below. Focus trap and restore. Esc closes it.                                                               | `--z-drawer`, `--shadow-3`, `--duration-standard`                         | `MatSidenav` / CDK `Overlay` + `FocusTrap` |
+| Spec name / proposed selector                           | Inputs → outputs                                                                      | States and accessibility                                                                                                                                                                                             | Tokens                                                                                                | Built on                                   |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `AppShellComponent` → `atlas-app-shell`                 | `navItems`, `user`; content projection → `quickAdd`                                   | Landmarks: `header`, `nav` (labelled "Primary"), `main#main`. The skip link is the first focus stop. Switches layout at `md` and `lg`.                                                                               | `--layout-*`, `--safe-area-*`, `--z-navigation`, `--z-topbar`                                         | CDK `BreakpointObserver`, router outlet    |
+| `DesktopSidebarComponent` → `atlas-sidebar`             | `items`, `activeRoute`, `collapsed` (model)                                           | `aria-current="page"` on the active item. The collapse button has an accessible name. Collapsed items keep their names and show tooltips. The active item uses the nav-active surface (dark adds a teal accent bar). | `--color-surface-navigation`, `--color-nav-active`, `--color-nav-active-accent`, `--layout-sidebar-*` | `routerLink`, `MatTooltip`                 |
+| `MobileBottomNavigationComponent` → `atlas-bottom-nav`  | `items` (at most 5), `activeRoute` → `more`                                           | Icons always have text labels. Targets ≥ 48 px. Pads by `--safe-area-bottom`. More opens a sheet.                                                                                                                    | `--layout-bottom-nav-height`, `--size-touch-target-preferred`                                         | `routerLink`, `MatBottomSheet`             |
+| `TopBarComponent` → `atlas-top-bar`                     | `title`, `breadcrumbs`, `showBack` → `search`, `quickAdd`, `notifications`, `profile` | Icon-only buttons have `aria-label`. Compact under `md`. Pads by `--safe-area-top`.                                                                                                                                  | `--layout-topbar-height(-compact)`, `--z-topbar`                                                      | `MatToolbar` (optional), `MatMenu`         |
+| `PageHeaderComponent` → `atlas-page-header`             | `title`, `subtitle`, `dimension?`, `status?`; projected actions                       | Exactly one `h1` per page. Actions stay visible on mobile, with overflow into a menu.                                                                                                                                | `atlas.style(h1)`, `--space-*`                                                                        | —                                          |
+| `BreadcrumbsComponent` → `atlas-breadcrumbs`            | `items: {label, link}[]`                                                              | `nav` labelled "Breadcrumb" with an ordered list. The last item has `aria-current="page"`. On mobile it collapses to the parent plus a back link.                                                                    | `--color-text-secondary`, `--color-text-primary` with a `--color-border-action` underline             | `routerLink`                               |
+| `ResponsiveDrawerComponent` → `atlas-responsive-drawer` | `open` (model), `position` → `closed`                                                 | A side panel at `lg` and above; a modal sheet below. Focus trap and restore. Esc closes it.                                                                                                                          | `--z-drawer`, `--shadow-3`, `--duration-standard`                                                     | `MatSidenav` / CDK `Overlay` + `FocusTrap` |
 
 ### Indicators and data display
 
@@ -230,11 +232,11 @@ Shared patterns from §15:
 | Spec name / proposed selector                           | Inputs → outputs                                       | States and accessibility                                                                                                                                    | Tokens                                                                                | Built on                        |
 | ------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------- |
 | `DestinationCardComponent` → `atlas-destination-card`   | `destination: DestinationCardVm` → `open`              | The whole card is one link, with the heading as its name. It shows the dimension badge, status, progress, next Waypoint and target date. Hover is optional. | `--color-surface-card`, `--radius-md`, `--shadow-1`                                   | `MatCard`, `routerLink`         |
-| `WaypointTimelineComponent` → `atlas-waypoint-timeline` | `waypoints: WaypointVm[]`, `orientation` → `select`    | An ordered list (`ol`) is the primary semantics. Each node is a focusable link. Vertical on mobile, horizontal at `lg` and above.                           | route line `--color-border-default`, `--color-nav-indicator` for the current Waypoint | SVG/CSS (ADR-0004 §4)           |
+| `WaypointTimelineComponent` → `atlas-waypoint-timeline` | `waypoints: WaypointVm[]`, `orientation` → `select`    | An ordered list (`ol`) is the primary semantics. Each node is a focusable link. Vertical on mobile, horizontal at `lg` and above.                           | route line `--color-border-subtle`, `--color-border-action` for the current Waypoint  | SVG/CSS (ADR-0004 §4)           |
 | `WaypointNodeComponent` → `atlas-waypoint-node`         | `waypoint`, `state: 'done' \| 'current' \| 'upcoming'` | The state is expressed by icon + label, never only by colour or shape. The accessible name includes the date and status.                                    | status tokens                                                                         | `atlas-icon`                    |
-| `StepListComponent` → `atlas-step-list`                 | `steps: StepVm[]`, `groupBy?` → `toggle`, `open`       | A list of rows. Completing a Step announces feedback through a live region or snackbar (§15). The empty state has a call to action.                         | `--space-*`, `--color-border-divider`                                                 | CDK `ListKeyManager` (optional) |
+| `StepListComponent` → `atlas-step-list`                 | `steps: StepVm[]`, `groupBy?` → `toggle`, `open`       | A list of rows. Completing a Step announces feedback through a live region or snackbar (§15). The empty state has a call to action.                         | `--space-*`, `--color-border-subtle`                                                  | CDK `ListKeyManager` (optional) |
 | `StepRowComponent` → `atlas-step-row`                   | `step: StepVm` → `toggle`, `open`                      | A native checkbox with the Step title as its label, plus a separate link for the details. Targets ≥ 44 px.                                                  | `--size-touch-target-min`                                                             | `MatCheckbox`                   |
-| `AwardCardComponent` → `atlas-award-card`               | `award: AwardVm` (PLANNED, EARNED or REDEEMED)         | The state is shown as text. When earned the card uses the achievement surface. Gold appears only here (§2).                                                 | `--color-surface-achievement`, `--color-text-achievement`, gold tiers                 | `MatCard`                       |
+| `AwardCardComponent` → `atlas-award-card`               | `award: AwardVm` (PLANNED, EARNED or REDEEMED)         | The state is shown as text. When earned the card uses the achievement surface. Gold appears only here (§2).                                                 | `--color-surface-achievement`, `--color-text-achievement`, `gold.dark` / `gold.light` | `MatCard`                       |
 | `NotesPanelComponent` → `atlas-notes-panel`             | `notes`, `editable` → `save`                           | A labelled textarea. Save state is announced. Text width is limited to `--layout-reading-max`.                                                              | `--layout-reading-max`                                                                | `MatFormField`, `MatInput`      |
 
 ### Visualisation wrappers (ADR-0004; libraries not installed)

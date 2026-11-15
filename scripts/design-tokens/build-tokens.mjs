@@ -99,12 +99,6 @@ const px = (v) => Number.parseFloat(v);
 
 function buildTs() {
   const dims = manifest.lifeDimensions;
-  const dimensionColors = Object.fromEntries(
-    dims.order.map((key) => {
-      const d = tree.color.dimension[key];
-      return [key, { accent: d.DEFAULT.$value, strong: d.strong.$value, tint: d.tint.$value }];
-    }),
-  );
   const lifeDimensionMeta = Object.fromEntries(
     dims.order.map((key) => [
       key,
@@ -122,8 +116,7 @@ function buildTs() {
       light: resolved(tree.semantic.light.color),
       dark: resolved(tree.semantic.dark.color),
     },
-    dimensionColors,
-    statusColors: resolved(tree.color.status),
+    statusColors: resolved(tree.semantic.light.color.status),
     breakpoints: resolved(tree.breakpoint, px),
     durations: resolved(tree.duration, px),
     easings: resolved(tree.easing),

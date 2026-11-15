@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="ia-title">
   <title id="ia-title">IKIGAI ATLAS</title>
-  <!-- Single colour outlines via currentColor; set the CSS color property. -->
-  <!-- Cardinal Ikigai Venn (Figma V3 brand symbol): four r19.2 circles on a 64 grid, centres N/W/E/S;
+  <!-- Figma "Mono" outlines via currentColor; set the CSS color property. -->
+  <!-- Cardinal Ikigai Venn (Figma V3 Atlas/V3/Brand/Symbol): four r19.2 circles on a 64 grid, centres N/W/E/S;
        the shared centre is formed by overlap only. Source: Figma "15.Export Assets", scaled 0.4 from 160px. -->
-  <g fill="none" stroke="currentColor" stroke-width="2">
-    <circle cx="32" cy="20.8" r="18.2" />
-    <circle cx="20.8" cy="32" r="18.2" />
-    <circle cx="43.2" cy="32" r="18.2" />
-    <circle cx="32" cy="43.2" r="18.2" />
+  <g fill="none" stroke="currentColor" stroke-width="1.28">
+    <circle cx="32" cy="20.8" r="18.56" />
+    <circle cx="20.8" cy="32" r="18.56" />
+    <circle cx="43.2" cy="32" r="18.56" />
+    <circle cx="32" cy="43.2" r="18.56" />
   </g>
 </svg>

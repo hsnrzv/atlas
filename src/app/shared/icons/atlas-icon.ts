@@ -8,7 +8,7 @@ export type AtlasIconSize = 'xs' | 'sm' | 'md' | 'lg';
 export const ATLAS_ICON_SIZES: Record<AtlasIconSize, number> = { xs: 16, sm: 18, md: 20, lg: 24 };
 
 /** Default outline stroke (design/tokens/spacing.json → size.icon-stroke). */
-export const ATLAS_ICON_STROKE = 1.75;
+export const ATLAS_ICON_STROKE = 2;
 
 /**
  * Renders an Atlas icon. Decorative by default (hidden from assistive technology);

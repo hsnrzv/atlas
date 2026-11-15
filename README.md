@@ -59,9 +59,8 @@ npm run verify          # everything CI's verify job runs, in the same order
 | `npm run lint`                    | ESLint (`angular-eslint`, `typescript-eslint`) for `src`, `e2e` and config files             |
 | `npm run lint:styles`             | Stylelint (SCSS; raw colours are forbidden in `src/app`)                                     |
 | `npm run format` / `format:check` | Prettier write / check                                                                       |
-| `npm run design:check`            | Tokens in sync, WCAG contrast pairs, dimension icons in sync, brand/platform assets valid    |
+| `npm run design:check`            | Tokens in sync, WCAG contrast pairs, brand/platform assets valid                             |
 | `npm run tokens:build`            | Regenerate SCSS/TS tokens and the Material palette from `design/tokens/*.json`               |
-| `npm run icons:sync`              | Re-export the seven Life Dimension SVGs from the pinned Tabler release                       |
 | `npm run assets:export`           | Re-render PNG/ICO exports (favicons, PWA, Capacitor, social) from the SVG masters            |
 | `npm run lockfile:check`          | Fails if `package-lock.json` resolves anything outside the public npm registry               |
 | `npm run verify`                  | `lockfile:check` → `design:check` → lint → stylelint → prettier → unit tests → build         |
@@ -78,7 +77,7 @@ docker run --rm -p 18081:8080 atlas-frontend:local   # http://localhost:18081
 ```text
 design/                     design system source of truth (see design/README.md)
   tokens/*.json             colour, type, spacing, radius, elevation, motion, layout, contrast pairs
-  svg/logo, svg/dimensions  brand SVG masters and the seven Life Dimension icons
+  svg/logo                  brand SVG masters
   exports/                  generated PNG/ICO deliverables (Capacitor, PWA, social)
   mockups/                  reference mock-ups (not used at runtime)
 docs/

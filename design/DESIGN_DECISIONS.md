@@ -11,42 +11,45 @@ not repeat them.
 - **Accepted (draft)** means it is implemented but not yet exposed to users.
 - **Specified** means it is decided for a later step but not built yet.
 - **Open** means a known issue or an unresolved question.
+- **Superseded** means a later entry replaces the decision. **Partly superseded** means a later entry changes part of
+  it and the rest still applies. The original text is kept as history.
 
-| ID                                                                       | Decision                                                 | Status           |
-| ------------------------------------------------------------------------ | -------------------------------------------------------- | ---------------- |
-| [DD-01](#dd-01-design-tokens-are-the-single-source-of-truth)             | Design tokens are the single source of truth             | Accepted         |
-| [DD-02](#dd-02-token-format-naming-and-theme-selectors)                  | Token format, naming and theme selectors                 | Accepted         |
-| [DD-03](#dd-03-ui-vocabulary-maps-onto-the-domain-model)                 | UI vocabulary maps onto the domain model                 | Accepted         |
-| [DD-04](#dd-04-life-dimension-keys-and-canonical-order)                  | Life Dimension keys and canonical order                  | Accepted         |
-| [DD-05](#dd-05-tabler-icons-instead-of-lucide)                           | Tabler Icons instead of Lucide                           | Accepted         |
-| [DD-06](#dd-06-logo-concept-heptagon-route-with-a-compass-needle)        | Logo concept: heptagon route with a compass needle       | Superseded       |
-| [DD-07](#dd-07-muted-text-uses-neutral-600)                              | Muted text uses neutral-600                              | Accepted         |
-| [DD-08](#dd-08-status-is-never-conveyed-by-colour-alone)                 | Status is never conveyed by colour alone                 | Accepted         |
-| [DD-09](#dd-09-dimension-accents-are-decorative-on-light-surfaces)       | Dimension accents are decorative on light surfaces       | Accepted         |
-| [DD-10](#dd-10-in-progress-status-equals-career-strong)                  | In-progress status equals Career strong                  | Accepted         |
-| [DD-11](#dd-11-gold-usage-tiers)                                         | Gold usage tiers                                         | Accepted         |
-| [DD-12](#dd-12-dark-control-border-is-a-non-text-element)                | Dark control border is a non-text element                | Accepted (draft) |
-| [DD-13](#dd-13-dark-theme-is-a-preview-not-a-user-setting)               | Dark theme is a preview, not a user setting              | Accepted (draft) |
-| [DD-14](#dd-14-self-hosted-fonts-and-no-runtime-urls)                    | Self-hosted fonts and no runtime URLs                    | Accepted         |
-| [DD-15](#dd-15-display-type-uses-weight-400-without-synthesis)           | Display type uses weight 400 without synthesis           | Accepted         |
-| [DD-16](#dd-16-angular-material-m3-mapped-onto-atlas-tokens)             | Angular Material M3 mapped onto Atlas tokens             | Accepted         |
-| [DD-17](#dd-17-raster-exports-are-derived-and-validated-by-properties)   | Raster exports are derived and validated by properties   | Accepted         |
-| [DD-18](#dd-18-splash-exports-live-in-exportscapacitor)                  | Splash exports live in `exports/capacitor`               | Accepted         |
-| [DD-19](#dd-19-motion-tokens-and-reduced-motion)                         | Motion tokens and reduced motion                         | Accepted         |
-| [DD-20](#dd-20-focus-indicators)                                         | Focus indicators                                         | Accepted         |
-| [DD-21](#dd-21-links-are-always-underlined)                              | Links are always underlined                              | Accepted         |
-| [DD-22](#dd-22-layout-token-additions)                                   | Layout token additions                                   | Accepted         |
-| [DD-23](#dd-23-brand-masters-are-served-at-brand)                        | Brand masters are served at `/brand`                     | Accepted         |
-| [DD-24](#dd-24-the-in-app-logo-renders-live-text)                        | The in-app logo renders live text                        | Accepted         |
-| [DD-25](#dd-25-critical-css-inlining-disabled-for-csp)                   | Critical-CSS inlining disabled for CSP                   | Accepted         |
-| [DD-26](#dd-26-zoneless-angular-with-onpush-defaults)                    | Zoneless Angular with OnPush defaults                    | Accepted         |
-| [DD-27](#dd-27-no-hex-colours-in-component-styles)                       | No hex colours in component styles                       | Accepted         |
-| [DD-28](#dd-28-sass-abstracts-module-and-global-type-classes)            | Sass abstracts module and global type classes            | Accepted         |
-| [DD-29](#dd-29-mobile-bottom-navigation-holds-five-items-including-more) | Mobile bottom navigation holds five items including More | Specified        |
-| [DD-30](#dd-30-wireframes-are-static-svg-not-pixel-specs)                | Wireframes are static SVG, not pixel specs               | Accepted         |
-| [DD-31](#dd-31-one-mock-dataset)                                         | One mock dataset                                         | Open             |
-| [DD-32](#dd-32-cdk-overlay-container-uses-the-overlay-layer)             | CDK overlay container uses the overlay layer             | Accepted         |
-| [DD-33](#dd-33-logo-symbol-is-the-figma-v3-cardinal-ikigai-venn)         | Logo symbol is the Figma V3 cardinal Ikigai Venn         | Accepted         |
+| ID                                                                       | Decision                                                 | Status            |
+| ------------------------------------------------------------------------ | -------------------------------------------------------- | ----------------- |
+| [DD-01](#dd-01-design-tokens-are-the-single-source-of-truth)             | Design tokens are the single source of truth             | Accepted          |
+| [DD-02](#dd-02-token-format-naming-and-theme-selectors)                  | Token format, naming and theme selectors                 | Accepted          |
+| [DD-03](#dd-03-ui-vocabulary-maps-onto-the-domain-model)                 | UI vocabulary maps onto the domain model                 | Accepted          |
+| [DD-04](#dd-04-life-dimension-keys-and-canonical-order)                  | Life Dimension keys and canonical order                  | Accepted          |
+| [DD-05](#dd-05-tabler-icons-instead-of-lucide)                           | Tabler Icons instead of Lucide                           | Partly superseded |
+| [DD-06](#dd-06-logo-concept-heptagon-route-with-a-compass-needle)        | Logo concept: heptagon route with a compass needle       | Superseded        |
+| [DD-07](#dd-07-muted-text-uses-neutral-600)                              | Muted text uses neutral-600                              | Superseded        |
+| [DD-08](#dd-08-status-is-never-conveyed-by-colour-alone)                 | Status is never conveyed by colour alone                 | Partly superseded |
+| [DD-09](#dd-09-dimension-accents-are-decorative-on-light-surfaces)       | Dimension accents are decorative on light surfaces       | Superseded        |
+| [DD-10](#dd-10-in-progress-status-equals-career-strong)                  | In-progress status equals Career strong                  | Accepted          |
+| [DD-11](#dd-11-gold-usage-tiers)                                         | Gold usage tiers                                         | Superseded        |
+| [DD-12](#dd-12-dark-control-border-is-a-non-text-element)                | Dark control border is a non-text element                | Superseded        |
+| [DD-13](#dd-13-dark-theme-is-a-preview-not-a-user-setting)               | Dark theme is a preview, not a user setting              | Accepted (draft)  |
+| [DD-14](#dd-14-self-hosted-fonts-and-no-runtime-urls)                    | Self-hosted fonts and no runtime URLs                    | Partly superseded |
+| [DD-15](#dd-15-display-type-uses-weight-400-without-synthesis)           | Display type uses weight 400 without synthesis           | Superseded        |
+| [DD-16](#dd-16-angular-material-m3-mapped-onto-atlas-tokens)             | Angular Material M3 mapped onto Atlas tokens             | Partly superseded |
+| [DD-17](#dd-17-raster-exports-are-derived-and-validated-by-properties)   | Raster exports are derived and validated by properties   | Accepted          |
+| [DD-18](#dd-18-splash-exports-live-in-exportscapacitor)                  | Splash exports live in `exports/capacitor`               | Accepted          |
+| [DD-19](#dd-19-motion-tokens-and-reduced-motion)                         | Motion tokens and reduced motion                         | Accepted          |
+| [DD-20](#dd-20-focus-indicators)                                         | Focus indicators                                         | Superseded        |
+| [DD-21](#dd-21-links-are-always-underlined)                              | Links are always underlined                              | Superseded        |
+| [DD-22](#dd-22-layout-token-additions)                                   | Layout token additions                                   | Partly superseded |
+| [DD-23](#dd-23-brand-masters-are-served-at-brand)                        | Brand masters are served at `/brand`                     | Accepted          |
+| [DD-24](#dd-24-the-in-app-logo-renders-live-text)                        | The in-app logo renders live text                        | Superseded        |
+| [DD-25](#dd-25-critical-css-inlining-disabled-for-csp)                   | Critical-CSS inlining disabled for CSP                   | Accepted          |
+| [DD-26](#dd-26-zoneless-angular-with-onpush-defaults)                    | Zoneless Angular with OnPush defaults                    | Accepted          |
+| [DD-27](#dd-27-no-hex-colours-in-component-styles)                       | No hex colours in component styles                       | Accepted          |
+| [DD-28](#dd-28-sass-abstracts-module-and-global-type-classes)            | Sass abstracts module and global type classes            | Accepted          |
+| [DD-29](#dd-29-mobile-bottom-navigation-holds-five-items-including-more) | Mobile bottom navigation holds five items including More | Specified         |
+| [DD-30](#dd-30-wireframes-are-static-svg-not-pixel-specs)                | Wireframes are static SVG, not pixel specs               | Accepted          |
+| [DD-31](#dd-31-one-mock-dataset)                                         | One mock dataset                                         | Open              |
+| [DD-32](#dd-32-cdk-overlay-container-uses-the-overlay-layer)             | CDK overlay container uses the overlay layer             | Accepted          |
+| [DD-33](#dd-33-logo-symbol-is-the-figma-v3-cardinal-ikigai-venn)         | Logo symbol is the Figma V3 cardinal Ikigai Venn         | Partly superseded |
+| [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2)       | Figma V3 tokens, typography, icons and brand (Phase 2)   | Accepted          |
 
 ---
 
@@ -136,7 +139,8 @@ not repeat them.
     `md` 20 and `lg` 24 px.
   - Features use `<atlas-icon name="…">` with a semantic name from `ATLAS_ICONS`
     (`src/app/shared/icons/atlas-icons.ts`).
-  - The seven dimension SVGs are generated from `@tabler/icons` by `npm run icons:sync`.
+  - Life Dimension glyph names live in `design-tokens.json → lifeDimensions.icons`; a unit test keeps the registry in
+    sync. (The former `design/svg/dimensions` SVG copies were removed on 2026-11-14.)
   - See [ADR-0005](../docs/adr/0005-icon-library-tabler.md).
 - **Substitutions** where the Lucide name has no direct Tabler equivalent:
 
@@ -161,8 +165,10 @@ not repeat them.
 - **Consequences:**
   - The spec's Lucide names do not apply directly; the registry is the reference.
   - Unknown icon names fail type-checking (`AtlasIconName`).
-  - `npm run icons:check` detects drift in the dimension SVGs.
-- **Status:** Accepted, implemented.
+  - `atlas-icon.spec.ts` fails if the registry and the Life Dimension glyph tokens drift apart.
+- **Status:** Partly superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2): stroke 2 and the
+  Figma V3 glyph set (for example `sitemap`, `orbit`, `calendar-week`, `dots`). Tabler itself is kept (ADR-0005
+  amendment, owner decision R-4).
 
 ### DD-06: Logo concept: heptagon route with a compass needle
 
@@ -195,7 +201,8 @@ not repeat them.
   - Restrict `neutral-500` to non-text and disabled use: control borders and the not-started status icon.
 - **Rationale:** Keeps the spec's visual hierarchy while meeting WCAG 1.4.3.
 - **Consequences:** This deviates from §10.2. The contrast check carries an `info` row that documents the limitation.
-- **Status:** Accepted.
+- **Status:** Superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2). The `neutral` scale is
+  retired; muted text is tide secondary.
 
 ### DD-08: Status is never conveyed by colour alone
 
@@ -210,7 +217,9 @@ not repeat them.
     ivory-50, all ≥ 5.2:1 on midnight-800.
 - **Rationale:** Meets WCAG 1.4.1 and 1.4.11 and keeps the specified hues.
 - **Consequences:** Components must never render a status as colour only, for example a bare coloured dot.
-- **Status:** Accepted.
+- **Status:** Partly superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2): `status-on-dark`
+  is retired, and labels use the theme-aware status foreground on its `-tint`. Status is still never conveyed by colour
+  alone.
 
 ### DD-09: Dimension accents are decorative on light surfaces
 
@@ -223,7 +232,8 @@ not repeat them.
 - **Rationale:** Keeps the calm palette and stays compliant.
 - **Consequences:** Charts (planned) need strong outlines or labels. The `symbol-dimensions` logo variant is for marketing
   use at ≥ 48 px only.
-- **Status:** Accepted.
+- **Status:** Superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2). Dimension colours are
+  theme-aware foreground and `-tint` pairs; `-strong` is an alias for one release.
 
 ### DD-10: In-progress status equals Career strong
 
@@ -233,7 +243,8 @@ not repeat them.
 - **Rationale:** Changing either value would deviate from the brand palette for little gain once colour is never the
   only signal ([DD-08](#dd-08-status-is-never-conveyed-by-colour-alone)).
 - **Consequences:** Avoid placing an in-progress dot directly beside a Career accent without labels.
-- **Status:** Accepted.
+- **Status:** Accepted. Still true in V3 (#426D9B light, #A6C3DF dark); the status glyph is now `loader-2`
+  ([DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2)).
 
 ### DD-11: Gold usage tiers
 
@@ -251,7 +262,8 @@ not repeat them.
 
 - **Rationale:** This is the spec's own guidance, made into tokens.
 - **Consequences:** `--color-text-achievement` is `gold-800`.
-- **Status:** Accepted.
+- **Status:** Superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2): `gold.dark`,
+  `gold.light` and `--color-text-achievement`.
 
 ### DD-12: Dark control border is a non-text element
 
@@ -259,7 +271,8 @@ not repeat them.
 - **Decision:** Classify it as a non-text UI component (WCAG 1.4.11, 3:1). It passes.
 - **Rationale:** Borders identify controls. They are not text.
 - **Consequences:** Do not reuse that pairing for text.
-- **Status:** Accepted (draft, as part of the dark theme).
+- **Status:** Superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2). The V3 dark control
+  border is tide muted #8290AA (4.40:1 on the dark card).
 
 ### DD-13: Dark theme is a preview, not a user setting
 
@@ -274,7 +287,8 @@ not repeat them.
     (step 4 onward). See ADR-0007 on the user-preference policy.
 - **Rationale:** Validates contrast and Material mapping early without committing to UX behaviour.
 - **Consequences:** `index.html` declares `color-scheme: light`. Axe runs in both themes (`e2e/design-foundation.spec.ts`).
-- **Status:** Accepted (draft).
+- **Status:** Accepted (draft). Since [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2) the dark values
+  are the Figma V3 dark theme.
 
 ### DD-14: Self-hosted fonts and no runtime URLs
 
@@ -286,7 +300,8 @@ not repeat them.
   - The sans stack is `"Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`.
 - **Rationale:** Offline-capable in Capacitor, works under a strict CSP, and leaks no privacy data to font CDNs.
 - **Consequences:** Font files are part of the bundle. Weights are limited to 400, 500 and 600.
-- **Status:** Accepted.
+- **Status:** Partly superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2): Manrope Variable
+  replaces DM Serif Display. Self-hosting is unchanged.
 
 ### DD-15: Display type uses weight 400 without synthesis
 
@@ -295,7 +310,8 @@ not repeat them.
   `font-synthesis: none`.
 - **Rationale:** Synthetic bold distorts the face. Its high contrast already gives display presence.
 - **Consequences:** This deviates from §3.2, as documented in the token `$description`.
-- **Status:** Accepted.
+- **Status:** Superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2). Display is Manrope 700,
+  and `font-synthesis: none` is no longer set.
 
 ### DD-16: Angular Material M3 mapped onto Atlas tokens
 
@@ -315,7 +331,8 @@ not repeat them.
 - **Rationale:** Material supplies accessible behaviour, and the tokens supply the brand.
 - **Consequences:** `_theme-colors.scss` is produced by the Material schematic, **not** by `tokens:build`. If a brand
   primary changes, re-run the schematic.
-- **Status:** Accepted.
+- **Status:** Partly superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2): new palette
+  seeds, the inverse roles map to the raised surface, and buttons are 48 px high with the `control` type style.
 
 ### DD-17: Raster exports are derived and validated by properties
 
@@ -365,14 +382,16 @@ not repeat them.
   - **Material:** components use strong focus indicators ([DD-16](#dd-16-angular-material-m3-mapped-onto-atlas-tokens)).
 - **Rationale:** The ring stays visible on every surface: 14.86:1 on ivory and 7.48:1 for gold on navy.
 - **Consequences:** Navy containers must set `data-surface="inverse"`.
-- **Status:** Accepted.
+- **Status:** Superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2). There are no inverse
+  surfaces; the ring is `--color-focus-ring` per theme.
 
 ### DD-21: Links are always underlined
 
 - **Decision:** Links use `--color-text-link` (midnight-800, 12.32:1 on white) and are always underlined, with a 1px
   underline at a 0.2em offset.
 - **Rationale:** WCAG 1.4.1. Navy links are close to body text in colour.
-- **Status:** Accepted.
+- **Status:** Superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2). Links use
+  `--color-text-primary` with a `--color-border-action` underline.
 
 ### DD-22: Layout token additions
 
@@ -391,7 +410,8 @@ not repeat them.
 - **Rationale:** The shell (step 4) needs agreed numbers before it is built.
 - **Consequences:** See [RESPONSIVE_BEHAVIOR.md](RESPONSIVE_BEHAVIOR.md). The CDK overlay container uses the overlay layer
   ([DD-32](#dd-32-cdk-overlay-container-uses-the-overlay-layer)).
-- **Status:** Accepted (tokens). The shell itself is Specified.
+- **Status:** Accepted (tokens). The shell itself is Specified. Partly superseded by
+  [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2): the bottom navigation is 80 px.
 
 ### DD-23: Brand masters are served at `/brand`
 
@@ -408,7 +428,8 @@ not repeat them.
   `<text>` element (`textLength` 203 at 26 px) for design use.
 - **Consequences:** Outlined-text wordmarks for print and marketing are **not** produced yet (to verify whether they are
   needed).
-- **Status:** Accepted.
+- **Status:** Superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2). The wordmark is Manrope
+  700, and there is no `tone` input.
 
 ### DD-25: Critical-CSS inlining disabled for CSP
 
@@ -508,4 +529,53 @@ not repeat them.
 - **Consequences:** The seven Life Dimensions are no longer encoded in the mark, which departs from design-instructions
   §1.3. The full-colour symbol stays recognisable at 16 px; the monochrome outline needs 24 px.
 - **Status:** Accepted, implemented (17 masters in `design/svg/logo/`, derived rasters re-exported, `<atlas-logo>`
-  updated).
+  updated). Partly superseded by [DD-34](#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2): tide space #0B1020
+  replaces #14243A and the wordmark is Manrope 700. The symbol geometry still applies.
+
+### DD-34: Figma V3 tokens, typography, icons and brand (Phase 2)
+
+- **Context:** [ADR-0010](../docs/adr/0010-figma-visual-source-of-truth.md) makes Figma V3 the visual source of truth
+  at design time. [DD-33](#dd-33-logo-symbol-is-the-figma-v3-cardinal-ikigai-venn) adopted only the V3 symbol. Phase 2
+  of the migration (roadmap T-1, T-2, T-3 and T-5) brings the tokens, fonts, icons and brand assets in line with V3.
+- **Decision:**
+  - **Colour (T-1):** the V3 palette replaces ivory, midnight navy and gold. The primitives are tide (space #0B1020 to
+    white #F5F7FC), green (forest #123F3C to teal #4B9387), violet (deep #493566 to accent #B8A5D0) and gold (dark
+    #D4B477, light #A17A3F). Light and dark themes each have their own semantic tokens. The values are in
+    [`docs/design/design-tokens.md`](../docs/design/design-tokens.md).
+  - **Retired tokens:** `--color-brand-midnight-*`, `--color-brand-ivory-*`, `--color-brand-gold-*`,
+    `--color-neutral-*`, `--color-surface-inverse*`, `--color-surface-sunken`, `--color-text-inverse*`,
+    `--color-text-link`, `--color-nav-indicator`, `--color-status-on-dark-*` and `--font-display`. The active
+    navigation item uses `--color-nav-active` (and `--color-nav-active-accent` in dark).
+  - **No inverse surfaces:** the `[data-surface='inverse']` rule and the `<atlas-logo>` `tone` input are removed. The
+    focus ring is `--color-focus-ring` in both themes (violet #65518C light, #B8A5D0 dark; 2 px, 2 px offset,
+    `Highlight` in forced colours).
+  - **Links** use `--color-text-primary` text with a `--color-border-action` underline. Teal link text would be only
+    3.93:1 on a dark card.
+  - **Dimension and status colours** are theme-aware foreground and `-tint` pairs. `--color-dimension-<key>-strong`
+    remains as an alias for one release.
+  - **Buttons** follow `Atlas/V3/Button` (`152:2307`): 48 px high (`--size-control-height`), radius 8, `control` text
+    style. Primary is filled `action/primary` with an `action/on-primary` label. Secondary is outlined, with a
+    `text/primary` label on a `border/control` outline. Text buttons use a `text/primary` label. Disabled uses
+    `action/disabled`.
+  - **Typography (T-2):** Manrope Variable (`@fontsource-variable/manrope` 5.3.0, OFL-1.1) for display and h1 (700) and
+    h2–h4 (600). Inter Variable for body, label, the new `control` style (600 14/22), caption and metric. The new
+    `wordmark` style is Manrope 700, 22/30, 1 px letter-spacing. DM Serif Display is removed.
+  - **Icons (T-3):** Tabler outline at stroke 2, with the V3 glyph set and status glyphs (`check`, `loader-2`,
+    `calendar-week`, `alert-circle`, `lock`, `flag`). Figma credits its glyphs to Lucide, but Tabler is kept
+    ([ADR-0005](../docs/adr/0005-icon-library-tabler.md) amendment, owner decision R-4). The Life Dimension SVGs keep
+    stroke 1.75 until Phase 3.
+  - **Brand (T-5):** the four-circle Venn symbol with a Manrope 700 "IKIGAI ATLAS" wordmark (22 px, 1 px
+    letter-spacing). The blend follows the theme: `multiply` at 72 % in light, `screen` at 82 % under
+    `[data-theme='dark']`. The app icon, adaptive-icon background, splash, `theme-color` and manifest `theme_color` use
+    tide space #0B1020; the manifest `background_color` is #F5F7FA.
+  - **Single dark app-icon master:** the light Figma app icon (#F5F7FA) is not exported. Splash and splash-dark still
+    share one dark source.
+  - **Layout:** the bottom navigation is 80 px (Figma 390 × 80). A dialog width of 560 px is added.
+- **Rationale:** One visual source avoids drift between Figma and code. Keeping text on the primary text colour, and
+  colour on borders and underlines, holds AA in both themes without per-surface overrides.
+- **Consequences:**
+  - The contrast gate covers 123 pairs across both themes, with 0 failing
+    ([ACCESSIBILITY.md](ACCESSIBILITY.md#generated-table)).
+  - New code must use the V3 semantic tokens; retired tokens are no longer emitted.
+  - DD-05, 07, 08, 09, 11, 12, 14, 15, 16, 20, 21, 22, 24 and 33 are superseded in full or in part.
+- **Status:** Accepted, implemented.

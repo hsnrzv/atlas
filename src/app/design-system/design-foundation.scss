@@ -66,8 +66,6 @@ section {
 }
 
 .swatches,
-.dimensions,
-.statuses,
 .icons {
   display: grid;
   gap: var(--space-2);
@@ -107,40 +105,81 @@ section {
   }
 }
 
-.dimensions {
-  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+.semantic {
+  overflow-x: auto;
 }
 
-.dimension {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-1) var(--space-3);
-  align-items: center;
-  padding: var(--space-3);
-  color: var(--color-text-primary);
-  background: var(--dimension-tint);
-  border-inline-start: var(--space-1) solid var(--dimension-accent);
-  border-radius: var(--radius-md);
+.semantic-table {
+  width: 100%;
+  border-collapse: collapse;
 
-  code {
-    grid-column: 2;
+  caption {
+    padding-block-end: var(--space-3);
+    text-align: start;
+  }
+
+  th,
+  td {
+    padding: var(--space-2) var(--space-3);
+    text-align: start;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  tbody th {
+    display: grid;
+    font-weight: inherit;
   }
 }
 
-.dimension-icon {
+.value {
   display: inline-flex;
-  grid-row: span 2;
-  color: var(--dimension-strong);
-}
-
-.statuses {
-  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-}
-
-.status {
-  display: flex;
   gap: var(--space-2);
   align-items: center;
+
+  .chip {
+    width: var(--space-8);
+    height: var(--space-6);
+  }
+}
+
+.edge-sample {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  overflow: hidden;
+  background: var(--color-surface-hero);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+
+  &::before {
+    position: absolute;
+    inset: 0 0 auto;
+    height: var(--size-signature-edge);
+    content: '';
+    background: var(--gradient-signature-edge);
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.tag {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: var(--size-touch-target-min);
+  padding-inline: var(--space-3);
+  color: var(--tag-fg);
+  background: var(--tag-bg);
+  border-radius: var(--radius-pill);
 }
 
 .icons {
@@ -187,8 +226,8 @@ section {
 
 .brand {
   padding: var(--space-8);
-  color: var(--color-text-inverse);
-  background: var(--color-surface-inverse);
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-lg);
 }
 
@@ -197,8 +236,4 @@ section {
   flex-wrap: wrap;
   gap: var(--space-8);
   align-items: center;
-}
-
-.inverse-link {
-  color: var(--color-text-inverse);
 }

@@ -9,6 +9,13 @@ specification is [`../project-instruction.md`](../project-instruction.md).
 > or test. **Specified** or **Planned** means it is described in the specification or here but has not been built yet.
 > Design steps 1–3 are implemented. Everything from the application shell onwards is planned.
 
+Figma V3 is the visual source of truth ([ADR-0010](../docs/adr/0010-figma-visual-source-of-truth.md)). Phase 2 of the
+migration has replaced the palette (tide, green, violet and gold, with light and dark themes), the fonts (Manrope
+Variable for display and headings, Inter Variable for everything else), the icon stroke (Tabler outline, stroke 2) and
+the logo (four-circle Venn symbol with a Manrope wordmark). See
+[DD-34](DESIGN_DECISIONS.md#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2) and
+[`docs/design/design-tokens.md`](../docs/design/design-tokens.md) for the shipped values.
+
 ## Design steps
 
 | Step | Scope (design-instructions §0 phases)                                                   | Status      | Evidence                                                                                                |
@@ -39,6 +46,8 @@ Related architecture decision records live in [`../docs/adr/`](../docs/adr/):
 - [ADR-0005 Icon library (Tabler)](../docs/adr/0005-icon-library-tabler.md)
 - [ADR-0006 UI vocabulary and domain mapping](../docs/adr/0006-ui-vocabulary-and-domain-mapping.md)
 - [ADR-0007 Design tokens as the single source of truth](../docs/adr/0007-design-tokens-source-of-truth.md)
+- [ADR-0010 Figma V3 is the visual source of truth](../docs/adr/0010-figma-visual-source-of-truth.md) (amends ADR-0005
+  and ADR-0007)
 - Also relevant: [ADR-0003 UI component stack](../docs/adr/0003-ui-component-stack.md),
   [ADR-0004 Visualization stack](../docs/adr/0004-visualization-stack.md) and
   [ADR-0008 Frontend test toolchain](../docs/adr/0008-frontend-test-toolchain.md)
@@ -47,18 +56,17 @@ Related architecture decision records live in [`../docs/adr/`](../docs/adr/):
 
 The specification's deliverable structure (design-instructions §0) maps to the repository as follows.
 
-| Spec path                        | Actual path                                                                                                                   | Notes                                                                                                                                                        |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `design/*.md`                    | `design/*.md`                                                                                                                 | Same names                                                                                                                                                   |
-| `design/tokens/*.json`           | `design/tokens/*.json`                                                                                                        | Adds **`layout.json`** (breakpoints, shell sizes, grid, z-index) and **`contrast-pairs.json`** (85 checked pairs). The second is not part of the token tree. |
-| `design/svg/logo/` (6 files)     | `design/svg/logo/` (17 files)                                                                                                 | Adds on-dark, monochrome and dimension-coloured variants, the adaptive-icon foreground, splash and favicon                                                   |
-| `design/svg/dimensions/` (7)     | `design/svg/dimensions/` (7)                                                                                                  | Copied from Tabler outline icons by `npm run icons:sync`. Do not hand-edit them.                                                                             |
-| `design/exports/app-icon/`       | `design/exports/app-icon/`                                                                                                    | iOS App Store 1024 and Google Play 512                                                                                                                       |
-| `design/exports/splash/`         | **`design/exports/capacitor/`** (`splash.png`, `splash-dark.png`)                                                             | Splash files sit next to the icon sources because that is the input layout `@capacitor/assets` expects                                                       |
-| `design/exports/social/`         | `design/exports/social/`                                                                                                      | `avatar-400.png`                                                                                                                                             |
-| `design/mockups/*.svg`           | `design/mockups/*.svg`                                                                                                        | Static wireframes, not pixel specs                                                                                                                           |
-| (web build outputs, not in spec) | `public/favicon.svg`, `public/favicon.ico`, `public/apple-touch-icon.png`, `public/icons/icon-{192,512}.png`                  | Generated by `npm run assets:export`. `public/manifest.webmanifest` is hand-written.                                                                         |
-| (generated code, not in spec)    | `src/styles/tokens/_tokens.generated.scss`, `_breakpoints.generated.scss`, `src/app/shared/design-system/tokens.generated.ts` | Never edit these by hand. `npm run tokens:check` fails on drift.                                                                                             |
+| Spec path                        | Actual path                                                                                                                   | Notes                                                                                                                                                         |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `design/*.md`                    | `design/*.md`                                                                                                                 | Same names                                                                                                                                                    |
+| `design/tokens/*.json`           | `design/tokens/*.json`                                                                                                        | Adds **`layout.json`** (breakpoints, shell sizes, grid, z-index) and **`contrast-pairs.json`** (123 checked pairs). The second is not part of the token tree. |
+| `design/svg/logo/` (6 files)     | `design/svg/logo/` (17 files)                                                                                                 | Adds on-dark, monochrome and dimension-coloured variants, the adaptive-icon foreground, splash and favicon                                                    |
+| `design/exports/app-icon/`       | `design/exports/app-icon/`                                                                                                    | iOS App Store 1024 and Google Play 512                                                                                                                        |
+| `design/exports/splash/`         | **`design/exports/capacitor/`** (`splash.png`, `splash-dark.png`)                                                             | Splash files sit next to the icon sources because that is the input layout `@capacitor/assets` expects                                                        |
+| `design/exports/social/`         | `design/exports/social/`                                                                                                      | `avatar-400.png`                                                                                                                                              |
+| `design/mockups/*.svg`           | `design/mockups/*.svg`                                                                                                        | Static wireframes, not pixel specs                                                                                                                            |
+| (web build outputs, not in spec) | `public/favicon.svg`, `public/favicon.ico`, `public/apple-touch-icon.png`, `public/icons/icon-{192,512}.png`                  | Generated by `npm run assets:export`. `public/manifest.webmanifest` is hand-written.                                                                          |
+| (generated code, not in spec)    | `src/styles/tokens/_tokens.generated.scss`, `_breakpoints.generated.scss`, `src/app/shared/design-system/tokens.generated.ts` | Never edit these by hand. `npm run tokens:check` fails on drift.                                                                                              |
 
 The production build also copies `design/svg/logo/ikigai-atlas-*.svg` to `/brand/` (`angular.json` assets). App-icon and
 splash masters are excluded from that copy.
@@ -86,9 +94,9 @@ Components must use `var(--…)` custom properties or the Sass abstracts. Stylel
 1. Pick an **outline** Tabler icon (see [DD-05](DESIGN_DECISIONS.md#dd-05-tabler-icons-instead-of-lucide)).
 2. Add a semantic name → Tabler component entry to `ATLAS_ICONS` in `src/app/shared/icons/atlas-icons.ts`.
 3. Use the icon as `<atlas-icon name="semantic-name" />`, or add `[label]` when the icon carries meaning on its own.
-4. If you change a Life Dimension icon, update `lifeDimensions.icons` in `design/tokens/design-tokens.json`. Then run
-   `npm run tokens:build` and `npm run icons:sync`, which rewrites `design/svg/dimensions/*.svg`.
-   `npm run icons:check` verifies that the SVGs are in sync.
+4. If you change a Life Dimension icon, update `lifeDimensions.icons` in `design/tokens/design-tokens.json`, run
+   `npm run tokens:build` and change the matching `ATLAS_ICONS` entry. A unit test fails if the two disagree. There are
+   no separate SVG copies: Life Dimension icons render from `@tabler/icons-angular` like every other icon.
 
 ### Regenerate raster assets
 
@@ -101,7 +109,7 @@ See [ASSET_EXPORTS.md](ASSET_EXPORTS.md) for the full table.
 ### Run all design checks
 
 ```sh
-npm run design:check   # tokens:check + contrast:check + icons:check + assets:validate
+npm run design:check   # tokens:check + contrast:check + assets:validate
 npm run verify         # design:check + lint + lint:styles + format:check + test:ci + build
 npm run e2e            # Playwright + axe on the design-foundation page (starts ng serve on :4200)
 ```
@@ -116,7 +124,7 @@ npm run e2e            # Playwright + axe on the design-foundation page (starts 
 |                 | App icon has no text and respects the safe area                          | Implemented (`assets:validate` rejects `<text>`; adaptive mark inside the safe radius)                                                                                     |
 |                 | Raster exports are reproducible                                          | Implemented (`assets:export`). Outputs are not byte-identical across platforms ([DD-17](DESIGN_DECISIONS.md#dd-17-raster-exports-are-derived-and-validated-by-properties)) |
 |                 | No external image or font URLs at runtime                                | Implemented (self-hosted `@fontsource` fonts)                                                                                                                              |
-| Design system   | Brand colours, seven dimension accents, status colours tokenised         | Implemented. In-progress equals Career strong ([DD-10](DESIGN_DECISIONS.md#dd-10-in-progress-status-equals-career-strong))                                                 |
+| Design system   | Brand colours, seven dimension colours, status colours tokenised         | Implemented. In-progress equals the Career foreground ([DD-10](DESIGN_DECISIONS.md#dd-10-in-progress-status-equals-career-strong))                                         |
 |                 | Typography, spacing, radius, elevation and motion tokens                 | Implemented                                                                                                                                                                |
 |                 | Components consume tokens, not hard-coded values                         | Enforced for hex colours by Stylelint. Components themselves are planned (step 5)                                                                                          |
 | UX & responsive | Eight pages specified for desktop, tablet and mobile                     | Specified ([PAGE_SPECIFICATIONS](PAGE_SPECIFICATIONS.md))                                                                                                                  |

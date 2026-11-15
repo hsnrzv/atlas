@@ -35,6 +35,56 @@
         </div>
       }
     </div>
+
+    <div class="semantic">
+      <table class="semantic-table">
+        <caption class="atlas-h4">
+          Semantic roles, one name in both themes
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col" class="atlas-label">Role</th>
+            <th scope="col" class="atlas-label">Dark</th>
+            <th scope="col" class="atlas-label">Light</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of semanticRoles; track row.role) {
+            <tr>
+              <th scope="row">
+                <span class="atlas-label">{{ row.role }}</span>
+                <code class="atlas-caption atlas-text-muted">{{ row.cssVar }}</code>
+              </th>
+              <td>
+                <span class="value">
+                  <span class="chip" [style.background]="row.dark"></span>
+                  <code class="atlas-caption">{{ row.dark }}</code>
+                </span>
+              </td>
+              <td>
+                <span class="value">
+                  <span class="chip" [style.background]="row.light"></span>
+                  <code class="atlas-caption">{{
+                    row.light === 'transparent' ? 'none' : row.light
+                  }}</code>
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="edge-title">
+    <h2 id="edge-title">Signature edge</h2>
+    <div class="edge-sample">
+      <p class="atlas-h4">Green to violet</p>
+      <p class="atlas-text-secondary">
+        Use on the upper edge of selected or hero surfaces only. No colourful perimeter on every
+        card.
+      </p>
+    </div>
   </section>
 
   <section aria-labelledby="type-title">
@@ -51,17 +101,15 @@
 
   <section aria-labelledby="dimension-title">
     <h2 id="dimension-title">Life Dimensions</h2>
-    <ul role="list" class="dimensions">
+    <ul role="list" class="tags">
       @for (dimension of dimensions; track dimension.key) {
         <li
-          class="dimension"
-          [style.--dimension-accent]="dimension.color.accent"
-          [style.--dimension-strong]="dimension.color.strong"
-          [style.--dimension-tint]="dimension.color.tint"
+          class="tag"
+          [style.--tag-fg]="dimension.color.foreground"
+          [style.--tag-bg]="dimension.color.tint"
         >
-          <span class="dimension-icon"><atlas-icon [name]="dimension.icon" size="lg" /></span>
+          <atlas-icon [name]="dimension.icon" size="sm" />
           <span class="atlas-label">{{ dimension.longLabel }}</span>
-          <code class="atlas-caption atlas-text-muted">{{ dimension.apiKey }}</code>
         </li>
       }
     </ul>
@@ -69,11 +117,11 @@
 
   <section aria-labelledby="status-title">
     <h2 id="status-title">Status</h2>
-    <ul role="list" class="statuses">
+    <ul role="list" class="tags">
       @for (status of statuses; track status.key) {
-        <li class="status">
-          <atlas-icon [name]="status.icon" [style.color]="status.color" />
-          <span class="atlas-label atlas-text-secondary">{{ status.label }}</span>
+        <li class="tag" [style.--tag-fg]="status.color" [style.--tag-bg]="status.tint">
+          <atlas-icon [name]="status.icon" size="sm" />
+          <span class="atlas-label">{{ status.label }}</span>
         </li>
       }
     </ul>
@@ -82,7 +130,8 @@
   <section aria-labelledby="icon-title">
     <h2 id="icon-title">Icons</h2>
     <p class="atlas-text-secondary">
-      Tabler Icons (outline, stroke 1.75) referenced by meaning via <code>&lt;atlas-icon&gt;</code>.
+      Tabler Icons (outline, stroke 2, matched to Figma <code>Atlas/V3/Icon</code>) referenced by
+      meaning via <code>&lt;atlas-icon&gt;</code>.
     </p>
     <ul role="list" class="icons">
       @for (name of iconNames; track name) {
@@ -136,12 +185,12 @@
     </div>
   </section>
 
-  <section aria-labelledby="brand-title" class="brand" data-surface="inverse">
-    <h2 id="brand-title">Brand on navy</h2>
+  <section aria-labelledby="brand-title" class="brand">
+    <h2 id="brand-title">Brand</h2>
     <div class="brand-row">
-      <atlas-logo tone="inverse" [size]="56" />
-      <atlas-logo tone="inverse" variant="symbol" [size]="56" />
-      <a class="inverse-link" href="#main">Focus me to see the gold focus ring</a>
+      <atlas-logo [size]="56" />
+      <atlas-logo variant="symbol" [size]="56" />
+      <a href="#main">Focus me to see the focus ring</a>
     </div>
   </section>
 </main>

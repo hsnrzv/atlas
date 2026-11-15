@@ -15,11 +15,9 @@ export interface LifeDimension {
   readonly longLabel: string;
   readonly icon: AtlasIconName;
   readonly color: {
-    /** Decorative accent (dots, rings, chart series). Pair with a label or the strong colour. */
-    readonly accent: string;
-    /** Text/icon-safe variant (≥ 4.5:1 on the light card surface). */
-    readonly strong: string;
-    /** Low-emphasis background behind dimension content. */
+    /** Theme-aware foreground for text, icons, strokes and chart series (≥ 4.5:1 on its tint). */
+    readonly foreground: string;
+    /** Theme-aware background for chips, badges and panels. */
     readonly tint: string;
   };
 }
@@ -33,8 +31,7 @@ export const LIFE_DIMENSIONS: readonly LifeDimension[] = LIFE_DIMENSION_KEYS.map
     longLabel: lifeDimensionMeta[key].longLabel,
     icon: key,
     color: {
-      accent: `var(--color-dimension-${key})`,
-      strong: `var(--color-dimension-${key}-strong)`,
+      foreground: `var(--color-dimension-${key})`,
       tint: `var(--color-dimension-${key}-tint)`,
     },
   }),

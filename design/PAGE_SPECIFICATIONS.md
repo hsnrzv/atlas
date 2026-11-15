@@ -6,6 +6,9 @@
 - None of these pages exist yet. The app currently serves only the temporary design-foundation page.
 - The source is design-instructions §7, with the domain model from project-instruction §3, §7 and §11.
 - Routes are **proposals**. They follow ADR-0006, which says routes use the UI vocabulary.
+- Visuals follow Figma V3 ([ADR-0010](../docs/adr/0010-figma-visual-source-of-truth.md)). The Figma frames and their
+  component mapping are listed in [`docs/design/figma-handoff.md`](../docs/design/figma-handoff.md) and
+  [`docs/design/component-mapping.md`](../docs/design/component-mapping.md).
 - API paths come from the example endpoint family in project-instruction §11.5, which says "adjust names during
   planning". Rows marked _to define_ have no endpoint in that list.
 
@@ -63,12 +66,12 @@ built from `…/tree`.
 
 1. A greeting and the headline "Build the life you envision."
 2. A date and context line.
-3. The **next Waypoint** hero: a navy card with a subtle route motif and `data-surface="inverse"`. Its primary action is
-   "Explore next waypoint".
+3. The **next Waypoint** hero: a `--color-surface-hero` card with a subtle route motif and the signature edge gradient
+   (`--gradient-signature-edge`) on its upper edge. Its primary action is "Explore next waypoint".
 4. A journey summary: active Destinations, Waypoints completed and upcoming deadlines. Use three `atlas-metric-card`s at
    most, not a wall of KPIs.
-5. Seven Life Dimension cards in canonical order. Each has a white surface, an accent icon, a slim progress bar and a
-   text status, such as "No Destinations yet".
+5. Seven Life Dimension cards in canonical order. Each has a card surface, a dimension-coloured icon, a slim progress
+   bar and a text status, such as "No Destinations yet".
 6. Next Waypoints: 3–5 items.
 7. Recent Progress feed.
 8. Needs Attention, optional. Only for overdue or blocked items, with neutral wording.
@@ -141,13 +144,13 @@ emphasised.
 
 **Route semantics:**
 
-| Node      | Visual                                             | Required text                                                                                       |
-| --------- | -------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Completed | Success icon                                       | "Completed" with the date                                                                           |
-| Active    | Dimension accent ring and gold "current" indicator | "In progress"                                                                                       |
-| Future    | Neutral outline                                    | "Not started" or "Upcoming"                                                                         |
-| Blocked   | Blocked status icon                                | "Blocked" with the reason                                                                           |
-| Locked    | Subdued, with a lock icon                          | "Locked until …". Only shown when a `GoalNodeDependency` exists; a lock is never implied otherwise. |
+| Node      | Visual                                                          | Required text                                                                                       |
+| --------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Completed | Success icon                                                    | "Completed" with the date                                                                           |
+| Active    | Dimension foreground ring and action-colour "current" indicator | "In progress"                                                                                       |
+| Future    | Neutral outline                                                 | "Not started" or "Upcoming"                                                                         |
+| Blocked   | Blocked status icon                                             | "Blocked" with the reason                                                                           |
+| Locked    | Subdued, with a lock icon                                       | "Locked until …". Only shown when a `GoalNodeDependency` exists; a lock is never implied otherwise. |
 
 **Detail:**
 
@@ -255,8 +258,9 @@ its detail. Never show every Step in the full-life overview.
 
 **Style:**
 
-- A muted gold accent (gold-700 for non-text, gold-800 for small text;
-  [DD-11](DESIGN_DECISIONS.md#dd-11-gold-usage-tiers)) on `--color-surface-achievement`.
+- A muted gold accent on `--color-surface-achievement`: `gold.light` (#A17A3F, light) or `gold.dark` (#D4B477, dark)
+  for non-text, and `--color-text-achievement` for small text
+  ([DD-34](DESIGN_DECISIONS.md#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2)).
 - Medallion geometry with restrained linework. No trophies or confetti.
 - One small celebration animation for a major achievement, disabled under reduced motion.
 
@@ -285,8 +289,8 @@ Friendship and Family. Each has an icon, accent, active Destination count and pr
 **Style:**
 
 - A dimension-coloured top border and icon, never a saturated background.
-- The accent is decorative; text uses the `-strong` colour or neutral text
-  ([DD-09](DESIGN_DECISIONS.md#dd-09-dimension-accents-are-decorative-on-light-surfaces)).
+- Text uses the theme-aware dimension foreground (`--color-dimension-<key>`) on its tint, or neutral text
+  ([DD-34](DESIGN_DECISIONS.md#dd-34-figma-v3-tokens-typography-icons-and-brand-phase-2)).
 - The app chrome stays unchanged.
 
 **Rules:**
