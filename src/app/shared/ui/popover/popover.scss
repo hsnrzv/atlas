@@ -1,0 +1,25 @@
+@use 'abstracts' as atlas;
+
+// Rendered in the CDK overlay container but still part of this component's view, so these styles apply.
+.atlas-popover-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  inline-size: min(var(--layout-popover-width), calc(100vw - var(--space-8)));
+  padding: var(--space-4);
+  color: var(--color-text-primary);
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-2);
+}
+
+.title {
+  @include atlas.style(control);
+}
+
+.body {
+  @include atlas.style(caption);
+
+  color: var(--color-text-secondary);
+}

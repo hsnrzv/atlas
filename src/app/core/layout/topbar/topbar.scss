@@ -1,0 +1,47 @@
+@use 'abstracts' as atlas;
+
+:host {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  height: var(--layout-topbar-height-compact);
+  padding-inline: max(var(--layout-gutter-mobile), var(--safe-area-left))
+    max(var(--layout-gutter-mobile), var(--safe-area-right));
+  background: var(--color-surface-navigation);
+  border-block-end: 1px solid var(--color-border-subtle);
+
+  @include atlas.up(md) {
+    height: var(--layout-topbar-height);
+    padding-inline: var(--layout-gutter-tablet);
+  }
+
+  @include atlas.up(lg) {
+    padding-inline: var(--layout-gutter-desktop);
+  }
+}
+
+.brand {
+  display: inline-flex;
+  flex: none;
+  border-radius: var(--radius-control);
+}
+
+.title {
+  @include atlas.style(h4);
+  @include atlas.truncate;
+
+  flex: 1;
+  min-width: 0;
+}
+
+.menu-heading {
+  @include atlas.style(label);
+
+  padding: var(--space-2) var(--space-4) var(--space-1);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.is-hidden {
+  visibility: hidden;
+}

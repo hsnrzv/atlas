@@ -1,0 +1,53 @@
+@use 'abstracts' as atlas;
+
+:host {
+  display: block;
+}
+
+.item {
+  @include atlas.style(control);
+
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: var(--size-control-height);
+  padding-inline: var(--space-3);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-control);
+  transition: background-color var(--duration-micro) var(--easing-standard);
+
+  &:hover {
+    color: var(--color-text-primary);
+    background: var(--color-surface-raised);
+  }
+
+  &.is-active {
+    color: var(--color-text-primary);
+    background: var(--color-nav-active);
+
+    .icon {
+      color: var(--color-nav-active-accent);
+    }
+  }
+}
+
+// Figma Navigation/Item, Viewport=Tablet: 44 × 48.
+:host(.is-compact) .item {
+  justify-content: center;
+  min-inline-size: var(--size-touch-target-min);
+  padding-inline: 0;
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .item.is-active {
+    outline: 2px solid LinkText;
+  }
+}

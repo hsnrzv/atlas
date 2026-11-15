@@ -1,4 +1,4 @@
-<a class="atlas-skip-link" href="#main">Skip to main content</a>
+<a class="atlas-skip-link" href="#main" (click)="skipToMain($event)">Skip to main content</a>
 
 <header class="masthead">
   <atlas-logo [size]="40" />
@@ -162,7 +162,7 @@
         <mat-card-actions>
           <button matButton>View journey</button>
           <button matButton="filled">
-            <atlas-icon name="add" size="sm" />
+            <atlas-icon matButtonIcon name="add" size="sm" />
             Add Step
           </button>
         </mat-card-actions>
@@ -185,12 +185,132 @@
     </div>
   </section>
 
+  <section aria-labelledby="shared-title">
+    <h2 id="shared-title">Shared UI</h2>
+    <div class="shared">
+      <div class="shared-block">
+        <h3 class="atlas-label">Page header and breadcrumbs</h3>
+        <atlas-page-header
+          [level]="2"
+          title="Study abroad"
+          description="Complete an online Master's degree in Computer Science / AI."
+        >
+          <atlas-breadcrumbs
+            [items]="[{ label: 'Destinations', path: '/_design' }, { label: 'Study abroad' }]"
+          />
+          <button matButton="filled" pageHeaderAction>
+            <atlas-icon matButtonIcon name="add" size="sm" />
+            Add Waypoint
+          </button>
+        </atlas-page-header>
+      </div>
+
+      <div class="shared-block">
+        <h3 class="atlas-label">Badges</h3>
+        <div class="tags">
+          @for (status of statuses; track status.key) {
+            <atlas-status-badge [status]="status.key" />
+          }
+        </div>
+        <div class="tags">
+          @for (dimension of dimensions; track dimension.key) {
+            <atlas-dimension-badge [dimension]="dimension.key" />
+          }
+        </div>
+      </div>
+
+      <div class="shared-block">
+        <h3 class="atlas-label">Progress and planned dates</h3>
+        <atlas-progress [value]="20" label="Destination progress" detail="2 of 10 Waypoints" />
+        <ul class="dates" role="list">
+          @for (date of plannedDates; track date.precision) {
+            <li>
+              <code class="atlas-caption">{{ date.precision }}</code>
+              <atlas-date-label [date]="date" />
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="shared-block">
+        <h3 class="atlas-label">Search, tabs and filters</h3>
+        <atlas-search-field label="Search Destinations" placeholder="Search Destinations" />
+        <atlas-search-field
+          label="Search Waypoints"
+          placeholder="Search Waypoints"
+          error="Use at least two characters."
+        />
+        <mat-tab-group class="atlas-tabs" mat-stretch-tabs="false" animationDuration="0ms">
+          <mat-tab label="Overview" />
+          <mat-tab label="Waypoints" />
+          <mat-tab label="Steps" />
+        </mat-tab-group>
+        <mat-chip-listbox aria-label="Filter by status" [multiple]="true">
+          <mat-chip-option [selected]="true">
+            <atlas-icon matChipAvatar name="filter" size="sm" />
+            In progress
+          </mat-chip-option>
+          <mat-chip-option>Upcoming</mat-chip-option>
+          <mat-chip-option>Completed</mat-chip-option>
+        </mat-chip-listbox>
+      </div>
+
+      <div class="shared-block">
+        <h3 class="atlas-label">Icon buttons, tooltip and popover</h3>
+        <div class="buttons">
+          <button atlas-icon-button icon="edit" aria-label="Edit Destination"></button>
+          <button
+            atlas-icon-button
+            icon="delete"
+            aria-label="Delete Destination"
+            size="compact"
+          ></button>
+          <button matButton="outlined" matTooltip="Progress comes from your Waypoints">
+            Hover or focus me
+          </button>
+          <button matButton="outlined" [atlasPopoverTrigger]="progressInfo">
+            <atlas-icon matButtonIcon name="help" size="sm" />
+            How progress works
+          </button>
+          <atlas-popover #progressInfo title="How progress works">
+            Your Destination progress is the share of completed Waypoints, calculated by Atlas.
+          </atlas-popover>
+        </div>
+      </div>
+
+      <div class="shared-block">
+        <h3 class="atlas-label">Feedback states</h3>
+        <div class="states">
+          <atlas-feedback-state
+            title="No Destinations yet"
+            description="Add your first Destination to start your Atlas."
+          >
+            <button matButton="filled">Add Destination</button>
+          </atlas-feedback-state>
+          <atlas-feedback-state kind="loading" title="Loading Destinations" />
+          <atlas-feedback-state
+            kind="error"
+            title="We couldn't load your Destinations"
+            description="Check your connection and try again."
+          >
+            <button matButton="outlined">Try again</button>
+          </atlas-feedback-state>
+          <atlas-feedback-state
+            kind="success"
+            title="Waypoint completed"
+            description="You're one step closer to your Destination."
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section aria-labelledby="brand-title" class="brand">
     <h2 id="brand-title">Brand</h2>
     <div class="brand-row">
       <atlas-logo [size]="56" />
       <atlas-logo variant="symbol" [size]="56" />
-      <a href="#main">Focus me to see the focus ring</a>
+      <a routerLink="." fragment="brand-title">Focus me to see the focus ring</a>
     </div>
   </section>
 </main>

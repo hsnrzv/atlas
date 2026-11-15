@@ -64,33 +64,34 @@ light uses `text/achievement` (`#765728`).
 
 CSS variable names keep the existing `--color-<group>-<role>` pattern. "New" means the name does not exist today.
 
-| Figma semantic          | CSS custom property                                 | Dark      | Light     | Status / current light value                                                                       |
-| ----------------------- | --------------------------------------------------- | --------- | --------- | -------------------------------------------------------------------------------------------------- |
-| background/page         | `--color-surface-page`                              | `#0B1020` | `#F5F7FA` | changed (was `#FBF9F4`)                                                                            |
-| background/navigation   | `--color-surface-navigation`                        | `#151B35` | `#FFFFFF` | new (sidebar was inverse navy in light)                                                            |
-| surface/card            | `--color-surface-card`                              | `#202A46` | `#FFFFFF` | dark changed                                                                                       |
-| surface/raised          | `--color-surface-raised`                            | `#273452` | `#EAF0F4` | new                                                                                                |
-| surface/subtle          | `--color-surface-subtle`                            | `#151B35` | `#E8F1EE` | changed                                                                                            |
-| surface/hero            | `--color-surface-hero`                              | `#151B35` | `#FFFFFF` | new                                                                                                |
-| achievement/surface     | `--color-surface-achievement`                       | `#2E2B27` | `#F4EFE5` | changed                                                                                            |
-| text/primary            | `--color-text-primary`                              | `#F5F7FC` | `#1D2935` | changed                                                                                            |
-| text/secondary          | `--color-text-secondary`                            | `#A8B4CC` | `#586578` | changed                                                                                            |
-| text/muted              | `--color-text-muted`                                | `#A8B4CC` | `#586578` | changed (same as secondary in V3)                                                                  |
-| text/on-action          | `--color-action-on-primary`                         | `#F5F7FC` | `#FFFFFF` | dark changed                                                                                       |
-| text/achievement        | `--color-text-achievement`                          | `#D4B477` | `#765728` | changed                                                                                            |
-| action/primary          | `--color-action-primary`                            | `#205D55` | `#2D6A61` | changed (was navy / gold)                                                                          |
-| action/hover            | `--color-action-primary-hover`                      | `#2D7266` | `#205D55` | changed                                                                                            |
-| action/pressed          | `--color-action-primary-pressed`                    | `#123F3C` | `#123F3C` | new                                                                                                |
-| action/disabled         | `--color-action-disabled`                           | `#273452` | `#EAF0F4` | new                                                                                                |
-| action/disabled-label   | `--color-action-on-disabled`                        | `#A8B4CC` | `#586578` | new                                                                                                |
-| border/subtle           | `--color-border-subtle`                             | `#36435D` | `#DCE4E9` | changed                                                                                            |
-| border/control          | `--color-border-control`                            | `#8290AA` | `#798B88` | changed; light value verified (`v3/border/control` on `230:25490`)                                 |
-| border/action           | `--color-border-action`                             | `#4B9387` | `#2D6A61` | new (secondary button outline)                                                                     |
-| focus/ring              | `--color-focus-ring`                                | `#B8A5D0` | `#65518C` | changed (was navy / gold); 2 px, outside                                                           |
-| progress/fill           | `--color-progress-fill`                             | `#4B9387` | `#2D6A61` | new                                                                                                |
-| progress/track          | `--color-progress-track`                            | `#273452` | `#DCE4E9` | new                                                                                                |
-| nav item active surface | `--color-nav-active` (→ `state/success/background`) | `#1B302C` | `#E8F1EE` | new; replaces the gold `--color-nav-indicator` (node `152:2588`)                                   |
-| nav item active accent  | `--color-nav-active-accent` (→ `accent/green`)      | `#4B9387` | none      | new, dark only; the light active item (`214:2435`) binds no accent: success surface + text/primary |
+| Figma semantic          | CSS custom property                                   | Dark      | Light     | Status / current light value                                                                       |
+| ----------------------- | ----------------------------------------------------- | --------- | --------- | -------------------------------------------------------------------------------------------------- |
+| background/page         | `--color-surface-page`                                | `#0B1020` | `#F5F7FA` | changed (was `#FBF9F4`)                                                                            |
+| background/navigation   | `--color-surface-navigation`                          | `#151B35` | `#FFFFFF` | new (sidebar was inverse navy in light)                                                            |
+| surface/card            | `--color-surface-card`                                | `#202A46` | `#FFFFFF` | dark changed                                                                                       |
+| surface/raised          | `--color-surface-raised`                              | `#273452` | `#EAF0F4` | new                                                                                                |
+| surface/subtle          | `--color-surface-subtle`                              | `#151B35` | `#E8F1EE` | changed                                                                                            |
+| surface/hero            | `--color-surface-hero`                                | `#151B35` | `#FFFFFF` | new                                                                                                |
+| achievement/surface     | `--color-surface-achievement`                         | `#2E2B27` | `#F4EFE5` | changed                                                                                            |
+| text/primary            | `--color-text-primary`                                | `#F5F7FC` | `#1D2935` | changed                                                                                            |
+| text/secondary          | `--color-text-secondary`                              | `#A8B4CC` | `#586578` | changed                                                                                            |
+| text/muted              | `--color-text-muted`                                  | `#A8B4CC` | `#586578` | changed (same as secondary in V3)                                                                  |
+| text/on-action          | `--color-action-on-primary`                           | `#F5F7FC` | `#FFFFFF` | dark changed                                                                                       |
+| text/achievement        | `--color-text-achievement`                            | `#D4B477` | `#765728` | changed                                                                                            |
+| action/primary          | `--color-action-primary`                              | `#205D55` | `#2D6A61` | changed (was navy / gold)                                                                          |
+| action/hover            | `--color-action-primary-hover`                        | `#2D7266` | `#205D55` | changed                                                                                            |
+| action/pressed          | `--color-action-primary-pressed`                      | `#123F3C` | `#123F3C` | new                                                                                                |
+| action/disabled         | `--color-action-disabled`                             | `#273452` | `#EAF0F4` | new                                                                                                |
+| action/disabled-label   | `--color-action-on-disabled`                          | `#A8B4CC` | `#586578` | new                                                                                                |
+| border/subtle           | `--color-border-subtle`                               | `#36435D` | `#DCE4E9` | changed                                                                                            |
+| border/control          | `--color-border-control`                              | `#8290AA` | `#798B88` | changed; light value verified (`v3/border/control` on `230:25490`)                                 |
+| border/action           | `--color-border-action`                               | `#4B9387` | `#2D6A61` | new (secondary button outline)                                                                     |
+| focus/ring              | `--color-focus-ring`                                  | `#B8A5D0` | `#65518C` | changed (was navy / gold); 2 px, outside                                                           |
+| progress/fill           | `--color-progress-fill`                               | `#4B9387` | `#2D6A61` | new                                                                                                |
+| progress/track          | `--color-progress-track`                              | `#273452` | `#DCE4E9` | new                                                                                                |
+| nav item active surface | `--color-nav-active` (→ `state/success/background`)   | `#1B302C` | `#E8F1EE` | new; replaces the gold `--color-nav-indicator` (node `152:2588`)                                   |
+| nav item active accent  | `--color-nav-active-accent` (→ `accent/green`)        | `#4B9387` | none      | new, dark only; the light active item (`214:2435`) binds no accent: success surface + text/primary |
+| bottom-nav active icon  | `--color-nav-bottom-active-accent` (→ `accent/green`) | `#4B9387` | `#2D6A61` | new (F1-14); the bottom navigation binds accent/green in both themes (`152:2995`, `214:2572`)      |
 
 **Signature edge** (upper edge of selected or hero surfaces only, never a full coloured perimeter):
 
@@ -190,6 +191,7 @@ Letter-spacing values stay until a Figma variable says otherwise.
 | Top bar desktop / mobile    | `layout.topbar-height` / `-compact`                       | 68 / 56    | none                                     |
 | Bottom navigation           | `layout.bottom-nav-height`                                | **80**     | changed from 64                          |
 | Modal width                 | `layout.dialog-width`                                     | 560 px     | new                                      |
+| Popover width               | `layout.popover-width`                                    | 320 px     | new (F2-1c, `152:6988`)                  |
 
 Breakpoints stay (`md` 768, `lg` 1024, `xl` 1280). The Figma viewports are 390, 768 and 1440.
 

@@ -1,0 +1,54 @@
+@use 'abstracts' as atlas;
+
+:host {
+  display: block;
+  padding-block: 0 max(var(--space-6), var(--safe-area-bottom));
+  padding-inline: var(--safe-area-left) var(--safe-area-right);
+  background: var(--color-surface-navigation);
+  border-block-start: 1px solid var(--color-border-subtle);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.item {
+  @include atlas.style(caption);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: center;
+  justify-content: center;
+
+  // Figma: full-width 56 px cells above the 24 px bottom inset of the 80 px bar.
+  min-height: calc(var(--layout-bottom-nav-height) - var(--space-6));
+  padding: var(--space-1) 0;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+
+  &.is-active {
+    color: var(--color-text-primary);
+    background: var(--color-nav-active);
+
+    .icon {
+      color: var(--color-nav-bottom-active-accent);
+    }
+  }
+}
+
+.label {
+  @include atlas.truncate;
+
+  max-width: 100%;
+}
+
+@media (forced-colors: active) {
+  .item.is-active {
+    outline: 2px solid LinkText;
+  }
+}

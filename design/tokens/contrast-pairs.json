@@ -92,6 +92,24 @@
       "use": "Light: active navigation label"
     },
     {
+      "fg": "{semantic.light.color.nav.active-accent}",
+      "bg": "{semantic.light.color.nav.active}",
+      "level": "non-text",
+      "use": "Light: active sidebar/rail icon"
+    },
+    {
+      "fg": "{semantic.light.color.nav.bottom-active-accent}",
+      "bg": "{semantic.light.color.nav.active}",
+      "level": "non-text",
+      "use": "Light: active bottom-navigation icon"
+    },
+    {
+      "fg": "{semantic.light.color.text.secondary}",
+      "bg": "{semantic.light.color.surface.navigation}",
+      "level": "text",
+      "use": "Light: inactive navigation label and group label"
+    },
+    {
       "fg": "{semantic.light.color.action.on-primary}",
       "bg": "{semantic.light.color.action.primary}",
       "level": "text",
@@ -444,6 +462,24 @@
       "bg": "{semantic.dark.color.nav.active}",
       "level": "text",
       "use": "Dark: active navigation label"
+    },
+    {
+      "fg": "{semantic.dark.color.nav.active-accent}",
+      "bg": "{semantic.dark.color.nav.active}",
+      "level": "non-text",
+      "use": "Dark: active sidebar/rail icon"
+    },
+    {
+      "fg": "{semantic.dark.color.nav.bottom-active-accent}",
+      "bg": "{semantic.dark.color.nav.active}",
+      "level": "non-text",
+      "use": "Dark: active bottom-navigation icon"
+    },
+    {
+      "fg": "{semantic.dark.color.text.secondary}",
+      "bg": "{semantic.dark.color.surface.navigation}",
+      "level": "text",
+      "use": "Dark: inactive navigation label and group label"
     },
     {
       "fg": "{semantic.dark.color.action.on-primary}",

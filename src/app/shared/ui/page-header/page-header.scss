@@ -1,0 +1,43 @@
+@use 'abstracts' as atlas;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-block-end: var(--space-4);
+
+  @include atlas.up(md) {
+    flex-direction: row;
+    gap: var(--space-6);
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+// Page frames (Figma pages 05–12): H1 title, Body subtitle 16 px below.
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.description {
+  max-width: var(--layout-reading-max);
+  color: var(--color-text-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  &:empty {
+    display: none;
+  }
+
+  @include atlas.up(md) {
+    flex-direction: row;
+    flex-shrink: 0;
+  }
+}

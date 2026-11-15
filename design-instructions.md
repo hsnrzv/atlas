@@ -385,7 +385,7 @@ Active state (Figma `Atlas/V3/Navigation/Item`, `152:2587`): the green success s
 
 - Compact top app bar and bottom navigation (Figma `Atlas/V3/BottomNavigation`, `152:5351`, **80 px** high plus the bottom safe area).
 - At most five bottom-nav destinations: My Atlas, Destinations, Journey, Awards, More.
-- More opens a sheet (Figma page 05, "More sheet") exposing Waypoints, Steps, Connections and Life Dimensions.
+- More opens a page (Figma page 04, "More of your Atlas") listing Waypoints, Steps, Connections, Life Dimensions, Settings and Help.
 - Respect iOS/Android safe areas.
 - Keep dialogs and bottom sheets clear of system navigation areas.
 - Touch targets at least 44 × 44 CSS px; prefer 48 px.

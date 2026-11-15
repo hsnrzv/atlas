@@ -1,0 +1,49 @@
+@use 'abstracts' as atlas;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+  width: 100%;
+  max-width: var(--layout-dialog-width);
+  padding: var(--space-6);
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-card);
+}
+
+.icon {
+  color: var(--color-text-secondary);
+
+  :host([data-kind='error']) & {
+    color: var(--color-status-blocked);
+  }
+
+  :host([data-kind='success']) & {
+    color: var(--color-status-success);
+  }
+}
+
+.title {
+  @include atlas.style(h4);
+}
+
+.description {
+  color: var(--color-text-secondary);
+}
+
+.action {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+
+  &:empty {
+    display: none;
+  }
+}
+
+atlas-skeleton {
+  width: 100%;
+}

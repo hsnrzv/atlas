@@ -51,10 +51,11 @@ module.exports = defineConfig([
           style: 'camelCase',
         },
       ],
+      // Attribute selectors are for components that enhance a native control (`button[atlas-icon-button]`).
       '@angular-eslint/component-selector': [
         'error',
         {
-          type: 'element',
+          type: ['element', 'attribute'],
           prefix: 'atlas',
           style: 'kebab-case',
         },

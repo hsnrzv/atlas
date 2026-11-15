@@ -88,6 +88,138 @@ $_typography: (
       container-shape: var(--radius-lg),
     )
   );
+
+  // Figma Atlas/V3/Tooltip (152:6984): card surface with a subtle border, Caption text.
+  @include mat.tooltip-overrides(
+    (
+      container-color: var(--color-surface-card),
+      container-shape: var(--radius-md),
+      supporting-text-color: var(--color-text-primary),
+      supporting-text-font: var(--typescale-caption-font-family),
+      supporting-text-size: var(--typescale-caption-font-size),
+      supporting-text-line-height: var(--typescale-caption-line-height),
+      supporting-text-weight: var(--typescale-caption-font-weight),
+      supporting-text-tracking: var(--typescale-caption-letter-spacing),
+    )
+  );
+  @include mat.menu-overrides(
+    (
+      container-color: var(--color-surface-card),
+      container-shape: var(--radius-md),
+      divider-color: var(--color-border-subtle),
+      item-label-text-color: var(--color-text-primary),
+      item-icon-color: var(--color-text-secondary),
+      item-label-text-size: var(--typescale-control-font-size),
+      item-label-text-weight: var(--typescale-control-font-weight),
+      item-label-text-line-height: var(--typescale-control-line-height),
+    )
+  );
+
+  // Figma Atlas/V3/Tabs (152:6093): 48 px segments; the segmented look is in `.atlas-tabs` below.
+  @include mat.tabs-overrides(
+    (
+      container-height: var(--size-control-height),
+      divider-height: 0,
+      active-indicator-height: 0,
+      active-label-text-color: var(--color-text-primary),
+      active-hover-label-text-color: var(--color-text-primary),
+      active-focus-label-text-color: var(--color-text-primary),
+      inactive-label-text-color: var(--color-text-secondary),
+      inactive-hover-label-text-color: var(--color-text-primary),
+      inactive-focus-label-text-color: var(--color-text-primary),
+      active-ripple-color: var(--color-text-primary),
+      inactive-ripple-color: var(--color-text-primary),
+      label-text-size: var(--typescale-control-font-size),
+      label-text-weight: var(--typescale-control-font-weight),
+      label-text-line-height: var(--typescale-control-line-height),
+      label-text-tracking: var(--typescale-control-letter-spacing),
+    )
+  );
+
+  // Figma Atlas/V3/FilterChip (152:6104): 48 px, control radius, the selected chip keeps its outline.
+  @include mat.chips-overrides(
+    (
+      container-height: var(--size-control-height),
+      container-shape-radius: var(--radius-sm),
+      outline-color: var(--color-border-control),
+      outline-width: 1px,
+      flat-selected-outline-width: 1px,
+      elevated-container-color: var(--color-surface-card),
+      elevated-selected-container-color: var(--color-nav-active),
+      label-text-color: var(--color-text-primary),
+      selected-label-text-color: var(--color-text-primary),
+      label-text-size: var(--typescale-control-font-size),
+      label-text-weight: var(--typescale-control-font-weight),
+      with-icon-icon-color: var(--color-text-primary),
+      with-icon-selected-icon-color: var(--color-text-primary),
+      with-icon-icon-size: 24px,
+    )
+  );
+
+  // Figma Atlas/V3/SearchField (152:6047) and inputs: 48 px, control radius, control border.
+  @include mat.form-field-overrides(
+    (
+      container-height: var(--size-control-height),
+      container-vertical-padding: var(--space-3),
+      outlined-container-shape: var(--radius-sm),
+      outlined-outline-color: var(--color-border-control),
+      outlined-hover-outline-color: var(--color-text-secondary),
+      outlined-focus-outline-color: var(--color-focus-ring),
+      outlined-input-text-color: var(--color-text-primary),
+      outlined-input-text-placeholder-color: var(--color-text-secondary),
+      outlined-label-text-color: var(--color-text-secondary),
+      outlined-focus-label-text-color: var(--color-text-primary),
+      leading-icon-color: var(--color-text-secondary),
+      error-text-color: var(--color-status-blocked),
+      outlined-error-outline-color: var(--color-status-blocked),
+      outlined-error-hover-outline-color: var(--color-status-blocked),
+      outlined-error-focus-outline-color: var(--color-status-blocked),
+      container-text-size: var(--typescale-body-font-size),
+      container-text-line-height: var(--typescale-body-line-height),
+      subscript-text-size: var(--typescale-caption-font-size),
+      subscript-text-line-height: var(--typescale-caption-line-height),
+    )
+  );
+}
+
+// Material keeps a few visuals outside its token API. Scoped to Atlas opt-in classes where possible.
+@mixin _structural-overrides {
+  .mat-mdc-tooltip .mdc-tooltip__surface {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .mat-mdc-menu-panel {
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  // Segmented tabs (Figma Atlas/V3/Tabs): separate 48 px items with a control border; the selected item
+  // uses the navigation-active surface. Apply `class="atlas-tabs"` to `mat-tab-group` / `mat-tab-nav-bar`.
+  .atlas-tabs {
+    .mat-mdc-tab-labels,
+    .mat-mdc-tab-links {
+      gap: var(--space-2);
+    }
+
+    .mat-mdc-tab,
+    .mat-mdc-tab-link {
+      flex-grow: 0;
+      min-width: 0;
+      padding-inline: var(--space-4);
+      background: var(--color-surface-card);
+      border: 1px solid var(--color-border-control);
+      border-radius: var(--radius-sm);
+
+      &.mdc-tab--active {
+        background: var(--color-nav-active);
+      }
+    }
+
+    .mdc-tab__ripple::before,
+    .mat-mdc-tab-ripple {
+      border-radius: var(--radius-sm);
+    }
+  }
 }
 
 @mixin theme {
@@ -118,8 +250,8 @@ $_typography: (
     );
   }
 
-  // Dark theme: first-class in Figma V3. The user-facing switch and system-preference default
-  // arrive with the app shell (F1-14).
+  // Dark theme: first-class in Figma V3. `AtlasTheme` (core/theme) sets `data-theme` from the user's choice in
+  // the account menu or, by default, from `prefers-color-scheme` (PLAN-FRONTEND D1).
   html[data-theme='dark'] {
     color-scheme: dark;
 
@@ -148,4 +280,6 @@ $_typography: (
   .cdk-overlay-container {
     z-index: var(--z-overlay);
   }
+
+  @include _structural-overrides;
 }

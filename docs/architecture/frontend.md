@@ -64,14 +64,14 @@ Rules:
 src/app/
   app.ts, app.config.ts, app.routes.ts
   core/
-    layout/            app-shell, sidebar, nav-item, topbar, bottom-nav, more-sheet
+    layout/            app-shell, sidebar, nav-item, topbar, bottom-nav, navigation, title strategy, route focus
     data-access/
       ports/           goal.repository.ts, dashboard.repository.ts, profile.repository.ts, …
       http/            http-goal.repository.ts, problem-details.ts, interceptors
       mock/            mock-goal.repository.ts, sample-plan.ts, sample-fixtures.ts   (dev only, §6)
       data-access.providers.ts           provideAtlasData() switches adapters
     models/            goal.ts, goal-node.ts, planned-date.ts, money.ts, life-dimension.ts, status-for-node.ts
-    theme/             (AtlasTheme moves here from shared/design-system)
+    theme/             atlas-theme (light / dark / match device)
     companion/         companion-preferences.store.ts (§9)
   shared/
     ui/                buttons are Material; badges, progress, page-header, breadcrumbs, feedback-state, cards, …
@@ -85,7 +85,11 @@ src/app/
   design-system/       design-foundation → /_design (dev only)
 ```
 
-The existing `shared/design-system/atlas-theme.ts` moves to `core/theme` in the shell PR. Nothing else moves.
+`AtlasTheme` moved to `core/theme` in F1-14. The theme choice lives in the topbar profile menu (Match device, Light, Dark)
+and is stored in `localStorage` (a preference, not a token).
+
+Until a feature lands, its route renders `features/placeholder` (F1-14). `features/more` is the mobile More page and
+`features/not-found` the `**` page.
 
 ## 5. Routing
 
@@ -110,7 +114,9 @@ is off. A `TitleStrategy` and a focus handler move focus to the page `h1` after 
 | `/dimensions`, `/dimensions/:key`                 | `DimensionsPage`, `DimensionDetailPage` | 12                 | `:key` is the `LifeDimensionKey`                                    |
 | `/welcome`                                        | `WelcomePage` → `OnboardingPage`        | 14 Getting started | skippable                                                           |
 | `/settings`, `/settings/companion`                | settings pages                          | 14 Companion       |                                                                     |
-| `/_design`                                        | `DesignFoundation`                      | 02/03              | dev builds only (D2); excluded by a `canMatch` on the environment   |
+| `/profile`, `/help`                               | placeholder pages                       | 04 (profile menu)  | reached from the profile menu and More                              |
+| `/more`                                           | `MorePage`                              | 04 mobile          | lists the areas that are not in the bottom nav                      |
+| `/_design`                                        | `DesignFoundation`                      | 02/03              | dev builds only (D2); `canMatch` on `devTools`; outside the shell   |
 | `**`                                              | `NotFoundPage`                          | —                  | uses `FeedbackState`                                                |
 
 The spec's API paths (`/goals/:goalId/nodes/:nodeId`) are API addresses, not UI routes. UI routes use the UI

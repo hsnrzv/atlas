@@ -1,0 +1,27 @@
+@use 'abstracts' as atlas;
+
+// Figma Atlas/V3/StatusBadge (152:2374) and DimensionBadge (152:2409): 32 px pill, icon + label.
+:host {
+  @include atlas.style(label);
+
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  max-width: 100%;
+  min-height: var(--space-8);
+  padding-inline: var(--space-4);
+  color: var(--atlas-badge-foreground);
+  white-space: nowrap;
+  background: var(--atlas-badge-background);
+  border-radius: var(--radius-pill);
+}
+
+.label {
+  @include atlas.truncate;
+}
+
+@media (forced-colors: active) {
+  :host {
+    border: 1px solid CanvasText;
+  }
+}

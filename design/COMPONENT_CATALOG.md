@@ -180,6 +180,20 @@ Global classes (from `src/styles/base`):
   Others, such as dialog, menu, tabs, snackbar, tooltip, chips and progress, are themed by the same system tokens, but
   their visual check is **pending**, in step 5.
 
+## Built in F1-14 and F2-1 (implementation roadmap phase 3)
+
+**Status: Implemented** (2026-11-14), shown on `/_design` under "Shared UI". Names differ from the proposals below:
+selectors drop the `Component` suffix, and the shell lives in `src/app/core/layout`, the primitives in
+`src/app/shared/ui`.
+
+- Shell: `atlas-app-shell`, `atlas-sidebar` (248 px, 76 px rail at `md`), `atlas-nav-item`, `atlas-topbar`,
+  `atlas-bottom-nav` (80 px), the `/more` page, placeholder pages, `AtlasTitleStrategy` and route focus.
+- Primitives: `atlas-status-badge`, `atlas-dimension-badge`, `atlas-progress`, `atlas-date-label`,
+  `atlas-page-header` (`level` 1 or 2), `atlas-breadcrumbs`, `atlas-feedback-state` (empty, loading, error,
+  success), `atlas-skeleton`, `atlas-search-field`, `button[atlas-icon-button]` (outlined or ghost), `atlas-popover` with
+  `button[atlasPopoverTrigger]` (CDK Overlay).
+- Material styling: `.atlas-tabs`, filter chips, tooltip and menu follow the Figma V3 components.
+
 ## Planned catalogue (design step 5)
 
 **Status: Specified.** These are proposals only. Rules from design-instructions §8:
@@ -211,7 +225,7 @@ Shared patterns from §15:
 | ------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | `AppShellComponent` → `atlas-app-shell`                 | `navItems`, `user`; content projection → `quickAdd`                                   | Landmarks: `header`, `nav` (labelled "Primary"), `main#main`. The skip link is the first focus stop. Switches layout at `md` and `lg`.                                                                               | `--layout-*`, `--safe-area-*`, `--z-navigation`, `--z-topbar`                                         | CDK `BreakpointObserver`, router outlet    |
 | `DesktopSidebarComponent` → `atlas-sidebar`             | `items`, `activeRoute`, `collapsed` (model)                                           | `aria-current="page"` on the active item. The collapse button has an accessible name. Collapsed items keep their names and show tooltips. The active item uses the nav-active surface (dark adds a teal accent bar). | `--color-surface-navigation`, `--color-nav-active`, `--color-nav-active-accent`, `--layout-sidebar-*` | `routerLink`, `MatTooltip`                 |
-| `MobileBottomNavigationComponent` → `atlas-bottom-nav`  | `items` (at most 5), `activeRoute` → `more`                                           | Icons always have text labels. Targets ≥ 48 px. Pads by `--safe-area-bottom`. More opens a sheet.                                                                                                                    | `--layout-bottom-nav-height`, `--size-touch-target-preferred`                                         | `routerLink`, `MatBottomSheet`             |
+| `MobileBottomNavigationComponent` → `atlas-bottom-nav`  | `items` (at most 5), `activeRoute` → `more`                                           | Icons always have text labels. Targets ≥ 48 px. Pads by `--safe-area-bottom`. More opens the More page (Figma page 04).                                                                                              | `--layout-bottom-nav-height`, `--size-touch-target-preferred`                                         | `routerLink`                               |
 | `TopBarComponent` → `atlas-top-bar`                     | `title`, `breadcrumbs`, `showBack` → `search`, `quickAdd`, `notifications`, `profile` | Icon-only buttons have `aria-label`. Compact under `md`. Pads by `--safe-area-top`.                                                                                                                                  | `--layout-topbar-height(-compact)`, `--z-topbar`                                                      | `MatToolbar` (optional), `MatMenu`         |
 | `PageHeaderComponent` → `atlas-page-header`             | `title`, `subtitle`, `dimension?`, `status?`; projected actions                       | Exactly one `h1` per page. Actions stay visible on mobile, with overflow into a menu.                                                                                                                                | `atlas.style(h1)`, `--space-*`                                                                        | —                                          |
 | `BreadcrumbsComponent` → `atlas-breadcrumbs`            | `items: {label, link}[]`                                                              | `nav` labelled "Breadcrumb" with an ordered list. The last item has `aria-current="page"`. On mobile it collapses to the parent plus a back link.                                                                    | `--color-text-secondary`, `--color-text-primary` with a `--color-border-action` underline             | `routerLink`                               |

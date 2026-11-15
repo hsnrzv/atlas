@@ -39,7 +39,10 @@ function primitiveDecls() {
 }
 
 const semanticDecls = (theme) =>
-  [...walk(tree.semantic[theme])].map(([path, token]) => [cssName(path), toCss(token.$value)]);
+  [...walk(tree.semantic[theme])].map(([path, token]) => [
+    cssName(path),
+    toCss(token.$value, { tree, theme }),
+  ]);
 
 function typescaleDecls(variant) {
   const out = [];

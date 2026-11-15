@@ -68,10 +68,18 @@ export function resolveValue(tree, value, seen = new Set()) {
 }
 
 /** Turns a value into CSS: references become var(--…), numbers stay unitless. */
-export function toCss(value) {
+export function toCss(value, { tree, theme } = {}) {
   const ref = refOf(value);
-  if (ref) return `var(${cssName(ref.split('.'))})`;
-  return String(value);
+  if (!ref) return String(value);
+  const path = ref.split('.');
+  // Semantic tokens are emitted without their `semantic.<theme>` prefix (`--color-…`), so a reference to
+  // another semantic token of the same theme points at that variable; other themes are inlined.
+  if (path[0] === 'semantic') {
+    if (path[1] === theme) return `var(${cssName(path.slice(2))})`;
+    if (!tree) throw new Error(`Cannot emit cross-theme reference {${ref}} without the token tree`);
+    return String(resolveValue(tree, value));
+  }
+  return `var(${cssName(path)})`;
 }
 
 // WCAG 2.x relative luminance / contrast ratio.

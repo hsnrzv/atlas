@@ -1,16 +1,31 @@
+import { DOCUMENT } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltip } from '@angular/material/tooltip';
+import { RouterLink } from '@angular/router';
 import { AtlasLogo } from '../shared/brand/atlas-logo';
-import { AtlasTheme } from '../shared/design-system/atlas-theme';
+import { AtlasTheme } from '../core/theme/atlas-theme';
 import { LIFE_DIMENSIONS } from '../shared/design-system/life-dimensions';
 import { ATLAS_STATUSES } from '../shared/design-system/statuses';
 import { colorPrimitives, semanticColors } from '../shared/design-system/tokens.generated';
 import { AtlasIcon } from '../shared/icons/atlas-icon';
 import { ATLAS_ICONS, AtlasIconName } from '../shared/icons/atlas-icons';
+import { AtlasDimensionBadge } from '../shared/ui/badge/dimension-badge';
+import { AtlasStatusBadge } from '../shared/ui/badge/status-badge';
+import { AtlasBreadcrumbs } from '../shared/ui/breadcrumbs/breadcrumbs';
+import { AtlasDateLabel, PlannedDate } from '../shared/ui/date-label/date-label';
+import { AtlasFeedbackState } from '../shared/ui/feedback-state/feedback-state';
+import { AtlasIconButton } from '../shared/ui/icon-button/icon-button';
+import { AtlasPageHeader } from '../shared/ui/page-header/page-header';
+import { AtlasPopover, AtlasPopoverTrigger } from '../shared/ui/popover/popover';
+import { AtlasProgress } from '../shared/ui/progress/progress';
+import { AtlasSearchField } from '../shared/ui/search-field/search-field';
 
 interface Swatch {
   readonly name: string;
@@ -53,6 +68,7 @@ const SEMANTIC_ROLES = [
   'progress.track',
   'nav.active',
   'nav.active-accent',
+  'nav.bottom-active-accent',
 ] as const;
 
 function semanticValue(theme: 'light' | 'dark', role: string): string {
@@ -72,18 +88,33 @@ function swatches(group: string, scale: Record<string, string>): Swatch[] {
 
 /**
  * Design foundation reference page (design steps 1–3). Renders every token-driven primitive so
- * theme changes can be reviewed in one place. Replaced as the root route by the app shell (step 4).
+ * theme changes can be reviewed in one place. Served at `/_design` in development builds only.
  */
 @Component({
   selector: 'atlas-design-foundation',
   imports: [
+    AtlasBreadcrumbs,
+    AtlasDateLabel,
+    AtlasDimensionBadge,
+    AtlasFeedbackState,
     AtlasIcon,
+    AtlasIconButton,
     AtlasLogo,
+    AtlasPageHeader,
+    AtlasPopover,
+    AtlasPopoverTrigger,
+    AtlasProgress,
+    AtlasSearchField,
+    AtlasStatusBadge,
     MatButtonModule,
     MatCardModule,
+    MatChipsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSlideToggleModule,
+    MatTabsModule,
+    MatTooltip,
+    RouterLink,
   ],
   templateUrl: './design-foundation.html',
   styleUrl: './design-foundation.scss',
@@ -124,4 +155,21 @@ export class DesignFoundation {
   protected readonly dimensions = LIFE_DIMENSIONS;
   protected readonly statuses = ATLAS_STATUSES;
   protected readonly iconNames = Object.keys(ATLAS_ICONS) as AtlasIconName[];
+
+  /** Illustrative planned dates; real values and their precision come from the backend. */
+  protected readonly plannedDates: readonly PlannedDate[] = [
+    { date: '2026-12-14', precision: 'DAY' },
+    { date: '2026-12-01', precision: 'MONTH' },
+    { date: '2027-07-01', precision: 'QUARTER' },
+    { date: '2030-01-01', precision: 'YEAR' },
+    { date: '2027-09-15', precision: 'APPROXIMATE' },
+  ];
+
+  private readonly document = inject(DOCUMENT);
+
+  /** `href="#main"` would resolve against `<base href>` and leave the page, so focus the target directly. */
+  protected skipToMain(event: Event): void {
+    event.preventDefault();
+    this.document.getElementById('main')?.focus();
+  }
 }

@@ -13,3 +13,13 @@ html {
   overscroll-behavior-y: none;
   background-color: var(--color-surface-page);
 }
+
+// Before Angular applies the stored or system theme (AtlasTheme sets `data-theme`), paint the dark page
+// colour for dark-preferring systems so the first frame does not flash white. No inline script (CSP).
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]),
+  html:not([data-theme]) body {
+    color-scheme: dark;
+    background-color: var(--color-tide-space);
+  }
+}

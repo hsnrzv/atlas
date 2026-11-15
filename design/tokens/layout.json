@@ -97,6 +97,11 @@
       "$type": "dimension",
       "$value": "560px",
       "$description": "Figma modal width"
+    },
+    "popover-width": {
+      "$type": "dimension",
+      "$value": "320px",
+      "$description": "Figma Atlas/V3/Popover (152:6988) width"
     }
   },
   "z": {

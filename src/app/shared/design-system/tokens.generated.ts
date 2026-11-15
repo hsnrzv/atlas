@@ -65,7 +65,7 @@ export const semanticColors = {
     border: { subtle: '#DCE4E9', control: '#798B88', action: '#2D6A61' },
     focus: { ring: '#65518C' },
     progress: { fill: '#2D6A61', track: '#DCE4E9' },
-    nav: { active: '#E8F1EE', 'active-accent': 'transparent' },
+    nav: { active: '#E8F1EE', 'active-accent': '#1D2935', 'bottom-active-accent': '#2D6A61' },
     edge: { '0': '#76968D', '1': '#71918E', '2': '#858B9E', '3': '#9583AE' },
     status: {
       success: { DEFAULT: '#2D6A61', tint: '#E8F1EE' },
@@ -109,7 +109,7 @@ export const semanticColors = {
     border: { subtle: '#36435D', control: '#8290AA', action: '#4B9387' },
     focus: { ring: '#B8A5D0' },
     progress: { fill: '#4B9387', track: '#273452' },
-    nav: { active: '#1B302C', 'active-accent': '#4B9387' },
+    nav: { active: '#1B302C', 'active-accent': '#4B9387', 'bottom-active-accent': '#4B9387' },
     edge: { '0': '#123F3C', '1': '#205D55', '2': '#353D60', '3': '#493566' },
     status: {
       success: { DEFAULT: '#9BBBA7', tint: '#1B302C' },

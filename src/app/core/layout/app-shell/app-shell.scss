@@ -1,0 +1,61 @@
+@use 'abstracts' as atlas;
+
+:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+:host([data-layout='rail']) {
+  grid-template-columns: var(--layout-sidebar-collapsed) minmax(0, 1fr);
+}
+
+:host([data-layout='sidebar']) {
+  grid-template-columns: var(--layout-sidebar-expanded) minmax(0, 1fr);
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-navigation);
+  height: 100dvh;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-topbar);
+  padding-block-start: var(--safe-area-top);
+  background: var(--color-surface-navigation);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--layout-content-max);
+  padding: var(--space-6) max(var(--layout-gutter-mobile), var(--safe-area-right))
+    calc(var(--layout-bottom-nav-height) + var(--safe-area-bottom) + var(--space-6))
+    max(var(--layout-gutter-mobile), var(--safe-area-left));
+  outline: none;
+
+  @include atlas.up(md) {
+    padding: var(--space-8) var(--layout-gutter-tablet);
+  }
+
+  @include atlas.up(lg) {
+    padding: var(--space-8) var(--layout-gutter-desktop);
+  }
+}
+
+.bottom-nav {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: var(--z-navigation);
+}

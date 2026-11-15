@@ -1,0 +1,25 @@
+import { Component, computed, input } from '@angular/core';
+import { ATLAS_STATUSES, AtlasStatusKey } from '../../design-system/statuses';
+import { AtlasIcon } from '../../icons/atlas-icon';
+
+const BY_KEY = new Map(ATLAS_STATUSES.map((status) => [status.key, status]));
+
+/** Progress status (Figma Atlas/V3/StatusBadge 152:2374). The label always shows; colour and icon reinforce it. */
+@Component({
+  selector: 'atlas-status-badge',
+  imports: [AtlasIcon],
+  template: `
+    <atlas-icon [name]="meta().icon" size="lg" />
+    <span class="label">{{ meta().label }}</span>
+  `,
+  styleUrl: './badge.scss',
+  host: {
+    '[style.--atlas-badge-foreground]': 'meta().color',
+    '[style.--atlas-badge-background]': 'meta().tint',
+  },
+})
+export class AtlasStatusBadge {
+  readonly status = input.required<AtlasStatusKey>();
+
+  protected readonly meta = computed(() => BY_KEY.get(this.status()) ?? BY_KEY.get('not-started')!);
+}

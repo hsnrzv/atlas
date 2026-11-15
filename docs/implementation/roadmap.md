@@ -63,14 +63,18 @@ Owner review fixes (2026-11-14):
 
 ### Phase 3 — Shared UI and the application shell
 
-| ID    | Item                                                                                                                                                                                                                            |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| F1-14 | Shell: `AtlasAppShell`, sidebar/rail, nav item, topbar, bottom nav (80 px), More sheet, placeholder pages for all areas, skip link, titles, `/_design` move, theme preference (D1, R-5); no top-bar Search/Quick add yet (R-14) |
-| F2-1a | Badges and progress: `StatusBadge`, `DimensionBadge`, `Progress`, `DateLabel`                                                                                                                                                   |
-| F2-1b | Page scaffolding: `PageHeader`, `Breadcrumbs`, `FeedbackState`, `Skeleton`                                                                                                                                                      |
-| F2-1c | Controls: Material button/icon-button overrides, `SearchField`, tabs, filter chips, tooltip, popover                                                                                                                            |
+| ID    | Item                                                                                                                                                                                                                           | Status                                                                                                                                                                                                                                                                             |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F1-14 | Shell: `AtlasAppShell`, sidebar/rail, nav item, topbar, bottom nav (80 px), More page, placeholder pages for all areas, skip link, titles, `/_design` move, theme preference (D1, R-5); no top-bar Search/Quick add yet (R-14) | done 2026-11-14: `core/layout` (shell, sidebar, rail, topbar, bottom nav, nav item), title strategy, focus moves to the h1 after navigation. More is a page (Figma page 04). Theme choice lives in the profile menu: Match device / Light / Dark. Notifications are omitted (R-14) |
+| F2-1a | Badges and progress: `StatusBadge`, `DimensionBadge`, `Progress`, `DateLabel`                                                                                                                                                  | done 2026-11-14: `shared/ui/badge`, `progress`, `date-label`. `PlannedDate` is a presentation type until F2-2; date rules stay with the backend (R-12)                                                                                                                             |
+| F2-1b | Page scaffolding: `PageHeader`, `Breadcrumbs`, `FeedbackState`, `Skeleton`                                                                                                                                                     | done 2026-11-14: `PageHeader` has a `level` input (1 or 2) for embedded use                                                                                                                                                                                                        |
+| F2-1c | Controls: Material button/icon-button overrides, `SearchField`, tabs, filter chips, tooltip, popover                                                                                                                           | done 2026-11-14: `AtlasIconButton` (outlined and ghost), `SearchField` on a reactive `FormControl`, `.atlas-tabs`, CDK-overlay `Popover`. Icons in Material buttons use the `matButtonIcon` slot                                                                                   |
 
-**Gate 3:** shell matches Figma page 04 at all three widths and both themes; keyboard and axe pass; no horizontal overflow.
+**Gate 3:** verified 2026-11-14 and awaiting owner approval. The shell was compared with Figma page 04 (`214:1721`) at
+390, 768 and 1440 px in both themes. `npm run verify` passes. `npm run e2e` (`e2e/app-shell.spec.ts`) checks
+landmarks, `aria-current`, titles, skip link, focus after navigation, axe WCAG 2.2 AA and no horizontal overflow at
+each width in both themes, plus the theme menu, the mobile More flow and the not-found page. `/_design` shows every
+shared UI component.
 
 ### Phase 4 — My Atlas with mock data
 
@@ -78,7 +82,7 @@ Owner review fixes (2026-11-14):
 | ----- | -------------------------------------------------------------------------------------------------------------------------------- |
 | F2-2  | Models, `statusForNode` (D14), ports, `MockGoalRepository` with the single §10.5 sample and fixture progress (R-6), bundle guard |
 | F2-3a | My Atlas cards: `Hero`, `NextWaypoint`, `GlanceSummary`, `DestinationCard`                                                       |
-| F2-3b | My Atlas page: Overview, Empty, Loading, Error states (Figma page 05), mobile More sheet wired                                   |
+| F2-3b | My Atlas page: Overview, Empty, Loading, Error states (Figma page 05), mobile More page wired                                    |
 
 **Gate 4:** My Atlas matches page 05 in all states; the production bundle contains no mock (guard green).
 

@@ -320,8 +320,13 @@
           },
           "active-accent": {
             "$type": "color",
-            "$value": "transparent",
-            "$description": "Active navigation accent bar; dark only (light 214:2435 binds none)"
+            "$value": "{semantic.light.color.text.primary}",
+            "$description": "Active sidebar/rail item icon. Light binds no accent (214:2435), so the icon keeps text/primary"
+          },
+          "bottom-active-accent": {
+            "$type": "color",
+            "$value": "{color.light.action}",
+            "$description": "Active bottom-navigation icon (Figma accent/green, 214:2572)"
           }
         },
         "edge": {
@@ -699,7 +704,12 @@
           "active-accent": {
             "$type": "color",
             "$value": "{color.green.teal}",
-            "$description": "Active navigation accent bar; dark only (light 214:2435 binds none)"
+            "$description": "Active sidebar/rail item icon (Figma accent/green, 152:2588)"
+          },
+          "bottom-active-accent": {
+            "$type": "color",
+            "$value": "{color.green.teal}",
+            "$description": "Active bottom-navigation icon (Figma accent/green, 152:2995)"
           }
         },
         "edge": {

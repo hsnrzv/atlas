@@ -1,0 +1,52 @@
+:host {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-control-height);
+  height: var(--size-control-height);
+  padding: 0;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-control);
+  transition: background-color var(--duration-micro) var(--easing-standard);
+
+  &:hover {
+    background: var(--color-surface-card);
+  }
+
+  &:active,
+  &[aria-expanded='true'] {
+    background: var(--color-surface-page);
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    color: var(--color-action-on-disabled);
+    cursor: default;
+    background: var(--color-action-disabled);
+    border-color: transparent;
+  }
+}
+
+:host(.is-ghost) {
+  background: transparent;
+  border-color: transparent;
+
+  &:hover {
+    background: var(--color-surface-raised);
+  }
+
+  &:active,
+  &[aria-expanded='true'] {
+    background: var(--color-nav-active);
+  }
+}
+
+:host(.is-compact) {
+  width: var(--size-control-height-compact);
+  height: var(--size-control-height-compact);
+}
