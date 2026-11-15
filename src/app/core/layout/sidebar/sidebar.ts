@@ -11,43 +11,7 @@ import { AtlasNavItem } from '../nav-item/nav-item';
 @Component({
   selector: 'atlas-sidebar',
   imports: [AtlasLogo, AtlasNavItem, RouterLink],
-  template: `
-    <a class="brand" [routerLink]="home.path" aria-label="IKIGAI ATLAS, go to My Atlas">
-      <atlas-logo
-        [variant]="rail() ? 'symbol' : 'horizontal'"
-        [size]="rail() ? 32 : 40"
-        [decorative]="true"
-      />
-    </a>
-
-    <nav class="nav" aria-label="Primary">
-      @if (!rail()) {
-        <p class="group-label" id="atlas-nav-primary-label">Your Atlas</p>
-      }
-      <ul
-        class="list"
-        [attr.aria-labelledby]="rail() ? null : 'atlas-nav-primary-label'"
-        role="list"
-      >
-        @for (link of primary; track link.path) {
-          <li><atlas-nav-item [link]="link" [compact]="rail()" /></li>
-        }
-      </ul>
-
-      <ul class="list account" aria-label="Account" role="list">
-        @for (link of account; track link.path) {
-          <li><atlas-nav-item [link]="link" [compact]="rail()" /></li>
-        }
-      </ul>
-    </nav>
-
-    @if (!rail()) {
-      <footer class="footer">
-        <p class="footer-label">Private workspace</p>
-        <p class="footer-text">Your life, mapped with purpose.</p>
-      </footer>
-    }
-  `,
+  templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
   host: { '[class.is-rail]': 'rail()' },
 })

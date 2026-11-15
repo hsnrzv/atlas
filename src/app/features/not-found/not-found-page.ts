@@ -8,16 +8,8 @@ import { AtlasPageHeader } from '../../shared/ui/page-header/page-header';
 @Component({
   selector: 'atlas-not-found-page',
   imports: [AtlasFeedbackState, AtlasPageHeader, MatButton, RouterLink],
-  template: `
-    <atlas-page-header title="Page not found" />
-    <atlas-feedback-state
-      iconName="alert"
-      title="We could not find this page"
-      description="The link may be out of date, or the page may have moved."
-    >
-      <a mat-flat-button [routerLink]="home.path">Go to {{ home.label }}</a>
-    </atlas-feedback-state>
-  `,
+  templateUrl: './not-found-page.html',
+  styleUrl: './not-found-page.scss',
 })
 export class NotFoundPage {
   protected readonly home = MY_ATLAS;

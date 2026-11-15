@@ -12,23 +12,7 @@ const BY_KEY = new Map(LIFE_DIMENSIONS.map((dimension) => [dimension.key, dimens
 @Component({
   selector: 'atlas-dimension-card',
   imports: [AtlasIcon],
-  template: `
-    <atlas-icon class="icon" [name]="meta().icon" size="lg" />
-    <h3 class="name">{{ meta().label }}</h3>
-    <p class="count">{{ countText() }}</p>
-    <p class="value" aria-hidden="true">{{ percentText() }}</p>
-    <div
-      class="track"
-      role="progressbar"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      [attr.aria-valuenow]="clamped()"
-      [attr.aria-valuetext]="percentText()"
-      [attr.aria-label]="meta().label + ' progress'"
-    >
-      <div class="fill" [style.inline-size.%]="clamped()"></div>
-    </div>
-  `,
+  templateUrl: './dimension-card.html',
   styleUrl: './dimension-card.scss',
   host: { '[style.--atlas-dimension-color]': 'meta().color.foreground' },
 })

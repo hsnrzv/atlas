@@ -6,20 +6,7 @@ import { Component, computed, inject, input, LOCALE_ID } from '@angular/core';
  */
 @Component({
   selector: 'atlas-progress',
-  template: `
-    <p class="text" aria-hidden="true">{{ valueText() }}</p>
-    <div
-      class="track"
-      role="progressbar"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      [attr.aria-valuenow]="clamped()"
-      [attr.aria-valuetext]="valueText()"
-      [attr.aria-label]="label()"
-    >
-      <div class="fill" [style.inline-size.%]="clamped()"></div>
-    </div>
-  `,
+  templateUrl: './progress.html',
   styleUrl: './progress.scss',
 })
 export class AtlasProgress {

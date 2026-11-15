@@ -41,6 +41,14 @@ Read these before changing code. They are binding.
   never in production bundles (CI bundle guard). It contains only the single sample Destination from
   `project-instruction.md` §10.5. Never invent financial figures or AI-style responses; finance stays
   "Illustrative · unverified" and companion copy is static.
+- Mock and sample data tracking: whenever you add or change mock data, sample data, sample copy, a fixture, a
+  mock-only mode or a dev-only sample shortcut, update the inventory in `docs/release/production-readiness.md` §2.1 in
+  the same change (path, what it is, cleanup action). Nothing mock-related may exist that the inventory does not list.
+- Component structure: never use inline `template` or `styles`. Every component is four files side by side —
+  `name.ts` (with `templateUrl` and `styleUrl`), `name.html`, `name.scss` and `name.spec.ts` — even when the
+  stylesheet only holds `:host` rules. This applies to pages, layout, shared UI and the root `App` component.
+  `npm run lint` enforces it (`@angular-eslint/component-max-inline-declarations` and
+  `scripts/check-component-files.mjs`). Only test-host components declared inside a `.spec.ts` may use an inline template.
 - Dependencies: only permissive licenses (see `docs/architecture/DEPENDENCY-LICENSE-MATRIX.md` §1). Update
   `THIRD-PARTY-NOTICES.md` in the same PR. The lockfile must resolve from `registry.npmjs.org` only.
 

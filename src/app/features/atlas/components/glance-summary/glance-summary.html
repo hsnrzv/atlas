@@ -1,0 +1,9 @@
+<h2 class="title" [id]="titleId">At a glance</h2>
+<ul class="rows" role="list">
+  @for (item of items(); track item.label) {
+    <li class="row">
+      <span class="value">{{ item.value }}</span>
+      <span class="label">{{ item.label }}</span>
+    </li>
+  }
+</ul>

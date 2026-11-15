@@ -33,40 +33,7 @@ const LABELS = new Map(LIFE_DIMENSIONS.map((dimension) => [dimension.key, dimens
 @Component({
   selector: 'atlas-next-waypoint-card',
   imports: [AtlasDateLabel, AtlasIcon, AtlasProgress, AtlasStatusBadge, MatButton, RouterLink],
-  template: `
-    <p class="eyebrow">Next Waypoint · {{ dimensionLabel() }}</p>
-    <div class="heading">
-      <h3 class="title" [id]="titleId">{{ waypoint().title }}</h3>
-      <atlas-status-badge [status]="waypoint().status" />
-    </div>
-    <p class="planned">
-      @if (waypoint().plannedDate; as date) {
-        Planned <atlas-date-label [date]="date" format="long" />
-        @if (precision(); as precision) {
-          · {{ precision }}
-        }
-      } @else {
-        Date not set
-      }
-    </p>
-    @if (waypoint().progress; as progress) {
-      <atlas-progress
-        class="progress"
-        label="Waypoint progress"
-        [value]="progress.value"
-        [detail]="progress.detail"
-      />
-    }
-    <a
-      mat-flat-button
-      class="action"
-      [routerLink]="waypoint().link"
-      [attr.aria-describedby]="titleId"
-    >
-      Explore next waypoint
-      <atlas-icon matButtonIcon iconPositionEnd name="next" size="lg" />
-    </a>
-  `,
+  templateUrl: './next-waypoint-card.html',
   styleUrl: './next-waypoint-card.scss',
 })
 export class AtlasNextWaypointCard {

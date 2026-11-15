@@ -16,21 +16,7 @@ const CIRCLES = [
  */
 @Component({
   selector: 'atlas-logo',
-  template: `
-    <svg class="symbol" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-      @for (circle of circles; track circle.key) {
-        <circle
-          [class]="'circle ' + circle.key"
-          [attr.cx]="circle.cx"
-          [attr.cy]="circle.cy"
-          r="19.2"
-        />
-      }
-    </svg>
-    @if (variant() === 'horizontal') {
-      <span class="wordmark" aria-hidden="true">IKIGAI ATLAS</span>
-    }
-  `,
+  templateUrl: './atlas-logo.html',
   styleUrl: './atlas-logo.scss',
   host: {
     '[attr.role]': 'decorative() ? null : "img"',

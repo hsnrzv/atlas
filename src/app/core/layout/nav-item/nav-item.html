@@ -1,0 +1,14 @@
+<a
+  class="item"
+  [routerLink]="link().path"
+  routerLinkActive="is-active"
+  ariaCurrentWhenActive="page"
+  [attr.aria-label]="compact() ? link().label : null"
+  [matTooltip]="compact() ? link().label : ''"
+  matTooltipPosition="right"
+>
+  <atlas-icon class="icon" [name]="link().icon" size="lg" />
+  @if (!compact()) {
+    <span class="label">{{ link().label }}</span>
+  }
+</a>

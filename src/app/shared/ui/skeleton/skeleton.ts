@@ -6,11 +6,7 @@ import { Component, computed, input } from '@angular/core';
  */
 @Component({
   selector: 'atlas-skeleton',
-  template: `
-    @for (line of lineList(); track $index) {
-      <span class="bar" [class.is-short]="$last && lineList().length > 1"></span>
-    }
-  `,
+  templateUrl: './skeleton.html',
   styleUrl: './skeleton.scss',
   host: { 'aria-hidden': 'true' },
 })

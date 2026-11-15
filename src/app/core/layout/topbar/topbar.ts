@@ -32,51 +32,7 @@ const THEME_OPTIONS: readonly { readonly value: AtlasThemePreference; readonly l
     MatMenuTrigger,
     RouterLink,
   ],
-  template: `
-    @if (showBrand()) {
-      <a class="brand" [routerLink]="home.path" aria-label="IKIGAI ATLAS, go to My Atlas">
-        <atlas-logo variant="symbol" [size]="32" [decorative]="true" />
-      </a>
-    }
-    <p class="title">{{ title() }}</p>
-
-    <button
-      atlas-icon-button
-      icon="profile"
-      aria-label="Account and appearance"
-      size="compact"
-      appearance="ghost"
-      [matMenuTriggerFor]="account"
-    ></button>
-
-    <mat-menu #account="matMenu" xPosition="before" class="atlas-account-menu">
-      @for (link of accountLinks; track link.path) {
-        <a mat-menu-item [routerLink]="link.path">
-          <atlas-icon [name]="link.icon" size="md" />
-          <span>{{ link.label }}</span>
-        </a>
-      }
-      <mat-divider />
-      <div role="group" aria-label="Appearance">
-        <p class="menu-heading" aria-hidden="true">Appearance</p>
-        @for (option of themeOptions; track option.value) {
-          <button
-            mat-menu-item
-            role="menuitemradio"
-            [attr.aria-checked]="theme.preference() === option.value"
-            (click)="theme.setPreference(option.value)"
-          >
-            <atlas-icon
-              [name]="'check'"
-              size="md"
-              [class.is-hidden]="theme.preference() !== option.value"
-            />
-            <span>{{ option.label }}</span>
-          </button>
-        }
-      </div>
-    </mat-menu>
-  `,
+  templateUrl: './topbar.html',
   styleUrl: './topbar.scss',
 })
 export class AtlasTopbar {

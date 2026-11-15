@@ -12,28 +12,7 @@ import { AtlasTopbar } from '../topbar/topbar';
 @Component({
   selector: 'atlas-app-shell',
   imports: [AtlasBottomNav, AtlasSidebar, AtlasTopbar, RouterOutlet],
-  template: `
-    <a class="atlas-skip-link" href="#main" (click)="skipToMain($event)">Skip to main content</a>
-
-    @if (mode() !== 'mobile') {
-      <atlas-sidebar class="sidebar" [rail]="mode() === 'rail'" />
-    }
-
-    <div class="pane">
-      <header class="topbar">
-        <atlas-topbar [showBrand]="mode() !== 'sidebar'" />
-      </header>
-      <main class="main" id="main" tabindex="-1">
-        <router-outlet />
-      </main>
-    </div>
-
-    @if (mode() === 'mobile') {
-      <nav class="bottom-nav" aria-label="Primary">
-        <atlas-bottom-nav />
-      </nav>
-    }
-  `,
+  templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
   host: { '[attr.data-layout]': 'mode()' },
 })

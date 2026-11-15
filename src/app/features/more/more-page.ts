@@ -12,31 +12,7 @@ import { AtlasPageHeader } from '../../shared/ui/page-header/page-header';
 @Component({
   selector: 'atlas-more-page',
   imports: [AtlasIcon, AtlasPageHeader, MatButton, RouterLink],
-  template: `
-    <atlas-page-header title="More of your Atlas" description="Explore the rest of your journey." />
-
-    <a mat-stroked-button class="back" [routerLink]="home.path">
-      <atlas-icon matButtonIcon name="back" size="md" />
-      Back to {{ home.label }}
-    </a>
-
-    @for (group of groups; track group.label) {
-      <section class="group" [attr.aria-labelledby]="'more-' + $index">
-        <h2 class="group-label" [id]="'more-' + $index">{{ group.label }}</h2>
-        <ul class="rows" role="list">
-          @for (link of group.links; track link.path) {
-            <li>
-              <a class="row" [routerLink]="link.path">
-                <atlas-icon class="row-icon" [name]="link.icon" size="md" />
-                <span class="row-label">{{ link.label }}</span>
-                <atlas-icon class="row-chevron" name="expand" size="md" />
-              </a>
-            </li>
-          }
-        </ul>
-      </section>
-    }
-  `,
+  templateUrl: './more-page.html',
   styleUrl: './more-page.scss',
 })
 export class MorePage {

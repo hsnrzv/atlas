@@ -49,6 +49,8 @@ A change is done when:
 - Organise by product feature (`src/app/features/<feature>`) when features arrive. Do not create empty folders for
   future features. Cross-cutting building blocks live in `src/app/core` (singletons) and `src/app/shared` (reusable UI).
 - Component selectors use the `atlas-` prefix. File names have no `.component` suffix (Angular 20+ style guide).
+- Every component is four sibling files: `name.ts` (`templateUrl`, `styleUrl`), `name.html`, `name.scss` and
+  `name.spec.ts`. No inline `template` or `styles`; `npm run lint` enforces this. Only test-host components inside a `.spec.ts` may use an inline template.
 - Styling: semantic tokens through `var(--color-…)`, `var(--space-…)` etc. and `@use 'abstracts' as atlas;`; prefer
   semantic (`--color-text-secondary`) over primitive (`--color-neutral-…`) tokens. No raw colour literals in `src/app` (Stylelint
   enforces this). Prefer Material component overrides in `src/styles/material/_theme.scss` to ad-hoc `::ng-deep`.

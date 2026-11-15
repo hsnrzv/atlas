@@ -10,11 +10,7 @@ export type { DatePrecision, PlannedDate } from '../../../core/models/planned-da
  */
 @Component({
   selector: 'atlas-date-label',
-  template: `
-    @if (parts(); as value) {
-      <time [attr.datetime]="value.datetime">{{ value.text }}</time>
-    }
-  `,
+  templateUrl: './date-label.html',
   styleUrl: './date-label.scss',
 })
 export class AtlasDateLabel {

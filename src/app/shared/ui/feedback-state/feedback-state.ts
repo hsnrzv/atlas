@@ -19,20 +19,7 @@ const ICONS: Record<Exclude<AtlasFeedbackKind, 'loading'>, AtlasIconName> = {
 @Component({
   selector: 'atlas-feedback-state',
   imports: [AtlasIcon, AtlasSkeleton],
-  template: `
-    <atlas-icon class="icon" [name]="icon()" size="lg" />
-    <h2 class="title">{{ title() }}</h2>
-    @if (description(); as description) {
-      <p class="description">{{ description }}</p>
-    }
-    @if (kind() === 'loading') {
-      <atlas-skeleton [lines]="3" />
-    } @else {
-      <div class="action">
-        <ng-content />
-      </div>
-    }
-  `,
+  templateUrl: './feedback-state.html',
   styleUrl: './feedback-state.scss',
   host: {
     '[attr.role]': 'kind() === "error" ? "alert" : "status"',

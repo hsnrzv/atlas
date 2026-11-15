@@ -1,0 +1,17 @@
+<nav aria-label="Breadcrumb">
+  <ol class="list" role="list">
+    @for (item of items(); track $index; let last = $last) {
+      <li class="item">
+        @if (!last && item.path) {
+          <a class="link" [routerLink]="item.path">{{ item.label }}</a>
+          <atlas-icon class="separator" name="expand" size="lg" />
+        } @else {
+          <span class="current" [attr.aria-current]="last ? 'page' : null">{{ item.label }}</span>
+          @if (!last) {
+            <atlas-icon class="separator" name="expand" size="lg" />
+          }
+        }
+      </li>
+    }
+  </ol>
+</nav>

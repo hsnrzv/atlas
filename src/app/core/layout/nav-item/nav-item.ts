@@ -12,22 +12,7 @@ import type { AtlasNavLink } from '../navigation';
 @Component({
   selector: 'atlas-nav-item',
   imports: [AtlasIcon, MatTooltip, RouterLink, RouterLinkActive],
-  template: `
-    <a
-      class="item"
-      [routerLink]="link().path"
-      routerLinkActive="is-active"
-      ariaCurrentWhenActive="page"
-      [attr.aria-label]="compact() ? link().label : null"
-      [matTooltip]="compact() ? link().label : ''"
-      matTooltipPosition="right"
-    >
-      <atlas-icon class="icon" [name]="link().icon" size="lg" />
-      @if (!compact()) {
-        <span class="label">{{ link().label }}</span>
-      }
-    </a>
-  `,
+  templateUrl: './nav-item.html',
   styleUrl: './nav-item.scss',
   host: { '[class.is-compact]': 'compact()' },
 })

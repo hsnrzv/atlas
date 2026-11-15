@@ -163,7 +163,8 @@ Depends on backend phase 3 (OpenAPI snapshot, BE-3.82). F3-5 can start as soon a
 | F2-12 | GHCR publishing and `atlas-infra` bump PRs                           |
 
 **Gate 9:** repo phase-4 gate (no demo-only data against the real backend; staging e2e green). Store release stays
-in repo phase 10 after identity hardening (phase 9 of the repo plan).
+in repo phase 10 after identity hardening (phase 9 of the repo plan). The release checklist, the mock and
+documentation cleanup, and the store steps are in [production-readiness.md](../release/production-readiness.md).
 
 ## 3. Mapping summary
 

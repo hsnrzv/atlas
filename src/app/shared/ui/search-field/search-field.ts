@@ -13,24 +13,7 @@ import { AtlasIcon } from '../../icons/atlas-icon';
 @Component({
   selector: 'atlas-search-field',
   imports: [AtlasIcon, MatError, MatFormField, MatInput, MatPrefix, ReactiveFormsModule],
-  template: `
-    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field">
-      <atlas-icon matPrefix class="icon" name="search" size="lg" />
-      <input
-        matInput
-        type="search"
-        enterkeyhint="search"
-        autocomplete="off"
-        [attr.aria-label]="label()"
-        [placeholder]="placeholder()"
-        [formControl]="control"
-        [errorStateMatcher]="errorMatcher"
-      />
-      @if (error(); as error) {
-        <mat-error>{{ error }}</mat-error>
-      }
-    </mat-form-field>
-  `,
+  templateUrl: './search-field.html',
   styleUrl: './search-field.scss',
   host: { role: 'search' },
 })

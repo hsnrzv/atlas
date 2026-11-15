@@ -12,7 +12,7 @@ export type AtlasIconButtonAppearance = 'outlined' | 'ghost';
 @Component({
   selector: 'button[atlas-icon-button], a[atlas-icon-button]',
   imports: [AtlasIcon],
-  template: `<atlas-icon [name]="icon()" size="lg" />`,
+  templateUrl: './icon-button.html',
   styleUrl: './icon-button.scss',
   host: {
     class: 'atlas-icon-button',

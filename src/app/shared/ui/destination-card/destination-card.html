@@ -1,0 +1,28 @@
+<div class="badges">
+  <atlas-dimension-badge [dimension]="destination().dimension" />
+  <atlas-status-badge [status]="destination().status" />
+</div>
+<h3 class="title">
+  <a class="link" [routerLink]="destination().link">{{ destination().title }}</a>
+</h3>
+<atlas-progress
+  label="Destination progress"
+  [value]="destination().progress.value"
+  [detail]="destination().progress.detail"
+/>
+<dl class="facts">
+  <div>
+    <dt>Next Waypoint</dt>
+    <dd>{{ destination().nextWaypoint ?? 'None planned' }}</dd>
+  </div>
+  <div>
+    <dt>Target</dt>
+    <dd>
+      @if (destination().targetDate; as date) {
+        <atlas-date-label [date]="date" format="long" />
+      } @else {
+        Date not set
+      }
+    </dd>
+  </div>
+</dl>

@@ -22,17 +22,8 @@ export const ATLAS_ICON_STROKE = 2;
 @Component({
   selector: 'atlas-icon',
   imports: [TablerIconComponent],
-  template: `<tabler-icon [icon]="icon()" [size]="px()" [stroke]="stroke()" />`,
-  styles: `
-    :host {
-      display: inline-flex;
-      flex: none;
-      align-items: center;
-      justify-content: center;
-      line-height: 0;
-      color: inherit;
-    }
-  `,
+  templateUrl: './atlas-icon.html',
+  styleUrl: './atlas-icon.scss',
   host: {
     class: 'atlas-icon',
     '[attr.role]': 'label() ? "img" : null',

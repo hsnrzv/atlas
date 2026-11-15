@@ -17,31 +17,7 @@ const POSITIONS: ConnectedPosition[] = [
 @Component({
   selector: 'atlas-popover',
   imports: [A11yModule, CdkConnectedOverlay],
-  template: `
-    <ng-template
-      cdkConnectedOverlay
-      [cdkConnectedOverlayOrigin]="origin()!"
-      [cdkConnectedOverlayOpen]="open()"
-      [cdkConnectedOverlayPositions]="positions"
-      [cdkConnectedOverlayPush]="true"
-      [cdkConnectedOverlayViewportMargin]="16"
-      (overlayOutsideClick)="onOutsideClick($event)"
-      (overlayKeydown)="onKeydown($event)"
-      (detach)="close(false)"
-    >
-      <div
-        class="atlas-popover-panel"
-        role="dialog"
-        [id]="id"
-        [attr.aria-labelledby]="id + '-title'"
-        cdkTrapFocus
-        cdkTrapFocusAutoCapture
-      >
-        <p class="title" [id]="id + '-title'">{{ title() }}</p>
-        <div class="body"><ng-content /></div>
-      </div>
-    </ng-template>
-  `,
+  templateUrl: './popover.html',
   styleUrl: './popover.scss',
 })
 export class AtlasPopover {

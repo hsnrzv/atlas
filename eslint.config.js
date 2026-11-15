@@ -60,6 +60,9 @@ module.exports = defineConfig([
           style: 'kebab-case',
         },
       ],
+      // Every component keeps its template and styles in sibling .html and .scss files
+      // (scripts/check-component-files.mjs checks the files and the spec).
+      '@angular-eslint/component-max-inline-declarations': ['error', { template: 0, styles: 0 }],
     },
   },
   {
@@ -86,6 +89,13 @@ module.exports = defineConfig([
     files: ['src/app/shared/**/*.ts', 'src/app/features/*/components/**/*.ts'],
     rules: {
       'no-restricted-imports': ['error', presentationalRestrictions],
+    },
+  },
+  {
+    // Test-host components inside specs (content projection, directive hosts) keep their small inline templates.
+    files: ['**/*.spec.ts'],
+    rules: {
+      '@angular-eslint/component-max-inline-declarations': 'off',
     },
   },
   {

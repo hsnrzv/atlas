@@ -124,6 +124,8 @@ capacitor.config.ts         app id dev.myatlas.app; native projects are added in
   [Frontend plan](docs/plan/PLAN-FRONTEND.md) ·
   [Dependency and license matrix](docs/architecture/DEPENDENCY-LICENSE-MATRIX.md) ·
   [ADRs](docs/adr/README.md)
+- [Production readiness and store release](docs/release/production-readiness.md) (checklist, mock and docs cleanup,
+  App Store and Google Play steps)
 - [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Third-party notices](THIRD-PARTY-NOTICES.md)
 
 ## License

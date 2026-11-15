@@ -9,13 +9,8 @@ import { AtlasPageHeader } from '../../shared/ui/page-header/page-header';
 @Component({
   selector: 'atlas-area-placeholder-page',
   imports: [AtlasFeedbackState, AtlasPageHeader],
-  template: `
-    <atlas-page-header [title]="heading()" [description]="description()" />
-    <atlas-feedback-state
-      title="This area is on its way"
-      description="It arrives in a later step of the build. Use the navigation to explore the rest of your Atlas."
-    />
-  `,
+  templateUrl: './area-placeholder-page.html',
+  styleUrl: './area-placeholder-page.scss',
 })
 export class AreaPlaceholderPage {
   /** Route data, bound by `withComponentInputBinding()`. */

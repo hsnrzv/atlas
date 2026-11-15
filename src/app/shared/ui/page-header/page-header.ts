@@ -8,22 +8,7 @@ import { Component, input } from '@angular/core';
  */
 @Component({
   selector: 'atlas-page-header',
-  template: `
-    <div class="text">
-      <ng-content select="atlas-breadcrumbs" />
-      @if (level() === 1) {
-        <h1>{{ title() }}</h1>
-      } @else {
-        <h2 class="atlas-h1">{{ title() }}</h2>
-      }
-      @if (description(); as description) {
-        <p class="description">{{ description }}</p>
-      }
-    </div>
-    <div class="actions">
-      <ng-content select="[pageHeaderAction]" />
-    </div>
-  `,
+  templateUrl: './page-header.html',
   styleUrl: './page-header.scss',
 })
 export class AtlasPageHeader {

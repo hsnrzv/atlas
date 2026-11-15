@@ -8,11 +8,8 @@ const BY_KEY = new Map(ATLAS_STATUSES.map((status) => [status.key, status]));
 @Component({
   selector: 'atlas-status-badge',
   imports: [AtlasIcon],
-  template: `
-    <atlas-icon [name]="meta().icon" size="lg" />
-    <span class="label">{{ meta().label }}</span>
-  `,
-  styleUrl: './badge.scss',
+  templateUrl: './status-badge.html',
+  styleUrl: './status-badge.scss',
   host: {
     '[style.--atlas-badge-foreground]': 'meta().color',
     '[style.--atlas-badge-background]': 'meta().tint',

@@ -9,11 +9,8 @@ const BY_KEY = new Map(LIFE_DIMENSIONS.map((dimension) => [dimension.key, dimens
 @Component({
   selector: 'atlas-dimension-badge',
   imports: [AtlasIcon],
-  template: `
-    <atlas-icon [name]="meta().icon" size="lg" />
-    <span class="label">{{ meta().label }}</span>
-  `,
-  styleUrl: './badge.scss',
+  templateUrl: './dimension-badge.html',
+  styleUrl: './dimension-badge.scss',
   host: {
     '[style.--atlas-badge-foreground]': 'meta().color.foreground',
     '[style.--atlas-badge-background]': 'meta().color.tint',

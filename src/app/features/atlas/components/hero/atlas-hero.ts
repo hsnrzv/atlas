@@ -10,24 +10,7 @@ let nextId = 0;
 @Component({
   selector: 'atlas-hero',
   imports: [AtlasProgress],
-  template: `
-    <div class="intent">
-      <p class="eyebrow">My Atlas · Your life, with intent</p>
-      <h2 class="title" [id]="titleId">Build the life you envision.</h2>
-      <p class="lead">A meaningful destination starts with one next step.</p>
-    </div>
-    <div class="summary">
-      <p class="eyebrow">Your destination</p>
-      <p class="metric" aria-hidden="true">{{ percentText() }}</p>
-      <atlas-progress
-        class="progress"
-        label="Destination progress"
-        [value]="percent()"
-        [detail]="detail()"
-      />
-      <p class="achieved">{{ achieved() }}</p>
-    </div>
-  `,
+  templateUrl: './atlas-hero.html',
   styleUrl: './atlas-hero.scss',
   host: { role: 'region', '[attr.aria-labelledby]': 'titleId' },
 })

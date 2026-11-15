@@ -16,23 +16,7 @@ const within = (path: string, base: string) => path === base || path.startsWith(
 @Component({
   selector: 'atlas-bottom-nav',
   imports: [AtlasIcon, RouterLink],
-  template: `
-    <ul class="list" role="list">
-      @for (link of links; track link.path) {
-        <li>
-          <a
-            class="item"
-            [routerLink]="link.path"
-            [class.is-active]="isActive(link)"
-            [attr.aria-current]="ariaCurrent(link)"
-          >
-            <atlas-icon class="icon" [name]="link.icon" size="lg" />
-            <span class="label">{{ link.shortLabel ?? link.label }}</span>
-          </a>
-        </li>
-      }
-    </ul>
-  `,
+  templateUrl: './bottom-nav.html',
   styleUrl: './bottom-nav.scss',
 })
 export class AtlasBottomNav {
