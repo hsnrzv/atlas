@@ -22,8 +22,8 @@ export interface GoalReward {
 
 export interface SecondaryArea {
   readonly areaKey: IkigaiAreaKey;
-  /** Decimal string, e.g. `"0.3"`. */
-  readonly weight: string;
+  /** Optional contribution weight as a decimal string, e.g. `"0.3"` (project-instruction §7; FQ-20). */
+  readonly weight: string | null;
 }
 
 /** `GET /api/v1/goals/{goalId}` (API-CONTRACT §9.5). */

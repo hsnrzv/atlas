@@ -108,13 +108,6 @@ export class PlanEditor {
     );
   }
 
-  async move(node: GoalNode, direction: -1 | 1): Promise<void> {
-    this.settle(
-      messageOf(await this.store.moveNode(node, direction)),
-      `${node.title} moved ${direction < 0 ? 'up' : 'down'}.`,
-    );
-  }
-
   /** Shows the outcome of a write: the error in the page alert, or a success toast. Resolves `true` on success. */
   settle(error: string | null, success: string): boolean {
     this.error.set(error);

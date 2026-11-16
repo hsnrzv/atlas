@@ -6,7 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { GoalPlanStore } from '../../core/data-access/goal-plan.store';
 import { DESTINATIONS, WAYPOINTS } from '../../core/layout/navigation';
 import { destinationLink, waypointLink } from '../../core/layout/plan-links';
-import { childrenOf, findNode, isWaypoint } from '../../core/models/goal-tree';
+import { findNode, isWaypoint, stepsOf } from '../../core/models/goal-tree';
 import { PlanEditor } from '../../core/plan/plan-editor';
 import { AtlasIcon } from '../../shared/icons/atlas-icon';
 import { AtlasBlockedPanel } from '../../shared/ui/blocked-panel/blocked-panel';
@@ -111,7 +111,7 @@ export class StepsPage {
       return null;
     }
     const nodes = this.store.nodes();
-    const all = childrenOf(nodes, parent.id).filter((node) => !isWaypoint(node));
+    const all = stepsOf(nodes, parent.id);
     const filters = this.filters();
     const shown = all.filter((step) => matchesStepFilters(step, filters));
     return {
@@ -134,6 +134,7 @@ export class StepsPage {
   });
 
   constructor() {
+    this.store.enter();
     keepHeadingFocus(this.state);
   }
 

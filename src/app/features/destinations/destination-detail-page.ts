@@ -109,6 +109,7 @@ export class DestinationDetailPage {
   );
 
   constructor() {
+    this.store.enter();
     effect(() => {
       this.store.goalId.set(this.goalId());
       this.store.notesNodeId.set(null);

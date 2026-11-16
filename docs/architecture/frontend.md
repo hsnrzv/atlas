@@ -197,7 +197,7 @@ The fixtures are deleted with the mock (F4-7).
 - "Use sample details" (form) and "Explore sample plan" (onboarding) exist only in dev builds, behind the same
   environment flag.
 
-### 6.5 Proposed contract additions (frontend questions FQ-1 … FQ-13)
+### 6.5 Proposed contract additions (frontend questions FQ-1 … FQ-20)
 
 Figma pages 05–08 show values that the draft `GET /api/v1/dashboard` contract (API-CONTRACT §9.1) does not provide.
 Only the backend can derive them (roadmap R-12), so the frontend models them as **proposed** additions
@@ -230,20 +230,24 @@ contract's existing field, as listed:
 Pages 09–14 (Phase 6) need read models the draft contract does not define. The ports, models and mock follow these
 proposals; the backend owner decides them before F4-1:
 
-| ID    | Question                                                                          | Until decided                                                 |
-| ----- | --------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| FQ-14 | `GET /timeline` returns undated items (`date: null`) and each item's `progress`   | Journey "Not placed yet" and marker progress use these fields |
-| FQ-15 | `GET /connections`: associations and unverified possible impacts per Destination  | proposed `GoalConnection` model; no amounts                   |
-| FQ-16 | `GET /rewards`: Milestone Awards with counts, earned dates and achieved Waypoints | proposed `Awards` model                                       |
-| FQ-17 | Onboarding step `areas` and `PUT /onboarding/steps/areas`                         | setup saves focus areas through the proposed step             |
-| FQ-18 | Whether a Waypoint's status follows its Steps                                     | the UI shows the status the backend returns (mock: fixtures)  |
-| FQ-19 | Whether a Life Dimension "intention" is its own entity                            | "Add intention" opens the Destination form for that dimension |
+| ID    | Question                                                                                                                                                                | Until decided                                                                                                            |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| FQ-14 | `GET /timeline` returns undated items (`date: null`) and each item's `progress`                                                                                         | Journey "Not placed yet" and marker progress use these fields                                                            |
+| FQ-15 | `GET /connections`: associations and unverified possible impacts per Destination                                                                                        | proposed `GoalConnection` model; no amounts                                                                              |
+| FQ-16 | `GET /rewards`: Milestone Awards with counts, earned dates and achieved Waypoints                                                                                       | proposed `Awards` model                                                                                                  |
+| FQ-17 | Onboarding step `areas` and `PUT /onboarding/steps/areas`                                                                                                               | setup saves focus areas through the proposed step                                                                        |
+| FQ-18 | Whether a Waypoint's status follows its Steps                                                                                                                           | the UI shows the status the backend returns (the mock derives it from the Steps, `mock-recalculation.ts`)                |
+| FQ-19 | Whether a Life Dimension "intention" is its own entity                                                                                                                  | "Add intention" opens the Destination form for that dimension                                                            |
+| FQ-20 | `PATCH /goals/{goalId}` with `secondaryAreas[]` (API-CONTRACT §9.5): the allowed range of the optional contribution `weight`, and whether `GET /connections` returns it | Connections "connect" sends `{ areaKey, weight }`; the form checks only the decimal format, the backend checks the range |
 
 ## 7. State
 
 - **Signal stores per feature**, written as `@Injectable()` classes provided on the feature route (not root), with
   `signal()`, `computed()` and `resource()` / `rxResource()` for loading. RxJS stays inside adapters and for streams
   (debounced search). No NgRx (no need yet; revisit if cross-feature state appears).
+- A route keeps its store between visits. Every page calls the store's `enter()`: the first visit loads, a later visit
+  refreshes in the background and keeps the shown values until the backend answers, so a change made on another page
+  (for example a completed Step) appears, and a failed refresh still shows the last saved plan.
 - Store shape: `{ status: 'idle'|'loading'|'ready'|'error', data, error }` exposed as read-only signals plus view-model
   `computed`s. Pages render `FeedbackState` for loading/empty/error with Retry.
 - First implementation (F2-3b): `AtlasOverviewStore` loads the dashboard with `rxResource` and exposes

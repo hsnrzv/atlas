@@ -1,7 +1,10 @@
 import type { GoalConnection } from '../../../core/models/connection';
 import type { GoalSummary } from '../../../core/models/goal';
 import type { IkigaiAreaKey } from '../../../core/models/life-dimension';
-import { lifeDimensionByApiKey } from '../../../shared/design-system/life-dimensions';
+import {
+  LIFE_DIMENSIONS,
+  lifeDimensionByApiKey,
+} from '../../../shared/design-system/life-dimensions';
 import type { LifeDimensionKey } from '../../../shared/design-system/tokens.generated';
 import type { AtlasIconName } from '../../../shared/icons/atlas-icons';
 import { formatMoney } from '../../../shared/utils/money-format';
@@ -177,7 +180,10 @@ export function toConnectionsVm(
   const byGoal = new Map(goals.map((goal) => [goal.id, goal]));
 
   const goalIds = [...new Set(visible.map((item) => item.connection.goalId))];
-  const areaKeys = [...new Set(visible.map((item) => item.connection.areaKey))];
+  // Every Life Dimension is a target, so a Destination can be connected to one it has no relationship with yet.
+  const areaKeys = filters.dimension
+    ? [filters.dimension]
+    : LIFE_DIMENSIONS.map((dimension) => dimension.apiKey as IkigaiAreaKey);
 
   const sourceNodes = goalIds.map((goalId): ConnectionGraphNode => {
     const title = visible.find((item) => item.connection.goalId === goalId)!.connection.goalTitle;
@@ -255,6 +261,32 @@ export function toConnectionsVm(
     contexts,
     filteredOut: all.length > 0 && relationships.length === 0,
   };
+}
+
+export interface ConnectRequestVm {
+  readonly goalId: string;
+  readonly goalTitle: string;
+  readonly areaKey: IkigaiAreaKey;
+  readonly dimensionLabel: string;
+}
+
+/** Resolves a graph "connect" gesture (Destination node → Life Dimension node) to what the dialog and store need. */
+export function connectRequest(
+  vm: ConnectionsVm,
+  source: string,
+  target: string,
+): ConnectRequestVm | null {
+  const goal = vm.relationships.find((item) => item.goalNode === source);
+  const areaKey = target.slice(dimensionNodeId('').length) as IkigaiAreaKey;
+  const dimension = lifeDimensionByApiKey(areaKey);
+  return goal && dimension && target === dimensionNodeId(areaKey)
+    ? {
+        goalId: source.slice(goalNodeId('').length),
+        goalTitle: goal.goalTitle,
+        areaKey,
+        dimensionLabel: dimension.label,
+      }
+    : null;
 }
 
 /** Relationships touching the selected graph node, for the details panel. */

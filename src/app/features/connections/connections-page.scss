@@ -160,3 +160,11 @@
 .context-link {
   @include atlas.style(label);
 }
+
+.connect-hint {
+  @include atlas.style(label);
+
+  &:empty {
+    display: none;
+  }
+}

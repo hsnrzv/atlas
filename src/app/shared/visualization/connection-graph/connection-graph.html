@@ -5,6 +5,10 @@
     [attr.aria-label]="label()"
     [style.inline-size.%]="zoom() * 100"
     [style.aspect-ratio]="layout().width + ' / ' + layout().height"
+    [class.is-armed]="armed() !== null"
+    (pointermove)="track($event)"
+    (pointerleave)="untrack()"
+    (keydown.escape)="clear($event)"
   >
     <svg
       class="lines"
@@ -23,6 +27,9 @@
           vector-effect="non-scaling-stroke"
         />
       }
+      @if (pendingPath(); as path) {
+        <path class="line is-pending" [attr.d]="path" vector-effect="non-scaling-stroke" />
+      }
     </svg>
     @for (item of placed(); track item.node.id) {
       <button
@@ -30,6 +37,8 @@
         class="node"
         [class.is-source]="item.node.column === 'source'"
         [class.is-selected]="selected() === item.node.id"
+        [class.is-locked]="isLocked(item.node)"
+        [attr.aria-disabled]="isLocked(item.node) || null"
         [attr.data-id]="item.node.id"
         [attr.data-dimension]="item.node.dimension"
         [attr.aria-pressed]="selected() === item.node.id"
@@ -37,7 +46,7 @@
         [style.top.%]="item.top"
         [style.width.%]="item.width"
         [style.height.%]="item.height"
-        (click)="toggle(item.node.id)"
+        (click)="choose(item.node)"
       >
         <atlas-icon class="node-icon" [name]="item.node.icon" size="md" />
         <span class="node-label" aria-hidden="true">{{ item.node.label }}</span>

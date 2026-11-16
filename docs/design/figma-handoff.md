@@ -192,7 +192,8 @@ Accepted with Phase 5 (F2-4…F2-7, F3-0…F3-3), pending owner review at gate 5
 - **Steps list** is a single column. The priority filter waits for FQ-11; the Due filter is "set" / "not set". Notes
   count per Step (FQ-13) and the application date (FQ-7) are not shown.
 - **Blocked Steps:** each blocked Step shows its own blocked panel with the prerequisites that block it.
-- **Reorder** (move up / move down buttons) is on Waypoint detail only.
+- **Step order:** Steps are listed by due date, earliest first, with undated Steps last, on every page (owner
+  request 2026-11-16). This replaced the move up / move down reorder on Waypoint detail.
 - **Step status change** is announced through the live region with an inline message, not a toast, so the change is
   not announced twice.
 - Waypoint and Step pages (`/destinations/…`) highlight "Destinations" in the navigation.
@@ -204,6 +205,11 @@ Accepted with Phase 6 (P-V1, F2-8, F2-9, P-V2, P-D1, F3-4, P-C1), pending owner 
 
 - **Connections (09):** the caption reads "Sample plan ·" instead of the Figma date, and its copy is generalised for
   more than one Destination (the heading counts them in words). Below 768 px the List view is the default.
+  - The graph lists all seven Life Dimensions, also those without a relationship (owner request 2026-11-16).
+  - **Connect (owner request 2026-11-16; not in Figma):** select a Destination, then a Life Dimension it has no
+    association with. On desktop a dashed line follows the mouse; below 768 px the other Destinations are disabled
+    until the selection is cleared (select it again or press Escape). A "Relationship details" dialog shows the
+    association and an optional contribution weight; Save adds a secondary assignment (FQ-20).
 - **Journey Overview (10):**
   - Lanes use Waypoint titles; Figma's lane names (Application / Programme start / Graduation) are not in the data
     model.
@@ -219,6 +225,9 @@ Accepted with Phase 6 (P-V1, F2-8, F2-9, P-V2, P-D1, F3-4, P-C1), pending owner 
   - The prototype "Completion study" and "Celebration study" frames are not reproduced as such; the page shows the
     state the backend reports, and the celebration card appears once a Waypoint is achieved (flow G).
   - "Mark as celebrated" (redeem, API-CONTRACT §9.6) is added. Dismiss is an icon button.
+  - Owner request 2026-11-16: awards are grouped per Destination, each group with its own linked Destination card, and
+    a "Next Milestones" list shows the next Waypoint of every active Destination with its status, progress, Step
+    count and planned date (dashboard `nextNode`, FQ-1).
   - Dates follow `LOCALE_ID` (long en-US format).
 - **Life Dimensions (12–13):** Figma has copy only for Career; the other six descriptions and prompts are authored in
   `dimension-copy.ts` and need product review. "Add intention" opens the Destination form for that dimension (FQ-19).

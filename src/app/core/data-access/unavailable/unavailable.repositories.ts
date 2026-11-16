@@ -56,6 +56,10 @@ export class UnavailableGoalRepository extends GoalRepository {
     return unavailable();
   }
 
+  setSecondaryAreas(): Observable<Goal> {
+    return unavailable();
+  }
+
   archive(): Observable<Goal> {
     return unavailable();
   }

@@ -40,6 +40,13 @@
   &.is-active {
     stroke-width: 4;
   }
+
+  // The armed connection that follows the mouse (decorative; the hint and the dialog say the same in words).
+  &.is-pending {
+    stroke: var(--color-text-primary);
+    stroke-dasharray: 4 6;
+    pointer-events: none;
+  }
 }
 
 .node {
@@ -73,6 +80,17 @@
     border-color: var(--node-accent, var(--color-text-primary));
     border-width: var(--size-focus-ring-width);
   }
+
+  // Locked Destinations while another one is armed on a compact screen; the disabled look pairs with `aria-disabled`.
+  &.is-locked {
+    color: var(--color-action-on-disabled);
+    cursor: not-allowed;
+    background: var(--color-action-disabled);
+  }
+}
+
+.stage.is-armed .node:not(.is-source, .is-locked) {
+  cursor: crosshair;
 }
 
 @each $dimension in career, finance, health, love, passion, friendship, family {

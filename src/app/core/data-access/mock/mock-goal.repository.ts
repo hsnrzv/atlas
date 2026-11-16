@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { map, type Observable } from 'rxjs';
-import type { Goal, GoalId, GoalSummary } from '../../models/goal';
+import type { Goal, GoalId, GoalSummary, SecondaryArea } from '../../models/goal';
 import type {
   GoalDependency,
   GoalDraft,
@@ -15,7 +15,7 @@ import { AtlasDataError } from '../data-error';
 import { GoalRepository } from '../ports/goal.repository';
 import { MockPlanState } from './mock-plan-state';
 import { MockResponder } from './mock-responder';
-import { MOCK_NEW_GOAL_PROGRESS } from './sample-fixtures';
+import { progressOf } from './mock-recalculation';
 import { ATLAS_MOCK_SENTINEL } from './sentinel';
 
 function summary(goal: Goal): GoalSummary {
@@ -97,7 +97,7 @@ export class MockGoalRepository extends GoalRepository {
         status: draft.status,
         startDate: null,
         targetDate: draft.targetDate,
-        progress: MOCK_NEW_GOAL_PROGRESS,
+        progress: progressOf(0, 0),
         nextAvailableNode: null,
         reward: trimmed(draft.reward)
           ? { description: draft.reward!.trim(), status: 'PLANNED' }
@@ -126,6 +126,23 @@ export class MockGoalRepository extends GoalRepository {
         status: draft.status,
         targetDate: draft.targetDate,
         reward: reward ? { description: reward, status: goal.reward?.status ?? 'PLANNED' } : null,
+        updatedAt: this.state.now(),
+        version: goal.version + 1,
+      });
+    });
+  }
+
+  setSecondaryAreas(
+    goalId: GoalId,
+    version: number,
+    areas: readonly SecondaryArea[],
+  ): Observable<Goal> {
+    return this.write(() => {
+      const goal = this.state.goal(goalId);
+      this.state.checkVersion(goal, version);
+      return this.state.replaceGoal({
+        ...goal,
+        secondaryAreas: areas,
         updatedAt: this.state.now(),
         version: goal.version + 1,
       });
@@ -183,7 +200,8 @@ export class MockGoalRepository extends GoalRepository {
         version: 1,
       };
       this.state.nodes = [...this.state.nodes, node];
-      return node;
+      this.state.recalculate(goalId);
+      return this.state.node(goalId, node.id);
     });
   }
 
@@ -210,7 +228,10 @@ export class MockGoalRepository extends GoalRepository {
         title: patch.title?.trim() ?? current.title,
         version: current.version + 1,
       });
-      this.state.applySampleFixtures();
+      if (patch.status && current.status === 'COMPLETED') {
+        this.state.markCompleted(nodeId, false);
+      }
+      this.state.recalculate(goalId);
       return this.state.node(goalId, updated.id);
     });
   }
@@ -237,10 +258,7 @@ export class MockGoalRepository extends GoalRepository {
       this.state.notes = this.state.notes.filter(
         (note) => !note.nodeId || !removed.has(note.nodeId),
       );
-      const goal = this.state.goal(goalId);
-      if (goal.nextAvailableNode && removed.has(goal.nextAvailableNode.id)) {
-        this.state.replaceGoal({ ...goal, nextAvailableNode: null });
-      }
+      this.state.recalculate(goalId);
     });
   }
 
@@ -260,7 +278,8 @@ export class MockGoalRepository extends GoalRepository {
       if (node.status !== 'COMPLETED') {
         this.state.statusBeforeComplete.set(nodeId, node.status);
         this.state.replaceNode({ ...node, status: 'COMPLETED', version: node.version + 1 });
-        this.state.applySampleFixtures();
+        this.state.markCompleted(nodeId, true);
+        this.state.recalculate(goalId);
       }
       return this.state.node(goalId, nodeId);
     });
@@ -272,7 +291,8 @@ export class MockGoalRepository extends GoalRepository {
       if (node.status === 'COMPLETED') {
         const status = this.state.statusBeforeComplete.get(nodeId) ?? 'IN_PROGRESS';
         this.state.replaceNode({ ...node, status, version: node.version + 1 });
-        this.state.applySampleFixtures();
+        this.state.markCompleted(nodeId, false);
+        this.state.recalculate(goalId);
       }
       return this.state.node(goalId, nodeId);
     });
@@ -318,6 +338,7 @@ export class MockGoalRepository extends GoalRepository {
         dependentNodeId,
       };
       this.state.dependencies = [...this.state.dependencies, dependency];
+      this.state.recalculate(goalId);
       return dependency;
     });
   }
@@ -326,6 +347,7 @@ export class MockGoalRepository extends GoalRepository {
     return this.write(() => {
       this.state.goal(goalId);
       this.state.dependencies = this.state.dependencies.filter((dep) => dep.id !== dependencyId);
+      this.state.recalculate(goalId);
     });
   }
 

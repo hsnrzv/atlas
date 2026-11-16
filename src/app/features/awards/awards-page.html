@@ -41,102 +41,118 @@
           <p class="secondary">{{ vm.summary.message }}</p>
         </section>
 
-        <div class="grid">
-          <section class="awards" aria-labelledby="atlas-awards-list">
-            <h2 id="atlas-awards-list" class="atlas-visually-hidden">Your Milestone Awards</h2>
-            <ul class="list">
-              @for (award of vm.awards; track award.key) {
-                <li class="card award" [class.is-earned]="award.earned">
-                  <span class="medal" aria-hidden="true"
-                    ><atlas-icon name="milestone-awards"
-                  /></span>
-                  <p class="eyebrow">{{ award.eyebrow }}</p>
-                  <h3 class="award-title">{{ award.title }}</h3>
-                  <p class="secondary">{{ award.body }}</p>
-                  <p class="status">{{ award.status }}</p>
-                  <p class="secondary">{{ award.date }}</p>
-                  <div class="actions">
-                    @if (award.redeemable) {
-                      <button
-                        mat-flat-button
-                        type="button"
-                        [disabled]="redeeming() === award.key"
-                        (click)="redeem(award)"
+        <section class="groups" aria-labelledby="atlas-awards-list">
+          <h2 id="atlas-awards-list" class="atlas-visually-hidden">Your Milestone Awards</h2>
+          @for (group of vm.groups; track group.id; let first = $first) {
+            <div class="grid">
+              <ul class="list">
+                @for (award of group.awards; track award.key) {
+                  <li class="card award" [class.is-earned]="award.earned">
+                    <span class="medal" aria-hidden="true"
+                      ><atlas-icon name="milestone-awards"
+                    /></span>
+                    <p class="eyebrow">{{ award.eyebrow }}</p>
+                    <h3 class="award-title">{{ award.title }}</h3>
+                    <p class="secondary">{{ award.body }}</p>
+                    <p class="status">{{ award.status }}</p>
+                    <p class="secondary">{{ award.date }}</p>
+                    <div class="actions">
+                      @if (award.redeemable) {
+                        <button
+                          mat-flat-button
+                          type="button"
+                          [disabled]="redeeming() === award.key"
+                          (click)="redeem(award)"
+                        >
+                          Mark as celebrated
+                        </button>
+                      }
+                      <a
+                        mat-stroked-button
+                        [routerLink]="award.link"
+                        [attr.aria-label]="award.linkName"
                       >
-                        Mark as celebrated
-                      </button>
-                    }
-                    <a
-                      mat-stroked-button
-                      [routerLink]="award.link"
-                      [attr.aria-label]="award.linkName"
-                    >
-                      {{ award.linkLabel }}
+                        {{ award.linkLabel }}
+                      </a>
+                    </div>
+                  </li>
+                }
+              </ul>
+
+              <div class="side">
+                @if (first && vm.celebration && companionMode(); as mode) {
+                  <atlas-companion-card
+                    trigger="waypoint-achieved"
+                    variant="expanded"
+                    [mode]="mode"
+                    [body]="vm.celebration.body"
+                    (dismissed)="companion.dismiss('waypoint-achieved')"
+                    (muted)="companion.setMode('muted')"
+                    (disabled)="companion.setMode('off')"
+                  >
+                    <a mat-flat-button atlasCompanionAction [routerLink]="atlasLink">
+                      <atlas-icon name="back" />
+                      Back to plan
                     </a>
+                    <a mat-stroked-button atlasCompanionAction [routerLink]="vm.celebration.link">
+                      View Waypoint
+                    </a>
+                  </atlas-companion-card>
+                  <p class="note">{{ vm.celebration.note }}</p>
+                }
+                @if (group.destination; as destination) {
+                  <section
+                    class="card destination"
+                    [attr.aria-labelledby]="'atlas-award-goal-' + destination.id"
+                  >
+                    <p class="eyebrow is-linked">{{ destination.eyebrow }}</p>
+                    <h3 class="destination-title" [id]="'atlas-award-goal-' + destination.id">
+                      <a [routerLink]="destination.link">{{ destination.title }}</a>
+                    </h3>
+                    <p class="strong">{{ destination.progress }}</p>
+                    <p class="secondary">{{ destination.achieved }}</p>
+                    @if (destination.keyDates.length) {
+                      <ul class="key-dates">
+                        @for (line of destination.keyDates; track $index) {
+                          <li>{{ line }}</li>
+                        }
+                      </ul>
+                    }
+                    <a mat-stroked-button [routerLink]="journeyLink">
+                      Review plan
+                      <atlas-icon name="journey-overview" />
+                    </a>
+                  </section>
+                }
+              </div>
+            </div>
+          }
+        </section>
+
+        @if (vm.next.length) {
+          <section class="card next" aria-labelledby="atlas-awards-next">
+            <h2 id="atlas-awards-next" class="section-title">Next Milestones</h2>
+            <ul class="next-list">
+              @for (item of vm.next; track item.id) {
+                <li class="next-item">
+                  <div class="next-head">
+                    <h3 class="next-title">
+                      <a [routerLink]="item.link">{{ item.title }}</a>
+                    </h3>
+                    <atlas-status-badge [status]="item.status" />
+                    @if (item.blocked) {
+                      <atlas-status-badge status="blocked" />
+                    }
                   </div>
+                  <p class="note">{{ item.destination }}</p>
+                  <atlas-progress
+                    [value]="item.value"
+                    [label]="item.title + ' progress'"
+                    [detail]="item.line"
+                  />
                 </li>
               }
             </ul>
-          </section>
-
-          <div class="side">
-            @if (vm.celebration && companionMode(); as mode) {
-              <atlas-companion-card
-                trigger="waypoint-achieved"
-                variant="expanded"
-                [mode]="mode"
-                [body]="vm.celebration.body"
-                (dismissed)="companion.dismiss('waypoint-achieved')"
-                (muted)="companion.setMode('muted')"
-                (disabled)="companion.setMode('off')"
-              >
-                <a mat-flat-button atlasCompanionAction [routerLink]="atlasLink">
-                  <atlas-icon name="back" />
-                  Back to plan
-                </a>
-                <a mat-stroked-button atlasCompanionAction [routerLink]="vm.celebration.link">
-                  View Waypoint
-                </a>
-              </atlas-companion-card>
-              <p class="note">{{ vm.celebration.note }}</p>
-            }
-            @for (destination of vm.destinations; track destination.id) {
-              <section
-                class="card destination"
-                [attr.aria-labelledby]="'atlas-award-goal-' + destination.id"
-              >
-                <p class="eyebrow is-linked">{{ destination.eyebrow }}</p>
-                <h2 class="destination-title" [id]="'atlas-award-goal-' + destination.id">
-                  <a [routerLink]="destination.link">{{ destination.title }}</a>
-                </h2>
-                <p class="strong">{{ destination.progress }}</p>
-                <p class="secondary">{{ destination.achieved }}</p>
-                @if (destination.keyDates.length) {
-                  <ul class="key-dates">
-                    @for (line of destination.keyDates; track $index) {
-                      <li>{{ line }}</li>
-                    }
-                  </ul>
-                }
-                <a mat-stroked-button [routerLink]="journeyLink">
-                  Review plan
-                  <atlas-icon name="journey-overview" />
-                </a>
-              </section>
-            }
-          </div>
-        </div>
-
-        @if (vm.next; as next) {
-          <section class="card next" aria-labelledby="atlas-awards-next">
-            <h2 id="atlas-awards-next" class="next-title">
-              <a [routerLink]="next.link">{{ next.title }}</a>
-            </h2>
-            <atlas-progress
-              [value]="next.value"
-              label="Next milestone progress"
-              [detail]="next.line"
-            />
           </section>
         }
 

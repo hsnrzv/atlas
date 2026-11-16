@@ -4,7 +4,8 @@ import type { Dashboard, DashboardGoal } from '../../../core/models/dashboard';
 import type { RewardStatus } from '../../../core/models/goal';
 import type { IsoInstant } from '../../../core/models/planned-date';
 import { lifeDimensionByApiKey } from '../../../shared/design-system/life-dimensions';
-import { plannedDateText } from '../../../shared/utils/plan-format';
+import type { UiStatus } from '../../../core/models/status-for-node';
+import { nodeStatusKey, plannedDateText } from '../../../shared/utils/plan-format';
 import { formatPlannedDate } from '../../../shared/utils/planned-date-format';
 import { formatPercent, percentValue, progressDetail } from '../../../shared/utils/progress-format';
 
@@ -38,8 +39,20 @@ export interface LinkedDestinationVm {
   readonly keyDates: readonly string[];
 }
 
+/** The awards of one Destination with its linked Destination card beside them. */
+export interface AwardGroupVm {
+  readonly id: string;
+  readonly awards: readonly AwardCardVm[];
+  readonly destination: LinkedDestinationVm | null;
+}
+
+/** The backend's next Waypoint of one active Destination. */
 export interface NextMilestoneVm {
+  readonly id: string;
   readonly title: string;
+  readonly destination: string;
+  readonly status: UiStatus;
+  readonly blocked: boolean;
   readonly line: string;
   readonly value: number;
   readonly link: string;
@@ -66,9 +79,8 @@ export interface AwardsVm {
     readonly planned: string | null;
     readonly message: string;
   };
-  readonly awards: readonly AwardCardVm[];
-  readonly destinations: readonly LinkedDestinationVm[];
-  readonly next: NextMilestoneVm | null;
+  readonly groups: readonly AwardGroupVm[];
+  readonly next: readonly NextMilestoneVm[];
   readonly history: readonly HistoryItemVm[];
   readonly celebration: CelebrationVm | null;
   /** Nothing to show yet: no reward and no achieved Waypoint. */
@@ -146,15 +158,23 @@ function linkedDestination(goal: DashboardGoal, locale: string): LinkedDestinati
   };
 }
 
-function nextMilestone(goal: DashboardGoal | undefined, locale: string): NextMilestoneVm | null {
-  const next = goal?.nextNode;
-  if (!goal || !next) {
+function nextMilestone(goal: DashboardGoal, locale: string): NextMilestoneVm | null {
+  const next = goal.nextNode;
+  if (!next) {
     return null;
   }
   const detail = progressDetail(next.progress);
   return {
-    title: `Next milestone · ${next.title}`,
-    line: [detail ? `${detail} steps complete` : null, plannedDateText(next.dueDate, locale)]
+    id: `${goal.id}:${next.id}`,
+    title: next.title,
+    destination: goal.title,
+    status: nodeStatusKey(next),
+    blocked: next.availability.state === 'LOCKED',
+    line: [
+      next.progress ? formatPercent(next.progress, locale) : null,
+      detail ? `${detail} steps complete` : null,
+      plannedDateText(next.dueDate, locale),
+    ]
       .filter(Boolean)
       .join(' · '),
     value: percentValue(next.progress),
@@ -184,7 +204,7 @@ export function toAwardsVm(input: AwardsInput, locale: string, sample: boolean):
     ...awards.rewards.map((item) => item.goalId),
     ...awards.achievedWaypoints.map((item) => item.goalId),
   ]);
-  const linked = dashboard.activeGoals.filter((goal) => goalIds.has(goal.id));
+  const goals = new Map(dashboard.activeGoals.map((goal) => [goal.id, goal]));
   const latest = awards.achievedWaypoints[0];
   const plannedTitles = planned.map((item) => item.description);
   const underway = dashboard.activeGoals.some((goal) => percentValue(goal.progress) > 0);
@@ -200,9 +220,19 @@ export function toAwardsVm(input: AwardsInput, locale: string, sample: boolean):
         ? `${summary.redeemed} of ${summary.earned} earned ${plural(summary.earned, 'award', 'awards')} celebrated.`
         : `${underway ? 'Progress is underway. ' : ''}No Milestone Award has been earned yet.`,
     },
-    awards: awards.rewards.map((item) => awardCard(item, locale)),
-    destinations: linked.map((goal) => linkedDestination(goal, locale)),
-    next: nextMilestone(linked[0] ?? dashboard.activeGoals[0], locale),
+    groups: [...goalIds].map((id) => {
+      const goal = goals.get(id);
+      return {
+        id,
+        awards: awards.rewards
+          .filter((item) => item.goalId === id)
+          .map((item) => awardCard(item, locale)),
+        destination: goal ? linkedDestination(goal, locale) : null,
+      };
+    }),
+    next: dashboard.activeGoals
+      .map((goal) => nextMilestone(goal, locale))
+      .filter((item): item is NextMilestoneVm => !!item),
     history: awards.achievedWaypoints.map((item) => historyItem(item, locale)),
     celebration: latest
       ? {

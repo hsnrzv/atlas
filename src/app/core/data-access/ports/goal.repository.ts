@@ -1,5 +1,5 @@
 import type { Observable } from 'rxjs';
-import type { Goal, GoalId, GoalSummary } from '../../models/goal';
+import type { Goal, GoalId, GoalSummary, SecondaryArea } from '../../models/goal';
 import type {
   GoalDependency,
   GoalDraft,
@@ -22,6 +22,12 @@ export abstract class GoalRepository {
 
   abstract create(draft: GoalDraft): Observable<Goal>;
   abstract update(goalId: GoalId, version: number, draft: GoalDraft): Observable<Goal>;
+  /** `PATCH /goals/{goalId}` with `secondaryAreas` (Connections "connect to a Life Dimension"). */
+  abstract setSecondaryAreas(
+    goalId: GoalId,
+    version: number,
+    areas: readonly SecondaryArea[],
+  ): Observable<Goal>;
   abstract archive(goalId: GoalId): Observable<Goal>;
   /** Permanent deletion (API-CONTRACT A-1); the UI confirms first. */
   abstract remove(goalId: GoalId, version: number): Observable<void>;

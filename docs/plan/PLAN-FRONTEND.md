@@ -288,7 +288,8 @@ content are built against Figma V3.
 - [x] **F3-1** Destination create/edit/archive/delete (Material forms, validation messages, confirm dialog). Done
       2026-11-15 (roadmap phase 5): `GoalFormDialog`, `ConfirmDialog`.
 - [x] **F3-2** Nested Waypoint/Step create/edit/reorder/delete; dependency picker (Connections within a Destination).
-      Done 2026-11-15 (roadmap phase 5): `NodeFormDialog`, `PlanEditor`, move up/down on Waypoint detail.
+      Done 2026-11-15 (roadmap phase 5): `NodeFormDialog`, `PlanEditor`. The move up/down reorder was replaced on
+      2026-11-16 by due-date order (owner request).
 - [x] **F3-3** Notes panel for Destinations and Waypoints (backend stores Markdown text, BE-3.60; rendering per D13);
       due dates with precision. Done 2026-11-15 (roadmap phase 5): `NotesPanel` (plain text until D13),
       `PlannedDateFields`.

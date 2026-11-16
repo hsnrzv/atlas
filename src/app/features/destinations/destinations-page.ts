@@ -97,6 +97,7 @@ export class DestinationsPage implements OnInit {
   );
 
   constructor() {
+    this.store.enter();
     effect(() => this.store.filters.set(this.filters()));
     keepHeadingFocus(this.store.state);
   }

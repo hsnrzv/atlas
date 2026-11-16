@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>Relationship details</h2>
+<form class="form" novalidate (submit)="save($event)">
+  <mat-dialog-content class="content">
+    <dl class="facts">
+      <div class="fact">
+        <dt class="atlas-caption atlas-text-secondary">Connects</dt>
+        <dd>{{ data.goalTitle }} → {{ data.dimensionLabel }}</dd>
+      </div>
+      <div class="fact">
+        <dt class="atlas-caption atlas-text-secondary">Type</dt>
+        <dd>Secondary assignment · association</dd>
+      </div>
+    </dl>
+    <p class="atlas-text-secondary">
+      An association does not guarantee a {{ data.dimensionLabel.toLowerCase() }} outcome.
+    </p>
+    <mat-form-field appearance="outline">
+      <mat-label>Contribution weight · optional</mat-label>
+      <input matInput inputmode="decimal" [formField]="relationship.weight" />
+      <mat-hint
+        >How much this Destination adds to {{ data.dimensionLabel }}, for example 0.3.</mat-hint
+      >
+      @if (error(relationship.weight); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+    <p class="form-error" role="alert">{{ formError() }}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancel</button>
+    <button mat-flat-button type="submit" [disabled]="saving()">Save</button>
+  </mat-dialog-actions>
+</form>

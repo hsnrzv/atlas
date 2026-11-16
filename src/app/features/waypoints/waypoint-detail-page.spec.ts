@@ -76,19 +76,6 @@ describe('WaypointDetailPage', () => {
     expect(text(root.querySelector('a[href="/awards"]'))).toBe('View milestone completion');
   });
 
-  it('moves a Step down the list', async () => {
-    const { fixture, root } = await render(N.submitApplication);
-    const [first, second] = stepTitles(root);
-
-    root.querySelector<HTMLButtonElement>(`[aria-label="Move ${first} down"]`)!.click();
-    await settle(fixture);
-
-    expect(stepTitles(root).slice(0, 2)).toEqual([second, first]);
-    expect(
-      root.querySelector<HTMLButtonElement>(`[aria-label="Move ${second} up"]`)!.disabled,
-    ).toBe(true);
-  });
-
   it('sends a Step to its own page', async () => {
     const { navigate } = await render(N.draftStatement);
 

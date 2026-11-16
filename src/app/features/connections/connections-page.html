@@ -133,11 +133,16 @@
                     [edges]="vm.edges"
                     [selected]="selectedNode()"
                     [zoom]="zoom()"
+                    [connectable]="true"
+                    [lockSources]="lockSources"
                     (selectedChange)="select($event)"
+                    (connectRequest)="connect($event)"
                   />
+                  <p class="connect-hint" aria-live="polite">{{ connectHint() }}</p>
                   <p class="atlas-caption atlas-text-secondary">
                     Solid lines are assignments. Dashed lines are possible effects that may not be
-                    verified. Select a node to read its relationships.
+                    verified. Select a node to read its relationships, or select a Destination and
+                    then a Life Dimension to connect them.
                   </p>
                 </section>
               } @else {

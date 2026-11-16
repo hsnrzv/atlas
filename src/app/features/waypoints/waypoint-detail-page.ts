@@ -7,7 +7,7 @@ import { AtlasTitleStrategy } from '../../core/layout/atlas-title-strategy';
 import { AWARDS, DESTINATIONS, STEPS, WAYPOINTS } from '../../core/layout/navigation';
 import { destinationLink, nodeLink, stepLink, waypointLink } from '../../core/layout/plan-links';
 import type { GoalNode } from '../../core/models/goal-node';
-import { ancestorsOf, childrenOf, findNode, isWaypoint } from '../../core/models/goal-tree';
+import { ancestorsOf, findNode, stepsOf } from '../../core/models/goal-tree';
 import { PlanEditor } from '../../core/plan/plan-editor';
 import { AtlasIcon } from '../../shared/icons/atlas-icon';
 import { AtlasStatusBadge } from '../../shared/ui/badge/status-badge';
@@ -107,8 +107,7 @@ export class WaypointDetailPage {
       })),
       { label: node.title },
     ];
-    const children = childrenOf(nodes, node.id);
-    const steps = children.filter((child) => !isWaypoint(child));
+    const steps = stepsOf(nodes, node.id);
     const waitsFor = this.store
       .prerequisitesOf(node.id)
       .map((id) => findNode(nodes, id))
@@ -128,12 +127,7 @@ export class WaypointDetailPage {
       percent: percentValue(node.progress),
       progressDetail: completedText(node.progress, 'Steps') ?? undefined,
       stops: toWaypointStops(goal, nodes, node.id, this.locale),
-      steps: steps.map((step, index) => ({
-        node: step,
-        row: toStepRow(step, this.locale),
-        first: index === 0,
-        last: index === steps.length - 1,
-      })),
+      steps: steps.map((step) => ({ node: step, row: toStepRow(step, this.locale) })),
       stepsQuery: { destination: goal.id, waypoint: node.id },
       due: plannedDateText(node.dueDate, this.locale),
       start: node.startDate ? plannedDateText(node.startDate, this.locale) : null,
@@ -148,6 +142,7 @@ export class WaypointDetailPage {
   protected readonly awardsPath = AWARDS.path;
 
   constructor() {
+    this.store.enter();
     effect(() => {
       this.store.goalId.set(this.goalId());
       this.store.notesNodeId.set(this.nodeId());

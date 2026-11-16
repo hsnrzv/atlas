@@ -51,6 +51,21 @@ describe('GoalPlanStore', () => {
     expect(store.notes()).toEqual([]);
   });
 
+  it('refreshes on a later visit and keeps the shown plan meanwhile', async () => {
+    const store = await ready();
+    store.enter();
+    const get = vi.spyOn(TestBed.inject(MockGoalRepository), 'get');
+    const tree = vi.spyOn(TestBed.inject(MockGoalRepository), 'tree');
+    store.enter();
+    TestBed.tick();
+    expect(store.state()).toBe('ready');
+    expect(store.goal()?.id).toBe(SAMPLE_GOAL_ID);
+    await flush();
+    expect(get).toHaveBeenCalledWith(SAMPLE_GOAL_ID);
+    expect(tree).toHaveBeenCalledWith(SAMPLE_GOAL_ID);
+    expect(store.state()).toBe('ready');
+  });
+
   it('reports a missing Destination as not-found', async () => {
     const store = setup();
     store.goalId.set('missing');
@@ -116,18 +131,6 @@ describe('GoalPlanStore', () => {
     expect(store.nodes().find((item) => item.id === node.id)?.title).toBe(
       'Pay the application fee',
     );
-  });
-
-  it('moves a node among its siblings', async () => {
-    const store = await ready();
-    const top = store.nodes().filter((node) => node.parentId === null);
-    const second = [...top].sort((a, b) => a.sortOrder - b.sortOrder)[1];
-    await settle(store.moveNode(second, -1));
-    const after = store
-      .nodes()
-      .filter((node) => node.parentId === null)
-      .sort((a, b) => a.sortOrder - b.sortOrder);
-    expect(after[0].id).toBe(second.id);
   });
 
   it('adds, edits and removes goal notes', async () => {

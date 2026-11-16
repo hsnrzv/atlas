@@ -4,7 +4,6 @@ import type { AchievedWaypoint, AwardItem, Awards } from '../../models/awards';
 import type { RewardStatus } from '../../models/goal';
 import { AtlasDataError } from '../data-error';
 import { AwardRepository } from '../ports/award.repository';
-import { SAMPLE_COMPLETION_TIMES } from './mock-dashboard.repository';
 import { mockRead, mockWrite } from './mock-io';
 import { MockPlanState } from './mock-plan-state';
 import { MockResponder } from './mock-responder';
@@ -65,7 +64,7 @@ export class MockAwardRepository extends AwardRepository {
         areaKey: goal.primaryAreaKey,
         description,
         status,
-        earnedAt: status === 'PLANNED' ? null : (SAMPLE_COMPLETION_TIMES[nodeId ?? ''] ?? null),
+        earnedAt: status === 'PLANNED' ? null : nodeId ? this.state.completedAt(nodeId) : null,
         redeemedAt: this.redeemed.get(`${goal.id}:${nodeId ?? ''}`) ?? null,
       });
       if (goal.reward) {
@@ -81,7 +80,7 @@ export class MockAwardRepository extends AwardRepository {
             nodeId: node.id,
             title: node.title,
             areaKey: goal.primaryAreaKey,
-            completedAt: SAMPLE_COMPLETION_TIMES[node.id] ?? null,
+            completedAt: this.state.completedAt(node.id),
             progress: node.progress,
           });
         }

@@ -79,6 +79,10 @@ describe('AwardsPage', () => {
     expect(text(root.querySelector('.award .status'))).toBe('Planned · not earned');
     expect(root.querySelector('atlas-companion-card')).toBeNull();
     expect(text(root.querySelector('.history .card'))).toContain('No Waypoint achieved yet');
+    expect(text(root.querySelector('.destination .eyebrow'))).toBe('Linked Destination · Career');
+    expect(text(root.querySelector('#atlas-awards-next'))).toBe('Next Milestones');
+    expect(text(root.querySelector('.next-title'))).toBe('Submit application');
+    expect(root.querySelector('.next-item atlas-status-badge')).not.toBeNull();
   });
 
   it('celebrates an achieved Waypoint with the optional companion', async () => {

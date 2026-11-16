@@ -1,7 +1,6 @@
 import type { Goal } from '../../models/goal';
 import type { GoalDraft } from '../../models/goal-commands';
 import type { GoalNode, NodeAvailability } from '../../models/goal-node';
-import type { IsoDate } from '../../models/planned-date';
 import { SAMPLE_PROGRESS } from './sample-fixtures';
 
 /**
@@ -9,8 +8,6 @@ import { SAMPLE_PROGRESS } from './sample-fixtures';
  * only; every derived value comes from `sample-fixtures.ts`. No other Destinations, curricula or dates may be
  * added (frontend.md §6.4). This is an illustration, not real programme or admission information.
  */
-export const SAMPLE_TODAY: IsoDate = '2026-11-12';
-
 export const SAMPLE_GOAL_ID = 'sample-goal-masters';
 
 /** Typographic apostrophe, as in Figma and §10.5. */

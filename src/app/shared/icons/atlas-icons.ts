@@ -2,10 +2,8 @@ import type { TablerIcon } from '@tabler/icons-angular';
 import {
   IconAdjustmentsHorizontal,
   IconAlertCircle,
-  IconArrowDown,
   IconArrowLeft,
   IconArrowRight,
-  IconArrowUp,
   IconAward,
   IconBell,
   IconBriefcase,
@@ -105,8 +103,6 @@ export const ATLAS_ICONS = {
   'view-grid': IconLayoutGrid,
   'view-list': IconList,
   // Not in Figma V3: reorder a Waypoint or Step among its siblings (F3-2).
-  'move-up': IconArrowUp,
-  'move-down': IconArrowDown,
   // Connections graph toolbar (Figma page 09).
   'zoom-in': IconZoomIn,
   'zoom-out': IconZoomOut,

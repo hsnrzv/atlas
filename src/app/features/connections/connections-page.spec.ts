@@ -15,6 +15,8 @@ describe('ConnectionsPage', () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
+  let settle: () => Promise<void>;
+
   async function render(mode: MockMode = 'sample', inputs: Record<string, string> = {}) {
     TestBed.configureTestingModule({
       providers: [provideRouter([]), ...providePlanTesting(mode), ConnectionsStore],
@@ -23,12 +25,15 @@ describe('ConnectionsPage', () => {
     for (const [name, value] of Object.entries(inputs)) {
       fixture.componentRef.setInput(name, value);
     }
-    fixture.detectChanges();
-    for (let i = 0; i < 3; i++) {
-      TestBed.tick();
-      await vi.advanceTimersByTimeAsync(MOCK_LATENCY_MS);
-    }
-    fixture.detectChanges();
+    settle = async () => {
+      fixture.detectChanges();
+      for (let i = 0; i < 3; i++) {
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(MOCK_LATENCY_MS);
+      }
+      fixture.detectChanges();
+    };
+    await settle();
     return fixture.nativeElement as HTMLElement;
   }
 
@@ -39,7 +44,8 @@ describe('ConnectionsPage', () => {
     expect(text(root.querySelector('#atlas-graph-title'))).toBe(
       'One destination. Two relationships.',
     );
-    expect(root.querySelectorAll('atlas-connection-graph .node')).toHaveLength(3);
+    // The Destination plus all seven Life Dimensions, so any of them can be connected.
+    expect(root.querySelectorAll('atlas-connection-graph .node')).toHaveLength(8);
     expect(text(root.querySelector('#atlas-relationship-title'))).toBe(
       'Select a node to see the connection',
     );
@@ -55,6 +61,34 @@ describe('ConnectionsPage', () => {
     expect(panel).toContain('Not set');
     expect(root.querySelector('aside a')?.getAttribute('href')).toBe(
       '/destinations/sample-goal-masters',
+    );
+  });
+
+  it('connects a Destination to a Life Dimension after the relationship details', async () => {
+    const root = await render('sample', { view: 'graph', selected: 'goal:sample-goal-masters' });
+    expect(text(root.querySelector('.connect-hint'))).toMatch(
+      /^Select a Life Dimension to connect .+\. Press Escape to cancel\.$/,
+    );
+
+    root.querySelector<HTMLButtonElement>('[data-id="area:HEALTH"]')!.click();
+    await settle();
+    const dialog = document.querySelector('atlas-relationship-dialog')!;
+    expect(text(dialog.querySelector('h2'))).toBe('Relationship details');
+    expect(text(dialog)).toContain('→ Health');
+
+    dialog.querySelector('form')!.dispatchEvent(new Event('submit'));
+    await settle();
+    await settle();
+
+    const connections = TestBed.inject(ConnectionsStore).value()!.connections;
+    expect(
+      connections.some(
+        (item) => item.areaKey === 'HEALTH' && item.kind === 'ASSOCIATION' && !item.primary,
+      ),
+    ).toBe(true);
+    expect(document.querySelector('atlas-relationship-dialog')).toBeNull();
+    expect(text(document.querySelector('.mat-mdc-snack-bar-label'))).toContain(
+      'is now connected to Health.',
     );
   });
 

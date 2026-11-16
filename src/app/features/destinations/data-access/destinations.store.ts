@@ -29,6 +29,7 @@ export class DestinationsStore {
   readonly filters = signal<DestinationFilters>(DEFAULT_FILTERS);
   /** Year the timeframe filter counts from. */
   readonly year = signal(new Date().getFullYear());
+  private visited = false;
 
   private readonly resource = rxResource({
     params: () => toGoalQuery(this.filters(), this.year()),
@@ -59,6 +60,14 @@ export class DestinationsStore {
     }
     return isDefault(this.filters()) ? 'empty' : 'no-results';
   });
+
+  /** Called when the page opens: a later visit refreshes the list in the background. */
+  enter(): void {
+    if (this.visited) {
+      this.resource.reload();
+    }
+    this.visited = true;
+  }
 
   retry(): void {
     this.resource.reload();

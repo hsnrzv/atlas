@@ -1,0 +1,24 @@
+@use 'abstracts' as atlas;
+
+.content {
+  @include atlas.stack(var(--space-3));
+}
+
+.facts {
+  @include atlas.card(var(--space-3));
+  @include atlas.stack(var(--space-2));
+
+  margin: 0;
+}
+
+.fact dd {
+  margin: 0;
+}
+
+.form-error {
+  color: var(--color-status-at-risk);
+
+  &:empty {
+    display: none;
+  }
+}

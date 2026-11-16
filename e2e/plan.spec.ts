@@ -117,6 +117,28 @@ test.describe('Destinations, Waypoints and Steps', () => {
     );
   });
 
+  test('shows the new progress when returning to a Waypoint after completing a Step', async ({
+    page,
+  }) => {
+    await page.goto(`${WAYPOINT}?mock=sample`);
+    const main = page.getByRole('main');
+    await expect(h1(page)).toHaveText('Submit application');
+    const progress = main.getByRole('progressbar', { name: 'Waypoint progress' });
+    await expect(progress).toHaveAttribute('aria-valuetext', /^40% · /);
+
+    await main
+      .getByRole('link', { name: /Draft personal statement/ })
+      .first()
+      .click();
+    await expect(h1(page)).toHaveText('Draft personal statement');
+    await main.getByRole('button', { name: 'Mark complete' }).click();
+    await expect(main.getByRole('button', { name: 'Reopen Step' })).toBeVisible();
+
+    await main.getByRole('link', { name: 'View updated waypoint' }).click();
+    await expect(h1(page)).toHaveText('Submit application');
+    await expect(progress).toHaveAttribute('aria-valuetext', /^60% · /);
+  });
+
   test('explains why a Step is blocked', async ({ page }) => {
     await page.goto(
       `/destinations/${GOAL_ID}/steps/sample-node-submit-the-application?mock=sample`,

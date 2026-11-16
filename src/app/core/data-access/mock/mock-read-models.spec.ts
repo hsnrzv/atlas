@@ -109,6 +109,25 @@ describe('mock read models (dev only)', () => {
     expect(list[1].impact?.money).toBeNull();
   });
 
+  it('adds a secondary association through the goal write and checks the version', async () => {
+    const { connections, goals } = setup();
+    const goal = await get(goals.get(SAMPLE_GOAL_ID));
+    const saved = await get(
+      goals.setSecondaryAreas(SAMPLE_GOAL_ID, goal.version, [{ areaKey: 'HEALTH', weight: null }]),
+    );
+    expect(saved.version).toBe(goal.version + 1);
+    expect(saved.secondaryAreas).toEqual([{ areaKey: 'HEALTH', weight: null }]);
+    const list = await get(connections.connections());
+    expect(list.map((item) => [item.areaKey, item.kind, item.primary])).toContainEqual([
+      'HEALTH',
+      'ASSOCIATION',
+      false,
+    ]);
+    expect(await reason(goals.setSecondaryAreas(SAMPLE_GOAL_ID, goal.version, []))).toBe(
+      'VERSION_CONFLICT',
+    );
+  });
+
   it('only redeems earned Milestone Awards', async () => {
     const { awards } = setup();
     const list = await get(awards.awards());

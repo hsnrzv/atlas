@@ -1,6 +1,7 @@
 import type { GoalConnection } from '../../../core/models/connection';
 import type { GoalSummary } from '../../../core/models/goal';
 import {
+  connectRequest,
   countPhrase,
   selectedLabel,
   selectedRelationships,
@@ -62,16 +63,38 @@ describe('connections view model', () => {
     const vm = toConnectionsVm([association, impact], [goal], ALL, 'en-US');
 
     expect(vm.heading).toBe('One destination. Two relationships.');
+    // Every Life Dimension is a target, so a Destination can be connected to a new one.
     expect(vm.nodes.map((node) => node.label)).toEqual([
       'Master’s degree · 20%',
       'Career',
       'Finance',
+      'Health',
+      'Love',
+      'Passion',
+      'Friendship',
+      'Family',
     ]);
+    expect(vm.nodes.find((node) => node.id === 'area:HEALTH')?.accessibleName).toBe(
+      'Health, no relationships',
+    );
     expect(vm.edges.map((edge) => edge.line)).toEqual(['solid', 'dashed']);
     expect(vm.noSelection).toBe(
       'No relationship selected. Career is the primary assignment; Finance is an unverified possible impact.',
     );
     expect(vm.contexts[0].line).toBe('Active · Career · 20% · 2 of 10 steps complete');
+  });
+
+  it('resolves a connect gesture from a Destination to a Life Dimension', () => {
+    const vm = toConnectionsVm([association, impact], [goal], ALL, 'en-US');
+
+    expect(connectRequest(vm, 'goal:g1', 'area:HEALTH')).toEqual({
+      goalId: 'g1',
+      goalTitle: 'Master’s degree',
+      areaKey: 'HEALTH',
+      dimensionLabel: 'Health',
+    });
+    expect(connectRequest(vm, 'goal:unknown', 'area:HEALTH')).toBeNull();
+    expect(connectRequest(vm, 'goal:g1', 'area:NOPE')).toBeNull();
   });
 
   it('never invents an amount or a period', () => {

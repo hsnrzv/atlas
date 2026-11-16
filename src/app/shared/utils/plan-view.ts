@@ -1,7 +1,13 @@
 import type { Goal } from '../../core/models/goal';
 import type { GoalNode, NodeId } from '../../core/models/goal-node';
 import type { GoalNote } from '../../core/models/goal-note';
-import { ancestorsOf, childrenOf, findNode, isWaypoint } from '../../core/models/goal-tree';
+import {
+  ancestorsOf,
+  childrenOf,
+  findNode,
+  isWaypoint,
+  stepsOf,
+} from '../../core/models/goal-tree';
 import { nodeLink } from '../../core/layout/plan-links';
 import type { NoteVm } from '../ui/notes-panel/notes-panel';
 import type { StepRowVm } from '../ui/step-row/step-row';
@@ -62,15 +68,13 @@ export function toWaypointStops(
     }));
 }
 
-/** Steps directly under `parentId`. */
+/** Steps directly under `parentId`, by due date. */
 export function toStepRows(
   nodes: readonly GoalNode[],
   parentId: NodeId | null,
   locale: string,
 ): StepRowVm[] {
-  return childrenOf(nodes, parentId)
-    .filter((node) => !isWaypoint(node))
-    .map((node) => toStepRow(node, locale));
+  return stepsOf(nodes, parentId).map((node) => toStepRow(node, locale));
 }
 
 export function toStepRow(node: GoalNode, locale: string): StepRowVm {

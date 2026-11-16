@@ -73,6 +73,7 @@ export class WaypointsPage {
   });
 
   constructor() {
+    this.store.enter();
     keepHeadingFocus(this.state);
   }
 

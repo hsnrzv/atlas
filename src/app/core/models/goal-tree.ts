@@ -15,6 +15,18 @@ export function childrenOf(nodes: readonly GoalNode[], parentId: NodeId | null):
     .sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
+/**
+ * Steps (non-Waypoint children) of `parentId`, ordered by due date ascending: undated Steps last, ties in
+ * `sortOrder`. ISO dates compare lexically; the backend normalises coarse precisions to the period start.
+ */
+export function stepsOf(nodes: readonly GoalNode[], parentId: NodeId | null): GoalNode[] {
+  return childrenOf(nodes, parentId)
+    .filter((node) => !isWaypoint(node))
+    .sort((a, b) => dueKey(a).localeCompare(dueKey(b)));
+}
+
+const dueKey = (node: GoalNode): string => node.dueDate?.date ?? '\uffff';
+
 /** Ancestors from the top level down to the parent of `nodeId`. */
 export function ancestorsOf(nodes: readonly GoalNode[], nodeId: NodeId): GoalNode[] {
   const ancestors: GoalNode[] = [];

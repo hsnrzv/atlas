@@ -1,5 +1,5 @@
 import type { GoalNode } from './goal-node';
-import { ancestorsOf, childrenOf, descendantIds, findNode, isWaypoint } from './goal-tree';
+import { ancestorsOf, childrenOf, descendantIds, findNode, isWaypoint, stepsOf } from './goal-tree';
 
 const node = (
   id: string,
@@ -34,5 +34,21 @@ describe('goal tree lookups', () => {
     expect(isWaypoint(node('m', null, 1, 'MILESTONE'))).toBe(true);
     expect(isWaypoint(node('c', null, 1, 'CHECKPOINT'))).toBe(true);
     expect(isWaypoint(node('t', null, 1, 'TASK'))).toBe(false);
+  });
+
+  it('orders Steps by due date, undated last, ties in sort order', () => {
+    const due = (id: string, sortOrder: number, date: string | null): GoalNode =>
+      ({
+        ...node(id, 'w', sortOrder),
+        dueDate: date ? { date, precision: 'DAY' } : null,
+      }) as GoalNode;
+    const steps = [
+      due('undated', 1, null),
+      due('late', 2, '2026-12-20'),
+      due('early', 3, '2026-11-20'),
+      due('early-tie', 4, '2026-11-20'),
+      node('sub', 'w', 0, 'CHECKPOINT'),
+    ];
+    expect(stepsOf(steps, 'w').map((n) => n.id)).toEqual(['early', 'early-tie', 'late', 'undated']);
   });
 });

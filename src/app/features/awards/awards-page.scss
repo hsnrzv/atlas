@@ -104,8 +104,28 @@ h3 {
   gap: var(--space-2);
 }
 
-.side {
+.side,
+.groups {
   @include atlas.stack(var(--space-4));
+}
+
+.next-list {
+  @include atlas.stack(var(--space-5));
+
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.next-item {
+  @include atlas.stack(var(--space-2));
+}
+
+.next-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
 }
 
 .note {

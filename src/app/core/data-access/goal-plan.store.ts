@@ -5,7 +5,6 @@ import type { Goal, GoalId, GoalSummary } from '../models/goal';
 import type { GoalDraft, NodeDraft, NodePatch, SettableNodeStatus } from '../models/goal-commands';
 import type { GoalNode, NodeId } from '../models/goal-node';
 import type { GoalNote } from '../models/goal-note';
-import { childrenOf } from '../models/goal-tree';
 import { AtlasDataError, writeErrorMessage, writeFailure, type WriteFailure } from './data-error';
 import { GoalRepository } from './ports/goal.repository';
 
@@ -47,6 +46,7 @@ export class GoalPlanStore {
   readonly notesNodeId = signal<NodeId | null>(null);
   private readonly listEnabled = signal(false);
   private readonly writing = signal(false);
+  private visited = false;
 
   private readonly goalResource = rxResource({
     params: () => this.goalId() ?? undefined,
@@ -142,6 +142,17 @@ export class GoalPlanStore {
     });
   }
 
+  /**
+   * Called when a page opens. The route keeps this store between visits, so a later visit refreshes the plan in the
+   * background (for example after a Step was completed on another page) and keeps the shown values meanwhile.
+   */
+  enter(): void {
+    if (this.visited) {
+      this.retry();
+    }
+    this.visited = true;
+  }
+
   retry(): void {
     this.goalResource.reload();
     this.treeResource.reload();
@@ -196,16 +207,6 @@ export class GoalPlanStore {
       true,
       prerequisites ? () => this.syncPrerequisites(node, prerequisites) : undefined,
     );
-  }
-
-  /** Moves a node one place up (`-1`) or down (`+1`) among its siblings. */
-  moveNode(node: GoalNode, direction: -1 | 1): Promise<WriteResult<GoalNode>> {
-    const siblings = childrenOf(this.nodes(), node.parentId);
-    const index = siblings.findIndex((item) => item.id === node.id);
-    const target = siblings[index + direction];
-    return target
-      ? this.updateNode(node, { sortOrder: target.sortOrder })
-      : Promise.resolve({ ok: true, value: node });
   }
 
   removeNode(node: GoalNode, cascade: boolean): Promise<WriteResult<void>> {

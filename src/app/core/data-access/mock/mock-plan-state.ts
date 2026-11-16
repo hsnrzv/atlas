@@ -1,36 +1,24 @@
 import { inject, Injectable } from '@angular/core';
 import type { Goal, GoalId } from '../../models/goal';
 import type { GoalDependency } from '../../models/goal-commands';
-import type { GoalNode, NodeAvailability, NodeId, NodeStatus } from '../../models/goal-node';
+import type { GoalNode, NodeId, NodeStatus } from '../../models/goal-node';
 import type { GoalNote } from '../../models/goal-note';
 import { AtlasDataError } from '../data-error';
 import { MockResponder } from './mock-responder';
-import { SAMPLE_STAGES, type SampleStage } from './sample-fixtures';
+import { recalculate } from './mock-recalculation';
+import { SAMPLE_COMPLETION_TIMES } from './sample-fixtures';
 import { SAMPLE_GOAL, SAMPLE_GOAL_ID, SAMPLE_NODE_IDS as N, SAMPLE_NODES } from './sample-plan';
 
 /** Seed of the session: deep copies, so the frozen sample constants never change. */
 const copy = <T>(value: T): T => structuredClone(value);
 
-/** The five Steps of "Submit application"; their completed count selects the fixture stage. */
-const APPLICATION_STEPS: readonly NodeId[] = [
-  N.confirmRequirements,
-  N.gatherRecords,
-  N.draftStatement,
-  N.reviewChecklist,
-  N.submitTheApplication,
-];
-
 /** The sample's one explicit prerequisite (Figma page 08 Blocked detail). */
 const SAMPLE_DEPENDENCY_ID = 'sample-dependency-review-before-submit';
-
-const AVAILABLE: NodeAvailability = { state: 'AVAILABLE', reasons: [], override: null };
-const SUBMIT_LOCKED = SAMPLE_NODES.find((node) => node.id === N.submitTheApplication)
-  ?.availability as NodeAvailability;
 
 /**
  * In-memory plan of the dev mock (F3-1, F3-2). Writes change it for the browser session only; a reload restores the
  * §10.5 sample. It applies the contract's structural rules (ids, order, version, same-goal dependencies, no cycles)
- * and swaps in the Flow D fixture, but never derives progress or availability (frontend.md §6.3–§6.4).
+ * and simulates the backend's recalculation (`recalculate`, provisional rules in `mock-recalculation.ts`).
  */
 @Injectable({ providedIn: 'root' })
 export class MockPlanState {
@@ -41,6 +29,7 @@ export class MockPlanState {
   readonly archived = new Set<GoalId>();
   /** Work status before `complete`, so `reopen` can restore it (the reopen target is FQ-10). */
   readonly statusBeforeComplete = new Map<NodeId, NodeStatus>();
+  private readonly completionTimes = new Map<NodeId, string>();
   private sequence = 0;
   private writes = 0;
 
@@ -67,6 +56,8 @@ export class MockPlanState {
     this.notes = [];
     this.archived.clear();
     this.statusBeforeComplete.clear();
+    this.completionTimes.clear();
+    this.recalculate();
   }
 
   /** Unique `?mock=` resource key per write, so `refresh-error` never fails a first write. */
@@ -127,48 +118,39 @@ export class MockPlanState {
   }
 
   /**
-   * Flows D and G (Figma page 08 Updated scenario, page 14 Milestone example): the backend recalculates progress,
-   * unlocks and the Waypoint status after every Step change. The mock swaps in the fixture stage for the number of
-   * completed application Steps (`SAMPLE_STAGES`) and the sample's two availability fixtures for "Submit the
-   * application"; any other change keeps the current values. Nothing is computed.
+   * The backend's recalculation after a write (progress, availability, Waypoint status, next Waypoint), simulated
+   * by `mock-recalculation.ts` for every Destination. The sample reproduces its Figma values (Flows D and G).
    */
-  applySampleFixtures(): void {
-    if (!this.goals.some((goal) => goal.id === SAMPLE_GOAL_ID)) {
-      return;
-    }
-    const stage = this.sampleStage();
-    const review = this.nodes.find((node) => node.id === N.reviewChecklist);
-    const dependency = this.dependencies.some((dep) => dep.id === SAMPLE_DEPENDENCY_ID);
-    this.nodes = this.nodes.map((node) => {
-      if (node.id === N.submitTheApplication && review && dependency) {
-        return {
-          ...node,
-          availability: review.status === 'COMPLETED' ? AVAILABLE : SUBMIT_LOCKED,
-        };
-      }
-      if (node.id === N.submitApplication && stage) {
-        return { ...node, progress: stage.application, status: stage.applicationStatus };
-      }
-      return node;
-    });
-    if (stage) {
-      const goal = this.goal(SAMPLE_GOAL_ID);
-      const next = stage.achievedWaypoints
-        ? this.nodes.find((node) => node.id === N.admissionDecision)
-        : this.nodes.find((node) => node.id === N.submitApplication);
-      this.replaceGoal({
-        ...goal,
-        progress: stage.goal,
-        nextAvailableNode: next ? { id: next.id, title: next.title } : goal.nextAvailableNode,
+  recalculate(goalId?: GoalId): void {
+    for (const goal of this.goals.filter((item) => !goalId || item.id === goalId)) {
+      const result = recalculate(
+        goal,
+        this.nodesOf(goal.id),
+        this.dependencies.filter((dep) => dep.goalId === goal.id),
+      );
+      const updated = new Map(result.nodes.map((node) => [node.id, node]));
+      this.nodes = this.nodes.map((node) => {
+        const next = updated.get(node.id) ?? node;
+        if ((node.status === 'COMPLETED') !== (next.status === 'COMPLETED')) {
+          this.markCompleted(node.id, next.status === 'COMPLETED');
+        }
+        return next;
       });
+      this.replaceGoal(result.goal);
     }
   }
 
-  /** The fixture stage of the sample, or `null` when no stage matches (e.g. a reopened sample Step). */
-  sampleStage(): SampleStage | null {
-    const done = this.nodes.filter(
-      (node) => APPLICATION_STEPS.includes(node.id) && node.status === 'COMPLETED',
-    ).length;
-    return SAMPLE_STAGES[done] ?? null;
+  /** When a node was completed: this session's completion, else the sample's fixture time. */
+  completedAt(nodeId: NodeId): string | null {
+    return this.completionTimes.get(nodeId) ?? SAMPLE_COMPLETION_TIMES[nodeId] ?? null;
+  }
+
+  /** Records a status change into or out of Completed. */
+  markCompleted(nodeId: NodeId, completed: boolean): void {
+    if (completed) {
+      this.completionTimes.set(nodeId, this.now());
+    } else {
+      this.completionTimes.delete(nodeId);
+    }
   }
 }

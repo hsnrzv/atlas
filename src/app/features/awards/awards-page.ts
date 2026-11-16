@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { CompanionPreferencesStore } from '../../core/companion/companion-preferences.store';
 import { AWARDS, JOURNEY, MY_ATLAS } from '../../core/layout/navigation';
 import { AtlasIcon } from '../../shared/icons/atlas-icon';
+import { AtlasStatusBadge } from '../../shared/ui/badge/status-badge';
 import { AtlasCompanionCard } from '../../shared/ui/companion-card/companion-card';
 import { AtlasFeedbackState } from '../../shared/ui/feedback-state/feedback-state';
 import { AtlasPageHeader } from '../../shared/ui/page-header/page-header';
@@ -25,6 +26,7 @@ import { toAwardsVm, type AwardCardVm } from './data-access/awards.view-model';
     AtlasIcon,
     AtlasPageHeader,
     AtlasProgress,
+    AtlasStatusBadge,
     MatButton,
     RouterLink,
   ],

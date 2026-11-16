@@ -117,24 +117,6 @@
                         stepRowAction
                         atlas-icon-button
                         type="button"
-                        icon="move-up"
-                        [aria-label]="'Move ' + step.row.title + ' up'"
-                        [disabled]="step.first"
-                        (click)="editor.move(step.node, -1)"
-                      ></button>
-                      <button
-                        stepRowAction
-                        atlas-icon-button
-                        type="button"
-                        icon="move-down"
-                        [aria-label]="'Move ' + step.row.title + ' down'"
-                        [disabled]="step.last"
-                        (click)="editor.move(step.node, 1)"
-                      ></button>
-                      <button
-                        stepRowAction
-                        atlas-icon-button
-                        type="button"
                         icon="edit"
                         [aria-label]="'Edit ' + step.row.title"
                         (click)="editor.edit(step.node)"

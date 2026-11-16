@@ -1,5 +1,6 @@
 import { Component, computed, inject, input, LOCALE_ID, signal, viewChild } from '@angular/core';
 import { MatButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { Router, RouterLink } from '@angular/router';
@@ -8,10 +9,13 @@ import { AtlasIcon } from '../../shared/icons/atlas-icon';
 import { AtlasDimensionBadge } from '../../shared/ui/badge/dimension-badge';
 import { AtlasFeedbackState } from '../../shared/ui/feedback-state/feedback-state';
 import { AtlasPageHeader } from '../../shared/ui/page-header/page-header';
+import { AtlasToast } from '../../shared/ui/toast/atlas-toast';
 import { keepHeadingFocus } from '../../shared/utils/heading-focus';
 import { AtlasConnectionGraph } from '../../shared/visualization/connection-graph/connection-graph';
+import { openRelationshipDialog } from './components/relationship-dialog/relationship-dialog';
 import { ConnectionsStore } from './data-access/connections.store';
 import {
+  connectRequest,
   dimensionNodeId,
   selectedLabel,
   selectedRelationships,
@@ -61,8 +65,14 @@ export class ConnectionsPage {
   protected readonly store = inject(ConnectionsStore);
   private readonly router = inject(Router);
   private readonly locale = inject(LOCALE_ID);
+  private readonly dialog = inject(MatDialog);
+  private readonly toast = inject(AtlasToast);
   private readonly graph = viewChild(AtlasConnectionGraph);
-  private readonly defaultView: ConnectionsView = wideScreen() ? 'graph' : 'list';
+  private readonly wide = wideScreen();
+  private readonly defaultView: ConnectionsView = this.wide ? 'graph' : 'list';
+
+  /** On compact screens the other Destinations are locked while one is selected (owner request 2026-11-16). */
+  protected readonly lockSources = !this.wide;
 
   protected readonly relationshipOptions = RELATIONSHIPS;
   protected readonly zoom = signal<number>(1);
@@ -98,6 +108,14 @@ export class ConnectionsPage {
     const vm = this.vm();
     return vm ? selectedLabel(vm, this.selectedNode()) : null;
   });
+  /** Announced while a Destination is selected: the next Life Dimension chosen connects to it. */
+  protected readonly connectHint = computed(() => {
+    const vm = this.vm();
+    const node = vm?.nodes.find((item) => item.id === this.selectedNode());
+    return node?.column === 'source'
+      ? `Select a Life Dimension to connect ${selectedLabel(vm!, node.id)}. Press Escape to cancel.`
+      : '';
+  });
   protected readonly description = computed(() =>
     this.store.sample
       ? 'Sample plan · changes stay in this browser session.'
@@ -114,6 +132,23 @@ export class ConnectionsPage {
 
   protected select(node: string | null): void {
     this.navigate({ selected: node });
+  }
+
+  protected async connect(request: { source: string; target: string }): Promise<void> {
+    const vm = this.vm();
+    const pending = vm ? connectRequest(vm, request.source, request.target) : null;
+    if (!pending) {
+      return;
+    }
+    const saved = await openRelationshipDialog(this.dialog, {
+      goalTitle: pending.goalTitle,
+      dimensionLabel: pending.dimensionLabel,
+      save: (weight) => this.store.connect(pending.goalId, pending.areaKey, weight),
+    });
+    if (saved) {
+      this.toast.show(`${pending.goalTitle} is now connected to ${pending.dimensionLabel}.`);
+      this.select(request.target);
+    }
   }
 
   protected selectDimension(areaKey: string): void {
