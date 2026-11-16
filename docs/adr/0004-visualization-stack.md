@@ -1,8 +1,9 @@
 # ADR-0004: Visualization stack — purpose-specific, open-source libraries behind Atlas wrappers
 
-- Status: Proposed
-- Date: 2026-11-12
-- Deciders: @hsnrzv (owner) to review; proposed during Phase 0 planning
+- Status: Accepted for the Connections graph and the Journey timeline (P-V1, 2026-11-15); charts and calendar stay
+  proposed until a screen needs them
+- Date: 2026-11-12, amended 2026-11-15 with the P-V1 spike result
+- Deciders: @hsnrzv (owner); proposed during Phase 0 planning
 
 ## Context
 
@@ -45,13 +46,39 @@ Nothing in Phase 1 needs a chart, so no visualization package is installed yet. 
    alternative. Colour encodes Life Dimensions together with labels or patterns, never alone. Reduced motion
    disables animations.
 
+## Spike result (P-V1, 2026-11-15)
+
+The spike built the Figma page 09 graph (one Destination, seven dimension nodes, solid and dashed curves) and the page
+10 timeline (ranges, Today line, approximate dates) three ways and measured a production build of each, isolated from
+the app:
+
+| Option                                       | Raw       | Gzip      | Notes                                                                                       |
+| -------------------------------------------- | --------- | --------- | ------------------------------------------------------------------------------------------- |
+| ECharts 6.1.0 (`graph` series, tree-shaken)  | 563,730 B | 194,849 B | canvas or SVG renderer; node focus and keyboard order need custom work                      |
+| `vis-timeline` 8.5.6 standalone build        | 551,958 B | 159,490 B | bundles `moment`; touch works; markers are not focusable                                    |
+| `vis-timeline` peer build + `vis-data`       | 606,930 B | 187,092 B | 39 `innerHTML` sites to audit against the "no `innerHTML` with user content" rule           |
+| Native SVG and HTML (`shared/visualization`) | < 15 kB   | < 5 kB    | lazy with the feature routes; real buttons and links; tokens only; reduced motion respected |
+
+The two Figma views are small: a two-column graph with at most a few dozen nodes and a single-axis timeline with a
+handful of lanes. Neither needs force layout, pinch zoom or virtualisation, and both must be keyboard- and
+screen-reader-first. The libraries would add 160–195 kB gzip each, `innerHTML` rendering and custom accessibility work.
+
+**Decision:** the Connections graph and the Journey timeline are native components:
+`shared/visualization/connection-graph` (HTML buttons positioned over an SVG layer of curves) and
+`shared/visualization/journey-timeline` (an ordered list of links on a CSS time axis, with `journeyScale` for the
+ranges). Both take typed view models, have no library types in their API and ship with a list alternative on the page
+(the relationship list and the chronological agenda). No visualisation package is installed. ECharts (point 1) and
+FullCalendar Standard (point 3) remain the defaults for future charts and calendars and need their own bundle check
+when a screen requires them.
+
 ## Consequences
 
 - Each library does what it is best at; swapping one later touches only its wrapper.
-- Bundle impact must be measured in the spike. ECharts (even tree-shaken) and `vis-timeline` with its peers are the
-  biggest additions; budgets in `angular.json` will catch regressions.
-- **CSP risk to verify in the spike.** These libraries inject inline styles, which the current policy allows
-  (`style-src 'unsafe-inline'`). Any need for `unsafe-eval` or inline scripts would block adoption.
+- The graph and the timeline add no dependency, no inline script and no `innerHTML`; the CSP is unchanged.
+- The native components own their layout code (`connection-graph-layout.ts`, `journey-scale.ts`) and its tests. A
+  future need for force layout, pinch zoom or thousands of items reopens this ADR.
+- ECharts or FullCalendar, if added later, must pass the same bundle and CSP check; budgets in `angular.json` catch
+  regressions. Both inject inline styles, which the current policy allows (`style-src 'unsafe-inline'`).
 - Library upgrades and licenses are re-checked when installing (THIRD-PARTY-NOTICES, dependency matrix).
 
 ## Alternatives considered

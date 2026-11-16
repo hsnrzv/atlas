@@ -53,6 +53,27 @@ describe('WaypointDetailPage', () => {
     expect(stepTitles(root)).toHaveLength(5);
     expect(text(root.querySelector('#atlas-waypoint-policy'))).toBe('Progress policy');
     expect(text(root.querySelector('a.back'))).toBe('Back to Waypoints');
+    expect(root.querySelector('a[href="/awards"]')).toBeNull();
+  });
+
+  it('links an achieved Waypoint to its milestone completion', async () => {
+    const { fixture, root } = await render(N.submitApplication);
+    const store = TestBed.inject(GoalPlanStore);
+    for (const step of [
+      N.confirmRequirements,
+      N.gatherRecords,
+      N.draftStatement,
+      N.reviewChecklist,
+      N.submitTheApplication,
+    ]) {
+      const node = store.nodes().find((item) => item.id === step)!;
+      if (node.status !== 'COMPLETED') {
+        void store.completeNode(node);
+        await settle(fixture);
+      }
+    }
+
+    expect(text(root.querySelector('a[href="/awards"]'))).toBe('View milestone completion');
   });
 
   it('moves a Step down the list', async () => {

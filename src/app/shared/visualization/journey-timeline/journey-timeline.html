@@ -1,0 +1,48 @@
+<div class="viewport">
+  <div class="stage">
+    <div class="axis" aria-hidden="true">
+      @for (tick of scale().ticks; track tick.date) {
+        <span class="tick" [style.inset-inline-start.%]="tick.offset">{{ tick.label }}</span>
+      }
+    </div>
+    <div class="body">
+      <div class="grid" aria-hidden="true">
+        @for (tick of scale().ticks; track tick.date) {
+          <span class="gridline" [style.inset-inline-start.%]="tick.offset"></span>
+        }
+      </div>
+      @if (todayOffset() !== null) {
+        <p class="today" [style.inset-inline-start.%]="todayOffset()">
+          <span class="today-label">{{ today().label }}</span>
+        </p>
+      }
+      <ol class="lanes" [attr.aria-label]="label()">
+        @for (item of placed(); track item.lane.id) {
+          <li class="lane">
+            <span class="lane-label" aria-hidden="true">{{ item.lane.label }}</span>
+            <span class="track">
+              <a
+                class="marker"
+                [class.is-end]="item.end"
+                [attr.data-dimension]="item.lane.dimension"
+                [style.inset-inline-start.%]="item.offset"
+                [routerLink]="item.lane.link"
+              >
+                <span
+                  class="dot"
+                  [class.is-dashed]="item.lane.marker === 'dashed'"
+                  aria-hidden="true"
+                ></span>
+                <span class="text" aria-hidden="true">
+                  <span class="title">{{ item.lane.label }}</span>
+                  <span class="caption">{{ item.lane.caption }}</span>
+                </span>
+                <span class="atlas-visually-hidden">{{ item.lane.accessibleName }}</span>
+              </a>
+            </span>
+          </li>
+        }
+      </ol>
+    </div>
+  </div>
+</div>

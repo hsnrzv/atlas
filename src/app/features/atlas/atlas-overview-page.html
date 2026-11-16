@@ -106,6 +106,19 @@
           </div>
           @if (vm.nextWaypoint; as next) {
             <atlas-next-waypoint-card [waypoint]="next" />
+            @if (companionMode(); as mode) {
+              <atlas-companion-card
+                trigger="next-step"
+                [mode]="mode"
+                (dismissed)="companion.dismiss('next-step')"
+                (muted)="companion.setMode('muted')"
+                (disabled)="companion.setMode('off')"
+              >
+                <a mat-stroked-button atlasCompanionAction [routerLink]="next.link"
+                  >View Waypoint</a
+                >
+              </atlas-companion-card>
+            }
           }
         </section>
         <atlas-glance-summary class="glance" [items]="vm.glance" />

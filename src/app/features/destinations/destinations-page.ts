@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, input, type OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -27,6 +27,7 @@ import {
   type DestinationFilters,
   type DestinationsView,
 } from './data-access/destinations.filters';
+import type { IkigaiAreaKey } from '../../core/models/life-dimension';
 import { DestinationsStore } from './data-access/destinations.store';
 import { toDestinationCard, toDestinationContext } from './data-access/destinations.view-model';
 
@@ -50,7 +51,7 @@ import { toDestinationCard, toDestinationContext } from './data-access/destinati
   templateUrl: './destinations-page.html',
   styleUrl: './destinations-page.scss',
 })
-export class DestinationsPage {
+export class DestinationsPage implements OnInit {
   // Bound from the query string (withComponentInputBinding).
   readonly q = input<string>();
   readonly dimension = input<string>();
@@ -58,6 +59,8 @@ export class DestinationsPage {
   readonly timeframe = input<string>();
   readonly sort = input<string>();
   readonly view = input<string>();
+  /** `?create=CAREER` opens "Create destination" with that Life Dimension (Life Dimensions "Add intention"). */
+  readonly create = input<string>();
 
   protected readonly store = inject(DestinationsStore);
   private readonly router = inject(Router);
@@ -113,11 +116,22 @@ export class DestinationsPage {
     this.navigate({ view: view === 'grid' ? null : view });
   }
 
-  protected async add(): Promise<void> {
+  ngOnInit(): void {
+    const create = this.create();
+    if (create === undefined) {
+      return;
+    }
+    this.navigate({ create: null });
+    const area = DIMENSION_OPTIONS.find((option) => option.value && option.value === create)?.value;
+    void this.add(area || undefined);
+  }
+
+  protected async add(area?: IkigaiAreaKey): Promise<void> {
     let created: string | null = null;
     const saved = await openGoalForm(this.dialog, {
       mode: 'create',
       initial: EMPTY_GOAL_DRAFT,
+      area,
       sample: this.store.sampleDraft,
       save: async (draft) => {
         const result = await this.store.create(draft);

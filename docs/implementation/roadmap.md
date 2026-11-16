@@ -1,7 +1,7 @@
 # Implementation roadmap — Figma V3 to production
 
-- Status: approved by the owner on 2026-11-14 with the decisions in §4. Phases 1–4 are complete and approved;
-  phase 5 is implemented and gate 5 awaits owner approval.
+- Status: approved by the owner on 2026-11-14 with the decisions in §4. Phases 1–5 are complete and approved;
+  phase 6 is implemented and gate 6 awaits owner approval.
 - Purpose: turn the approved Figma V3 design into the production Angular app, in small reviewed PRs.
 - Maps the nine implementation phases of the production brief onto the existing backlog in
   [PLAN-FRONTEND.md](../plan/PLAN-FRONTEND.md) (`F…` IDs) and the cross-repository phases in
@@ -109,7 +109,7 @@ F3-* items may start after F2-5 in parallel with F2-6/F2-7. Figma flows B, C and
 
 **Gate 5:** flows B–D pass e2e at all widths and both themes; repo phase-2 gate met (overview → Destination → Waypoint
 → nested → back, Chromium/Firefox/WebKit, zero axe violations).
-Verified 2026-11-15 and awaiting owner approval. `npm run verify` passes. `npm run e2e` (`e2e/plan.spec.ts`) covers
+Verified 2026-11-15 and approved by the owner. `npm run verify` passes. `npm run e2e` (`e2e/plan.spec.ts`) covers
 flow B (create a Destination), flow C (Destination → Waypoint → Step → back), nested Waypoint create and back, Step
 add and edit, flow D (mark complete, updated Waypoint progress) and the Blocked Step. Every Phase 5 page passes axe
 WCAG 2.2 AA with no horizontal overflow in both themes, plus the three empty states. Playwright now runs desktop
@@ -120,19 +120,28 @@ stay open as FQ-7 … FQ-13 ([frontend.md §6.5](../architecture/frontend.md#65-
 
 ### Phase 6 — Connections, Journey, Awards, Life Dimensions, onboarding and companion
 
-| ID   | Item                                                                                                                                                     |
-| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| P-V1 | Visualisation spike (R-7, ADR-0004), then Connections: graph and list, selected relationship, legend, zoom controls; finance "Illustrative · unverified" |
-| F2-9 | Journey v0: accessible chronological list (repo backlog)                                                                                                 |
-| P-V2 | Journey timeline: ranges, Today marker, approximate dates, "Not placed yet"                                                                              |
-| F2-8 | Awards: planned / earned / redeemed; celebration (respects companion preference)                                                                         |
-| P-D1 | Life Dimensions overview (7 cards, "Add intention") and dimension detail                                                                                 |
-| F3-4 | Welcome and onboarding (skippable); dev-only "Explore sample plan"                                                                                       |
-| P-C1 | Companion preferences (on/muted/off), static copy, placeholder art behind the `companionArt` flag                                                        |
+| ID   | Item                                                                                                                                                     | Status                                                                                                                                                |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P-V1 | Visualisation spike (R-7, ADR-0004), then Connections: graph and list, selected relationship, legend, zoom controls; finance "Illustrative · unverified" | done 2026-11-15: native SVG/HTML won the spike ([ADR-0004](../adr/0004-visualization-stack.md)); `AtlasConnectionGraph`, List view, zoom; FQ-15       |
+| F2-9 | Journey v0: accessible chronological list (repo backlog)                                                                                                 | done 2026-11-15: the agenda (default below 768 px) lists dated items in order, then "Not placed yet"                                                  |
+| P-V2 | Journey timeline: ranges, Today marker, approximate dates, "Not placed yet"                                                                              | done 2026-11-15: `AtlasJourneyTimeline` with 3m/6m/1y/3y/All ranges, dimension filter, Today marker and approximate-date markers; FQ-14               |
+| F2-8 | Awards: planned / earned / redeemed; celebration (respects companion preference)                                                                         | done 2026-11-15: summary, award list with "Mark as celebrated", achieved Waypoints; the celebration card follows the companion mode; FQ-16            |
+| P-D1 | Life Dimensions overview (7 cards, "Add intention") and dimension detail                                                                                 | done 2026-11-15: `/dimensions` and `/dimensions/:dimension`; "Add intention" opens the Destination form with the dimension preset                     |
+| F3-4 | Welcome and onboarding (skippable); dev-only "Explore sample plan"                                                                                       | done 2026-11-15: `/welcome`, `/welcome/setup`, `startGuard` on `/`; focus areas through the proposed step (FQ-17); "Explore sample plan" in dev only  |
+| P-C1 | Companion preferences (on/muted/off), static copy, placeholder art behind the `companionArt` flag                                                        | done 2026-11-15: `CompanionPreferencesStore`, `/settings/companion`, `AtlasCompanionCard` with Dismiss / Mute / Disable; Atlas symbol in the art slot |
 
 Figma flows A, E, F, G and H become Playwright journeys.
 
 **Gate 6:** all eight Figma areas and flows A–H implemented on mock data and matching Figma.
+Verified 2026-11-15 and awaiting owner approval. `npm run verify` passes. `e2e/onboarding.spec.ts` covers flow A
+(new user → Welcome → setup → empty My Atlas; Explore sample plan; Skip for now). `e2e/explore.spec.ts` covers flow E
+(Journey marker → Waypoint), flow F (Connections → relationship → Destination), flow G (complete the application Steps
+→ Awards celebration) and flow H (mobile More → Life Dimensions → Career → Destination). Every Phase 6 page passes axe
+WCAG 2.2 AA with no horizontal overflow at 390/768/1440 in both themes, plus the empty states: 274 tests on desktop
+Chromium, Pixel 7 Chromium and WebKit, and the Firefox project. Deviations from Figma are listed in
+[figma-handoff.md §6.3](../design/figma-handoff.md#63-phase-6-pages-0914-known-deviations). The initial bundle is
+514 kB raw (129 kB transfer); the new pages are lazy. Backend-owned rules stay open as FQ-14 … FQ-19
+([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-13)).
 
 ### Phase 7 — Responsive, accessibility, themes and Capacitor
 

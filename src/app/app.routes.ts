@@ -14,7 +14,9 @@ import {
   SETTINGS,
   STEPS,
   WAYPOINTS,
+  WELCOME,
 } from './core/layout/navigation';
+import { startGuard } from './core/onboarding/onboarding.store';
 import { devRoutes } from './dev-routes';
 
 /** Temporary page for an area until its feature lands (F1-14); route data feeds the page inputs. */
@@ -31,10 +33,15 @@ function placeholder(link: AtlasNavLink, description: string): Route {
 export const routes: Routes = [
   ...devRoutes,
   {
+    path: WELCOME.path.slice(1),
+    loadChildren: () =>
+      import('./features/onboarding/onboarding.routes').then((m) => m.ONBOARDING_ROUTES),
+  },
+  {
     path: '',
     component: AtlasAppShell,
     children: [
-      { path: '', pathMatch: 'full', redirectTo: MY_ATLAS.path.slice(1) },
+      { path: '', pathMatch: 'full', canActivate: [startGuard], children: [] },
       {
         path: MY_ATLAS.path.slice(1),
         loadChildren: () => import('./features/atlas/atlas.routes').then((m) => m.ATLAS_ROUTES),
@@ -63,11 +70,30 @@ export const routes: Routes = [
         path: STEPS.path.slice(1),
         loadChildren: () => import('./features/steps/steps.routes').then((m) => m.STEPS_ROUTES),
       },
-      placeholder(CONNECTIONS, 'How your Destinations and Waypoints depend on each other.'),
-      placeholder(JOURNEY, 'Your plan over time.'),
-      placeholder(AWARDS, 'The rewards you set for reaching your milestones.'),
-      placeholder(DIMENSIONS, 'The seven areas of your life and how they are doing.'),
-      placeholder(SETTINGS, 'Preferences for your Atlas.'),
+      {
+        path: CONNECTIONS.path.slice(1),
+        loadChildren: () =>
+          import('./features/connections/connections.routes').then((m) => m.CONNECTIONS_ROUTES),
+      },
+      {
+        path: JOURNEY.path.slice(1),
+        loadChildren: () =>
+          import('./features/journey/journey.routes').then((m) => m.JOURNEY_ROUTES),
+      },
+      {
+        path: AWARDS.path.slice(1),
+        loadChildren: () => import('./features/awards/awards.routes').then((m) => m.AWARDS_ROUTES),
+      },
+      {
+        path: DIMENSIONS.path.slice(1),
+        loadChildren: () =>
+          import('./features/dimensions/dimensions.routes').then((m) => m.DIMENSIONS_ROUTES),
+      },
+      {
+        path: SETTINGS.path.slice(1),
+        loadChildren: () =>
+          import('./features/settings/settings.routes').then((m) => m.SETTINGS_ROUTES),
+      },
       placeholder(PROFILE, 'Your account details.'),
       placeholder(HELP, 'Answers and guidance for using your Atlas.'),
       {

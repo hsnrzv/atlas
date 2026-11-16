@@ -1,0 +1,52 @@
+<atlas-page-header
+  title="Life, in your own direction."
+  description="Seven dimensions. No score to live up to."
+/>
+@if (vm()?.meta; as meta) {
+  <p class="meta">{{ meta }}</p>
+}
+
+@switch (store.state()) {
+  @case ('loading') {
+    <atlas-feedback-state
+      kind="loading"
+      title="Loading your Life Dimensions"
+      description="Gathering your Destinations by dimension."
+    />
+  }
+  @case ('error') {
+    <atlas-feedback-state
+      kind="error"
+      title="Life Dimensions could not load"
+      description="A connection issue does not change your saved plan. Try again."
+    >
+      <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
+    </atlas-feedback-state>
+  }
+  @case ('ready') {
+    @if (vm(); as vm) {
+      <h2 class="atlas-visually-hidden" id="atlas-dimensions-all">All Life Dimensions</h2>
+      <ul class="grid" aria-labelledby="atlas-dimensions-all">
+        @for (card of vm.cards; track card.key) {
+          <li class="item">
+            <atlas-dimension-card
+              [dimension]="card.key"
+              [destinations]="card.destinations"
+              [progress]="card.progress"
+            />
+            <a
+              mat-stroked-button
+              [routerLink]="card.action.path"
+              [queryParams]="card.action.query"
+              [attr.aria-label]="card.action.name"
+            >
+              {{ card.action.label }}
+            </a>
+          </li>
+        }
+      </ul>
+      <p class="lead">Progress follows your Destinations, not your worth.</p>
+      <p class="meta">{{ vm.summary }}</p>
+    }
+  }
+}

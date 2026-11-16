@@ -257,7 +257,7 @@ content are built against Figma V3.
 - [x] **F2-3** My Atlas page: Life Dimension overview, active Destinations, next Waypoints, upcoming deadlines,
       Milestone Award preview; responsive grid. Done 2026-11-15 as roadmap F2-3a (hero, `NextWaypointCard`,
       `GlanceSummary`, `DimensionCard`, `DestinationCard`) and F2-3b (Overview, Empty, Loading and Error states of
-      Figma page 05). The award preview and the companion card follow with their features (F2-8, P-C1).
+      Figma page 05). The companion card followed with P-C1 (roadmap phase 6).
 - [x] **F2-4** Destinations list and `DestinationCard` (progress, next Waypoint, dimension, target period, award
       preview). Done 2026-11-15 (roadmap phase 5): search, filters and sort in the URL, grid/list view, empty and
       no-match states; the award preview follows with F2-8.
@@ -269,9 +269,10 @@ content are built against Figma V3.
       `/waypoints` overview.
 - [x] **F2-7** Steps list/rows with status change through the repository port (mock), live-region announcement.
       Done 2026-11-15 (roadmap phase 5): `/steps` with filters, Step detail page, blocked panel.
-- [ ] **F2-8** Milestone Award card states (planned/earned/redeemed), before and after achievement.
-- [ ] **F2-9** Journey Overview v0: accessible chronological list grouped by period (the interactive timeline comes in
-      Phase 5).
+- [x] **F2-8** Milestone Award card states (planned/earned/redeemed), before and after achievement. Done 2026-11-15
+      (roadmap phase 6): `/awards` with summary, "Mark as celebrated" and the celebration companion card (FQ-16).
+- [x] **F2-9** Journey Overview v0: accessible chronological list grouped by period (the interactive timeline comes in
+      Phase 5). Done 2026-11-15 (roadmap phase 6) as the Journey agenda, together with the timeline (P-V2, FQ-14).
 - [ ] **F2-10** E2E: overview → Destination → Waypoint → nested → back; responsive smoke at 390/768/1280; add
       Firefox and WebKit projects; axe on every route. Partly done 2026-11-15 (roadmap phase 5): the plan flows,
       axe on the plan pages in both themes and the Firefox and WebKit projects (`e2e/plan.spec.ts`).
@@ -291,8 +292,10 @@ content are built against Figma V3.
 - [x] **F3-3** Notes panel for Destinations and Waypoints (backend stores Markdown text, BE-3.60; rendering per D13);
       due dates with precision. Done 2026-11-15 (roadmap phase 5): `NotesPanel` (plain text until D13),
       `PlannedDateFields`.
-- [ ] **F3-4** Onboarding wizard (editable, skippable): profile basics, Life Dimension selection and labels, first
-      Destination.
+- [x] **F3-4** Onboarding wizard (editable, skippable): profile basics, Life Dimension selection and labels, first
+      Destination. Done 2026-11-15 (roadmap phase 6) in the Figma page 14 scope: `/welcome`, `/welcome/setup` (focus
+      areas, FQ-17), `startGuard`, "Run setup again" in Settings. Profile basics and dimension labels wait for the
+      profile API (F4-*); the first Destination is added from the empty My Atlas.
 - [ ] **F3-5** OpenAPI client spike against the backend's committed snapshot (`atlas-microservices/docs/api/openapi.json`,
       BE-3.05/BE-3.82): generator choice (D3), CI step that fails on contract drift.
 

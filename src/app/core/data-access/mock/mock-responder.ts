@@ -9,10 +9,11 @@ import { AtlasDataError } from '../data-error';
  * - `loading`: never answers.
  * - `error`: every request fails.
  * - `refresh-error`: the first request per resource succeeds, later ones fail (Error state with the last saved plan).
+ * - `new`: a first visit (Flow A): onboarding not completed and no Destinations until the user explores the sample.
  */
-export type MockMode = 'sample' | 'empty' | 'loading' | 'error' | 'refresh-error';
+export type MockMode = 'sample' | 'empty' | 'loading' | 'error' | 'refresh-error' | 'new';
 
-const MODES: readonly MockMode[] = ['sample', 'empty', 'loading', 'error', 'refresh-error'];
+const MODES: readonly MockMode[] = ['sample', 'empty', 'loading', 'error', 'refresh-error', 'new'];
 
 /** Simulated network latency, so loading states are visible. */
 export const MOCK_LATENCY_MS = 400;

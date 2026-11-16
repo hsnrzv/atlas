@@ -1,0 +1,46 @@
+<header class="brand">
+  <atlas-logo variant="horizontal" [size]="40" />
+</header>
+
+<main class="content" id="main">
+  <div class="intro">
+    <h1 class="title">Your life, mapped with purpose.</h1>
+    <p class="description">
+      Make room for what matters.
+      @if (flow.canExploreSample) {
+        Start with an empty Atlas, or explore a clearly labelled sample plan.
+      } @else {
+        Start with an empty Atlas and add only what feels meaningful.
+      }
+    </p>
+    @if (flow.error(); as message) {
+      <atlas-plan-alert [message]="message" (dismissed)="flow.error.set(null)" />
+    }
+    <div class="actions">
+      <a mat-flat-button [routerLink]="setupPath">
+        Get started
+        <atlas-icon matButtonIcon iconPositionEnd name="next" />
+      </a>
+      <button mat-stroked-button type="button" [disabled]="flow.busy()" (click)="flow.skip()">
+        Skip for now
+        <atlas-icon matButtonIcon iconPositionEnd name="next" />
+      </button>
+      @if (flow.canExploreSample) {
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="flow.busy()"
+          (click)="flow.exploreSample()"
+        >
+          Explore sample plan
+          <atlas-icon matButtonIcon iconPositionEnd name="next" />
+        </button>
+      }
+    </div>
+  </div>
+  @if (companion.mode() === 'on') {
+    <div class="art" aria-hidden="true">
+      <atlas-logo variant="symbol" [size]="160" [decorative]="true" />
+    </div>
+  }
+</main>

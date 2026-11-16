@@ -17,6 +17,7 @@ import {
   IconCompass,
   IconDots,
   IconFlag,
+  IconFocus2,
   IconHeart,
   IconHeartbeat,
   IconHelp,
@@ -45,6 +46,9 @@ import {
   IconUsers,
   IconWallet,
   IconX,
+  IconZoomIn,
+  IconZoomOut,
+  IconZoomReset,
 } from '@tabler/icons-angular';
 
 /**
@@ -103,6 +107,11 @@ export const ATLAS_ICONS = {
   // Not in Figma V3: reorder a Waypoint or Step among its siblings (F3-2).
   'move-up': IconArrowUp,
   'move-down': IconArrowDown,
+  // Connections graph toolbar (Figma page 09).
+  'zoom-in': IconZoomIn,
+  'zoom-out': IconZoomOut,
+  'zoom-reset': IconZoomReset,
+  focus: IconFocus2,
 
   // Status (always paired with a text label; colour is never the only signal).
   // Glyphs follow the Figma V3 status chips (Foundations 214:1794).

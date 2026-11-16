@@ -1,0 +1,49 @@
+<div class="viewport">
+  <div
+    class="stage"
+    role="group"
+    [attr.aria-label]="label()"
+    [style.inline-size.%]="zoom() * 100"
+    [style.aspect-ratio]="layout().width + ' / ' + layout().height"
+  >
+    <svg
+      class="lines"
+      aria-hidden="true"
+      focusable="false"
+      preserveAspectRatio="none"
+      [attr.viewBox]="'0 0 ' + layout().width + ' ' + layout().height"
+    >
+      @for (edge of paths(); track edge.id) {
+        <path
+          class="line"
+          [class.is-dashed]="edge.line === 'dashed'"
+          [class.is-active]="edge.active"
+          [attr.d]="edge.path"
+          [attr.data-edge]="edge.id"
+          vector-effect="non-scaling-stroke"
+        />
+      }
+    </svg>
+    @for (item of placed(); track item.node.id) {
+      <button
+        type="button"
+        class="node"
+        [class.is-source]="item.node.column === 'source'"
+        [class.is-selected]="selected() === item.node.id"
+        [attr.data-id]="item.node.id"
+        [attr.data-dimension]="item.node.dimension"
+        [attr.aria-pressed]="selected() === item.node.id"
+        [style.left.%]="item.left"
+        [style.top.%]="item.top"
+        [style.width.%]="item.width"
+        [style.height.%]="item.height"
+        (click)="toggle(item.node.id)"
+      >
+        <atlas-icon class="node-icon" [name]="item.node.icon" size="md" />
+        <span class="node-label" aria-hidden="true">{{ item.node.label }}</span>
+        <span class="node-caption" aria-hidden="true">{{ item.node.caption }}</span>
+        <span class="atlas-visually-hidden">{{ item.node.accessibleName }}</span>
+      </button>
+    }
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="head">
+  @if (mode() === 'on') {
+    <span class="art">
+      <atlas-logo
+        variant="symbol"
+        [size]="variant() === 'expanded' ? 40 : 28"
+        [decorative]="true"
+      />
+    </span>
+  }
+  <div class="text">
+    <p class="eyebrow">{{ copy().eyebrow }}</p>
+    <h2 class="title" [id]="titleId">{{ copy().title }}</h2>
+  </div>
+  <button
+    atlas-icon-button
+    type="button"
+    class="dismiss"
+    icon="close"
+    aria-label="Dismiss companion"
+    (click)="dismissed.emit()"
+  ></button>
+</div>
+@if (body(); as body) {
+  <p class="body">{{ body }}</p>
+}
+<div class="actions">
+  <ng-content select="[atlasCompanionAction]" />
+  @if (mode() === 'on') {
+    <button mat-button type="button" (click)="muted.emit()">Mute</button>
+  }
+  <button mat-button type="button" (click)="disabled.emit()">Disable</button>
+</div>

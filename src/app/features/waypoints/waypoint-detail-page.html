@@ -88,6 +88,12 @@
               <atlas-icon name="steps" />
               Open Steps
             </a>
+            @if (vm.achieved) {
+              <a class="open-steps" mat-stroked-button [routerLink]="awardsPath">
+                <atlas-icon name="milestone-awards" />
+                View milestone completion
+              </a>
+            }
           </section>
 
           @if (vm.blocked) {

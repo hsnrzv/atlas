@@ -1,0 +1,156 @@
+@use 'abstracts' as atlas;
+
+:host {
+  @include atlas.stack;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.ranges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+
+  [aria-pressed='true'] {
+    background: var(--color-status-success-tint);
+    border-color: var(--color-border-action);
+    box-shadow: inset 0 0 0 1px var(--color-border-action);
+  }
+}
+
+.filter {
+  flex: 0 1 12rem;
+  min-width: 0;
+}
+
+.group {
+  @include atlas.stack;
+}
+
+.card {
+  @include atlas.card;
+  @include atlas.stack(var(--space-3));
+}
+
+.destination-title {
+  @include atlas.style(h3);
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Figma page 10: the time axis from 768 px; the chronological agenda below it.
+.timeline {
+  @include atlas.stack(var(--space-3));
+
+  @include atlas.down(md) {
+    display: none;
+  }
+}
+
+.agenda {
+  @include atlas.stack(var(--space-3));
+
+  @include atlas.up(md) {
+    display: none;
+  }
+}
+
+.section-title {
+  @include atlas.style(h4);
+}
+
+.agenda-list,
+.unplaced-list,
+.legend {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.agenda-list {
+  @include atlas.stack(var(--space-3));
+}
+
+.agenda-item {
+  align-items: flex-start;
+}
+
+.agenda-title {
+  @include atlas.style(control);
+}
+
+.legend {
+  @include atlas.style(caption);
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  color: var(--color-text-secondary);
+
+  li {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+}
+
+.dot {
+  flex: none;
+  inline-size: var(--space-3);
+  block-size: var(--space-3);
+  background: var(--color-border-action);
+  border: calc(var(--border-width) * 2) solid var(--color-border-action);
+  border-radius: var(--radius-pill);
+
+  &.is-hollow,
+  &.is-dashed {
+    background: transparent;
+  }
+
+  &.is-dashed {
+    border-style: dashed;
+  }
+}
+
+.context {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+
+  @include atlas.up(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.unplaced-list {
+  @include atlas.stack(var(--space-3));
+
+  li {
+    display: flex;
+    gap: var(--space-2);
+    align-items: baseline;
+
+    > span:last-child {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+.unplaced-title {
+  @include atlas.style(label);
+
+  color: var(--color-text-primary);
+}

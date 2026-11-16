@@ -1,0 +1,40 @@
+@use 'abstracts' as atlas;
+
+// Shared layout of the full-screen Welcome and setup pages (Figma page 14, outside the app shell).
+:host {
+  display: block;
+  min-height: 100dvh;
+  padding: var(--space-8) var(--space-5);
+  color: var(--color-text-primary);
+  background: var(--color-surface-page);
+
+  @include atlas.up(md) {
+    padding: var(--space-10) var(--space-16);
+  }
+}
+
+p,
+h1,
+h2 {
+  margin: 0;
+}
+
+.brand {
+  margin-bottom: var(--space-10);
+}
+
+.title {
+  @include atlas.style(display);
+}
+
+.description {
+  color: var(--color-text-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: stretch;
+  max-width: 17rem;
+}

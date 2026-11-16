@@ -317,6 +317,45 @@
     </div>
   </section>
 
+  <section aria-labelledby="companion-title">
+    <h2 id="companion-title">Companion</h2>
+    <div class="cards">
+      <atlas-companion-card trigger="next-step" mode="on">
+        <a mat-stroked-button atlasCompanionAction routerLink=".">View Waypoint</a>
+      </atlas-companion-card>
+      <atlas-companion-card trigger="welcome" mode="muted" />
+      <atlas-companion-card
+        trigger="waypoint-achieved"
+        mode="on"
+        variant="expanded"
+        body="Submit application is complete."
+      />
+    </div>
+  </section>
+
+  <section aria-labelledby="visualization-title">
+    <h2 id="visualization-title">Visualisation</h2>
+    <div class="shared-block">
+      <h3 class="atlas-label">Connection graph</h3>
+      <atlas-connection-graph
+        label="Sample connection graph"
+        [nodes]="sampleGraphNodes"
+        [edges]="sampleGraphEdges"
+        [selected]="selectedGraphNode()"
+        (selectedChange)="selectedGraphNode.set($event)"
+      />
+    </div>
+    <div class="shared-block">
+      <h3 class="atlas-label">Journey timeline</h3>
+      <atlas-journey-timeline
+        label="Sample journey timeline"
+        [lanes]="sampleLanes"
+        [scale]="sampleScale"
+        [today]="{ date: '2026-11-12', label: 'Today · 12 Nov 2026' }"
+      />
+    </div>
+  </section>
+
   <section aria-labelledby="brand-title" class="brand">
     <h2 id="brand-title">Brand</h2>
     <div class="brand-row">

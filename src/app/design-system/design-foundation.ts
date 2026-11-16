@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, LOCALE_ID, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -24,6 +24,7 @@ import {
   AtlasDestinationCard,
   type DestinationCardVm,
 } from '../shared/ui/destination-card/destination-card';
+import { AtlasCompanionCard } from '../shared/ui/companion-card/companion-card';
 import { AtlasDimensionCard } from '../shared/ui/dimension-card/dimension-card';
 import { AtlasFeedbackState } from '../shared/ui/feedback-state/feedback-state';
 import { AtlasIconButton } from '../shared/ui/icon-button/icon-button';
@@ -35,6 +36,16 @@ import { AtlasPageHeader } from '../shared/ui/page-header/page-header';
 import { AtlasPopover, AtlasPopoverTrigger } from '../shared/ui/popover/popover';
 import { AtlasProgress } from '../shared/ui/progress/progress';
 import { AtlasSearchField } from '../shared/ui/search-field/search-field';
+import {
+  AtlasConnectionGraph,
+  type ConnectionGraphEdge,
+  type ConnectionGraphNode,
+} from '../shared/visualization/connection-graph/connection-graph';
+import { journeyScale } from '../shared/visualization/journey-timeline/journey-scale';
+import {
+  AtlasJourneyTimeline,
+  type JourneyLane,
+} from '../shared/visualization/journey-timeline/journey-timeline';
 
 interface Swatch {
   readonly name: string;
@@ -103,6 +114,8 @@ function swatches(group: string, scale: Record<string, string>): Swatch[] {
   selector: 'atlas-design-foundation',
   imports: [
     AtlasBreadcrumbs,
+    AtlasCompanionCard,
+    AtlasConnectionGraph,
     AtlasDateLabel,
     AtlasDestinationCard,
     AtlasDimensionBadge,
@@ -110,6 +123,7 @@ function swatches(group: string, scale: Record<string, string>): Swatch[] {
     AtlasFeedbackState,
     AtlasIcon,
     AtlasIconButton,
+    AtlasJourneyTimeline,
     AtlasLogo,
     AtlasNextWaypointCard,
     AtlasPageHeader,
@@ -206,4 +220,71 @@ export class DesignFoundation {
     event.preventDefault();
     this.document.getElementById('main')?.focus();
   }
+
+  protected readonly sampleGraphNodes: readonly ConnectionGraphNode[] = [
+    {
+      id: 'demo-goal',
+      column: 'source',
+      label: 'Master’s degree',
+      caption: 'Destination',
+      icon: 'destinations',
+      dimension: null,
+      accessibleName: 'Master’s degree, Destination, 2 relationships',
+    },
+    {
+      id: 'demo-career',
+      column: 'target',
+      label: 'Career',
+      caption: 'Association',
+      icon: 'career',
+      dimension: 'career',
+      accessibleName: 'Career, 1 relationship',
+    },
+    {
+      id: 'demo-finance',
+      column: 'target',
+      label: 'Finance',
+      caption: 'Possible impact',
+      icon: 'finance',
+      dimension: 'finance',
+      accessibleName: 'Finance, 1 relationship',
+    },
+  ];
+
+  protected readonly sampleGraphEdges: readonly ConnectionGraphEdge[] = [
+    { id: 'demo-edge-1', source: 'demo-goal', target: 'demo-career', line: 'solid' },
+    { id: 'demo-edge-2', source: 'demo-goal', target: 'demo-finance', line: 'dashed' },
+  ];
+
+  protected readonly selectedGraphNode = signal<string | null>(null);
+
+  protected readonly sampleLanes: readonly JourneyLane[] = [
+    {
+      id: 'demo-lane-1',
+      label: 'Submit application',
+      date: '2026-12-01',
+      caption: 'Dec 2026 · month',
+      marker: 'solid',
+      dimension: 'career',
+      link: '/_design',
+      accessibleName: 'Submit application, December 2026, month precision, In progress',
+    },
+    {
+      id: 'demo-lane-2',
+      label: 'Graduate',
+      date: '2030-01-01',
+      caption: '2030 · year',
+      marker: 'dashed',
+      dimension: 'career',
+      link: '/_design',
+      accessibleName: 'Graduate, 2030, year precision, Upcoming',
+    },
+  ];
+
+  protected readonly sampleScale = journeyScale(
+    'all',
+    '2026-11-12',
+    this.sampleLanes.map((lane) => lane.date),
+    inject(LOCALE_ID),
+  );
 }

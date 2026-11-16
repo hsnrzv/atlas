@@ -1,0 +1,27 @@
+@use 'abstracts' as atlas;
+@use 'onboarding-layout';
+
+.content {
+  display: grid;
+  gap: var(--space-10);
+  align-items: center;
+
+  @include atlas.up(lg) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.intro {
+  @include atlas.stack(var(--space-8));
+
+  max-width: 32rem;
+}
+
+.art {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  max-width: 21rem;
+  background: var(--color-surface-hero);
+  border-radius: var(--radius-card);
+}

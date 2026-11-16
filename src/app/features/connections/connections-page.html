@@ -1,0 +1,232 @@
+<atlas-page-header title="Connections" [description]="description()" />
+
+@switch (store.state()) {
+  @case ('loading') {
+    <atlas-feedback-state
+      kind="loading"
+      title="Loading Connections"
+      description="Gathering how your Destinations relate to Life Dimensions."
+    />
+  }
+  @case ('error') {
+    <atlas-feedback-state
+      kind="error"
+      title="Connections could not load"
+      description="A connection issue does not change your saved plan. Try again."
+    >
+      <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
+    </atlas-feedback-state>
+  }
+  @case ('ready') {
+    @if (vm(); as vm) {
+      @if (!vm.relationships.length && !vm.filteredOut) {
+        <atlas-feedback-state
+          iconName="connections"
+          title="No connections yet"
+          description="Assign a Destination to a Life Dimension to see how they relate."
+        >
+          <a mat-flat-button routerLink="/destinations">Open Destinations</a>
+        </atlas-feedback-state>
+      } @else {
+        <div class="toolbar" role="group" aria-label="Filters and view">
+          <mat-form-field appearance="outline" class="filter" subscriptSizing="dynamic">
+            <mat-label>Relationship</mat-label>
+            <mat-select [value]="filters().relationship" (valueChange)="setRelationship($event)">
+              @for (option of relationshipOptions; track option.value) {
+                <mat-option [value]="option.value">{{ option.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter" subscriptSizing="dynamic">
+            <mat-label>Dimension</mat-label>
+            <mat-select [value]="filters().dimension" (valueChange)="setDimension($event)">
+              <mat-option [value]="null">All dimensions</mat-option>
+              @for (option of vm.dimensionOptions; track option.value) {
+                <mat-option [value]="option.value">{{ option.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <div class="views">
+            <button
+              mat-stroked-button
+              type="button"
+              [attr.aria-pressed]="layout() === 'graph'"
+              (click)="setView('graph')"
+            >
+              <atlas-icon name="connections" />
+              Graph
+            </button>
+            <button
+              mat-stroked-button
+              type="button"
+              [attr.aria-pressed]="layout() === 'list'"
+              (click)="setView('list')"
+            >
+              <atlas-icon name="view-list" />
+              List
+            </button>
+          </div>
+        </div>
+
+        @if (vm.filteredOut) {
+          <atlas-feedback-state
+            iconName="filter"
+            title="No relationships match"
+            description="Try another relationship type or dimension."
+          >
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="setRelationship('all'); setDimension(null)"
+            >
+              Clear filters
+            </button>
+          </atlas-feedback-state>
+        } @else {
+          <div class="layout">
+            <div class="main">
+              @if (layout() === 'graph') {
+                <section class="card graph-card" aria-labelledby="atlas-graph-title">
+                  <div class="graph-head">
+                    <h2 class="card-title" id="atlas-graph-title">{{ vm.heading }}</h2>
+                    <ul class="legend" aria-label="Legend">
+                      <li><span class="swatch is-solid" aria-hidden="true"></span>Association</li>
+                      <li>
+                        <span class="swatch is-dashed" aria-hidden="true"></span>Possible impact
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="graph-tools" role="toolbar" aria-label="Graph view">
+                    <button
+                      mat-stroked-button
+                      type="button"
+                      [disabled]="!canZoomOut()"
+                      (click)="zoomBy(-1)"
+                    >
+                      <atlas-icon name="zoom-out" />
+                      Zoom out
+                    </button>
+                    <span class="zoom atlas-caption atlas-text-secondary" aria-live="polite">
+                      {{ zoomText() }}
+                    </span>
+                    <button
+                      mat-stroked-button
+                      type="button"
+                      [disabled]="!canZoomIn()"
+                      (click)="zoomBy(1)"
+                    >
+                      <atlas-icon name="zoom-in" />
+                      Zoom in
+                    </button>
+                    <button mat-stroked-button type="button" (click)="focusSelection()">
+                      <atlas-icon name="focus" />
+                      Focus
+                    </button>
+                    <button mat-stroked-button type="button" (click)="reset()">
+                      <atlas-icon name="zoom-reset" />
+                      Reset
+                    </button>
+                  </div>
+                  <atlas-connection-graph
+                    label="Destinations and Life Dimensions"
+                    [nodes]="vm.nodes"
+                    [edges]="vm.edges"
+                    [selected]="selectedNode()"
+                    [zoom]="zoom()"
+                    (selectedChange)="select($event)"
+                  />
+                  <p class="atlas-caption atlas-text-secondary">
+                    Solid lines are assignments. Dashed lines are possible effects that may not be
+                    verified. Select a node to read its relationships.
+                  </p>
+                </section>
+              } @else {
+                <ul class="relationships" aria-label="Relationships">
+                  @for (item of vm.relationships; track item.id) {
+                    <li class="card relationship">
+                      <atlas-dimension-badge [dimension]="item.dimension.key" />
+                      <h2 class="relationship-title">
+                        {{ item.goalTitle }}
+                        <span class="atlas-text-secondary">→ {{ item.dimension.label }}</span>
+                      </h2>
+                      <p class="atlas-caption kind" [class.is-dashed]="item.line === 'dashed'">
+                        {{ item.kindLabel }}
+                      </p>
+                      <p class="atlas-text-secondary">{{ item.summary }}</p>
+                      <button
+                        mat-button
+                        type="button"
+                        class="read"
+                        [attr.aria-pressed]="selectedNode() === item.dimensionNode"
+                        (click)="select(item.dimensionNode)"
+                      >
+                        Read {{ item.dimension.label }} relationship
+                        <atlas-icon name="next" />
+                      </button>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+
+            <aside class="card panel" aria-labelledby="atlas-relationship-title">
+              @if (details().length) {
+                <div class="panel-head">
+                  <div>
+                    <p class="eyebrow">Selected relationship · {{ detailsLabel() }}</p>
+                    <h2 class="card-title" id="atlas-relationship-title" tabindex="-1">
+                      Relationship details
+                    </h2>
+                  </div>
+                  <button mat-button type="button" (click)="select(null)">Clear</button>
+                </div>
+                @for (item of details(); track item.id) {
+                  <section class="detail" [attr.aria-label]="item.title">
+                    <h3 class="detail-title">{{ item.title }}</h3>
+                    <p class="atlas-caption atlas-text-secondary">Source → target</p>
+                    <p>{{ item.goalTitle }} → {{ item.dimension.label }}</p>
+                    <p class="atlas-caption kind" [class.is-dashed]="item.line === 'dashed'">
+                      {{ item.kindLabel }}
+                    </p>
+                    <p class="atlas-text-secondary">{{ item.summary }}</p>
+                    @if (item.facts.length) {
+                      <dl class="facts">
+                        @for (fact of item.facts; track fact.label) {
+                          <div>
+                            <dt>{{ fact.label }}</dt>
+                            <dd>{{ fact.value }}</dd>
+                          </div>
+                        }
+                        @if (item.assumptions) {
+                          <div>
+                            <dt>Assumptions</dt>
+                            <dd>{{ item.assumptions }}</dd>
+                          </div>
+                        }
+                      </dl>
+                    }
+                    <a mat-stroked-button [routerLink]="item.goalLink">Review relationship</a>
+                  </section>
+                }
+              } @else {
+                <h2 class="card-title" id="atlas-relationship-title" tabindex="-1">
+                  Select a node to see the connection
+                </h2>
+                <p class="atlas-text-secondary">{{ vm.noSelection }}</p>
+              }
+            </aside>
+          </div>
+        }
+
+        @for (context of vm.contexts; track context.id) {
+          <section class="card context" [attr.aria-label]="'Destination context: ' + context.title">
+            <p class="eyebrow">Destination context</p>
+            <h2 class="card-title">{{ context.title }}</h2>
+            <p class="atlas-text-secondary">{{ context.line }}</p>
+            <a class="context-link" [routerLink]="context.link">Open destination</a>
+          </section>
+        }
+      }
+    }
+  }
+}

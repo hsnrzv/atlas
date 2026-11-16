@@ -209,6 +209,22 @@ selectors drop the `Component` suffix, and the shell lives in `src/app/core/layo
 - `PlanEditor` (`core/plan`) opens these dialogs for the plan pages and reports each write as a toast or a
   `PlanAlert`.
 
+## Built in implementation roadmap phase 6
+
+**Status: Implemented** (2026-11-15).
+
+- `atlas-companion-card` (`shared/ui/companion-card`): `trigger`, `mode` (`on` / `muted`), `variant` (`compact` /
+  `expanded`), `body`; projected actions with `[atlasCompanionAction]`; outputs `dismissed`, `muted`, `disabled`.
+  Static copy from `core/companion/companion-copy.ts`. The art slot shows the Atlas symbol until the art is cleared
+  (R-9); muted cards drop the art and the entrance animation, which also stops under reduced motion.
+- `atlas-connection-graph` (`shared/visualization`, native SVG/HTML, ADR-0004): `nodes`, `edges`, `selected`, `zoom`,
+  `label` → `selectedChange`. Each node is a button whose accessible name starts with its visible label. Association
+  is a solid line and possible impact a dashed one, with a text legend. The Connections List view is the alternative
+  and the default below 768 px.
+- `atlas-journey-timeline` (`shared/visualization`, native SVG/HTML): `lanes`, `scale`, `today`, `label`. Markers are
+  links to the Waypoint; planned, approximate (dashed) and unplaced (hollow) differ by shape and legend text. The
+  Journey agenda is the list alternative and the default below 768 px.
+
 ## Planned catalogue (design step 5)
 
 **Status: Specified.** These are proposals only. Rules from design-instructions §8:
@@ -268,7 +284,7 @@ Shared patterns from §15:
 | `AwardCardComponent` → `atlas-award-card`                       | `award: AwardVm` (PLANNED, EARNED or REDEEMED)                  | The state is shown as text. When earned the card uses the achievement surface. Gold appears only here (§2).                                                                                                                                                 | `--color-surface-achievement`, `--color-text-achievement`, `gold.dark` / `gold.light`                               | `MatCard`                       |
 | `NotesPanelComponent` → `atlas-notes-panel`                     | `notes`, `editable` → `save`                                    | A labelled textarea. Save state is announced. Text width is limited to `--layout-reading-max`.                                                                                                                                                              | `--layout-reading-max`                                                                                              | `MatFormField`, `MatInput`      |
 
-### Visualisation wrappers (ADR-0004; libraries not installed)
+### Visualisation wrappers (superseded: built as native components in phase 6, see above)
 
 | Spec name / proposed selector                         | Inputs → outputs                                                                              | Accessibility                                                                                                                                                                   | Built on                                            |
 | ----------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |

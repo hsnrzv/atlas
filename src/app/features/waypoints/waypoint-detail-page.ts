@@ -4,7 +4,7 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { Router, RouterLink } from '@angular/router';
 import { GoalPlanStore } from '../../core/data-access/goal-plan.store';
 import { AtlasTitleStrategy } from '../../core/layout/atlas-title-strategy';
-import { DESTINATIONS, STEPS, WAYPOINTS } from '../../core/layout/navigation';
+import { AWARDS, DESTINATIONS, STEPS, WAYPOINTS } from '../../core/layout/navigation';
 import { destinationLink, nodeLink, stepLink, waypointLink } from '../../core/layout/plan-links';
 import type { GoalNode } from '../../core/models/goal-node';
 import { ancestorsOf, childrenOf, findNode, isWaypoint } from '../../core/models/goal-tree';
@@ -121,6 +121,7 @@ export class WaypointDetailPage {
         ? { label: `Back to ${parent.title}`, link: waypointLink(goal.id, parent.id) }
         : { label: 'Back to Waypoints', link: WAYPOINTS.path, query: { destination: goal.id } },
       status: nodeStatusKey(node),
+      achieved: node.status === 'COMPLETED',
       blocked: isBlocked(node),
       blockedReasons: toBlockedReasons(node, nodes),
       goalPercent: percentValue(goal.progress),
@@ -144,6 +145,7 @@ export class WaypointDetailPage {
     this.store.notes().map((note) => toNoteVm(note, this.locale)),
   );
   protected readonly stepsPath = STEPS.path;
+  protected readonly awardsPath = AWARDS.path;
 
   constructor() {
     effect(() => {

@@ -1,0 +1,48 @@
+@use 'abstracts' as atlas;
+@use 'onboarding-layout';
+
+.content {
+  @include atlas.stack(var(--space-8));
+
+  max-width: 40rem;
+}
+
+.section {
+  @include atlas.stack(var(--space-3));
+}
+
+.section-title {
+  @include atlas.style(h3);
+}
+
+.number {
+  margin-right: var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  @include atlas.style(caption);
+
+  color: var(--color-text-secondary);
+}
+
+.area {
+  --mat-chip-elevated-container-color: var(--atlas-area-background);
+  --mat-chip-elevated-selected-container-color: var(--atlas-area-background);
+  --mat-chip-label-text-color: var(--atlas-area-foreground);
+  --mat-chip-selected-label-text-color: var(--atlas-area-foreground);
+  --mat-chip-with-icon-icon-color: var(--atlas-area-foreground);
+  --mat-chip-with-icon-selected-icon-color: var(--atlas-area-foreground);
+  --mat-chip-selected-trailing-icon-color: var(--atlas-area-foreground);
+  --mat-chip-outline-color: var(--atlas-area-background);
+  --mat-chip-flat-selected-outline-width: 1px;
+
+  &[aria-selected='true'] {
+    --mat-chip-outline-color: var(--atlas-area-foreground);
+    --mat-chip-outline-width: 1px;
+  }
+}
+
+.preferences {
+  align-self: flex-start;
+}

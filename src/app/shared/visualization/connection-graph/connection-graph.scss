@@ -1,0 +1,108 @@
+@use 'abstracts' as atlas;
+
+// Figma page 09 graph stage: grey stage, white Destination card, tinted dimension cards, solid and dashed curves.
+:host {
+  display: block;
+
+  // The stage scrolls inside the viewport, so the host never widens a grid or flex parent.
+  min-inline-size: 0;
+}
+
+.viewport {
+  overflow: auto;
+  background: var(--color-surface-subtle);
+  border-radius: var(--radius-card);
+}
+
+.stage {
+  position: relative;
+  min-inline-size: 40rem;
+}
+
+.lines {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+
+.line {
+  fill: none;
+  stroke: var(--color-border-action);
+  stroke-width: 2;
+
+  &.is-dashed {
+    stroke: var(--color-brand-venn-violet);
+    stroke-dasharray: 6 6;
+  }
+
+  &.is-active {
+    stroke-width: 4;
+  }
+}
+
+.node {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 0;
+  padding: var(--space-2) var(--space-4);
+  overflow: hidden;
+  font: inherit;
+  color: var(--color-text-primary);
+  text-align: start;
+  cursor: pointer;
+  background: var(--node-tint, var(--color-surface-card));
+  border: var(--border-width) solid var(--color-border-subtle);
+  border-radius: var(--radius-card);
+  transition: border-color var(--duration-micro) var(--easing-standard);
+
+  &:hover {
+    border-color: var(--color-border-control);
+  }
+
+  &:focus-visible {
+    @include atlas.focus-ring;
+  }
+
+  &.is-selected {
+    border-color: var(--node-accent, var(--color-text-primary));
+    border-width: var(--size-focus-ring-width);
+  }
+}
+
+@each $dimension in career, finance, health, love, passion, friendship, family {
+  .node[data-dimension='#{$dimension}'] {
+    --node-tint: var(--color-dimension-#{$dimension}-tint);
+    --node-accent: var(--color-dimension-#{$dimension});
+  }
+}
+
+.node-icon {
+  color: var(--node-accent, var(--color-text-primary));
+}
+
+.node-label {
+  @include atlas.style(control);
+  @include atlas.truncate;
+
+  max-width: 100%;
+}
+
+.node-caption {
+  @include atlas.style(caption);
+  @include atlas.truncate;
+
+  max-width: 100%;
+  color: var(--color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node {
+    transition: none;
+  }
+}

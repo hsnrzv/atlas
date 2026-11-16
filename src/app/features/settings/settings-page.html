@@ -1,0 +1,45 @@
+<atlas-page-header title="Settings" description="Preferences for your Atlas." />
+
+<section class="section" aria-labelledby="settings-appearance">
+  <h2 class="section-title" id="settings-appearance">Appearance</h2>
+  <mat-radio-group
+    class="options"
+    aria-labelledby="settings-appearance"
+    [value]="theme.preference()"
+    (change)="theme.setPreference($event.value)"
+  >
+    @for (option of themes; track option.value) {
+      <mat-radio-button [value]="option.value">{{ option.label }}</mat-radio-button>
+    }
+  </mat-radio-group>
+</section>
+
+<section class="section" aria-labelledby="settings-companion">
+  <h2 class="section-title" id="settings-companion">Companion</h2>
+  <p class="atlas-text-secondary">
+    {{ modeCopy[companion.mode()].label }} · {{ modeCopy[companion.mode()].description }}
+  </p>
+  <a mat-stroked-button class="action" routerLink="/settings/companion">
+    Companion preferences
+    <atlas-icon matButtonIcon iconPositionEnd name="next" />
+  </a>
+</section>
+
+<section class="section" aria-labelledby="settings-setup">
+  <h2 class="section-title" id="settings-setup">Getting started</h2>
+  <p class="atlas-text-secondary">
+    Choose your focus dimensions again. Your Destinations, Waypoints and Steps stay as they are.
+  </p>
+  @if (error(); as message) {
+    <atlas-plan-alert [message]="message" (dismissed)="error.set(null)" />
+  }
+  <button
+    mat-stroked-button
+    type="button"
+    class="action"
+    [disabled]="reopening()"
+    (click)="runSetupAgain()"
+  >
+    Run setup again
+  </button>
+</section>

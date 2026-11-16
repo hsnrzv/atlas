@@ -1,0 +1,129 @@
+@switch (store.state()) {
+  @case ('loading') {
+    <atlas-page-header title="Opening Life Dimension" />
+    <atlas-feedback-state
+      kind="loading"
+      title="Loading this Life Dimension"
+      description="Gathering its Destinations."
+    />
+  }
+  @case ('error') {
+    <atlas-page-header title="Life Dimension could not load" />
+    <atlas-feedback-state
+      kind="error"
+      title="Something went wrong"
+      description="A connection issue does not change your saved plan. Try again."
+    >
+      <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
+    </atlas-feedback-state>
+  }
+  @case ('ready') {
+    @if (vm(); as vm) {
+      <atlas-page-header [title]="vm.dimension.label" [description]="vm.description">
+        <atlas-breadcrumbs
+          [items]="[
+            { label: dimensions.label, path: dimensions.path },
+            { label: vm.dimension.label },
+          ]"
+        />
+      </atlas-page-header>
+      <div class="intro">
+        <atlas-dimension-badge [dimension]="vm.dimension.key" />
+        @if (vm.meta; as meta) {
+          <p class="meta">{{ meta }}</p>
+        }
+      </div>
+
+      <div class="layout">
+        <div class="main">
+          @for (goal of vm.goals; track goal.id) {
+            <article
+              class="card destination"
+              [attr.aria-labelledby]="'atlas-dimension-goal-' + goal.id"
+            >
+              <div class="badges">
+                <atlas-dimension-badge [dimension]="vm.dimension.key" />
+                <atlas-status-badge [status]="goal.status" />
+              </div>
+              <p class="eyebrow">Destination{{ store.sample ? ' · Sample plan' : '' }}</p>
+              <h2 class="goal-title" [id]="'atlas-dimension-goal-' + goal.id">{{ goal.title }}</h2>
+              <atlas-progress
+                label="Destination progress"
+                [value]="goal.progress.value"
+                [detail]="goal.progress.detail"
+              />
+              @if (goal.completed; as completed) {
+                <p class="secondary">{{ completed }}</p>
+              }
+              @if (goal.target; as target) {
+                <div>
+                  <p class="eyebrow">Target</p>
+                  <p class="strong">{{ target }}</p>
+                </div>
+              }
+              <p class="secondary">{{ goal.achieved }}</p>
+              @if (goal.next; as next) {
+                <a class="next" [routerLink]="next.link">
+                  <span class="strong">{{ next.title }}</span>
+                  <span class="secondary">{{ next.line }}</span>
+                </a>
+              }
+              @if (goal.reward; as reward) {
+                <p class="reward">{{ reward }}</p>
+              }
+              <a
+                mat-flat-button
+                [routerLink]="goal.link"
+                [attr.aria-label]="'Destination details: ' + goal.title"
+              >
+                Destination details
+                <atlas-icon name="next" />
+              </a>
+            </article>
+          } @empty {
+            <atlas-feedback-state
+              [iconName]="vm.dimension.icon"
+              [title]="'No ' + vm.dimension.label + ' Destinations yet'"
+              description="Add an intention only when it feels meaningful."
+            />
+          }
+        </div>
+
+        <div class="aside">
+          <section class="card" aria-labelledby="atlas-dimension-meaning">
+            <h2 class="section-title" id="atlas-dimension-meaning">Make it meaningful</h2>
+            <p class="secondary">{{ vm.prompt }}</p>
+            <a
+              mat-stroked-button
+              [routerLink]="vm.intention.path"
+              [queryParams]="vm.intention.query"
+              [attr.aria-label]="'Add intention for ' + vm.dimension.label"
+            >
+              Add intention
+            </a>
+          </section>
+          @if (vm.nextLines.length) {
+            <section class="card" aria-labelledby="atlas-dimension-next">
+              <h2 class="section-title" id="atlas-dimension-next">One next step</h2>
+              <ul class="lines">
+                @for (line of vm.nextLines; track $index) {
+                  <li>{{ line }}</li>
+                }
+              </ul>
+            </section>
+          }
+          <p class="meta">{{ vm.caption }}</p>
+        </div>
+      </div>
+    } @else {
+      <atlas-page-header title="Life Dimension not found" />
+      <atlas-feedback-state
+        iconName="life-dimensions"
+        title="This Life Dimension does not exist"
+        description="Choose one of the seven Life Dimensions."
+      >
+        <a mat-stroked-button [routerLink]="dimensions.path">Open Life Dimensions</a>
+      </atlas-feedback-state>
+    }
+  }
+}

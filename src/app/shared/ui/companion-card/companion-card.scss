@@ -1,0 +1,98 @@
+@use 'abstracts' as atlas;
+
+// Figma Atlas/V3/CompanionCard: compact 384 × 138 (art 40, eyebrow, title, close; text actions) and expanded
+// (celebration) with a larger title.
+:host {
+  @include atlas.card(var(--space-4));
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow: hidden;
+  animation: atlas-companion-enter var(--duration-standard) var(--easing-standard);
+
+  @include atlas.signature-edge;
+}
+
+:host(.is-muted) {
+  animation: none;
+}
+
+.head {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.art {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--size-touch-target-min);
+  block-size: var(--size-touch-target-min);
+  background: var(--color-surface-subtle);
+  border-radius: var(--radius-pill);
+
+  :host(.is-expanded) & {
+    inline-size: calc(var(--size-touch-target-min) * 1.5);
+    block-size: calc(var(--size-touch-target-min) * 1.5);
+  }
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+.eyebrow {
+  @include atlas.style(caption);
+
+  color: var(--color-text-secondary);
+
+  :host(.is-expanded) & {
+    @include atlas.style(label);
+
+    text-transform: uppercase;
+  }
+}
+
+.title {
+  @include atlas.style(body-large);
+
+  color: var(--color-text-primary);
+
+  :host(.is-expanded) & {
+    @include atlas.style(h3);
+  }
+}
+
+.dismiss {
+  flex: none;
+  margin-block-start: calc(var(--space-2) * -1);
+  margin-inline-end: calc(var(--space-2) * -1);
+}
+
+.body {
+  color: var(--color-text-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+@keyframes atlas-companion-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
+}

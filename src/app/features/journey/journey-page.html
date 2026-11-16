@@ -1,0 +1,183 @@
+<atlas-page-header [title]="title" [description]="vm()?.description" />
+
+<div class="toolbar">
+  <div class="ranges" role="group" aria-label="Time range">
+    @for (option of ranges; track option.value) {
+      <button
+        mat-stroked-button
+        type="button"
+        [attr.aria-pressed]="selectedRange() === option.value"
+        (click)="setRange(option.value)"
+      >
+        {{ option.label }}<span class="atlas-visually-hidden">, {{ option.name }}</span>
+      </button>
+    }
+  </div>
+  <mat-form-field appearance="outline" class="filter" subscriptSizing="dynamic">
+    <mat-label>Dimension</mat-label>
+    <mat-select [value]="selectedDimension()" (valueChange)="setDimension($event)">
+      <mat-option [value]="null">All dimensions</mat-option>
+      @for (option of vm()?.dimensionOptions ?? []; track option.value) {
+        <mat-option [value]="option.value">{{ option.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <button mat-stroked-button type="button" [disabled]="!vm()" (click)="showToday()">
+    <atlas-icon name="calendar" />
+    Today
+  </button>
+</div>
+
+@switch (store.state()) {
+  @case ('loading') {
+    <atlas-feedback-state
+      kind="loading"
+      title="Loading your Journey"
+      description="Placing your Waypoints in time."
+    />
+  }
+  @case ('error') {
+    <atlas-feedback-state
+      kind="error"
+      title="Journey could not load"
+      description="A connection issue does not change your saved plan. Try again."
+    >
+      <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
+    </atlas-feedback-state>
+  }
+  @case ('ready') {
+    @if (vm(); as vm) {
+      @if (vm.filteredOut) {
+        <atlas-feedback-state
+          iconName="filter"
+          title="Nothing in this dimension"
+          description="Choose another dimension or show all of them."
+        >
+          <button mat-stroked-button type="button" (click)="setDimension(null)">
+            Show all dimensions
+          </button>
+        </atlas-feedback-state>
+      } @else if (!vm.groups.length) {
+        <atlas-feedback-state
+          iconName="journey-overview"
+          title="Nothing planned in this range"
+          description="Choose a longer range, or plan a Waypoint with a date."
+        >
+          @if (selectedRange() !== 'all') {
+            <button mat-stroked-button type="button" (click)="setRange('all')">
+              Show the whole plan
+            </button>
+          } @else {
+            <a mat-flat-button routerLink="/destinations">Open Destinations</a>
+          }
+        </atlas-feedback-state>
+      } @else {
+        @for (group of vm.groups; track group.goalId) {
+          <section class="group" [attr.aria-labelledby]="'atlas-journey-' + group.goalId">
+            <div class="card destination">
+              <h2 class="destination-title" [id]="'atlas-journey-' + group.goalId">
+                <a [routerLink]="group.link">{{ group.title }}</a>
+              </h2>
+              <atlas-progress
+                [value]="group.progress.value"
+                [label]="group.progress.label"
+                [detail]="group.progress.detail"
+              />
+              @if (group.caption) {
+                <p class="atlas-caption atlas-text-secondary">{{ group.caption }}</p>
+              }
+              <div class="timeline">
+                @if (group.lanes.length) {
+                  <atlas-journey-timeline
+                    [label]="'Waypoints of ' + group.title + ' in time'"
+                    [lanes]="group.lanes"
+                    [scale]="vm.scale"
+                    [today]="vm.today"
+                  />
+                  <ul class="legend" aria-label="Legend">
+                    <li><span class="dot" aria-hidden="true"></span>Planned · solid</li>
+                    <li>
+                      <span class="dot is-hollow" aria-hidden="true"></span>Not placed · hollow
+                    </li>
+                    <li>
+                      <span class="dot is-dashed" aria-hidden="true"></span>Approximate · dashed
+                    </li>
+                  </ul>
+                  <p class="atlas-caption atlas-text-secondary">
+                    Broad view shows Waypoints only. Month, year and approximate targets are not
+                    exact-day commitments. Undated Waypoints stay in Not placed yet.
+                  </p>
+                } @else {
+                  <p class="atlas-text-secondary">No Waypoint has a date in this range.</p>
+                }
+              </div>
+            </div>
+
+            @if (group.agenda.length) {
+              <div class="agenda">
+                <h3 class="section-title">Your chronological agenda</h3>
+                <ol class="agenda-list">
+                  @for (item of group.agenda; track item.id) {
+                    <li class="card agenda-item">
+                      <p class="atlas-caption">
+                        <time [attr.datetime]="item.date.datetime">{{ item.date.text }}</time>
+                      </p>
+                      <h4 class="agenda-title">{{ item.title }}</h4>
+                      <atlas-status-badge [status]="item.status" />
+                      @if (item.line) {
+                        <p class="atlas-caption atlas-text-secondary">{{ item.line }}</p>
+                      }
+                      <a
+                        mat-flat-button
+                        [id]="'atlas-agenda-' + item.id"
+                        [routerLink]="item.link"
+                        [attr.aria-label]="'Open Waypoint ' + item.title"
+                      >
+                        Open Waypoint
+                      </a>
+                    </li>
+                  }
+                </ol>
+              </div>
+            }
+
+            <div class="context">
+              @if (group.next; as next) {
+                <atlas-next-waypoint-card [waypoint]="next" />
+              }
+              <section
+                class="card unplaced"
+                [attr.aria-labelledby]="'atlas-unplaced-' + group.goalId"
+              >
+                <h3 class="section-title" [id]="'atlas-unplaced-' + group.goalId">
+                  Not placed yet
+                </h3>
+                <p class="atlas-caption atlas-text-secondary">
+                  Keep uncertainty in the plan, not on the calendar.
+                </p>
+                @if (group.unplaced.length) {
+                  <ul class="unplaced-list">
+                    @for (item of group.unplaced; track item.id) {
+                      <li>
+                        <span class="dot is-hollow" aria-hidden="true"></span>
+                        <span>
+                          <a class="unplaced-title" [routerLink]="item.link">{{ item.title }}</a>
+                          <span class="atlas-caption atlas-text-secondary">{{ item.line }}</span>
+                        </span>
+                      </li>
+                    }
+                  </ul>
+                } @else {
+                  <p class="atlas-text-secondary">Every Waypoint in this range has a date.</p>
+                }
+                @if (group.excluded) {
+                  <p class="atlas-caption atlas-text-secondary">{{ group.excluded }}</p>
+                }
+              </section>
+            </div>
+          </section>
+        }
+      }
+    }
+  }
+}

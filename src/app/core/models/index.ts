@@ -1,3 +1,5 @@
+export * from './awards';
+export * from './connection';
 export * from './dashboard';
 export * from './goal';
 export * from './goal-commands';
@@ -6,6 +8,8 @@ export * from './goal-note';
 export * from './goal-tree';
 export * from './life-dimension';
 export * from './money';
+export * from './onboarding';
 export * from './planned-date';
 export * from './progress';
 export * from './status-for-node';
+export * from './timeline';

@@ -1,0 +1,162 @@
+@use 'abstracts' as atlas;
+
+:host {
+  @include atlas.stack;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.filter {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.views,
+.graph-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.views [aria-pressed='true'],
+.read[aria-pressed='true'] {
+  border-color: var(--color-border-action);
+  box-shadow: inset 0 0 0 1px var(--color-border-action);
+}
+
+.layout {
+  @include atlas.with-aside;
+}
+
+.main {
+  @include atlas.stack;
+}
+
+.card {
+  @include atlas.card;
+  @include atlas.stack(var(--space-3));
+}
+
+.card-title {
+  @include atlas.style(h3);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.eyebrow {
+  @include atlas.style(label);
+
+  margin: 0;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.graph-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.legend {
+  @include atlas.style(caption);
+
+  display: flex;
+  gap: var(--space-4);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+}
+
+.swatch {
+  inline-size: var(--space-6);
+  border-block-start: calc(var(--border-width) * 2) solid var(--color-border-action);
+
+  &.is-dashed {
+    border-block-start-style: dashed;
+    border-block-start-color: var(--color-brand-venn-violet);
+  }
+}
+
+.zoom {
+  min-inline-size: 3rem;
+  text-align: center;
+}
+
+.relationships {
+  @include atlas.stack;
+
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.relationship-title,
+.detail-title {
+  @include atlas.style(h4);
+}
+
+.kind {
+  @include atlas.style(label);
+
+  &.is-dashed {
+    font-style: italic;
+  }
+}
+
+.read {
+  align-self: flex-start;
+}
+
+.panel-head {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.detail {
+  @include atlas.stack(var(--space-2));
+
+  padding-block-start: var(--space-3);
+  border-block-start: var(--border-width) solid var(--color-border-subtle);
+
+  a {
+    align-self: flex-start;
+  }
+}
+
+.facts {
+  @include atlas.stack(var(--space-2));
+
+  margin: 0;
+
+  dt {
+    @include atlas.style(caption);
+
+    color: var(--color-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.context-link {
+  @include atlas.style(label);
+}

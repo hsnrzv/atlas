@@ -63,4 +63,13 @@ describe('DestinationsPage', () => {
     expect(text(root.querySelector('atlas-feedback-state h2'))).toBe('Destinations could not load');
     expect(text(root.querySelector('atlas-feedback-state button'))).toBe('Retry');
   });
+
+  it('opens Create destination with the Life Dimension from ?create=', async () => {
+    await render('sample', { create: 'HEALTH' });
+    await vi.advanceTimersByTimeAsync(500);
+
+    const dialog = document.querySelector('atlas-goal-form-dialog');
+    expect(text(dialog?.querySelector('h2'))).toBe('Create destination');
+    expect(text(dialog?.querySelector('mat-select .mat-mdc-select-value'))).toBe('Health');
+  });
 });

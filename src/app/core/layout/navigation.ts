@@ -47,6 +47,8 @@ export const SETTINGS: AtlasNavLink = { label: 'Settings', path: '/settings', ic
 export const PROFILE: AtlasNavLink = { label: 'Profile', path: '/profile', icon: 'profile' };
 export const HELP: AtlasNavLink = { label: 'Help', path: '/help', icon: 'help' };
 export const MORE: AtlasNavLink = { label: 'More', path: '/more', icon: 'menu' };
+/** Onboarding (F3-4), outside the app shell and the navigation. */
+export const WELCOME = { label: 'Welcome', path: '/welcome', setup: '/welcome/setup' } as const;
 
 /** Sidebar and rail, "YOUR ATLAS" group (Figma Atlas/V3/Sidebar 152:5175). */
 export const PRIMARY_NAV: readonly AtlasNavLink[] = [

@@ -1,0 +1,71 @@
+<header class="brand">
+  <atlas-logo variant="horizontal" [size]="40" />
+</header>
+
+<main class="content" id="main">
+  <h1 class="title">A little direction. Your pace.</h1>
+  <p class="description">
+    Optional setup. Choose as much or as little as you like; you can change it later.
+  </p>
+
+  <section class="section" aria-labelledby="atlas-setup-areas">
+    <h2 class="section-title" id="atlas-setup-areas">
+      <span class="number" aria-hidden="true">01</span> Areas · Choose any
+    </h2>
+    <mat-chip-listbox
+      class="areas"
+      aria-labelledby="atlas-setup-areas"
+      [multiple]="true"
+      [value]="selected()"
+      (change)="select($event)"
+    >
+      @for (dimension of dimensions; track dimension.key) {
+        <mat-chip-option
+          class="area"
+          [value]="dimension.apiKey"
+          [style.--atlas-area-foreground]="dimension.color.foreground"
+          [style.--atlas-area-background]="dimension.color.tint"
+        >
+          <atlas-icon matChipAvatar [name]="dimension.icon" size="sm" />
+          {{ dimension.label }}
+        </mat-chip-option>
+      }
+    </mat-chip-listbox>
+  </section>
+
+  <section class="section" aria-labelledby="atlas-setup-intention">
+    <h2 class="section-title" id="atlas-setup-intention">
+      <span class="number" aria-hidden="true">02</span> Intention · Add later
+    </h2>
+    <p class="note">No financial or health details required.</p>
+    <a mat-stroked-button class="preferences" routerLink="/settings/companion">
+      Companion preferences
+      <atlas-icon matButtonIcon iconPositionEnd name="next" />
+    </a>
+  </section>
+
+  @if (flow.error(); as message) {
+    <atlas-plan-alert [message]="message" (dismissed)="flow.error.set(null)" />
+  }
+  <div class="actions">
+    <button mat-flat-button type="button" [disabled]="flow.busy()" (click)="continue()">
+      Continue
+      <atlas-icon matButtonIcon iconPositionEnd name="next" />
+    </button>
+    <button mat-stroked-button type="button" [disabled]="flow.busy()" (click)="flow.skip()">
+      Skip for now
+      <atlas-icon matButtonIcon iconPositionEnd name="next" />
+    </button>
+    @if (flow.canExploreSample) {
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="flow.busy()"
+        (click)="flow.exploreSample()"
+      >
+        Explore sample plan
+        <atlas-icon matButtonIcon iconPositionEnd name="next" />
+      </button>
+    }
+  </div>
+</main>

@@ -1,13 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
+import type { AwardItem, Awards } from '../../models/awards';
+import type { GoalConnection } from '../../models/connection';
 import type { Dashboard } from '../../models/dashboard';
 import type { Goal, GoalSummary } from '../../models/goal';
 import type { GoalDependency } from '../../models/goal-commands';
 import type { GoalNode, GoalTree } from '../../models/goal-node';
 import type { GoalNote } from '../../models/goal-note';
+import type { Onboarding } from '../../models/onboarding';
+import type { Timeline } from '../../models/timeline';
 import { AtlasDataError } from '../data-error';
+import { AwardRepository } from '../ports/award.repository';
+import { ConnectionRepository } from '../ports/connection.repository';
 import { DashboardRepository } from '../ports/dashboard.repository';
 import { GoalRepository } from '../ports/goal.repository';
+import { OnboardingRepository } from '../ports/onboarding.repository';
+import { TimelineRepository } from '../ports/timeline.repository';
 
 function unavailable<T>(): Observable<T> {
   return throwError(
@@ -101,6 +109,50 @@ export class UnavailableGoalRepository extends GoalRepository {
   }
 
   removeNote(): Observable<void> {
+    return unavailable();
+  }
+}
+
+@Injectable()
+export class UnavailableTimelineRepository extends TimelineRepository {
+  timeline(): Observable<Timeline> {
+    return unavailable();
+  }
+}
+
+@Injectable()
+export class UnavailableConnectionRepository extends ConnectionRepository {
+  connections(): Observable<readonly GoalConnection[]> {
+    return unavailable();
+  }
+}
+
+@Injectable()
+export class UnavailableAwardRepository extends AwardRepository {
+  awards(): Observable<Awards> {
+    return unavailable();
+  }
+
+  redeem(): Observable<AwardItem> {
+    return unavailable();
+  }
+}
+
+@Injectable()
+export class UnavailableOnboardingRepository extends OnboardingRepository {
+  onboarding(): Observable<Onboarding> {
+    return unavailable();
+  }
+
+  saveAreas(): Observable<Onboarding> {
+    return unavailable();
+  }
+
+  complete(): Observable<Onboarding> {
+    return unavailable();
+  }
+
+  reopen(): Observable<Onboarding> {
     return unavailable();
   }
 }

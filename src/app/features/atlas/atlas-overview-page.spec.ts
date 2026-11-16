@@ -2,6 +2,7 @@ import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { NEVER, of, ReplaySubject, throwError, type Observable } from 'rxjs';
+import { ATLAS_COMPANION_STORAGE_KEY } from '../../core/companion/companion-preferences.store';
 import { AtlasDataError } from '../../core/data-access/data-error';
 import { DashboardRepository } from '../../core/data-access/ports/dashboard.repository';
 import { ATLAS_SAMPLE_DATA } from '../../core/data-access/sample-data';
@@ -66,6 +67,7 @@ describe('AtlasOverviewPage', () => {
   });
 
   it('shows the Overview with every section in heading order', async () => {
+    localStorage.clear();
     const { root } = await render([() => of(testDashboard())], true);
     const headings = Array.from(
       root.querySelectorAll('h1, h2, h3'),
@@ -77,6 +79,7 @@ describe('AtlasOverviewPage', () => {
       'H2 Build the life you envision.',
       'H2 Run a marathon',
       'H3 Finish a half marathon',
+      'H2 Choose one meaningful next step.',
       'H2 At a glance',
       'H2 Life dimensions',
       'H3 Health',
@@ -131,5 +134,31 @@ describe('AtlasOverviewPage', () => {
     expect(Array.from(root.querySelectorAll('.saved-lines li'), text)).toContain(
       'Next: Finish a half marathon · March 2027',
     );
+  });
+
+  describe('companion', () => {
+    beforeEach(() => localStorage.clear());
+    afterEach(() => localStorage.clear());
+
+    it('suggests the next Waypoint and can be dismissed for the session', async () => {
+      const { fixture, root } = await render([() => of(testDashboard())]);
+      const card = root.querySelector('atlas-companion-card');
+
+      expect(text(card?.querySelector('h2'))).toBe('Choose one meaningful next step.');
+      expect(card?.querySelector('a[atlasCompanionAction]')?.getAttribute('href')).toBe(
+        root.querySelector('atlas-next-waypoint-card a')?.getAttribute('href'),
+      );
+
+      card!.querySelector<HTMLButtonElement>('.dismiss')!.click();
+      fixture.detectChanges();
+      expect(root.querySelector('atlas-companion-card')).toBeNull();
+    });
+
+    it('stays hidden when the companion is disabled', async () => {
+      localStorage.setItem(ATLAS_COMPANION_STORAGE_KEY, 'off');
+      const { root } = await render([() => of(testDashboard())]);
+
+      expect(root.querySelector('atlas-companion-card')).toBeNull();
+    });
   });
 });

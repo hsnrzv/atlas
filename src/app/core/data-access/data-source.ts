@@ -1,9 +1,17 @@
 import type { Provider } from '@angular/core';
+import { AwardRepository } from './ports/award.repository';
+import { ConnectionRepository } from './ports/connection.repository';
 import { DashboardRepository } from './ports/dashboard.repository';
 import { GoalRepository } from './ports/goal.repository';
+import { OnboardingRepository } from './ports/onboarding.repository';
+import { TimelineRepository } from './ports/timeline.repository';
 import {
+  UnavailableAwardRepository,
+  UnavailableConnectionRepository,
   UnavailableDashboardRepository,
   UnavailableGoalRepository,
+  UnavailableOnboardingRepository,
+  UnavailableTimelineRepository,
 } from './unavailable/unavailable.repositories';
 
 /**
@@ -15,5 +23,9 @@ export function dataSourceProviders(): Provider[] {
   return [
     { provide: DashboardRepository, useClass: UnavailableDashboardRepository },
     { provide: GoalRepository, useClass: UnavailableGoalRepository },
+    { provide: TimelineRepository, useClass: UnavailableTimelineRepository },
+    { provide: ConnectionRepository, useClass: UnavailableConnectionRepository },
+    { provide: AwardRepository, useClass: UnavailableAwardRepository },
+    { provide: OnboardingRepository, useClass: UnavailableOnboardingRepository },
   ];
 }

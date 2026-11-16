@@ -67,19 +67,21 @@ src/app/
     layout/            app-shell, sidebar, nav-item, topbar, bottom-nav, navigation, title strategy, route focus,
                        plan-links (UI routes for a Goal or GoalNode)
     data-access/
-      ports/           goal.repository.ts, dashboard.repository.ts, profile.repository.ts, …
+      ports/           goal, dashboard, timeline, connection, award, onboarding repositories, …
       http/            http-goal.repository.ts, problem-details.ts, interceptors
-      mock/            mock-goal.repository.ts, mock-plan-state.ts, sample-plan.ts, sample-fixtures.ts (dev only, §6)
+      mock/            mock-*.repository.ts, mock-plan-state.ts, sample-plan.ts, sample-fixtures.ts (dev only, §6)
+      read-model.ts                      readModel(): loading / empty / ready / error signals for read-only pages
       testing/         plan-testing.ts: providers for specs (mock responder, mock goal repository, en-US)
       goal-plan.store.ts                 one Destination's plan; shared by the Destination, Waypoint and Step pages
       data-access.providers.ts           provideAtlasData() switches adapters
     plan/              PlanEditor: opens the plan dialogs and confirmations, reports write results
     models/            goal.ts, goal-node.ts, planned-date.ts, money.ts, life-dimension.ts, status-for-node.ts
     theme/             atlas-theme (light / dark / match device)
-    companion/         companion-preferences.store.ts (§9)
+    companion/         companion-preferences.store.ts, companion-copy.ts (§9)
+    onboarding/        OnboardingStore and startGuard (F3-4)
   shared/
     ui/                buttons are Material; badges, progress, page-header, breadcrumbs, feedback-state, cards, …
-    visualization/     waypoint-route, connection-graph, journey-timeline (+ wrappers or SVG per §11)
+    visualization/     connection-graph, journey-timeline: native SVG/HTML (§11)
     icons/             atlas-icon, atlas-icons (exists)
     brand/             atlas-logo (exists)
     design-system/     life-dimensions, statuses, tokens.generated (exists)
@@ -92,8 +94,8 @@ src/app/
 `AtlasTheme` moved to `core/theme` in F1-14. The theme choice lives in the topbar profile menu (Match device, Light, Dark)
 and is stored in `localStorage` (a preference, not a token).
 
-Until a feature lands, its route renders `features/placeholder` (F1-14). `features/more` is the mobile More page and
-`features/not-found` the `**` page.
+`/profile` and `/help` still render `features/placeholder` (F1-14) until their features land. `features/more` is the
+mobile More page and `features/not-found` the `**` page.
 
 ## 5. Routing
 
@@ -104,7 +106,7 @@ is off. A `TitleStrategy` and a focus handler move focus to the page `h1` after 
 
 | Route                                     | Page                                    | Figma area         | Notes                                                               |
 | ----------------------------------------- | --------------------------------------- | ------------------ | ------------------------------------------------------------------- |
-| `/` → `/atlas`                            | redirect                                | —                  | `/welcome` instead when onboarding is incomplete (guard, F3-4)      |
+| `/`                                       | `startGuard`                            | —                  | `/atlas`; `/welcome` until onboarding is `COMPLETED` (F3-4)         |
 | `/atlas`                                  | `AtlasOverviewPage`                     | 05 My Atlas        |                                                                     |
 | `/destinations`                           | `DestinationsPage`                      | 06                 | filters as query params                                             |
 | `/destinations/:goalId`                   | `DestinationDetailPage`                 | 06                 | one page: purpose, route, Steps, notes, reward; create/edit dialogs |
@@ -112,11 +114,11 @@ is off. A `TitleStrategy` and a focus handler move focus to the page `h1` after 
 | `/destinations/:goalId/steps/:nodeId`     | `StepDetailPage`                        | 08                 | full page; a Milestone id redirects to the Waypoint page            |
 | `/waypoints`                              | `WaypointsPage`                         | 07                 | `?destination=`                                                     |
 | `/steps`                                  | `StepsPage`                             | 08                 | `?destination=&waypoint=&status=&due=`                              |
-| `/connections`                            | `ConnectionsPage`                       | 09                 | `?view=graph\|list`, `?selected=`                                   |
-| `/journey`                                | `JourneyPage`                           | 10                 | `?range=3m\|6m\|1y\|3y\|all`, `?dimension=`                         |
+| `/connections`                            | `ConnectionsPage`                       | 09                 | `?view=graph\|list`, `?selected=`; list below 768 px                |
+| `/journey`                                | `JourneyPage`                           | 10                 | `?range=3m\|6m\|1y\|3y`, `?dimension=`; agenda below 768 px         |
 | `/awards`                                 | `AwardsPage`                            | 11                 |                                                                     |
-| `/dimensions`, `/dimensions/:key`         | `DimensionsPage`, `DimensionDetailPage` | 12                 | `:key` is the `LifeDimensionKey`                                    |
-| `/welcome`                                | `WelcomePage` → `OnboardingPage`        | 14 Getting started | skippable                                                           |
+| `/dimensions`, `/dimensions/:dimension`   | `DimensionsPage`, `DimensionDetailPage` | 13                 | `:dimension` is the `LifeDimensionKey`                              |
+| `/welcome`, `/welcome/setup`              | `WelcomePage`, `SetupPage`              | 14 Getting started | outside the shell; skippable                                        |
 | `/settings`, `/settings/companion`        | settings pages                          | 14 Companion       |                                                                     |
 | `/profile`, `/help`                       | placeholder pages                       | 04 (profile menu)  | reached from the profile menu and More                              |
 | `/more`                                   | `MorePage`                              | 04 mobile          | lists the areas that are not in the bottom nav                      |
@@ -225,6 +227,18 @@ contract's existing field, as listed:
 | FQ-12 | Waypoints achieved on a Destination outside the dashboard              | not shown on Destination detail                           |
 | FQ-13 | Notes count per Step (Figma Step row "No notes")                       | not shown in the Step row                                 |
 
+Pages 09–14 (Phase 6) need read models the draft contract does not define. The ports, models and mock follow these
+proposals; the backend owner decides them before F4-1:
+
+| ID    | Question                                                                          | Until decided                                                 |
+| ----- | --------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| FQ-14 | `GET /timeline` returns undated items (`date: null`) and each item's `progress`   | Journey "Not placed yet" and marker progress use these fields |
+| FQ-15 | `GET /connections`: associations and unverified possible impacts per Destination  | proposed `GoalConnection` model; no amounts                   |
+| FQ-16 | `GET /rewards`: Milestone Awards with counts, earned dates and achieved Waypoints | proposed `Awards` model                                       |
+| FQ-17 | Onboarding step `areas` and `PUT /onboarding/steps/areas`                         | setup saves focus areas through the proposed step             |
+| FQ-18 | Whether a Waypoint's status follows its Steps                                     | the UI shows the status the backend returns (mock: fixtures)  |
+| FQ-19 | Whether a Life Dimension "intention" is its own entity                            | "Add intention" opens the Destination form for that dimension |
+
 ## 7. State
 
 - **Signal stores per feature**, written as `@Injectable()` classes provided on the feature route (not root), with
@@ -269,11 +283,13 @@ The companion is an **optional, decorative helper**: no audio, no AI analysis, n
 
 - Preferences (`on` / `muted` / `off`) live in `CompanionPreferencesStore` (core). Until the profile API stores them,
   they are kept in `localStorage` as a non-sensitive UI preference (same rule as the theme, D1).
-- Copy is a static, curated catalogue (`features/companion/companion-copy.ts`) keyed by trigger (welcome, step
-  completed, waypoint achieved, award earned). Nothing is generated.
-- Every appearance offers Dismiss, Mute and Disable. Muted shows a compact card without art; Off hides it.
-- **Art:** the Figma companion is raster demonstration art without cleared rights. Behind the feature flag
-  `companionArt` (off by default) the card shows a placeholder slot (Atlas symbol). Real art lands only after rights
+- Copy is a static, curated catalogue (`core/companion/companion-copy.ts`) keyed by trigger (`welcome`,
+  `next-step`, `waypoint-achieved`). Nothing is generated. `AtlasCompanionCard` (`shared/ui/companion-card`) shows it
+  on My Atlas and Awards; `/settings/companion` sets the mode.
+- Every appearance offers Dismiss, Mute and Disable. Dismiss hides that appearance until reload; muted shows a compact
+  card without art; Off hides it everywhere.
+- **Art:** the Figma companion is raster demonstration art without cleared rights (R-9). Until it is cleared the art
+  slot shows the Atlas symbol; the `companionArt` environment flag stays off. Real art lands only after rights
   clearance, as optimised PNG/WebP in `public/companion/` with `alt=""` (decorative) and text that carries the message.
 - Celebration uses a short, optional animation that is disabled under `prefers-reduced-motion`.
 
@@ -289,17 +305,25 @@ The companion is an **optional, decorative helper**: no audio, no AI analysis, n
 
 ## 11. Visualisation
 
-`project-instruction.md` §9 and ADR-0004 select Apache ECharts (+ `ngx-echarts`) for graphs and vis-timeline for the
-Journey time axis, with D3 only as a fallback. That default stands (roadmap R-7). Because Figma V3 defines its own
-graph and timeline components (`GraphNode`, `GraphConnector`, `TimelineMarker`), a **time-boxed spike at the start of
-P-V1** builds the Connections and Journey frames with the selected libraries and with native SVG, and compares Figma
-fidelity, keyboard and screen-reader access, CSP compatibility and bundle size (roadmap trade-off T-A). ADR-0004
-records the result. Whatever wins:
+The P-V1 spike ([ADR-0004](../adr/0004-visualization-stack.md)) compared Apache ECharts and vis-timeline with native
+SVG/HTML on the Connections and Journey frames. Both Figma components are a fixed layout of a few nodes and lanes, so
+**native components** won: `AtlasConnectionGraph` and `AtlasJourneyTimeline` in `shared/visualization`, no new
+dependency.
 
-- Libraries sit behind Atlas wrapper components in `shared/visualization`; features never import them directly.
+| Option                       | Raw (min) | Gzip   | Notes                                                    |
+| ---------------------------- | --------- | ------ | -------------------------------------------------------- |
+| ECharts 6.1.0                | 564 kB    | 195 kB | canvas: Figma styling and per-node keyboard access added |
+| vis-timeline (standalone)    | 552 kB    | 159 kB | DOM-based; needs its own CSS                             |
+| vis-timeline + vis-data peer | 607 kB    | 187 kB | 39 `innerHTML` sites                                     |
+| Native SVG/HTML              | < 15 kB   | < 5 kB | tokens, focus rings and accessible names as elsewhere    |
+
+ECharts stays the choice for future charts (finance, ADR-0004); it is added only when such a chart lands.
+
+- Any future library sits behind an Atlas wrapper in `shared/visualization`; features never import it directly.
 - Layout logic owned by Atlas (range bucketing, node grouping) lives in pure, tested functions.
-- Every chart has a list/table alternative and keyboard support. Connector types differ by line style and legend
-  text, not colour only.
+- Every chart has a list/table alternative and keyboard support: Connections has a List view (default below 768 px),
+  Journey an agenda (below 768 px). Each node and marker is a button whose accessible name starts with its visible
+  label (WCAG 2.5.3). Connector types differ by line style and legend text, not colour only.
 - The Waypoint route (F2-5) is an ordered list styled with CSS/SVG and needs no library.
 
 ## 12. Responsive behaviour and Capacitor
@@ -370,7 +394,7 @@ Browser notes for the e2e suite (`e2e/support/`):
 ## 17. Performance budgets
 
 - Initial JS ≤ 500 kB warning / 1 MB error (current `angular.json`); target ≤ 250 kB for the shell + My Atlas.
-  Measured after phase 5: 510 kB raw / 128 kB transfer (budget warning). The shell's Material menu, tooltip and
+  Measured after phase 6: 514 kB raw / 129 kB transfer (budget warning; phase 6 pages are lazy). The shell's Material menu, tooltip and
   ripple import CDK overlay and a11y, and esbuild keeps every export the lazy pages use from those modules in the
   initial chunk (dialogs, focus trap, `LiveAnnouncer`). App code adds about 1 kB. Reducing it means a lighter shell
   menu and tooltip; tracked in production-readiness §1.5.

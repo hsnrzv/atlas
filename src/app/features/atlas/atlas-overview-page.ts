@@ -1,6 +1,7 @@
 import {
   afterNextRender,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -9,8 +10,10 @@ import {
 } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+import { CompanionPreferencesStore } from '../../core/companion/companion-preferences.store';
 import { DESTINATIONS } from '../../core/layout/navigation';
 import { AtlasIcon } from '../../shared/icons/atlas-icon';
+import { AtlasCompanionCard } from '../../shared/ui/companion-card/companion-card';
 import { AtlasDimensionCard } from '../../shared/ui/dimension-card/dimension-card';
 import { AtlasFeedbackState } from '../../shared/ui/feedback-state/feedback-state';
 import { AtlasNextWaypointCard } from '../../shared/ui/next-waypoint-card/next-waypoint-card';
@@ -24,6 +27,7 @@ import { AtlasOverviewStore } from './data-access/atlas-overview.store';
 @Component({
   selector: 'atlas-overview-page',
   imports: [
+    AtlasCompanionCard,
     AtlasDimensionCard,
     AtlasFeedbackState,
     AtlasGlanceSummary,
@@ -42,6 +46,12 @@ export class AtlasOverviewPage implements OnInit {
   protected readonly store = inject(AtlasOverviewStore);
   protected readonly destinations = DESTINATIONS;
   protected readonly skeletonPanels = [1, 2, 3, 4, 5, 6];
+  protected readonly companion = inject(CompanionPreferencesStore);
+  /** The optional "next step" companion (P-C1), unless it is off or dismissed this session. */
+  protected readonly companionMode = computed(() => {
+    const mode = this.companion.mode();
+    return mode !== 'off' && this.companion.shows('next-step') ? mode : null;
+  });
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly injector = inject(Injector);

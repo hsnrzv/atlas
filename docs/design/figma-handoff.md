@@ -175,8 +175,8 @@ Accepted with Phase 4 (F2-3b), pending owner review at gate 4:
   The "Last saved plan" label is sentence case.
 - **Date format:** follows `LOCALE_ID` (en-US: "November 12, 2026"; Figma: en-GB "12 November 2026") until the
   profile locale arrives (D7).
-- **Not yet built:** the companion card (P-C1) and the search, Quick add and notifications in the top bar (with their
-  features).
+- **Not yet built:** the search, Quick add and notifications in the top bar (with their features). The companion card
+  (P-C1, Phase 6) sits under the Next Waypoint card.
 - "Sample plan ·" appears only while the mock serves the sample (`ATLAS_SAMPLE_DATA`); a real plan shows the date
   only.
 - `FeedbackState` cards are limited to `--layout-dialog-width`.
@@ -197,6 +197,37 @@ Accepted with Phase 5 (F2-4…F2-7, F3-0…F3-3), pending owner review at gate 5
   not announced twice.
 - Waypoint and Step pages (`/destinations/…`) highlight "Destinations" in the navigation.
 - All form fields use the outline appearance; the filled field label in the dark theme measured 4.45:1.
+
+### 6.3 Phase 6 pages (09–14): known deviations
+
+Accepted with Phase 6 (P-V1, F2-8, F2-9, P-V2, P-D1, F3-4, P-C1), pending owner review at gate 6:
+
+- **Connections (09):** the caption reads "Sample plan ·" instead of the Figma date, and its copy is generalised for
+  more than one Destination (the heading counts them in words). Below 768 px the List view is the default.
+- **Journey Overview (10):**
+  - Lanes use Waypoint titles; Figma's lane names (Application / Programme start / Graduation) are not in the data
+    model.
+  - "Fall 2027" shows as year precision (no season precision, see §6.1).
+  - The dimension filter is a select, not the Figma "Career" button. The legend reads "Not placed · hollow"
+    (Figma: "Unplaced").
+  - The optional thesis is listed under "Not placed yet" with the excluded caption.
+  - Bounded ranges run from the first day of the current month. Below 768 px the timeline becomes an agenda.
+  - Range buttons and markers carry visually hidden text ("3m, Next 3 months") so their accessible name starts with
+    the visible label (WCAG 2.5.3).
+- **Milestone Awards (11):**
+  - The planned label uses the full reward description ("Graduation celebration").
+  - The prototype "Completion study" and "Celebration study" frames are not reproduced as such; the page shows the
+    state the backend reports, and the celebration card appears once a Waypoint is achieved (flow G).
+  - "Mark as celebrated" (redeem, API-CONTRACT §9.6) is added. Dismiss is an icon button.
+  - Dates follow `LOCALE_ID` (long en-US format).
+- **Life Dimensions (12–13):** Figma has copy only for Career; the other six descriptions and prompts are authored in
+  `dimension-copy.ts` and need product review. "Add intention" opens the Destination form for that dimension (FQ-19).
+- **Welcome and setup (14):**
+  - The "Prototype" label is omitted; the art is the Atlas symbol until the companion art is cleared (R-9).
+  - Production copy omits the sample sentence; "Explore sample plan" exists only in dev builds.
+  - The setup heading reads "Areas · Choose any" and its description is reworded.
+- **Companion:** the art slot shows the Atlas symbol (R-9). On My Atlas the card sits under the Next Waypoint card. The
+  settings page has no card preview; it describes each mode in the radio option.
 
 ## 7. Reading the file from code (MCP workflow)
 

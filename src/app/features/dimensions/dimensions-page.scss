@@ -1,0 +1,42 @@
+@use 'abstracts' as atlas;
+
+:host {
+  @include atlas.stack;
+}
+
+p {
+  margin: 0;
+}
+
+.meta {
+  @include atlas.style(caption);
+
+  color: var(--color-text-secondary);
+}
+
+.lead {
+  color: var(--color-text-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
+  gap: var(--space-4);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  @include atlas.up(lg) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  atlas-dimension-card {
+    flex: 1;
+  }
+}

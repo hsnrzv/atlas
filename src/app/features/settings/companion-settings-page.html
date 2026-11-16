@@ -1,0 +1,23 @@
+<atlas-page-header [title]="copy.heading" [description]="copy.description">
+  <atlas-breadcrumbs [items]="breadcrumbs" />
+</atlas-page-header>
+
+<section class="section" aria-labelledby="companion-mode">
+  <h2 class="section-title" id="companion-mode">How the companion appears</h2>
+  <mat-radio-group
+    class="options"
+    aria-labelledby="companion-mode"
+    [value]="store.mode()"
+    (change)="store.setMode($event.value)"
+  >
+    @for (mode of modes; track mode) {
+      <mat-radio-button [value]="mode" [attr.data-mode]="mode">
+        <span class="option-label">{{ copy[mode].label }}</span>
+        <span class="option-description">{{ copy[mode].description }}</span>
+      </mat-radio-button>
+    }
+  </mat-radio-group>
+  <p class="note" role="status">Saved on this device · {{ copy[store.mode()].label }}</p>
+</section>
+
+<p class="atlas-text-secondary">No audio · No analysis of your plan · No streaks or points.</p>

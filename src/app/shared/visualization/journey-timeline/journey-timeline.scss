@@ -1,0 +1,177 @@
+@use 'abstracts' as atlas;
+
+// Figma page 10 timeline: year axis, lane labels in a fixed column, gridlines, a gold Today line, solid markers for
+// day or month targets and dashed hollow markers for coarse or approximate dates.
+:host {
+  --lane-label: 10rem;
+  --lane-height: calc(var(--size-touch-target-min) + var(--space-6));
+
+  display: block;
+
+  // The stage scrolls inside the viewport, so the host never widens a grid or flex parent.
+  min-inline-size: 0;
+}
+
+.viewport {
+  overflow: auto;
+  background: var(--color-surface-subtle);
+  border-radius: var(--radius-card);
+}
+
+.stage {
+  min-inline-size: 44rem;
+  padding: var(--space-4);
+}
+
+.axis,
+.grid,
+.today,
+.track {
+  margin-inline-start: var(--lane-label);
+}
+
+.axis,
+.today-label,
+.lane-label,
+.caption {
+  @include atlas.style(caption);
+}
+
+.axis {
+  position: relative;
+  block-size: var(--space-8);
+  color: var(--color-text-secondary);
+}
+
+.tick {
+  position: absolute;
+  translate: -50% 0;
+}
+
+.body {
+  position: relative;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gridline {
+  position: absolute;
+  inset-block: 0;
+  border-inline-start: var(--border-width) solid var(--color-border-subtle);
+}
+
+.today {
+  position: absolute;
+  inset-block: calc(-1 * var(--space-6)) 0;
+  inline-size: 0;
+  margin-block: 0;
+  pointer-events: none;
+  border-inline-start: calc(var(--border-width) * 2) solid var(--color-text-achievement);
+}
+
+.today-label {
+  position: absolute;
+  inset-block-start: 0;
+  padding-inline: var(--space-1);
+  color: var(--color-text-achievement);
+  white-space: nowrap;
+  translate: -50% -100%;
+}
+
+.lanes {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.lane {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-block-size: var(--lane-height);
+}
+
+.lane-label {
+  @include atlas.truncate;
+
+  position: absolute;
+  inset-inline-start: 0;
+  inline-size: calc(var(--lane-label) - var(--space-2));
+  color: var(--color-text-secondary);
+}
+
+.track {
+  position: relative;
+  flex: 1;
+  block-size: var(--lane-height);
+  border-block-end: var(--border-width) solid var(--color-border-subtle);
+}
+
+.marker {
+  position: absolute;
+  inset-block-start: 50%;
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-block-size: var(--size-touch-target-min);
+  padding-inline: var(--space-1);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  border-radius: var(--radius-control);
+  translate: calc(-1 * var(--space-2)) -50%;
+
+  &:hover .title {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include atlas.focus-ring;
+  }
+
+  &.is-end {
+    flex-direction: row-reverse;
+    text-align: end;
+    translate: calc(-100% + var(--space-2)) -50%;
+  }
+}
+
+.dot {
+  flex: none;
+  inline-size: var(--space-3);
+  block-size: var(--space-3);
+  background: var(--marker-color, var(--color-border-action));
+  border: calc(var(--border-width) * 2) solid var(--marker-color, var(--color-border-action));
+  border-radius: var(--radius-pill);
+
+  &.is-dashed {
+    background: transparent;
+    border-style: dashed;
+  }
+}
+
+@each $dimension in career, finance, health, love, passion, friendship, family {
+  .marker[data-dimension='#{$dimension}'] {
+    --marker-color: var(--color-dimension-#{$dimension});
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  @include atlas.style(label);
+
+  white-space: nowrap;
+}
+
+.caption {
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}

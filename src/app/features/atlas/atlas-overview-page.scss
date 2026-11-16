@@ -17,10 +17,15 @@ atlas-page-header {
   gap: var(--space-1);
 }
 
-.eyebrow {
+.eyebrow,
+.recent-kind,
+.saved-label {
   @include atlas.style(label);
 
   color: var(--color-text-secondary);
+}
+
+.eyebrow {
   text-transform: uppercase;
 }
 
@@ -105,8 +110,6 @@ atlas-page-header {
 }
 
 .recent-kind {
-  @include atlas.style(label);
-
   display: inline-flex;
   gap: var(--space-1);
   align-items: center;
@@ -150,10 +153,7 @@ atlas-page-header {
 }
 
 .saved-label {
-  @include atlas.style(label);
-
   margin: 0;
-  color: var(--color-text-secondary);
 }
 
 .saved-lines {

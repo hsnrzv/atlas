@@ -41,6 +41,8 @@ export interface GoalFormDialogData {
   readonly initial: GoalDraft;
   /** Offered as "Use sample details" while creating, in sample mode only. */
   readonly sample: GoalDraft | null;
+  /** Life Dimension chosen before the form opened (Life Dimensions "Add intention"); kept while creating. */
+  readonly area?: IkigaiAreaKey;
   save(draft: GoalDraft): Promise<FormSaveError | null>;
 }
 
@@ -68,11 +70,15 @@ export const EMPTY_GOAL_DRAFT: GoalDraft = {
   reward: null,
 };
 
-function toModel(draft: GoalDraft, mode: GoalFormDialogData['mode']): GoalFormModel {
+function toModel(
+  draft: GoalDraft,
+  mode: GoalFormDialogData['mode'],
+  area?: IkigaiAreaKey,
+): GoalFormModel {
   return {
     title: draft.title,
     outcome: draft.outcome ?? '',
-    primaryAreaKey: mode === 'create' && !draft.title ? '' : draft.primaryAreaKey,
+    primaryAreaKey: area ?? (mode === 'create' && !draft.title ? '' : draft.primaryAreaKey),
     status: draft.status,
     target: fromPlannedDate(draft.targetDate),
     description: draft.description ?? '',
@@ -116,7 +122,9 @@ export class AtlasGoalFormDialog {
   protected readonly statusOptions = GOAL_STATUS_OPTIONS;
   protected readonly saving = signal(false);
   protected readonly formError = signal<string | null>(null);
-  protected readonly model = signal<GoalFormModel>(toModel(this.data.initial, this.data.mode));
+  protected readonly model = signal<GoalFormModel>(
+    toModel(this.data.initial, this.data.mode, this.data.area),
+  );
   protected readonly goal = form(this.model, (path) => {
     required(path.title, { message: 'Enter a name for this Destination.' });
     maxLength(path.title, TITLE_MAX, { message: `Keep the name under ${TITLE_MAX} characters.` });
