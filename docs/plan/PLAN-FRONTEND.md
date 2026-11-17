@@ -279,11 +279,13 @@ content are built against Figma V3.
 - [x] **F2-10** E2E: overview → Destination → Waypoint → nested → back; responsive smoke at 390/768/1440; Firefox
       and WebKit projects; axe on every route. Done 2026-11-17 (roadmap phase 7): page suites check axe and overflow
       at 390/768/1440 in both themes, and `e2e/accessibility.spec.ts` covers every route.
-- [ ] **F2-11** Supply-chain gates in `frontend-ci`: a production-tree license allow-list check (DEPENDENCY-LICENSE-MATRIX
+- [x] **F2-11** Supply-chain gates in `frontend-ci`: a production-tree license allow-list check (DEPENDENCY-LICENSE-MATRIX
       §1; tool and license to verify), a CycloneDX SBOM, and an image scan with the scanner chosen together with
-      `atlas-infra` and the backend (BE-1.13).
+      `atlas-infra` and the backend (BE-1.13). Done 2026-11-17 (roadmap phase 9): `scripts/check-licenses.mjs` (no new
+      dependency), `npm sbom` (CycloneDX), Trivy v0.76.2 in `frontend-container` (proposed as the shared scanner).
 - [ ] **F2-12** `frontend-container.yml` publishes `main-<sha>` to GHCR on `main` (provenance, SBOM and scan from
-      F2-11) and opens the bump PR to `atlas-infra` `environments/dev`. Starts once `atlas-infra` ADR-0007 is accepted.
+      F2-11) and opens the bump PR to `atlas-infra` `environments/dev`. Starts once `atlas-infra` ADR-0007 is accepted. Blocked
+      (2026-11-17): ADR-0007 is still Proposed.
 
 ### Phase 3 — editing and onboarding (frontend, parallel to backend Phase 3)
 
@@ -318,12 +320,13 @@ content are built against Figma V3.
       `Idempotency-Key` (API-CONTRACT §7–§8, BE-4.3). Done 2026-11-17 (roadmap phase 9) without optimistic UI:
       pinned dialog versions, conflict reload, idempotency keys reused after an unknown outcome.
 - [ ] **F4-4** Onboarding, Destination/Waypoint/Step CRUD, completion and unlock, notes and awards wired to the
-      backend.
+      backend. Blocked (2026-11-17): the backend has no REST endpoints yet; the adapters are ready (F4-1).
 - [x] **F4-5** Auth-ready client: `withCredentials`/same-origin cookies, XSRF configuration, a 401 → sign-in
       redirect hook, and a `/me` bootstrap (behind a flag until Phase 9). Done 2026-11-17 (roadmap phase 9):
       `AtlasSession` and `atlasAuthInterceptor` behind the `auth` flag, which stays off until the BFF login exists;
       open session endpoints are FQ-22 (frontend.md §6.5).
-- [ ] **F4-6** E2E against `atlas-infra/local` compose in CI; seed through the API, not demo data.
+- [ ] **F4-6** E2E against `atlas-infra/local` compose in CI; seed through the API, not demo data. Blocked
+      (2026-11-17) on F4-4.
 - [x] **F4-7** Remove the mock adapter from non-development builds; CI bundle check. Done 2026-11-17 (roadmap
       phase 9): guard in CI, image build and native jobs, with a self-test on the `performance` build and an ESLint
       boundary for production data-access files.
