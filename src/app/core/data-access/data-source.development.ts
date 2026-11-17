@@ -1,5 +1,13 @@
 import { inject, type Provider, type Type } from '@angular/core';
 import { ATLAS_ENVIRONMENT } from '../config/atlas-environment';
+import { HttpGoalRepository } from './http/http-goal.repository';
+import {
+  HttpAwardRepository,
+  HttpConnectionRepository,
+  HttpDashboardRepository,
+  HttpOnboardingRepository,
+  HttpTimelineRepository,
+} from './http/http-read.repositories';
 import { MockAwardRepository } from './mock/mock-award.repository';
 import { MockConnectionRepository } from './mock/mock-connection.repository';
 import { MockDashboardRepository } from './mock/mock-dashboard.repository';
@@ -17,28 +25,18 @@ import { TimelineRepository } from './ports/timeline.repository';
 import { ATLAS_SAMPLE_DATA } from './sample-data';
 import { ATLAS_SAMPLE_GOAL_DRAFT } from './sample-goal-draft';
 import { ATLAS_SAMPLE_PLAN_LOADER } from './sample-plan-loader';
-import {
-  UnavailableAwardRepository,
-  UnavailableConnectionRepository,
-  UnavailableDashboardRepository,
-  UnavailableGoalRepository,
-  UnavailableOnboardingRepository,
-  UnavailableTimelineRepository,
-} from './unavailable/unavailable.repositories';
 
 const useMock = () => inject(ATLAS_ENVIRONMENT).dataSource === 'mock';
 
-/** Binds `port` to the mock adapter when the mock is active, otherwise to the unavailable one. */
-function port<T>(token: abstract new () => T, mock: Type<T>, unavailable: Type<T>): Provider[] {
-  return [
-    unavailable,
-    { provide: token, useFactory: () => (useMock() ? inject(mock) : inject(unavailable)) },
-  ];
+/** Binds `port` to the mock adapter when the mock is active, otherwise to the HTTP adapter (F4-1). */
+function port<T>(token: abstract new () => T, mock: Type<T>, http: Type<T>): Provider {
+  return { provide: token, useFactory: () => (useMock() ? inject(mock) : inject(http)) };
 }
 
 /**
  * Development data source (replaces `data-source.ts` through `angular.json` `fileReplacements`). Serves the
- * single §10.5 sample when `environment.dataSource` is `'mock'`.
+ * single §10.5 sample when `environment.dataSource` is `'mock'`, and talks to the backend through the dev-server
+ * proxy (`proxy.conf.json`) when it is `'http'`.
  */
 export function dataSourceProviders(): Provider[] {
   return [
@@ -54,11 +52,11 @@ export function dataSourceProviders(): Provider[] {
         return () => state.seedSample();
       },
     },
-    ...port(DashboardRepository, MockDashboardRepository, UnavailableDashboardRepository),
-    ...port(GoalRepository, MockGoalRepository, UnavailableGoalRepository),
-    ...port(TimelineRepository, MockTimelineRepository, UnavailableTimelineRepository),
-    ...port(ConnectionRepository, MockConnectionRepository, UnavailableConnectionRepository),
-    ...port(AwardRepository, MockAwardRepository, UnavailableAwardRepository),
-    ...port(OnboardingRepository, MockOnboardingRepository, UnavailableOnboardingRepository),
+    port(DashboardRepository, MockDashboardRepository, HttpDashboardRepository),
+    port(GoalRepository, MockGoalRepository, HttpGoalRepository),
+    port(TimelineRepository, MockTimelineRepository, HttpTimelineRepository),
+    port(ConnectionRepository, MockConnectionRepository, HttpConnectionRepository),
+    port(AwardRepository, MockAwardRepository, HttpAwardRepository),
+    port(OnboardingRepository, MockOnboardingRepository, HttpOnboardingRepository),
   ];
 }

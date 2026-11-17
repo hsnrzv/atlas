@@ -1,7 +1,8 @@
 # Implementation roadmap — Figma V3 to production
 
 - Status: approved by the owner on 2026-11-14 with the decisions in §4. Phases 1–6 are complete and approved;
-  phase 7 is implemented and gate 7 awaits the owner's real-device and screen-reader checks.
+  phase 7 is implemented and gate 7 awaits the owner's real-device and screen-reader checks. Phase 8 is implemented
+  except F3-5, which waits for the backend OpenAPI snapshot (BE-3.82); gate 8 awaits the owner's approval.
 - Purpose: turn the approved Figma V3 design into the production Angular app, in small reviewed PRs.
 - Maps the nine implementation phases of the production brief onto the existing backlog in
   [PLAN-FRONTEND.md](../plan/PLAN-FRONTEND.md) (`F…` IDs) and the cross-repository phases in
@@ -80,7 +81,7 @@ shared UI component.
 
 | ID    | Item                                                                                                                             | Status                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | ----- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| F2-2  | Models, `statusForNode` (D14), ports, `MockGoalRepository` with the single §10.5 sample and fixture progress (R-6), bundle guard | done 2026-11-15: `Dashboard`/`Goal`/`GoalNode` models, `DashboardRepository` and `GoalRepository` ports, `?mock=sample\|empty\|loading\|error\|refresh-error`, `Unavailable*Repository` in production until F4-1, `npm run bundle:check` in `verify` and CI. Fields beyond the draft contract are proposed as FQ-1 … FQ-6 ([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-20)) |
+| F2-2  | Models, `statusForNode` (D14), ports, `MockGoalRepository` with the single §10.5 sample and fixture progress (R-6), bundle guard | done 2026-11-15: `Dashboard`/`Goal`/`GoalNode` models, `DashboardRepository` and `GoalRepository` ports, `?mock=sample\|empty\|loading\|error\|refresh-error`, `Unavailable*Repository` in production until F4-1, `npm run bundle:check` in `verify` and CI. Fields beyond the draft contract are proposed as FQ-1 … FQ-6 ([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-21)) |
 | F2-3a | My Atlas cards: `Hero`, `NextWaypoint`, `GlanceSummary`, `DestinationCard`                                                       | done 2026-11-15: plus `DimensionCard`; shared cards in `shared/ui`, page-only parts in `features/atlas/components`; all shown on `/_design`                                                                                                                                                                                                                                                                                               |
 | F2-3b | My Atlas page: Overview, Empty, Loading, Error states (Figma page 05), mobile More page wired                                    | done 2026-11-15: `AtlasOverviewStore` (`rxResource`) keeps the last saved plan when a refresh fails; focus stays on the page heading when the state changes. Deviations from Figma are listed in [figma-handoff.md §6](../design/figma-handoff.md#6-sample-data-shown-in-figma)                                                                                                                                                           |
 
@@ -116,7 +117,7 @@ WCAG 2.2 AA with no horizontal overflow in both themes, plus the three empty sta
 Chromium, Pixel 7 Chromium, desktop Firefox and desktop WebKit (CI installs all three engines). Deviations from Figma
 are listed in [figma-handoff.md §6.2](../design/figma-handoff.md#62-destinations-waypoints-and-steps-pages-0608-known-deviations). The initial bundle grew from 460 kB to 510 kB raw (128 kB transfer) and now triggers the 500 kB
 budget warning ([frontend.md §17](../architecture/frontend.md#17-performance-budgets)). Backend-owned rules
-stay open as FQ-7 … FQ-13 ([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-20)).
+stay open as FQ-7 … FQ-13 ([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-21)).
 
 ### Phase 6 — Connections, Journey, Awards, Life Dimensions, onboarding and companion
 
@@ -141,7 +142,7 @@ WCAG 2.2 AA with no horizontal overflow at 390/768/1440 in both themes, plus the
 Chromium, Pixel 7 Chromium and WebKit, and the Firefox project. Deviations from Figma are listed in
 [figma-handoff.md §6.3](../design/figma-handoff.md#63-phase-6-pages-0914-known-deviations). The initial bundle is
 514 kB raw (129 kB transfer); the new pages are lazy. Backend-owned rules stay open as FQ-14 … FQ-19
-([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-20)).
+([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-21)).
 
 ### Phase 7 — Responsive, accessibility, themes and Capacitor
 
@@ -165,15 +166,20 @@ Release follow-ups (monochrome Android icon, Gradle and AppCompat updates, expor
 
 ### Phase 8 — Typed API contracts
 
-| ID   | Item                                                                                  |
-| ---- | ------------------------------------------------------------------------------------- |
-| F3-5 | OpenAPI types from the backend snapshot (D3, types only); CI fails on drift           |
-| F4-1 | `HttpGoalRepository` and the other HTTP adapters; switch by environment               |
-| F4-2 | HTTP layer: base path, Problem Details, retries, money from string amounts via `Intl` |
+| ID   | Item                                                                                  | Status                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ---- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F3-5 | OpenAPI types from the backend snapshot (D3, types only); CI fails on drift           | blocked: the backend snapshot (BE-3.82) does not exist yet. Until then the wire types are hand-written from the draft API-CONTRACT in `core/data-access/http/api-types.ts`, the only file F3-5 replaces                                                                                                                                                                                                                                                     |
+| F4-1 | `HttpGoalRepository` and the other HTTP adapters; switch by environment               | done 2026-11-17: `Http*` adapters for all six ports in `core/data-access/http`; production binds them, development picks mock or HTTP from `environment.dataSource`; `Unavailable*Repository` deleted. `archive`, `completeNode` and `reopenNode` now take the version for `If-Match`. Writes without a `version` in the contract are FQ-21 ([frontend.md §6.5](../architecture/frontend.md#65-proposed-contract-additions-frontend-questions-fq-1--fq-21)) |
+| F4-2 | HTTP layer: base path, Problem Details, retries, money from string amounts via `Intl` | done 2026-11-17: `API_BASE_URL` (`/api/v1`), `atlasApiInterceptor` (Accept header, GET retries on 0/502/503/504 with backoff, Problem Details → `AtlasDataError` with code and field messages; never shows the server `detail`), `AtlasApi` (pagination, `If-Match`, `Idempotency-Key`), new `unauthorized` reason. Money already renders through `formatMoney` (`Intl.NumberFormat`, string amounts)                                                       |
 
 Depends on backend phase 3 (OpenAPI snapshot, BE-3.82). F3-5 can start as soon as the snapshot exists.
 
 **Gate 8:** every port has an HTTP adapter that passes the same store tests as the mock.
+Evidence 2026-11-17: `FakeAtlasApi` (spec-only `HttpBackend`, `core/data-access/testing`) serves the mock repositories
+over `/api/v1` and enforces the draft contract (`If-Match` 428/412, unknown properties 400, Problem Details). The
+`GoalPlanStore` and `OnboardingStore` specs and the Destinations, Dimensions, Journey, Connections and Awards page
+specs run with `describe.each(TEST_ADAPTERS)` against both the mock and the HTTP adapters (all six ports). F3-5 and
+the contract drift check follow once BE-3.82 publishes the snapshot.
 
 ### Phase 9 — Production integration, testing and deployment
 

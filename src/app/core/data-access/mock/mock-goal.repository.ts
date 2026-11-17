@@ -149,9 +149,11 @@ export class MockGoalRepository extends GoalRepository {
     });
   }
 
-  archive(goalId: GoalId): Observable<Goal> {
+  // `version` is optional here so mock specs can drive actions without tracking versions; the ports require it.
+  archive(goalId: GoalId, version?: number): Observable<Goal> {
     return this.write(() => {
       const goal = this.state.goal(goalId);
+      this.checkOptionalVersion(goal, version);
       this.state.archived.add(goalId);
       return goal;
     });
@@ -262,9 +264,10 @@ export class MockGoalRepository extends GoalRepository {
     });
   }
 
-  completeNode(goalId: GoalId, nodeId: NodeId): Observable<GoalNode> {
+  completeNode(goalId: GoalId, nodeId: NodeId, version?: number): Observable<GoalNode> {
     return this.write(() => {
       const node = this.state.node(goalId, nodeId);
+      this.checkOptionalVersion(node, version);
       if (node.availability.state === 'LOCKED') {
         const reason = node.availability.reasons[0];
         throw new AtlasDataError(
@@ -285,9 +288,10 @@ export class MockGoalRepository extends GoalRepository {
     });
   }
 
-  reopenNode(goalId: GoalId, nodeId: NodeId): Observable<GoalNode> {
+  reopenNode(goalId: GoalId, nodeId: NodeId, version?: number): Observable<GoalNode> {
     return this.write(() => {
       const node = this.state.node(goalId, nodeId);
+      this.checkOptionalVersion(node, version);
       if (node.status === 'COMPLETED') {
         const status = this.state.statusBeforeComplete.get(nodeId) ?? 'IN_PROGRESS';
         this.state.replaceNode({ ...node, status, version: node.version + 1 });
@@ -395,6 +399,12 @@ export class MockGoalRepository extends GoalRepository {
       this.state.goal(goalId);
       this.state.notes = this.state.notes.filter((note) => note.id !== noteId);
     });
+  }
+
+  private checkOptionalVersion(current: { readonly version: number }, version?: number): void {
+    if (version !== undefined) {
+      this.state.checkVersion(current, version);
+    }
   }
 
   /** A read with the `?mock=` mode; errors thrown by `read` reach the subscriber. */

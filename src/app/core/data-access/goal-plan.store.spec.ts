@@ -2,19 +2,18 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { GoalPlanStore } from './goal-plan.store';
 import { MockGoalRepository } from './mock/mock-goal.repository';
-import { MOCK_LATENCY_MS, MockResponder, type MockMode } from './mock/mock-responder';
+import { MOCK_LATENCY_MS, type MockMode } from './mock/mock-responder';
 import { SAMPLE_GOAL_ID, SAMPLE_NODE_IDS as N } from './mock/sample-plan';
-import { GoalRepository } from './ports/goal.repository';
+import { providePlanTesting, TEST_ADAPTERS } from './testing/plan-testing';
 
-describe('GoalPlanStore', () => {
+describe.each(TEST_ADAPTERS)('GoalPlanStore (%s adapter)', (adapter) => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
   function setup(mode: MockMode = 'sample') {
     TestBed.configureTestingModule({
-      providers: [GoalPlanStore, { provide: GoalRepository, useExisting: MockGoalRepository }],
+      providers: [providePlanTesting(mode, adapter), GoalPlanStore],
     });
-    Object.assign(TestBed.inject(MockResponder), { mode });
     return TestBed.inject(GoalPlanStore);
   }
 

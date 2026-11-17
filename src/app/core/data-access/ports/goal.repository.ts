@@ -28,7 +28,8 @@ export abstract class GoalRepository {
     version: number,
     areas: readonly SecondaryArea[],
   ): Observable<Goal>;
-  abstract archive(goalId: GoalId): Observable<Goal>;
+  /** `POST /goals/{goalId}/archive`; like every state-changing action it sends `If-Match` (API-CONTRACT §6). */
+  abstract archive(goalId: GoalId, version: number): Observable<Goal>;
   /** Permanent deletion (API-CONTRACT A-1); the UI confirms first. */
   abstract remove(goalId: GoalId, version: number): Observable<void>;
 
@@ -47,8 +48,8 @@ export abstract class GoalRepository {
     cascade: boolean,
   ): Observable<void>;
   /** Fails with `conflict` / `NODE_LOCKED` while a prerequisite is open. */
-  abstract completeNode(goalId: GoalId, nodeId: NodeId): Observable<GoalNode>;
-  abstract reopenNode(goalId: GoalId, nodeId: NodeId): Observable<GoalNode>;
+  abstract completeNode(goalId: GoalId, nodeId: NodeId, version: number): Observable<GoalNode>;
+  abstract reopenNode(goalId: GoalId, nodeId: NodeId, version: number): Observable<GoalNode>;
 
   abstract dependencies(goalId: GoalId): Observable<readonly GoalDependency[]>;
   /** Same goal only; fails with `conflict` / `DEPENDENCY_CYCLE`. */

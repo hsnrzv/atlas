@@ -6,6 +6,7 @@ import { GoalRepository } from '../../core/data-access/ports';
 import {
   MOCK_LATENCY_MS,
   providePlanTesting,
+  TEST_ADAPTERS,
   SAMPLE_GOAL_ID,
   SAMPLE_NODE_IDS,
   type MockMode,
@@ -26,7 +27,7 @@ const APPLICATION_STEPS = [
   N.submitTheApplication,
 ];
 
-describe('AwardsPage', () => {
+describe.each(TEST_ADAPTERS)('AwardsPage (%s adapter)', (adapter) => {
   beforeEach(() => {
     vi.useFakeTimers();
     localStorage.clear();
@@ -37,7 +38,7 @@ describe('AwardsPage', () => {
     TestBed.configureTestingModule({
       providers: [
         provideRouter([]),
-        ...providePlanTesting(mode),
+        ...providePlanTesting(mode, adapter),
         AwardsStore,
         { provide: AtlasToast, useValue: { show: vi.fn() } },
       ],
@@ -63,7 +64,7 @@ describe('AwardsPage', () => {
   async function completeApplication() {
     const goals = TestBed.inject(GoalRepository);
     for (const step of APPLICATION_STEPS) {
-      const done = firstValueFrom(goals.completeNode(SAMPLE_GOAL_ID, step));
+      const done = firstValueFrom(goals.completeNode(SAMPLE_GOAL_ID, step, 1));
       await vi.advanceTimersByTimeAsync(MOCK_LATENCY_MS);
       await done;
     }

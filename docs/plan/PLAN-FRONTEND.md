@@ -255,7 +255,7 @@ content are built against Figma V3.
       backend BE-2.1); `GoalRepository` port; `MockGoalRepository` with the **single** §10.5 sample Destination
       (generic placeholders, no invented curriculum or dates); dev-only provider; production-bundle guard test.
       Done 2026-11-15: also `Dashboard` model and `DashboardRepository` port, `statusForNode()` (D14), `?mock=` modes,
-      `Unavailable*Repository` in production until F4-1, `npm run bundle:check` in `verify` and CI. Dashboard fields
+      `Unavailable*Repository` in production until F4-1 (deleted 2026-11-17), `npm run bundle:check` in `verify` and CI. Dashboard fields
       Figma needs beyond the draft contract are proposed as FQ-1 … FQ-6 (frontend.md §6.5).
 - [x] **F2-3** My Atlas page: Life Dimension overview, active Destinations, next Waypoints, upcoming deadlines,
       Milestone Award preview; responsive grid. Done 2026-11-15 as roadmap F2-3a (hero, `NextWaypointCard`,
@@ -301,14 +301,18 @@ content are built against Figma V3.
       areas, FQ-17), `startGuard`, "Run setup again" in Settings. Profile basics and dimension labels wait for the
       profile API (F4-*); the first Destination is added from the empty My Atlas.
 - [ ] **F3-5** OpenAPI client spike against the backend's committed snapshot (`atlas-microservices/docs/api/openapi.json`,
-      BE-3.05/BE-3.82): generator choice (D3), CI step that fails on contract drift.
+      BE-3.05/BE-3.82): generator choice (D3), CI step that fails on contract drift. Blocked on BE-3.82 (roadmap
+      phase 8); the hand-written wire types in `core/data-access/http/api-types.ts` are what it replaces.
 
 ### Phase 4 — integration with the backend
 
-- [ ] **F4-1** Typed API client and `HttpGoalRepository`; repository provider switched by build configuration.
-- [ ] **F4-2** HTTP layer: base path `/api/v1`, Problem Details (RFC 9457, `urn:problem:atlas:*` codes) → typed
+- [x] **F4-1** Typed API client and `HttpGoalRepository`; repository provider switched by build configuration.
+      Done 2026-11-17 (roadmap phase 8): `Http*` adapters for every port, the same store specs run against the mock
+      and against `FakeAtlasApi` (gate 8); open contract points are FQ-21 (frontend.md §6.5).
+- [x] **F4-2** HTTP layer: base path `/api/v1`, Problem Details (RFC 9457, `urn:problem:atlas:*` codes) → typed
       errors → form and field messages, retry for idempotent GETs, global error handling, and money display from string
-      amounts through `Intl.NumberFormat` (no client arithmetic).
+      amounts through `Intl.NumberFormat` (no client arithmetic). Done 2026-11-17 (roadmap phase 8); the 401 flow and
+      global error handling stay with F4-5/F4-3.
 - [ ] **F4-3** Deliberate loading/empty/error/retry states on every page. Optimistic updates send `If-Match` with
       the last `ETag`; on `412 VERSION_CONFLICT` the client reloads and tells the user. Creates and completions send an
       `Idempotency-Key` (API-CONTRACT §7–§8, BE-4.3).

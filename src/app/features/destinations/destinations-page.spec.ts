@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import {
   MOCK_LATENCY_MS,
   providePlanTesting,
+  TEST_ADAPTERS,
   type MockMode,
 } from '../../core/data-access/testing/plan-testing';
 import { DestinationsStore } from './data-access/destinations.store';
@@ -11,13 +12,13 @@ import { DestinationsPage } from './destinations-page';
 const text = (element: Element | null | undefined) =>
   element?.textContent?.replace(/\s+/g, ' ').trim();
 
-describe('DestinationsPage', () => {
+describe.each(TEST_ADAPTERS)('DestinationsPage (%s adapter)', (adapter) => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
   async function render(mode: MockMode = 'sample', inputs: Record<string, string> = {}) {
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), ...providePlanTesting(mode), DestinationsStore],
+      providers: [provideRouter([]), ...providePlanTesting(mode, adapter), DestinationsStore],
     });
     const fixture = TestBed.createComponent(DestinationsPage);
     for (const [name, value] of Object.entries(inputs)) {

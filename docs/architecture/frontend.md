@@ -156,8 +156,12 @@ precision }`, `Money { amount: string, currency }`, statuses and link types as s
 
 ### 6.2 Adapters and selection
 
-- `HttpGoalRepository` (F4-1) uses `HttpClient` with a base path from `API_BASE_URL` (`/api/v1`, same origin), maps
-  Problem Details to typed errors, and sends `If-Match` / `Idempotency-Key` where the contract requires.
+- The HTTP adapters (F4-1, `core/data-access/http`) implement every port: `HttpGoalRepository`,
+  `HttpDashboardRepository`, `HttpTimelineRepository`, `HttpConnectionRepository`, `HttpAwardRepository` and
+  `HttpOnboardingRepository`. They call `AtlasApi`, which builds URLs under `API_BASE_URL` (`/api/v1`, same origin),
+  follows paginated collections (`page`, `size=100`), sends `If-Match: "<version>"` on versioned writes and an
+  `Idempotency-Key` on creates and completions. Request bodies are hand-written in `http/api-types.ts` from the draft
+  API-CONTRACT until F3-5 generates them from the OpenAPI snapshot.
 - `MockDashboardRepository` and `MockGoalRepository` (F2-2) serve **only** the single sample from
   `project-instruction.md` §10.5 (described in
   [figma-handoff.md §6](../design/figma-handoff.md#6-sample-data-shown-in-figma)). `MockResponder` adds 400 ms latency
@@ -166,9 +170,9 @@ precision }`, `Money { amount: string, currency }`, statuses and link types as s
   `refresh-error` (the first request succeeds, later ones fail: the Error state with the last saved plan).
 - `provideAtlasData()` registers the adapters from `core/data-access/data-source.ts`. In development builds
   `angular.json` `fileReplacements` swaps in `data-source.development.ts`, which picks the mock when
-  `environment.dataSource` is `'mock'`. The production file never references `core/data-access/mock/**`. Until the
-  HTTP adapters land (F4-1), production uses `Unavailable*Repository`: every call fails with an `AtlasDataError` of
-  kind `unavailable`, so pages show their Error state.
+  `environment.dataSource` is `'mock'`. The production file never references `core/data-access/mock/**` and binds
+  the HTTP adapters. To run a development build against a local backend, set `dataSource: 'http'`; `proxy.conf.json`
+  forwards `/api` to `localhost:8080`.
 - `ATLAS_SAMPLE_DATA` (root token, `false` by default) is `true` only while the mock serves the sample. Pages use it
   for the "Sample plan ·" label from Figma.
 - `/_design` lives in `src/app/dev-routes.development.ts`. Production builds use the empty `dev-routes.ts`, so the
@@ -199,7 +203,7 @@ The fixtures are deleted with the mock (F4-7).
 - "Use sample details" (form) and "Explore sample plan" (onboarding) exist only in dev builds, behind the same
   environment flag.
 
-### 6.5 Proposed contract additions (frontend questions FQ-1 … FQ-20)
+### 6.5 Proposed contract additions (frontend questions FQ-1 … FQ-21)
 
 Figma pages 05–08 show values that the draft `GET /api/v1/dashboard` contract (API-CONTRACT §9.1) does not provide.
 Only the backend can derive them (roadmap R-12), so the frontend models them as **proposed** additions
@@ -241,6 +245,12 @@ proposals; the backend owner decides them before F4-1:
 | FQ-18 | Whether a Waypoint's status follows its Steps                                                                                                                           | the UI shows the status the backend returns (the mock derives it from the Steps, `mock-recalculation.ts`)                |
 | FQ-19 | Whether a Life Dimension "intention" is its own entity                                                                                                                  | "Add intention" opens the Destination form for that dimension                                                            |
 | FQ-20 | `PATCH /goals/{goalId}` with `secondaryAreas[]` (API-CONTRACT §9.5): the allowed range of the optional contribution `weight`, and whether `GET /connections` returns it | Connections "connect" sends `{ areaKey, weight }`; the form checks only the decimal format, the backend checks the range |
+
+The HTTP adapters (Phase 8) raise one more:
+
+| ID    | Question                                                                                                                                                                                                                                                                                    | Until decided                                                                                                                                                                                                              |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| FQ-21 | Concurrency and body shapes the draft does not fix: rewards, notes, dependencies and onboarding carry no `version`; the reward `PUT`/`DELETE` precondition; the onboarding step body (`{ status, payload }`, FQ-17); whether `GET …/notes?nodeId=` filters; a correlation-ID request header | the adapters send no `If-Match` for those writes except the reward, which uses the Destination's version; the onboarding body is `{ status, payload }`; notes are also filtered by `nodeId` client-side; no correlation ID |
 
 ## 7. State
 
@@ -388,22 +398,28 @@ WCAG 2.2 AA is a release gate:
 
 ## 15. HTTP and errors
 
-- Interceptors: base URL, XSRF, `Accept: application/json`, correlation ID header, Problem Details → `AtlasApiError`
-  (`type`, `status`, `code` from `urn:problem:atlas:*`, field errors).
-- Retry only idempotent GETs (2 tries, backoff). `412 VERSION_CONFLICT` reloads and informs the user.
+- `provideAtlasHttp()` registers `HttpClient` (`withFetch`) with `atlasApiInterceptor`, which only touches
+  `API_BASE_URL` requests: it adds `Accept: application/json, application/problem+json`, retries idempotent GETs on
+  network errors and 502/503/504 (`ATLAS_HTTP_RETRY`, 2 retries, 500 ms × 2ⁿ backoff), and maps every failure to
+  `AtlasDataError` (`problem-details.ts`): reason by status (0 network, 400/422 validation, 401/403 unauthorized,
+  404/410 not-found, 409/412/428 conflict, 5xx unavailable), the `urn:problem:atlas:*` code, and field messages from a
+  local catalogue. The server's `detail` text is never shown.
+- XSRF uses Angular's defaults (`XSRF-TOKEN` cookie, `X-XSRF-TOKEN` header), which match Spring Security. The 401
+  flow and `/me` are F4-5; a correlation-ID header is open (FQ-21).
+- `412 VERSION_CONFLICT` reloads and informs the user (store `write`).
 - Global error handler logs to the console in dev; production telemetry is a later decision.
 
 ## 16. Testing
 
-| Level     | Tool                                                     | What                                                                               |
-| --------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Unit      | Vitest                                                   | mappers, view-model builders, layout functions, `statusForNode`, environment flags |
-| Component | Vitest + Angular Testing Library (from F2-1a, D12)       | every shared component in each Figma state; inputs/outputs; ARIA                   |
-| Store     | Vitest with a fake port                                  | loading/empty/error transitions, writes use server responses                       |
-| E2E       | Playwright (Chromium, Pixel 7 Chromium, Firefox, WebKit) | Figma flows A–H, 390/768/1440, dark and light, keyboard only, axe, WCAG checks     |
-| Visual    | Playwright screenshots in a Linux container              | `/_design` and 11 key pages at 390 and 1440 px in both themes, against baselines   |
-| Perf      | Playwright with CDP throttling                           | LCP, TBT and CLS budgets of 10 key pages on a mid-range phone profile              |
-| Contract  | F3-5 OpenAPI snapshot diff                               | models match the backend contract                                                  |
+| Level     | Tool                                                       | What                                                                                                                                                 |
+| --------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit      | Vitest                                                     | mappers, view-model builders, layout functions, `statusForNode`, environment flags                                                                   |
+| Component | Vitest + Angular Testing Library (from F2-1a, D12)         | every shared component in each Figma state; inputs/outputs; ARIA                                                                                     |
+| Store     | Vitest with a fake port, or `describe.each(TEST_ADAPTERS)` | loading/empty/error transitions, writes use server responses; the same specs run against the mock and the HTTP adapters with `FakeAtlasApi` (gate 8) |
+| E2E       | Playwright (Chromium, Pixel 7 Chromium, Firefox, WebKit)   | Figma flows A–H, 390/768/1440, dark and light, keyboard only, axe, WCAG checks                                                                       |
+| Visual    | Playwright screenshots in a Linux container                | `/_design` and 11 key pages at 390 and 1440 px in both themes, against baselines                                                                     |
+| Perf      | Playwright with CDP throttling                             | LCP, TBT and CLS budgets of 10 key pages on a mid-range phone profile                                                                                |
+| Contract  | F3-5 OpenAPI snapshot diff                                 | models match the backend contract                                                                                                                    |
 
 Browser notes for the e2e suite (`e2e/support/`):
 

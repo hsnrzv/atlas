@@ -172,7 +172,9 @@ export class GoalPlanStore {
 
   archiveGoal(): Promise<WriteResult<Goal>> {
     const goal = this.goal();
-    return goal ? this.write(this.repository.archive(goal.id), false) : this.missing();
+    return goal
+      ? this.write(this.repository.archive(goal.id, goal.version), false)
+      : this.missing();
   }
 
   removeGoal(): Promise<WriteResult<void>> {
@@ -214,11 +216,11 @@ export class GoalPlanStore {
   }
 
   completeNode(node: GoalNode): Promise<WriteResult<GoalNode>> {
-    return this.write(this.repository.completeNode(node.goalId, node.id));
+    return this.write(this.repository.completeNode(node.goalId, node.id, node.version));
   }
 
   reopenNode(node: GoalNode): Promise<WriteResult<GoalNode>> {
-    return this.write(this.repository.reopenNode(node.goalId, node.id));
+    return this.write(this.repository.reopenNode(node.goalId, node.id, node.version));
   }
 
   setNodeStatus(node: GoalNode, status: SettableNodeStatus): Promise<WriteResult<GoalNode>> {

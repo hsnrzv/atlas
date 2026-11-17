@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import {
   MOCK_LATENCY_MS,
   providePlanTesting,
+  TEST_ADAPTERS,
   type MockMode,
 } from '../../core/data-access/testing/plan-testing';
 import { ConnectionsPage } from './connections-page';
@@ -11,7 +12,7 @@ import { ConnectionsStore } from './data-access/connections.store';
 const text = (element: Element | null | undefined) =>
   element?.textContent?.replace(/\s+/g, ' ').trim();
 
-describe('ConnectionsPage', () => {
+describe.each(TEST_ADAPTERS)('ConnectionsPage (%s adapter)', (adapter) => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
@@ -19,7 +20,7 @@ describe('ConnectionsPage', () => {
 
   async function render(mode: MockMode = 'sample', inputs: Record<string, string> = {}) {
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), ...providePlanTesting(mode), ConnectionsStore],
+      providers: [provideRouter([]), ...providePlanTesting(mode, adapter), ConnectionsStore],
     });
     const fixture = TestBed.createComponent(ConnectionsPage);
     for (const [name, value] of Object.entries(inputs)) {

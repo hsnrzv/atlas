@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import {
   MOCK_LATENCY_MS,
   providePlanTesting,
+  TEST_ADAPTERS,
   type MockMode,
 } from '../../core/data-access/testing/plan-testing';
 import { DimensionsStore } from './data-access/dimensions.store';
@@ -11,13 +12,13 @@ import { DimensionsPage } from './dimensions-page';
 const text = (element: Element | null | undefined) =>
   element?.textContent?.replace(/\s+/g, ' ').trim();
 
-describe('DimensionsPage', () => {
+describe.each(TEST_ADAPTERS)('DimensionsPage (%s adapter)', (adapter) => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
   async function render(mode: MockMode = 'sample') {
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), ...providePlanTesting(mode), DimensionsStore],
+      providers: [provideRouter([]), ...providePlanTesting(mode, adapter), DimensionsStore],
     });
     const fixture = TestBed.createComponent(DimensionsPage);
     fixture.detectChanges();
