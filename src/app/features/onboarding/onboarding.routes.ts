@@ -1,5 +1,7 @@
 import type { Routes } from '@angular/router';
 import { OnboardingFlow } from './data-access/onboarding-flow';
+import { WelcomePage } from './welcome-page';
+import { SetupPage } from './setup-page';
 
 /** `/welcome` and `/welcome/setup` (F3-4), outside the app shell. */
 export const ONBOARDING_ROUTES: Routes = [
@@ -10,12 +12,12 @@ export const ONBOARDING_ROUTES: Routes = [
       {
         path: '',
         title: 'Welcome',
-        loadComponent: () => import('./welcome-page').then((m) => m.WelcomePage),
+        component: WelcomePage,
       },
       {
         path: 'setup',
         title: 'Getting started',
-        loadComponent: () => import('./setup-page').then((m) => m.SetupPage),
+        component: SetupPage,
       },
     ],
   },

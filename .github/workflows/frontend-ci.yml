@@ -84,6 +84,64 @@ jobs:
           path: playwright-report
           retention-days: 7
 
+  performance:
+    name: Core Web Vitals budgets (mid-range phone)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Optimised build with the mock adapter, then measure LCP, TBT and CLS
+        run: npm run e2e:performance
+
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: performance-report
+          path: playwright-report
+          retention-days: 7
+
+  visual:
+    name: Visual regression (key pages, both themes)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Start the Linux Playwright browser server
+        run: npm run e2e:visual:start
+        env:
+          ATLAS_CONTAINER_ENGINE: docker
+
+      - name: Compare screenshots with the approved baselines
+        run: npm run e2e:visual
+
+      - if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-diff
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7
+
   # GitHub supports dependency review on private repositories only with GitHub Advanced Security, which
   # personal accounts cannot enable. The job runs once the repository is public; Dependabot alerts cover
   # vulnerable dependencies until then.

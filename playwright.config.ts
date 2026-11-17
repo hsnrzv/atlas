@@ -9,6 +9,9 @@ const BASE_URL = `http://localhost:${PORT}`;
  */
 export default defineConfig({
   testDir: './e2e',
+  // Screenshot comparisons and performance budgets have their own configs (playwright.visual.config.ts,
+  // playwright.performance.config.ts).
+  testIgnore: ['**/visual/**', '**/performance/**'],
   fullyParallel: true,
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 1 : 0,

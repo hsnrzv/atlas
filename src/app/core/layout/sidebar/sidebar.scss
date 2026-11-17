@@ -28,12 +28,13 @@
   }
 }
 
+// Grows to push the account links down, but never shrinks below its content: on short viewports the sidebar
+// scrolls instead of letting the footer cover the last links.
 .nav {
   display: flex;
-  flex: 1;
+  flex: 1 0 auto;
   flex-direction: column;
   gap: var(--space-2);
-  min-height: 0;
 }
 
 .group-label,

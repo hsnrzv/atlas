@@ -3,17 +3,29 @@ import { expect, type Page } from '@playwright/test';
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
-/** Lets finite CSS transitions settle, so contrast is not measured halfway through a theme change. */
+/** No finite animation may run for this long, so content that arrives with the data has finished entering. */
+const QUIET_MS = 500;
+
+/**
+ * Lets finite CSS animations and transitions settle, so contrast is not measured halfway through a theme change or
+ * an enter animation (for example the companion card, which mounts only when the plan has loaded).
+ */
 async function settleAnimations(page: Page): Promise<void> {
-  await page.waitForFunction(() =>
-    document
-      .getAnimations()
-      .every(
-        (animation) =>
-          animation.playState !== 'running' ||
-          animation.effect?.getTiming().iterations === Infinity,
-      ),
-  );
+  await page.evaluate(async (quietMs) => {
+    const busy = () =>
+      document
+        .getAnimations()
+        .some(
+          (animation) =>
+            animation.playState === 'running' &&
+            animation.effect?.getTiming().iterations !== Infinity,
+        );
+    let quietSince = performance.now();
+    while (performance.now() - quietSince < quietMs) {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      if (busy()) quietSince = performance.now();
+    }
+  }, QUIET_MS);
 }
 
 const ARIA_ELEMENT_REFLECTION = [

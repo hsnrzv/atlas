@@ -4,7 +4,14 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import sharp from 'sharp';
 import { ROOT } from '../design-tokens/lib.mjs';
-import { APP_BACKGROUND, FAVICON, LOGO, RASTER_EXPORTS } from './asset-manifest.mjs';
+import {
+  ANDROID_BACKGROUND_COLOR,
+  APP_BACKGROUND,
+  FAVICON,
+  LOGO,
+  NATIVE_EXPORTS,
+  RASTER_EXPORTS,
+} from './asset-manifest.mjs';
 
 const errors = [];
 const ok = (msg) => console.log(`✓ ${msg}`);
@@ -74,8 +81,10 @@ if (!appIcon.includes(`<rect width="1024" height="1024" fill="${APP_BACKGROUND}"
   fail(`app icon master must have an opaque ${APP_BACKGROUND} background`);
 if (!errors.length) ok(`${LOGO}: masters present, editable and self-contained`);
 
-// 2. Derived rasters.
-for (const spec of RASTER_EXPORTS) {
+// 2. Derived rasters (store, web and native project assets).
+for (const spec of [...RASTER_EXPORTS, ...NATIVE_EXPORTS]) {
+  const width = spec.width ?? spec.size;
+  const height = spec.height ?? spec.size;
   if (!existsSync(abs(spec.out))) {
     fail(`${spec.out} is missing (run npm run assets:export)`);
     continue;
@@ -84,8 +93,8 @@ for (const spec of RASTER_EXPORTS) {
   const stats = await sharp(abs(spec.out)).stats();
   const problems = [];
   if (meta.format !== 'png') problems.push(`format ${meta.format}`);
-  if (meta.width !== spec.size || meta.height !== spec.size)
-    problems.push(`${meta.width}×${meta.height}`);
+  if (meta.width !== width || meta.height !== height)
+    problems.push(`${meta.width}×${meta.height}, expected ${width}×${height}`);
   if (meta.space !== 'srgb') problems.push(`colour space ${meta.space}`);
   if (spec.alpha === 'none' && meta.hasAlpha) problems.push('has alpha channel');
   if (spec.alpha === 'opaque' && meta.hasAlpha && !stats.isOpaque)
@@ -105,8 +114,13 @@ for (const spec of RASTER_EXPORTS) {
       problems.push(`background ${corner}, expected ${APP_BACKGROUND} (run npm run assets:export)`);
   }
   if (problems.length) fail(`${spec.out}: ${problems.join(', ')}`);
-  else ok(`${spec.out}  ${spec.size}×${spec.size} sRGB alpha:${spec.alpha}`);
+  else ok(`${spec.out}  ${width}×${height} sRGB alpha:${spec.alpha}`);
 }
+
+const androidBackground = readFileSync(abs(ANDROID_BACKGROUND_COLOR), 'utf8');
+if (!androidBackground.includes(`<color name="ic_launcher_background">${APP_BACKGROUND}</color>`))
+  fail(`${ANDROID_BACKGROUND_COLOR}: ic_launcher_background must be ${APP_BACKGROUND}`);
+else ok(`${ANDROID_BACKGROUND_COLOR} is ${APP_BACKGROUND}`);
 
 // 3. Favicons.
 if (readFileSync(abs(FAVICON.svgOut), 'utf8') !== readFileSync(abs(FAVICON.svgSource), 'utf8')) {

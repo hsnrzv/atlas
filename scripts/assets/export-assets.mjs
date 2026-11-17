@@ -5,7 +5,7 @@ import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import sharp from 'sharp';
 import { ROOT } from '../design-tokens/lib.mjs';
-import { APP_BACKGROUND, FAVICON, RASTER_EXPORTS } from './asset-manifest.mjs';
+import { APP_BACKGROUND, FAVICON, NATIVE_EXPORTS, RASTER_EXPORTS } from './asset-manifest.mjs';
 
 const abs = (p) => join(ROOT, p);
 
@@ -16,12 +16,40 @@ async function renderSvg(source, size) {
   return sharp(svg, { density: (72 * size) / width }).resize(size, size, { fit: 'fill' });
 }
 
+/** Centre-crops a square render to `width`×`height` (the splash symbol stays centred). */
+async function renderCover(source, width, height) {
+  const side = Math.max(width, height);
+  const square = await (await renderSvg(source, side)).png().toBuffer();
+  return sharp(square).extract({
+    left: Math.round((side - width) / 2),
+    top: Math.round((side - height) / 2),
+    width,
+    height,
+  });
+}
+
+/** Keeps a centred circle and makes the corners transparent. */
+async function circleMask(img, size) {
+  const r = size / 2;
+  const circle = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"><circle cx="${r}" cy="${r}" r="${r}"/></svg>`,
+  );
+  const square = await img.ensureAlpha().png().toBuffer();
+  return sharp(square).composite([{ input: circle, blend: 'dest-in' }]);
+}
+
 async function exportOne(spec) {
-  let img = spec.solid
-    ? sharp({
-        create: { width: spec.size, height: spec.size, channels: 3, background: spec.solid },
-      })
-    : await renderSvg(spec.source, spec.size);
+  const width = spec.width ?? spec.size;
+  const height = spec.height ?? spec.size;
+  let img;
+  if (spec.solid) {
+    img = sharp({ create: { width, height, channels: 3, background: spec.solid } });
+  } else if (spec.fit === 'cover') {
+    img = await renderCover(spec.source, width, height);
+  } else {
+    img = await renderSvg(spec.source, width);
+  }
+  if (spec.mask === 'circle') img = await circleMask(img, width);
   if (spec.alpha === 'none') img = img.flatten({ background: APP_BACKGROUND }).removeAlpha();
   if (spec.alpha === 'opaque') img = img.flatten({ background: APP_BACKGROUND }).ensureAlpha(1);
   mkdirSync(dirname(abs(spec.out)), { recursive: true });
@@ -29,7 +57,7 @@ async function exportOne(spec) {
     .toColourspace('srgb')
     .png({ compressionLevel: 9, adaptiveFiltering: true })
     .toFile(abs(spec.out));
-  console.log(`✎ ${spec.out}  ${spec.size}×${spec.size}  alpha:${spec.alpha}`);
+  console.log(`✎ ${spec.out}  ${width}×${height}  alpha:${spec.alpha}`);
 }
 
 /** Builds a PNG-compressed ICO (supported by all current browsers). */
@@ -59,7 +87,7 @@ async function exportIco() {
   console.log(`✎ ${FAVICON.icoOut}  ${FAVICON.icoSizes.join('/')}px`);
 }
 
-for (const spec of RASTER_EXPORTS) await exportOne(spec);
+for (const spec of [...RASTER_EXPORTS, ...NATIVE_EXPORTS]) await exportOne(spec);
 copyFileSync(abs(FAVICON.svgSource), abs(FAVICON.svgOut));
 console.log(`✎ ${FAVICON.svgOut}  (copy of ${FAVICON.svgSource})`);
 await exportIco();

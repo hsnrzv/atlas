@@ -20,9 +20,13 @@
   }
 }
 
+// The 32 px symbol keeps its Figma size; the link around it is a full touch target.
 .brand {
+  @include atlas.touch-target;
+
   display: inline-flex;
   flex: none;
+  align-items: center;
   border-radius: var(--radius-control);
 }
 

@@ -21,16 +21,16 @@
 
 ## 2. Stack
 
-| Concern       | Choice                                                                             | Reference             |
-| ------------- | ---------------------------------------------------------------------------------- | --------------------- |
-| Framework     | Angular 22.2, standalone, zoneless, signals, `OnPush`, strict templates            | TECH-STACK            |
-| UI behaviour  | Angular Material 22 (M3) and CDK, restyled by tokens                               | ADR-0003              |
-| Styling       | SCSS with CSS custom properties from `design/tokens`; `@use 'abstracts' as atlas;` | ADR-0007 (+ ADR-0010) |
-| Icons         | Tabler through `<atlas-icon>` and the semantic registry                            | ADR-0005              |
-| Forms         | **Signal Forms** (`@angular/forms/signals`) with Material form fields              | ADR-0009              |
-| Visualisation | ECharts / vis-timeline per spec §9, or native SVG; decided by a spike (§11)        | ADR-0004, roadmap T-A |
-| Native shell  | Capacitor 8.6 (core/CLI now; iOS/Android projects in roadmap phase 7)              | F1-2, Phase 10        |
-| Tests         | Vitest (+ Angular Testing Library from F2-1a), Playwright + axe                    | ADR-0008, D12         |
+| Concern       | Choice                                                                              | Reference             |
+| ------------- | ----------------------------------------------------------------------------------- | --------------------- |
+| Framework     | Angular 22.2, standalone, zoneless, signals, `OnPush`, strict templates             | TECH-STACK            |
+| UI behaviour  | Angular Material 22 (M3) and CDK, restyled by tokens                                | ADR-0003              |
+| Styling       | SCSS with CSS custom properties from `design/tokens`; `@use 'abstracts' as atlas;`  | ADR-0007 (+ ADR-0010) |
+| Icons         | Tabler through `<atlas-icon>` and the semantic registry                             | ADR-0005              |
+| Forms         | **Signal Forms** (`@angular/forms/signals`) with Material form fields               | ADR-0009              |
+| Visualisation | ECharts / vis-timeline per spec §9, or native SVG; decided by a spike (§11)         | ADR-0004, roadmap T-A |
+| Native shell  | Capacitor 8.6 iOS and Android projects with app, keyboard and splash-screen plugins | F1-2, P-N1            |
+| Tests         | Vitest (+ Angular Testing Library from F2-1a), Playwright + axe                     | ADR-0008, D12         |
 
 ## 3. Layers
 
@@ -99,7 +99,9 @@ mobile More page and `features/not-found` the `**` page.
 
 ## 5. Routing
 
-All feature routes are lazy (`loadChildren` → `feature.routes.ts`, `loadComponent` per page). Every route has a
+All feature routes are lazy: `loadChildren` loads `feature.routes.ts`, which imports its pages statically
+(`component:`), so a first visit loads one feature chunk instead of a routes chunk followed by a page chunk. Every
+route has a
 `title` ("Destinations · IKIGAI ATLAS"). Router options: `withComponentInputBinding()` (route params as inputs),
 `withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })`, `withViewTransitions()` only when reduced motion
 is off. A `TitleStrategy` and a focus handler move focus to the page `h1` after navigation.
@@ -334,12 +336,26 @@ ECharts stays the choice for future charts (finance, ADR-0004); it is added only
 
 - Mobile-first SCSS with breakpoint mixins from tokens (`md` 768, `lg` 1024). Components use container queries
   where the Figma variants change by available width.
-- Shell: bottom nav < 768; rail 768–1023; sidebar ≥ 1024. Safe areas through `env(safe-area-inset-*)`.
+- Shell: bottom nav < 768; rail 768–1023; sidebar ≥ 1024. Safe areas through `--safe-area-*`
+  (`styles/base/_platform.scss`): Capacitor's injected `--safe-area-inset-*` first, then `env(safe-area-inset-*)`.
 - Touch targets ≥ 44 px (48 preferred). The keyboard must not hide the focused field (`interactive-widget=resizes-content`
-  in the viewport meta, plus `scrollIntoView` on focus in sheets).
-- Capacitor: `webDir` is the browser build; iOS/Android projects, `@capacitor/status-bar`, `splash-screen`,
-  `keyboard`, and `app` (back button) arrive in roadmap phase 7. No native-only features before then. Tokens and
-  auth stay in HttpOnly cookies, never in `localStorage` or Capacitor Preferences.
+  in the viewport meta; on native, the focused field scrolls into view when the keyboard opens).
+- Capacitor (`capacitor.config.ts`, app ID `dev.myatlas.app`): `webDir` is the browser build; `ios/` and `android/`
+  are generated Capacitor projects kept in git. Native icons and splash images come from the SVG masters
+  (`npm run assets:export`). Plugins: `@capacitor/app`, `@capacitor/keyboard`, `@capacitor/splash-screen`, and
+  `SystemBars` from `@capacitor/core`.
+- Native shell (`core/native/`): `NATIVE_PLATFORM` reads `window.Capacitor` without importing a plugin. On iOS and
+  Android only, `provideNativeShell()` lazy-loads `AtlasNativeBridge` and the plugin adapter, so the web bundle has
+  no plugin code. The bridge:
+  - keeps the status bar style in sync with the theme;
+  - hides the splash screen after the first navigation renders (the config auto-hides it after 3 s as a fallback);
+  - scrolls the focused field into view when the keyboard opens;
+  - handles the Android back button: it closes an open dialog, menu or listbox (Escape), else goes back in history,
+    else minimises the app.
+- No other native-only features. Tokens and auth stay in HttpOnly cookies, never in `localStorage` or Capacitor
+  Preferences.
+- CI (`mobile-validation.yml`): Android `assembleDebug lintDebug testDebugUnitTest`; iOS simulator build without
+  signing.
 
 ## 13. Accessibility
 
@@ -354,8 +370,11 @@ WCAG 2.2 AA is a release gate:
 - Status = icon + text; dimension = glyph + label; connector type = line style + legend.
 - Live region announcements for Step completion, saves and errors.
 - `prefers-reduced-motion` disables animation; `forced-colors` keeps borders and focus visible.
-- axe in Playwright on every route and on `/_design`; manual screen-reader checks (VoiceOver, TalkBack, NVDA) before
-  each phase gate.
+- axe in Playwright on every route and on `/_design`. `e2e/accessibility.spec.ts` checks every route for reflow at
+  320 px with WCAG text spacing, a visible and unobscured focus indicator on every Tab stop, focus visibility in
+  forced colours, no running animation under reduced motion, and 44 px touch targets on mobile.
+- Manual screen-reader checks (VoiceOver, TalkBack, NVDA) and real-device checks follow
+  [accessibility-evidence.md](../release/accessibility-evidence.md).
 
 ## 14. Security
 
@@ -381,8 +400,9 @@ WCAG 2.2 AA is a release gate:
 | Unit      | Vitest                                                   | mappers, view-model builders, layout functions, `statusForNode`, environment flags |
 | Component | Vitest + Angular Testing Library (from F2-1a, D12)       | every shared component in each Figma state; inputs/outputs; ARIA                   |
 | Store     | Vitest with a fake port                                  | loading/empty/error transitions, writes use server responses                       |
-| E2E       | Playwright (Chromium, Pixel 7 Chromium, Firefox, WebKit) | Figma flows A–H, 390/768/1440, dark and light, keyboard only, axe                  |
-| Visual    | Playwright screenshots of `/_design` (proposal)          | catches token/regression drift; compared manually with Figma screenshots           |
+| E2E       | Playwright (Chromium, Pixel 7 Chromium, Firefox, WebKit) | Figma flows A–H, 390/768/1440, dark and light, keyboard only, axe, WCAG checks     |
+| Visual    | Playwright screenshots in a Linux container              | `/_design` and 11 key pages at 390 and 1440 px in both themes, against baselines   |
+| Perf      | Playwright with CDP throttling                           | LCP, TBT and CLS budgets of 10 key pages on a mid-range phone profile              |
 | Contract  | F3-5 OpenAPI snapshot diff                               | models match the backend contract                                                  |
 
 Browser notes for the e2e suite (`e2e/support/`):
@@ -395,6 +415,14 @@ Browser notes for the e2e suite (`e2e/support/`):
 - Firefox may not launch on managed macOS machines. Run it locally through the Playwright server container
   (`PW_TEST_CONNECT_WS_ENDPOINT`); CI runs it natively on Linux.
 
+Visual regression (`playwright.visual.config.ts`, `e2e/visual/`):
+
+- The browser always runs in the official Playwright Linux container, so fonts and anti-aliasing match on every
+  machine and in CI. Start it with `npm run e2e:visual:start` (podman or docker; `ATLAS_CONTAINER_ENGINE` overrides),
+  run `npm run e2e:visual`, and stop it with `npm run e2e:visual:stop`.
+- Pages render with a fixed clock, reduced motion and the sample data. After an approved visual change, update the
+  baselines with `npm run e2e:visual -- --update-snapshots` and review the PNG diff in the PR.
+
 ## 17. Performance budgets
 
 - Initial JS ≤ 500 kB warning / 1 MB error (current `angular.json`); target ≤ 250 kB for the shell + My Atlas.
@@ -405,7 +433,13 @@ Browser notes for the e2e suite (`e2e/support/`):
 - Component styles ≤ 4 kB warning / 8 kB error.
 - Fonts: Inter + Manrope variable, Latin subset, `font-display: swap`, preload only the heading weight used above the
   fold.
-- LCP < 2.5 s and INP < 200 ms on a mid-range phone profile; measured in CI with Lighthouse from roadmap phase 7.
+- LCP < 2.5 s, TBT < 200 ms (the lab proxy for INP < 200 ms) and CLS < 0.1 on a mid-range phone profile: Chrome
+  DevTools' Fast 4G preset (150 ms, 9 Mbit/s down, 1.5 Mbit/s up) with a 4× CPU slowdown. `npm run e2e:performance`
+  builds the `performance` configuration (production optimisation with the dev-only mock adapter, output
+  `dist/atlas-performance`, never deployed), serves it with gzip (`scripts/serve-static.mjs`) and measures 10 key
+  pages; CI runs it on every PR. The timings include the mock's simulated 400 ms API latency.
+- The `lighthouse` npm package is not a dependency: its tree includes `sentry`, which uses the source-available
+  FSL-1.1 licence. Lighthouse scores are a manual pre-release check in Chrome DevTools (production-readiness §1).
 
 ## 18. Decisions needed
 

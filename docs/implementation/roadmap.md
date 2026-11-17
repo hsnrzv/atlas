@@ -1,7 +1,7 @@
 # Implementation roadmap — Figma V3 to production
 
-- Status: approved by the owner on 2026-11-14 with the decisions in §4. Phases 1–5 are complete and approved;
-  phase 6 is implemented and gate 6 awaits owner approval.
+- Status: approved by the owner on 2026-11-14 with the decisions in §4. Phases 1–6 are complete and approved;
+  phase 7 is implemented and gate 7 awaits the owner's real-device and screen-reader checks.
 - Purpose: turn the approved Figma V3 design into the production Angular app, in small reviewed PRs.
 - Maps the nine implementation phases of the production brief onto the existing backlog in
   [PLAN-FRONTEND.md](../plan/PLAN-FRONTEND.md) (`F…` IDs) and the cross-repository phases in
@@ -90,7 +90,7 @@ Verified 2026-11-15 and awaiting owner approval. Compared with Figma: Overview d
 Error (`230:13412`) at desktop size, dark. `npm run verify` passes, including `bundle:check` against the production build.
 `npm run e2e` (`e2e/my-atlas.spec.ts`) covers every state, Retry, the saved plan after a failed refresh, focus
 handling, and axe WCAG 2.2 AA plus no horizontal overflow for every state in both themes on the desktop and mobile
-projects, plus the Overview at 768 px. Visual-regression screenshots (D11) are still deferred.
+projects, plus the Overview at 768 px. Visual-regression screenshots (D11) followed in phase 7 (A-2).
 
 ### Phase 5 — Destinations, Waypoints and Steps
 
@@ -133,7 +133,7 @@ stay open as FQ-7 … FQ-13 ([frontend.md §6.5](../architecture/frontend.md#65-
 Figma flows A, E, F, G and H become Playwright journeys.
 
 **Gate 6:** all eight Figma areas and flows A–H implemented on mock data and matching Figma.
-Verified 2026-11-15 and awaiting owner approval. `npm run verify` passes. `e2e/onboarding.spec.ts` covers flow A
+Verified 2026-11-15 and approved by the owner on 2026-11-17, after the manual-test bug fixes. `npm run verify` passes. `e2e/onboarding.spec.ts` covers flow A
 (new user → Welcome → setup → empty My Atlas; Explore sample plan; Skip for now). `e2e/explore.spec.ts` covers flow E
 (Journey marker → Waypoint), flow F (Connections → relationship → Destination), flow G (complete the application Steps
 → Awards celebration) and flow H (mobile More → Life Dimensions → Career → Destination). Every Phase 6 page passes axe
@@ -145,15 +145,23 @@ Chromium, Pixel 7 Chromium and WebKit, and the Firefox project. Deviations from 
 
 ### Phase 7 — Responsive, accessibility, themes and Capacitor
 
-| ID    | Item                                                                                                                      |
-| ----- | ------------------------------------------------------------------------------------------------------------------------- |
-| F2-10 | Cross-browser e2e (Firefox, WebKit), responsive smoke at 390/768/1440                                                     |
-| A-1   | Accessibility pass: screen-reader checks (VoiceOver, TalkBack, NVDA), forced colours, reduced motion, 200 % zoom/reflow   |
-| A-2   | Visual regression of `/_design` and key pages in both themes (proposal)                                                   |
-| P-N1  | Capacitor iOS/Android projects, status bar, splash, keyboard, back button, safe areas (pulled forward from repo P10, R-8) |
-| P-N2  | Device testing per the page-13 mobile contract; Lighthouse budgets in CI                                                  |
+| ID    | Item                                                                                                                      | Status                                                                                                                                                                                                                                                                                                                 |
+| ----- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F2-10 | Cross-browser e2e (Firefox, WebKit), responsive smoke at 390/768/1440                                                     | done 2026-11-17: four Playwright projects (desktop Chromium, Pixel 7 Chromium, Firefox, WebKit); every page suite runs axe and the overflow check at 390/768/1440                                                                                                                                                      |
+| A-1   | Accessibility pass: screen-reader checks (VoiceOver, TalkBack, NVDA), forced colours, reduced motion, 200 % zoom/reflow   | automated part done 2026-11-17: `e2e/accessibility.spec.ts` (320 px reflow, text spacing, unobscured focus, forced colours, reduced motion, 44 px touch targets) on every route; screen readers and device settings are the owner's manual checks in [accessibility-evidence.md](../release/accessibility-evidence.md) |
+| A-2   | Visual regression of `/_design` and key pages in both themes (proposal)                                                   | done 2026-11-17: `npm run e2e:visual`, 12 pages × 390/1440 × light/dark (48 baselines) in a pinned Playwright container; CI job `visual`                                                                                                                                                                               |
+| P-N1  | Capacitor iOS/Android projects, status bar, splash, keyboard, back button, safe areas (pulled forward from repo P10, R-8) | done 2026-11-17: `ios/` and `android/` in git, `core/native/` shell, native icons and splash from `npm run assets:export`; `mobile-validation.yml` builds both platforms                                                                                                                                               |
+| P-N2  | Device testing per the page-13 mobile contract; Lighthouse budgets in CI                                                  | CI part done 2026-11-17: Core Web Vitals budgets (LCP < 2.5 s, TBT < 200 ms, CLS < 0.1, mid-range phone profile) with Playwright in the CI job `performance`. Lighthouse is a manual DevTools check because its npm tree is not permissively licensed. Real devices: owner                                             |
 
 **Gate 7:** WCAG 2.2 AA evidence for every page; app runs on one real iOS and one Android device.
+Automated evidence 2026-11-17: `npm run verify` passes; `npm run e2e` passes on all four browser projects;
+`npm run e2e:visual` and `npm run e2e:performance` pass (worst LCP 2.2 s on Journey, TBT ≤ 70 ms, CLS ≤ 0.007).
+The iOS simulator (iPhone 16, iOS 18.2) shows correct launch, splash, safe areas and status bar in both themes; the
+Android debug build, lint and unit tests pass. Feature route files now import their pages statically, so each area
+loads in one lazy chunk. Awaiting the owner's real-device and screen-reader checks in
+[accessibility-evidence.md §2–3](../release/accessibility-evidence.md#2-manual-checks-before-each-store-release).
+Release follow-ups (monochrome Android icon, Gradle and AppCompat updates, export compliance) are in
+[production-readiness.md §4](../release/production-readiness.md).
 
 ### Phase 8 — Typed API contracts
 

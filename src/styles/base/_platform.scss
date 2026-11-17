@@ -1,11 +1,13 @@
 // Native shell (Capacitor iOS/Android) and notch-aware layout support (design-instructions §6.4).
 // Requires `viewport-fit=cover` in index.html. Shell components consume these variables instead of
-// calling env() directly, so web and native layouts share one code path.
+// calling env() directly, so web and native layouts share one code path. On Android WebViews older than
+// 140, env() reports no insets; Capacitor's SystemBars plugin (`insetsHandling: 'css'`) injects
+// --safe-area-inset-* instead, which wins when present.
 :root {
-  --safe-area-top: env(safe-area-inset-top, 0px);
-  --safe-area-right: env(safe-area-inset-right, 0px);
-  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --safe-area-right: var(--safe-area-inset-right, env(safe-area-inset-right, 0px));
+  --safe-area-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+  --safe-area-left: var(--safe-area-inset-left, env(safe-area-inset-left, 0px));
 }
 
 html {

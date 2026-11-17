@@ -50,20 +50,23 @@ npm run verify          # everything CI's verify job runs, in the same order
 
 ## Commands
 
-| Command                           | What it does                                                                                 |
-| --------------------------------- | -------------------------------------------------------------------------------------------- |
-| `npm start`                       | Dev server on `:4200` with `/api` proxied to the backend on `:8080` (`proxy.conf.json`)      |
-| `npm run build`                   | Production build to `dist/atlas-frontend/browser`                                            |
-| `npm test` / `npm run test:ci`    | Unit and component tests (Vitest via `@angular/build:unit-test`), watch / single run         |
-| `npm run e2e`                     | Playwright smoke and axe (WCAG 2.2 AA) tests, desktop and mobile Chromium; starts `ng serve` |
-| `npm run lint`                    | ESLint (`angular-eslint`, `typescript-eslint`) for `src`, `e2e` and config files             |
-| `npm run lint:styles`             | Stylelint (SCSS; raw colours are forbidden in `src/app`)                                     |
-| `npm run format` / `format:check` | Prettier write / check                                                                       |
-| `npm run design:check`            | Tokens in sync, WCAG contrast pairs, brand/platform assets valid                             |
-| `npm run tokens:build`            | Regenerate SCSS/TS tokens and the Material palette from `design/tokens/*.json`               |
-| `npm run assets:export`           | Re-render PNG/ICO exports (favicons, PWA, Capacitor, social) from the SVG masters            |
-| `npm run lockfile:check`          | Fails if `package-lock.json` resolves anything outside the public npm registry               |
-| `npm run verify`                  | `lockfile:check` → `design:check` → lint → stylelint → prettier → unit tests → build         |
+| Command                                                       | What it does                                                                                                                                               |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm start`                                                   | Dev server on `:4200` with `/api` proxied to the backend on `:8080` (`proxy.conf.json`)                                                                    |
+| `npm run build`                                               | Production build to `dist/atlas-frontend/browser`                                                                                                          |
+| `npm test` / `npm run test:ci`                                | Unit and component tests (Vitest via `@angular/build:unit-test`), watch / single run                                                                       |
+| `npm run e2e`                                                 | Playwright flows and accessibility (axe, reflow, focus, motion, touch targets) on desktop and mobile Chromium, Firefox and WebKit; starts `ng serve`       |
+| `npm run e2e:visual:start` / `e2e:visual` / `e2e:visual:stop` | Visual regression of the key pages in both themes, against a pinned Playwright container (podman or docker); add `-- --update-snapshots` to accept changes |
+| `npm run e2e:performance`                                     | Core Web Vitals budgets on a throttled mid-range phone profile (`performance` build)                                                                       |
+| `npm run lint`                                                | ESLint (`angular-eslint`, `typescript-eslint`) for `src`, `e2e` and config files                                                                           |
+| `npm run lint:styles`                                         | Stylelint (SCSS; raw colours are forbidden in `src/app`)                                                                                                   |
+| `npm run format` / `format:check`                             | Prettier write / check                                                                                                                                     |
+| `npm run design:check`                                        | Tokens in sync, WCAG contrast pairs, brand/platform assets valid                                                                                           |
+| `npm run tokens:build`                                        | Regenerate SCSS/TS tokens and the Material palette from `design/tokens/*.json`                                                                             |
+| `npm run assets:export`                                       | Re-render PNG/ICO exports (favicons, PWA, store, social) and the native icons and splash from the SVG masters                                              |
+| `npm run build && npx cap sync`                               | Copy the web build into the `ios/` and `android/` projects; then `npx cap open ios` or `npx cap open android`                                              |
+| `npm run lockfile:check`                                      | Fails if `package-lock.json` resolves anything outside the public npm registry                                                                             |
+| `npm run verify`                                              | `lockfile:check` → `design:check` → lint → stylelint → prettier → unit tests → build                                                                       |
 
 Container image (nginx-unprivileged, port 8080, SPA fallback, `GET /healthz`, strict CSP):
 
@@ -84,7 +87,8 @@ docs/
   adr/                      cross-cutting and frontend ADRs
   architecture/             CONTEXT.md, TECH-STACK.md, DEPENDENCY-LICENSE-MATRIX.md
   plan/                     PLAN-FRONTEND.md, IMPLEMENTATION-ROADMAP.md
-e2e/                        Playwright specs
+e2e/                        Playwright specs; visual/ (screenshot baselines) and performance/ (Core Web Vitals)
+ios/, android/              Capacitor native projects (web assets are copied in by `npx cap sync`)
 nginx/                      container nginx config and security headers (CSP)
 public/                     favicon, PWA manifest and icons
 scripts/                    token pipeline, asset export/validation, lockfile guard
@@ -125,7 +129,7 @@ capacitor.config.ts         app id dev.myatlas.app; native projects are added in
   [Dependency and license matrix](docs/architecture/DEPENDENCY-LICENSE-MATRIX.md) ·
   [ADRs](docs/adr/README.md)
 - [Production readiness and store release](docs/release/production-readiness.md) (checklist, mock and docs cleanup,
-  App Store and Google Play steps)
+  App Store and Google Play steps) · [Accessibility and device evidence](docs/release/accessibility-evidence.md)
 - [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Third-party notices](THIRD-PARTY-NOTICES.md)
 
 ## License

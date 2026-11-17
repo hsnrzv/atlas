@@ -22,6 +22,9 @@
 }
 
 .link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-touch-target-min);
   color: var(--color-text-secondary);
 
   &:hover {

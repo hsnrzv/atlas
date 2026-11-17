@@ -51,9 +51,14 @@
   }
 }
 
-.eyebrow {
+.eyebrow,
+.kind,
+.context-link,
+.connect-hint {
   @include atlas.style(label);
+}
 
+.eyebrow {
   margin: 0;
   color: var(--color-text-secondary);
   text-transform: uppercase;
@@ -111,12 +116,8 @@
   @include atlas.style(h4);
 }
 
-.kind {
-  @include atlas.style(label);
-
-  &.is-dashed {
-    font-style: italic;
-  }
+.kind.is-dashed {
+  font-style: italic;
 }
 
 .read {
@@ -158,13 +159,11 @@
 }
 
 .context-link {
-  @include atlas.style(label);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-touch-target-min);
 }
 
-.connect-hint {
-  @include atlas.style(label);
-
-  &:empty {
-    display: none;
-  }
+.connect-hint:empty {
+  display: none;
 }

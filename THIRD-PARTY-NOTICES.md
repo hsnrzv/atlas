@@ -13,16 +13,17 @@ These packages, or parts of them, end up in the browser bundle, the container im
 license requires keeping its copyright notice, so the full license texts must be included in release artifacts
 (see "Distribution obligations" below).
 
-| Package                                                                      | Version | License    | Copyright / source                                                         |
-| ---------------------------------------------------------------------------- | ------- | ---------- | -------------------------------------------------------------------------- |
-| `@angular/core`, `common`, `compiler`, `forms`, `platform-browser`, `router` | 22.2.6  | MIT        | © 2010-2026 Google LLC — <https://github.com/angular/angular>              |
-| `@angular/material`, `@angular/cdk`                                          | 22.2.7  | MIT        | © 2026 Google LLC — <https://github.com/angular/components>                |
-| `@capacitor/core`                                                            | 8.6.0   | MIT        | © 2017-present Drifty Co. — <https://github.com/ionic-team/capacitor>      |
-| `@tabler/icons-angular` (+ transitive `@tabler/icons`)                       | 3.51.0  | MIT        | © 2020-2026 Paweł Kuna — <https://github.com/tabler/tabler-icons>          |
-| `rxjs`                                                                       | 7.8.2   | Apache-2.0 | <https://github.com/reactivex/rxjs>                                        |
-| `tslib`                                                                      | 2.9.1   | 0BSD       | © Microsoft Corporation — <https://github.com/Microsoft/tslib>             |
-| `@fontsource-variable/inter` (Inter variable font)                           | 5.3.0   | OFL-1.1    | © 2016 The Inter Project Authors — <https://github.com/rsms/inter>         |
-| `@fontsource-variable/manrope` (Manrope variable font)                       | 5.3.0   | OFL-1.1    | © 2019 The Manrope Project Authors — <https://github.com/sharanda/manrope> |
+| Package                                                                      | Version             | License    | Copyright / source                                                         |
+| ---------------------------------------------------------------------------- | ------------------- | ---------- | -------------------------------------------------------------------------- |
+| `@angular/core`, `common`, `compiler`, `forms`, `platform-browser`, `router` | 22.2.6              | MIT        | © 2010-2026 Google LLC — <https://github.com/angular/angular>              |
+| `@angular/material`, `@angular/cdk`                                          | 22.2.7              | MIT        | © 2026 Google LLC — <https://github.com/angular/components>                |
+| `@capacitor/core`, `@capacitor/ios`, `@capacitor/android`                    | 8.6.2               | MIT        | © 2017-present Drifty Co. — <https://github.com/ionic-team/capacitor>      |
+| `@capacitor/app`, `@capacitor/keyboard`, `@capacitor/splash-screen`          | 8.1.2, 8.0.6, 8.0.2 | MIT        | © 2020-present Ionic — <https://github.com/ionic-team/capacitor-plugins>   |
+| `@tabler/icons-angular` (+ transitive `@tabler/icons`)                       | 3.51.0              | MIT        | © 2020-2026 Paweł Kuna — <https://github.com/tabler/tabler-icons>          |
+| `rxjs`                                                                       | 7.8.2               | Apache-2.0 | <https://github.com/reactivex/rxjs>                                        |
+| `tslib`                                                                      | 2.9.1               | 0BSD       | © Microsoft Corporation — <https://github.com/Microsoft/tslib>             |
+| `@fontsource-variable/inter` (Inter variable font)                           | 5.3.0               | OFL-1.1    | © 2016 The Inter Project Authors — <https://github.com/rsms/inter>         |
+| `@fontsource-variable/manrope` (Manrope variable font)                       | 5.3.0               | OFL-1.1    | © 2019 The Manrope Project Authors — <https://github.com/sharanda/manrope> |
 
 Transitive production packages pulled in by Angular. Today they are not part of the browser bundle, but they are
 listed for completeness:
@@ -46,12 +47,25 @@ deliberately do not outline it, so viewing them needs Manrope installed or a fal
 | `nginxinc/nginx-unprivileged:1.30-alpine` | nginx: BSD-2-Clause; Alpine packages: various (mostly MIT/BSD/GPL for OS tools) | Runtime only; unmodified. Alpine OS package licenses apply to the image as distributed. |
 | `node:26-alpine`                          | Node.js: MIT and bundled licenses                                               | Build stage only; not part of the final image.                                          |
 
+## Native libraries in the Capacitor apps
+
+Resolved by Gradle and Swift Package Manager when the native projects build; they ship inside the store apps.
+
+| Library                                                                                                  | Version (from `android/variables.gradle`, `CapApp-SPM`) | License    |
+| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ---------- |
+| Capacitor iOS runtime (`capacitor-swift-pm`: Capacitor, Cordova)                                         | 8.6.2                                                   | MIT        |
+| AndroidX `appcompat`, `core`, `core-splashscreen`, `activity`, `fragment`, `coordinatorlayout`, `webkit` | 1.7.1, 1.17.0, 1.2.0, 1.11.0, 1.8.9, 1.3.0, 1.14.0      | Apache-2.0 |
+| `org.apache.cordova:framework` (Capacitor's Cordova compatibility layer)                                 | 14.0.1                                                  | Apache-2.0 |
+
+`lighthouse` is deliberately not a dependency: its dependency tree includes a package under the
+source-available FSL-1.1-Apache-2.0 license, which the license policy does not allow. Lighthouse runs from Chrome DevTools instead.
+
 ## Development and build tooling (not shipped)
 
 | Package                                                             | Version          | License           | Use                                                                                                               |
 | ------------------------------------------------------------------- | ---------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `@angular/cli`, `@angular/build`, `@angular/compiler-cli`           | 22.2.6           | MIT               | build, dev server, unit-test builder                                                                              |
-| `@capacitor/cli`                                                    | 8.6.0            | MIT               | native project sync (Phase 10)                                                                                    |
+| `@capacitor/cli`                                                    | 8.6.2            | MIT               | native project sync and run                                                                                       |
 | `typescript`                                                        | 6.0.3            | Apache-2.0        | compiler                                                                                                          |
 | `vitest`                                                            | 5.1.0            | MIT               | unit/component tests                                                                                              |
 | `jsdom`                                                             | 30.1.3           | MIT               | DOM for unit tests                                                                                                |

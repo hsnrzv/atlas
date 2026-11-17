@@ -4,8 +4,8 @@ This file is the export record that design-instructions §12.4 asks for. Vector 
 hand-edited sources. Every raster and platform file is **derived** by a script and validated by its properties
 ([DD-17](DESIGN_DECISIONS.md#dd-17-raster-exports-are-derived-and-validated-by-properties)).
 
-- **Status:** web, store and Capacitor _source_ PNGs are Implemented and pass validation.
-- **Pending (design step 7):** native platform projects and device verification. See [Pending](#pending).
+- **Status:** web, store, Capacitor source and native project PNGs are Implemented and pass validation.
+- **Pending:** verification on real devices and across launcher masks. See [Pending](#pending).
 
 ## Toolchain
 
@@ -36,19 +36,33 @@ The source masters are in `design/svg/logo/`. Every row below is produced by `np
 `npm run assets:validate`, which looks at the PNG format, the exact size, the sRGB colour space and the alpha policy.
 The last validation run passed for every row.
 
-| Output                                           | Source master                          | Size (px)   | Alpha                  | Destination / consumer                                                                                            |
-| ------------------------------------------------ | -------------------------------------- | ----------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `design/exports/app-icon/ios-app-store-1024.png` | `ikigai-atlas-app-icon-master.svg`     | 1024 × 1024 | none (RGB)             | iOS `AppIcon.appiconset` single-size source and the App Store Connect marketing icon                              |
-| `design/exports/app-icon/google-play-512.png`    | `ikigai-atlas-app-icon-master.svg`     | 512 × 512   | opaque (32-bit RGBA)   | Google Play Console listing icon. This is separate from the launcher icons.                                       |
-| `design/exports/capacitor/icon-only.png`         | `ikigai-atlas-app-icon-master.svg`     | 1024 × 1024 | none                   | `@capacitor/assets` icon source (iOS, Android legacy, PWA)                                                        |
-| `design/exports/capacitor/icon-foreground.png`   | `ikigai-atlas-app-icon-foreground.svg` | 1024 × 1024 | required (transparent) | `@capacitor/assets` Android adaptive-icon foreground                                                              |
-| `design/exports/capacitor/icon-background.png`   | solid `#0B1020` (generated)            | 1024 × 1024 | none                   | `@capacitor/assets` Android adaptive-icon background                                                              |
-| `design/exports/capacitor/splash.png`            | `ikigai-atlas-splash.svg`              | 2732 × 2732 | none                   | `@capacitor/assets` splash (light)                                                                                |
-| `design/exports/capacitor/splash-dark.png`       | `ikigai-atlas-splash.svg`              | 2732 × 2732 | none                   | `@capacitor/assets` splash (dark). It uses the same tide-space master, because the splash is dark in both themes. |
-| `design/exports/social/avatar-400.png`           | `ikigai-atlas-app-icon-master.svg`     | 400 × 400   | none                   | Social profile avatar, symbol only (§13)                                                                          |
-| `public/apple-touch-icon.png`                    | `ikigai-atlas-app-icon-master.svg`     | 180 × 180   | none                   | iOS Safari home screen (`<link rel="apple-touch-icon">`)                                                          |
-| `public/icons/icon-192.png`                      | `ikigai-atlas-app-icon-master.svg`     | 192 × 192   | none                   | Web app manifest                                                                                                  |
-| `public/icons/icon-512.png`                      | `ikigai-atlas-app-icon-master.svg`     | 512 × 512   | none                   | Web app manifest                                                                                                  |
+| Output                                           | Source master                          | Size (px)   | Alpha                  | Destination / consumer                                                                                   |
+| ------------------------------------------------ | -------------------------------------- | ----------- | ---------------------- | -------------------------------------------------------------------------------------------------------- |
+| `design/exports/app-icon/ios-app-store-1024.png` | `ikigai-atlas-app-icon-master.svg`     | 1024 × 1024 | none (RGB)             | iOS `AppIcon.appiconset` single-size source and the App Store Connect marketing icon                     |
+| `design/exports/app-icon/google-play-512.png`    | `ikigai-atlas-app-icon-master.svg`     | 512 × 512   | opaque (32-bit RGBA)   | Google Play Console listing icon. This is separate from the launcher icons.                              |
+| `design/exports/capacitor/icon-only.png`         | `ikigai-atlas-app-icon-master.svg`     | 1024 × 1024 | none                   | Icon source set in the Capacitor layout, for store tooling and manual checks                             |
+| `design/exports/capacitor/icon-foreground.png`   | `ikigai-atlas-app-icon-foreground.svg` | 1024 × 1024 | required (transparent) | Adaptive-icon foreground source set                                                                      |
+| `design/exports/capacitor/icon-background.png`   | solid `#0B1020` (generated)            | 1024 × 1024 | none                   | Adaptive-icon background source set                                                                      |
+| `design/exports/capacitor/splash.png`            | `ikigai-atlas-splash.svg`              | 2732 × 2732 | none                   | Splash source set (light)                                                                                |
+| `design/exports/capacitor/splash-dark.png`       | `ikigai-atlas-splash.svg`              | 2732 × 2732 | none                   | Splash source set (dark). It uses the same tide-space master, because the splash is dark in both themes. |
+| `design/exports/social/avatar-400.png`           | `ikigai-atlas-app-icon-master.svg`     | 400 × 400   | none                   | Social profile avatar, symbol only (§13)                                                                 |
+| `public/apple-touch-icon.png`                    | `ikigai-atlas-app-icon-master.svg`     | 180 × 180   | none                   | iOS Safari home screen (`<link rel="apple-touch-icon">`)                                                 |
+| `public/icons/icon-192.png`                      | `ikigai-atlas-app-icon-master.svg`     | 192 × 192   | none                   | Web app manifest                                                                                         |
+| `public/icons/icon-512.png`                      | `ikigai-atlas-app-icon-master.svg`     | 512 × 512   | none                   | Web app manifest                                                                                         |
+
+### Native project outputs
+
+`NATIVE_EXPORTS` in the manifest renders the same masters straight into the Capacitor projects, so no extra
+generator is needed. `assets:validate` also checks that the Android colour resource `ic_launcher_background` (adaptive-icon
+background) equals `#0B1020`, and that the top-left pixel of every opaque export is that colour.
+
+| Output                                                                       | Source master                          | Size (px)                                 | Consumer                                        |
+| ---------------------------------------------------------------------------- | -------------------------------------- | ----------------------------------------- | ----------------------------------------------- |
+| `ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png`          | `ikigai-atlas-app-icon-master.svg`     | 1024 × 1024, RGB                          | iOS app icon (Xcode single size)                |
+| `ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732*.png` (3)      | `ikigai-atlas-splash.svg`              | 2732 × 2732, RGB                          | iOS launch screen                               |
+| `android/app/src/main/res/mipmap-*/ic_launcher.png`, `ic_launcher_round.png` | `ikigai-atlas-app-icon-master.svg`     | 48 dp per density; round is circle-masked | Legacy launcher icons (API 24–25)               |
+| `android/app/src/main/res/mipmap-*/ic_launcher_foreground.png`               | `ikigai-atlas-app-icon-foreground.svg` | 108 dp per density, transparent           | Adaptive icon foreground (API 26+)              |
+| `android/app/src/main/res/drawable{,-port-*,-land-*}/splash.png`             | `ikigai-atlas-splash.svg`              | Capacitor template sizes, centre-cropped  | Splash (API 24–30; Android 12+ uses the colour) |
 
 ### Favicons
 
@@ -115,24 +129,24 @@ platform, and `splash.png` and `splash-dark.png` share the same dark source
 
 ## Mapping to the spec's deliverable structure
 
-| design-instructions §0 | Actual location                                                            | Why                                                                                                                                                                       |
-| ---------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `exports/app-icon/`    | `design/exports/app-icon/`                                                 | As specified                                                                                                                                                              |
-| `exports/splash/`      | `design/exports/capacitor/splash.png`, `splash-dark.png`                   | `@capacitor/assets` expects the icon and splash sources together in one `--assetPath` folder ([DD-18](DESIGN_DECISIONS.md#dd-18-splash-exports-live-in-exportscapacitor)) |
-| `exports/social/`      | `design/exports/social/`                                                   | Only the avatar so far                                                                                                                                                    |
-| Favicon set (§13)      | `public/favicon.{svg,ico}`, `public/apple-touch-icon.png`, `public/icons/` | Served directly by the Angular build                                                                                                                                      |
+| design-instructions §0 | Actual location                                                            | Why                                                                                                                                                 |
+| ---------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `exports/app-icon/`    | `design/exports/app-icon/`                                                 | As specified                                                                                                                                        |
+| `exports/splash/`      | `design/exports/capacitor/splash.png`, `splash-dark.png`                   | The icon and splash sources sit together in the Capacitor input layout ([DD-18](DESIGN_DECISIONS.md#dd-18-splash-exports-live-in-exportscapacitor)) |
+| `exports/social/`      | `design/exports/social/`                                                   | Only the avatar so far                                                                                                                              |
+| Favicon set (§13)      | `public/favicon.{svg,ico}`, `public/apple-touch-icon.png`, `public/icons/` | Served directly by the Angular build                                                                                                                |
 
 ## Store requirements (§12)
 
-| Requirement                                                                  | Status                                                                                             |
-| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| iOS App Store icon: 1024 × 1024 PNG, RGB, no transparency                    | `ios-app-store-1024.png` passes (no alpha channel). The Xcode asset catalog is not configured yet. |
-| Google Play listing icon: 512 × 512, 32-bit PNG                              | `google-play-512.png` is RGBA and fully opaque. Play's 1024 kB size limit is to verify at upload.  |
-| Android adaptive icon: foreground and background layers within the safe zone | Foreground and background PNGs are ready. Mipmaps are generated later by `@capacitor/assets`.      |
-| Android legacy density icons                                                 | Generated later from `icon-only.png` by `@capacitor/assets`, if the native project needs them.     |
-| Splash with a centred symbol on a solid brand background                     | `splash.png` and `splash-dark.png` are ready. Native splash configuration is pending.              |
-| App icon has no text and a generous safe area                                | Enforced by validation (no `<text>`) and by the geometry above.                                    |
-| Verified on device or simulator, across launcher masks and densities         | **Pending**                                                                                        |
+| Requirement                                                                  | Status                                                                                            |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| iOS App Store icon: 1024 × 1024 PNG, RGB, no transparency                    | `ios-app-store-1024.png` passes (no alpha channel). The Xcode asset catalog uses the same render. |
+| Google Play listing icon: 512 × 512, 32-bit PNG                              | `google-play-512.png` is RGBA and fully opaque. Play's 1024 kB size limit is to verify at upload. |
+| Android adaptive icon: foreground and background layers within the safe zone | Foreground mipmaps are exported per density; the background is the colour `#0B1020`.              |
+| Android legacy density icons                                                 | `ic_launcher.png` and `ic_launcher_round.png` are exported per density.                           |
+| Splash with a centred symbol on a solid brand background                     | iOS and Android splash images are exported; `capacitor.config.ts` configures the splash.          |
+| App icon has no text and a generous safe area                                | Enforced by validation (no `<text>`) and by the geometry above.                                   |
+| Verified on device or simulator, across launcher masks and densities         | iOS simulator checked; devices and Android launcher masks are **pending**                         |
 
 ## Marketing templates (§13)
 
@@ -148,16 +162,11 @@ Use the masters and tokens when creating them, and do not claim unbuilt features
 
 ## Pending
 
-Design step 7, platform validation:
+Platform validation:
 
-1. `npx cap add ios` and `npx cap add android`. No native projects exist yet. `capacitor.config.ts` sets `appId`
-   `dev.myatlas.app`, `appName` "IKIGAI ATLAS" and `webDir` `dist/atlas-frontend/browser`.
-2. `npx @capacitor/assets generate --assetPath design/exports/capacitor`. This has not been run, and
-   `@capacitor/assets` is not installed; it is fetched by `npx`. The output goes into the native projects; do not
-   hand-edit the generated files (§12.2).
-3. Verify the icon in the iOS Simulator and on a device (home screen, Settings, Spotlight) and the splash in light and
-   dark.
-4. Verify the Android adaptive icon in the emulator with circle, squircle and rounded-square masks and several
-   densities, plus the Android 12+ splash behaviour (to verify how `@capacitor/assets` maps `splash.png`).
-5. Add a maskable PWA icon, or document why there is none. Verify installability with Lighthouse.
-6. Optional §13 marketing templates.
+1. Verify the icon on an iOS device (home screen, Settings, Spotlight) and the splash in light and dark.
+2. Verify the Android adaptive icon in the emulator and on a device with circle, squircle and rounded-square masks
+   and several densities, plus the Android 12+ splash.
+3. Add a monochrome layer for Android 13 themed icons (needs a monochrome master).
+4. Add a maskable PWA icon, or document why there is none. Verify installability in Chrome DevTools.
+5. Optional §13 marketing templates.

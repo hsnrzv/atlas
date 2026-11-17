@@ -350,10 +350,11 @@ not repeat them.
 
 ### DD-18: Splash exports live in `exports/capacitor`
 
-- **Context:** Design-instructions §0 lists `design/exports/splash/`. `@capacitor/assets` expects `icon-*.png` and
-  `splash*.png` together in one input folder.
+- **Context:** Design-instructions §0 lists `design/exports/splash/`. The Capacitor asset layout keeps `icon-*.png`
+  and `splash*.png` together in one input folder.
 - **Decision:** `splash.png` and `splash-dark.png` (2732², identical content) live in `design/exports/capacitor/`.
-- **Rationale:** `npx @capacitor/assets generate --assetPath design/exports/capacitor` can then run with no copying.
+- **Rationale:** One folder holds the full source set. The native projects are rendered straight from the SVG masters
+  by `npm run assets:export` ([ASSET_EXPORTS.md](ASSET_EXPORTS.md#native-project-outputs)).
 - **Consequences:** The [README folder map](README.md#folder-map) documents the mapping.
 - **Status:** Accepted.
 

@@ -17,6 +17,7 @@ import { ATLAS_ENVIRONMENT } from './core/config/atlas-environment';
 import { provideAtlasData } from './core/data-access/data-access.providers';
 import { AtlasTitleStrategy } from './core/layout/atlas-title-strategy';
 import { AtlasRouteFocus } from './core/layout/route-focus';
+import { provideNativeShell } from './core/native/native-shell';
 import { AtlasTheme } from './core/theme/atlas-theme';
 
 const prefersReducedMotion = () =>
@@ -41,6 +42,7 @@ export const appConfig: ApplicationConfig = {
     { provide: TitleStrategy, useExisting: AtlasTitleStrategy },
     { provide: ATLAS_ENVIRONMENT, useValue: environment },
     provideAtlasData(),
+    provideNativeShell(),
     provideAppInitializer(() => {
       inject(AtlasTheme);
       inject(AtlasRouteFocus);
