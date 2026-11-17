@@ -54,7 +54,7 @@ describe('SettingsPage', () => {
     [...root.querySelectorAll('button')].find((b) => b.textContent?.includes('Run setup'))!.click();
     await fixture.whenStable();
     expect(root.querySelector('[role="alert"]')?.textContent).toContain(
-      'The Atlas service is not connected yet.',
+      'The Atlas service is not available right now.',
     );
   });
 });

@@ -1,10 +1,12 @@
 /**
  * Why a repository call failed. Reads show the Error state with Retry; writes keep the user's input and show the
  * message. `conflict` covers `409` (e.g. `NODE_LOCKED`, `DEPENDENCY_CYCLE`) and `412 VERSION_CONFLICT`;
- * `validation` covers `400`/`422` Problem Details with field errors (API-CONTRACT §4).
+ * `validation` covers `400`/`422` Problem Details with field errors; `unauthorized` covers `401`/`403`;
+ * `unavailable` covers `5xx` and a missing backend; `network` covers no response at all (API-CONTRACT §4,
+ * `http/problem-details.ts`).
  */
 export type AtlasDataErrorReason =
-  'unavailable' | 'not-found' | 'network' | 'conflict' | 'validation';
+  'unavailable' | 'not-found' | 'network' | 'conflict' | 'validation' | 'unauthorized';
 
 export interface AtlasDataErrorDetails {
   /** Problem Details `code`, e.g. `NODE_LOCKED`. */
@@ -37,8 +39,10 @@ export function writeErrorMessage(error: unknown): string {
       case 'validation':
       case 'not-found':
         return error.message;
+      case 'unauthorized':
+        return 'You are not signed in, or you may not do this. Nothing was saved.';
       case 'unavailable':
-        return 'The Atlas service is not connected yet. Nothing was saved.';
+        return 'The Atlas service is not available right now. Nothing was saved.';
     }
   }
   return 'Could not save. Check your connection and try again.';
