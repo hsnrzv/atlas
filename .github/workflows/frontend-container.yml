@@ -1,7 +1,7 @@
 name: frontend-container
 
-# Builds and smoke-tests the runtime image. Publishing to ghcr.io/hsnrzv/atlas-frontend (immutable
-# tags, provenance, signing) is added with the delivery pipeline; see atlas-infra
+# Builds, smoke-tests and scans the runtime image (F2-11). Publishing to ghcr.io/hsnrzv/atlas-frontend (immutable
+# tags, provenance, signing) is added with the delivery pipeline (F2-12, atlas-infra ADR-0007); see atlas-infra
 # docs/plan/PLAN-INFRASTRUCTURE-CICD.md.
 on:
   pull_request:
@@ -15,6 +15,7 @@ on:
       - src/**
       - public/**
       - design/svg/**
+      - .trivyignore
       - .github/workflows/frontend-container.yml
   push:
     branches: [main]
@@ -58,3 +59,33 @@ jobs:
 
       - if: failure()
         run: docker logs atlas-frontend
+
+      # Trivy (Apache-2.0), action pinned to the v0.36.0 commit and the scanner to a fixed version. Fixable critical
+      # and high findings fail the job; an accepted finding goes into .trivyignore with a reason and an expiry date.
+      - name: Image vulnerability scan (Trivy)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.2
+          image-ref: atlas-frontend:ci
+          scanners: vuln
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: '1'
+          trivyignores: .trivyignore
+
+      - name: CycloneDX SBOM of the image (OS packages and the bundle)
+        if: ${{ !cancelled() }}
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.2
+          image-ref: atlas-frontend:ci
+          format: cyclonedx
+          output: atlas-frontend-image.cdx.json
+          skip-setup-trivy: true
+
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-image-sbom
+          path: atlas-frontend-image.cdx.json
+          retention-days: 30

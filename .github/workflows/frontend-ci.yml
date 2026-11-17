@@ -30,6 +30,9 @@ jobs:
       - name: Lockfile resolves only from the public npm registry
         run: npm run lockfile:check
 
+      - name: Licence allow-list for the shipped dependency tree (F2-11)
+        run: npm run licenses:check
+
       - name: Design system (tokens in sync, WCAG contrast, dimension icons, brand assets)
         run: npm run design:check
 
@@ -56,6 +59,15 @@ jobs:
           name: frontend-dist
           path: dist/atlas-frontend/browser
           retention-days: 7
+
+      - name: CycloneDX SBOM of the shipped npm tree (F2-11)
+        run: npm run sbom
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: frontend-sbom
+          path: dist/atlas-frontend.cdx.json
+          retention-days: 30
 
   e2e:
     name: Playwright smoke + axe

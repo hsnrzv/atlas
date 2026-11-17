@@ -79,6 +79,15 @@ source-available FSL-1.1-Apache-2.0 license, which the license policy does not a
 | `sharp`                                                             | 0.35.5           | Apache-2.0        | rasterising brand SVGs into PNG/ICO exports                                                                       |
 | `@img/sharp-libvips-*` (installed by `sharp` for the host platform) | 1.3.4            | LGPL-3.0-or-later | prebuilt libvips, loaded dynamically by `sharp`; used only on developer/CI machines; never bundled or distributed |
 
+CI-only supply-chain tooling (F2-11, not npm packages; licences checked with the GitHub license API on 2026-11-17):
+
+| Tool                                  | Version          | License      | Use                                                                   |
+| ------------------------------------- | ---------------- | ------------ | --------------------------------------------------------------------- |
+| Trivy (`aquasecurity/trivy`)          | v0.76.2          | Apache-2.0   | image vulnerability scan and image SBOM in `frontend-container.yml`   |
+| `aquasecurity/trivy-action`           | v0.36.0 (commit) | Apache-2.0   | runs Trivy in CI                                                      |
+| `npm sbom` (npm CLI, runner-provided) | npm 11           | Artistic-2.0 | CycloneDX SBOM of the shipped npm tree; part of the Node.js toolchain |
+| `scripts/check-licenses.mjs`          | —                | project      | licence allow-list of the shipped tree from `package-lock.json`       |
+
 License mix of the complete development tree (`package-lock.json`, 2026-11-12): MIT, Apache-2.0, ISC, BSD-2/3-Clause,
 BlueOak-1.0.0, MPL-2.0, MIT-0, CC0-1.0, CC-BY-4.0 (data), Unlicense, Python-2.0, and LGPL-3.0-or-later (libvips only,
 see above). No GPL/AGPL/SSPL or non-commercial licenses.

@@ -24,9 +24,14 @@ Enforcement:
 
 - `atlas` and `atlas-microservices` CI run `actions/dependency-review-action` on PRs.
 - `atlas` checks that the lockfile resolves only from the public npm registry (`npm run lockfile:check`).
-- An automated license allow-list gate is planned:
-  - `atlas`: F2-11. License allow-list scan of the production tree; tool and license to verify.
-  - `atlas-microservices`: BE-1.13, CycloneDX SBOM plus a policy check.
+- Automated license allow-list gates:
+  - `atlas` (F2-11, done 2026-11-17): `npm run licenses:check` (`scripts/check-licenses.mjs`, in `npm run verify` and
+    `frontend-ci`) fails when a package of the shipped tree in `package-lock.json` has no licence or one outside the
+    "Allowed" class. Reviewed exceptions are listed in the script with their reason. `frontend-ci` also uploads a
+    CycloneDX SBOM (`npm sbom`), and `frontend-container` scans the image with Trivy (fixable critical/high fail;
+    exceptions in `.trivyignore` with an expiry date) and uploads the image SBOM.
+  - `atlas-microservices`: BE-1.13, CycloneDX SBOM plus a policy check. Trivy is the frontend's proposal for the
+    shared scanner (atlas-infra ADR-0007 allows Trivy or Grype).
 
 ## 2. Summary by artifact
 
@@ -66,6 +71,7 @@ Enforcement:
 | `sharp` / `@img/sharp-libvips-*`                                                 | 0.35.5 / 1.3.4                          | Apache-2.0 / LGPL-3.0-or-later   | dev tool (asset export), never shipped |
 | Actions: `checkout`, `setup-node`, `upload-artifact`, `dependency-review-action` | v7, v7, v7, v5                          | MIT                              | CI                                     |
 | Actions: `docker/setup-buildx-action`, `docker/build-push-action`                | v4, v7                                  | Apache-2.0                       | CI                                     |
+| Trivy, `aquasecurity/trivy-action`                                               | v0.76.2, v0.36.0 (commit pin)           | Apache-2.0                       | CI (image scan, image SBOM)            |
 
 ### 3.2 `atlas-microservices` (backend)
 
@@ -114,25 +120,25 @@ Enforcement:
 
 Versions are those seen on 2026-11-12. Re-verify the version and license when the component is added.
 
-| Component                                                                    | Repo                  | Phase                        | Version seen        | License                  | Record                    |
-| ---------------------------------------------------------------------------- | --------------------- | ---------------------------- | ------------------- | ------------------------ | ------------------------- |
-| `echarts`, `ngx-echarts`                                                     | atlas                 | 5                            | 6.1.0, 22.0.0       | Apache-2.0, MIT          | ADR-0004 (atlas)          |
-| `vis-timeline` (+ `vis-data`, `moment`, `@egjs/hammerjs`, …)                 | atlas                 | 5 (spike)                    | 8.5.6               | Apache-2.0 OR MIT        | ADR-0004 (atlas)          |
-| `@fullcalendar/angular`, `fullcalendar`, `temporal-polyfill` (Standard only) | atlas                 | 5                            | 7.1.4, 7.1.4, 1.0.8 | MIT                      | ADR-0004 (atlas)          |
-| `d3` (only if needed)                                                        | atlas                 | 5+                           | 7.9.2               | ISC                      | ADR-0004 (atlas)          |
-| OpenAPI types generator                                                      | atlas                 | 3 (F3-5)                     | to verify           | to verify                | PLAN-FRONTEND D3          |
-| Markdown renderer + sanitiser for notes                                      | atlas                 | later                        | to verify           | to verify                | PLAN-FRONTEND D13         |
-| springdoc-openapi 3.x                                                        | backend               | 3 (BE-3.05)                  | to verify           | Apache-2.0 (to verify)   | backend ADR-0006          |
-| Spring Security / OAuth2 resource server                                     | backend               | 3 (BE-3.03)                  | Boot-managed        | Apache-2.0               | backend ADR-0005          |
-| `spring-modulith-starter-jpa`                                                | backend               | when needed (B-5)            | Modulith-managed    | Apache-2.0               | PLAN-BACKEND B-5          |
-| Argo CD                                                                      | infra                 | 3                            | v3.6.1              | Apache-2.0               | infra ADR-0002            |
-| k3s (+ bundled Traefik)                                                      | infra                 | 3                            | v1.37.2+k3s1        | Apache-2.0 (Traefik MIT) | infra ADR-0003            |
-| External Secrets Operator                                                    | infra                 | 3                            | v2.15.0             | Apache-2.0               | infra ADR-0005            |
-| cert-manager                                                                 | infra                 | 3                            | v1.21.3             | Apache-2.0               | infra plan (TLS)          |
-| SOPS / Sealed Secrets (alternatives, not recommended)                        | infra                 | —                            | v3.13.3 / v0.41.2   | MPL-2.0 / Apache-2.0     | infra ADR-0005            |
-| Container scanner, SBOM tooling                                              | backend, atlas, infra | 1–2 (BE-1.13, infra Phase 2) | to choose           | to verify                | infra plan (supply chain) |
-| Capacitor `@capacitor/browser` and a secure-storage plugin                   | atlas                 | 10                           | to verify           | to verify                | PLAN-FRONTEND D5          |
-| Export renderer (PDF/raster)                                                 | atlas                 | 7                            | to verify           | permissive required      | roadmap decision 8        |
+| Component                                                                    | Repo           | Phase                        | Version seen                                          | License                  | Record             |
+| ---------------------------------------------------------------------------- | -------------- | ---------------------------- | ----------------------------------------------------- | ------------------------ | ------------------ |
+| `echarts`, `ngx-echarts`                                                     | atlas          | 5                            | 6.1.0, 22.0.0                                         | Apache-2.0, MIT          | ADR-0004 (atlas)   |
+| `vis-timeline` (+ `vis-data`, `moment`, `@egjs/hammerjs`, …)                 | atlas          | 5 (spike)                    | 8.5.6                                                 | Apache-2.0 OR MIT        | ADR-0004 (atlas)   |
+| `@fullcalendar/angular`, `fullcalendar`, `temporal-polyfill` (Standard only) | atlas          | 5                            | 7.1.4, 7.1.4, 1.0.8                                   | MIT                      | ADR-0004 (atlas)   |
+| `d3` (only if needed)                                                        | atlas          | 5+                           | 7.9.2                                                 | ISC                      | ADR-0004 (atlas)   |
+| OpenAPI types generator                                                      | atlas          | 3 (F3-5)                     | to verify                                             | to verify                | PLAN-FRONTEND D3   |
+| Markdown renderer + sanitiser for notes                                      | atlas          | later                        | to verify                                             | to verify                | PLAN-FRONTEND D13  |
+| springdoc-openapi 3.x                                                        | backend        | 3 (BE-3.05)                  | to verify                                             | Apache-2.0 (to verify)   | backend ADR-0006   |
+| Spring Security / OAuth2 resource server                                     | backend        | 3 (BE-3.03)                  | Boot-managed                                          | Apache-2.0               | backend ADR-0005   |
+| `spring-modulith-starter-jpa`                                                | backend        | when needed (B-5)            | Modulith-managed                                      | Apache-2.0               | PLAN-BACKEND B-5   |
+| Argo CD                                                                      | infra          | 3                            | v3.6.1                                                | Apache-2.0               | infra ADR-0002     |
+| k3s (+ bundled Traefik)                                                      | infra          | 3                            | v1.37.2+k3s1                                          | Apache-2.0 (Traefik MIT) | infra ADR-0003     |
+| External Secrets Operator                                                    | infra          | 3                            | v2.15.0                                               | Apache-2.0               | infra ADR-0005     |
+| cert-manager                                                                 | infra          | 3                            | v1.21.3                                               | Apache-2.0               | infra plan (TLS)   |
+| SOPS / Sealed Secrets (alternatives, not recommended)                        | infra          | —                            | v3.13.3 / v0.41.2                                     | MPL-2.0 / Apache-2.0     | infra ADR-0005     |
+| Container scanner, SBOM tooling                                              | backend, infra | 1–2 (BE-1.13, infra Phase 2) | Trivy v0.76.2 (proposed; used by `atlas` since F2-11) | Apache-2.0               | infra ADR-0007     |
+| Capacitor `@capacitor/browser` and a secure-storage plugin                   | atlas          | 10                           | to verify                                             | to verify                | PLAN-FRONTEND D5   |
+| Export renderer (PDF/raster)                                                 | atlas          | 7                            | to verify                                             | permissive required      | roadmap decision 8 |
 
 ## 5. Items that need attention
 
