@@ -157,6 +157,23 @@
         "$description": "Figma control/compact (equals the touch-target minimum)"
       }
     },
+    "companion": {
+      "compact": {
+        "$type": "dimension",
+        "$value": "48px",
+        "$description": "Companion avatar in the compact card (Figma 141:2991, circle)"
+      },
+      "expanded": {
+        "$type": "dimension",
+        "$value": "64px",
+        "$description": "Companion artwork slot in the expanded card (Figma 141:1751)"
+      },
+      "welcome": {
+        "$type": "dimension",
+        "$value": "160px",
+        "$description": "Companion welcome art on onboarding (Figma 141:2891)"
+      }
+    },
     "progress": {
       "height": {
         "$type": "dimension",

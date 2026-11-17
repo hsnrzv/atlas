@@ -3,6 +3,6 @@ import type { AtlasEnvironment } from '../app/core/config/atlas-environment';
 export const environment: AtlasEnvironment = {
   dataSource: 'mock',
   devTools: true,
-  companionArt: false,
+  companionArt: true,
   auth: false,
 };

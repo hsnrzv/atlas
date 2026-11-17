@@ -136,6 +136,11 @@ atlas-page-header {
   max-width: var(--layout-dialog-width);
 }
 
+.state-companion {
+  inline-size: 100%;
+  max-inline-size: var(--layout-dialog-width);
+}
+
 .panel {
   @include atlas.card;
 

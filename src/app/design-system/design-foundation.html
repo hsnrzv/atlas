@@ -320,7 +320,7 @@
   <section aria-labelledby="companion-title">
     <h2 id="companion-title">Companion</h2>
     <div class="cards">
-      <atlas-companion-card trigger="next-step" mode="on">
+      <atlas-companion-card trigger="next-step" mode="on" [art]="companionArt">
         <a mat-stroked-button atlasCompanionAction routerLink=".">View Waypoint</a>
       </atlas-companion-card>
       <atlas-companion-card trigger="welcome" mode="muted" />
@@ -329,8 +329,27 @@
         mode="on"
         variant="expanded"
         body="Submit application is complete."
+        [art]="companionArt"
       />
+      <atlas-companion-card trigger="fresh-start" mode="on" [art]="companionArt" />
+      <atlas-companion-card trigger="plan-unchanged" mode="on" [art]="companionArt" />
     </div>
+    <h3 class="atlas-label">
+      Expressions · Figma 141:2443 (raster candidates, not rights-cleared)
+    </h3>
+    <ul class="companion-expressions" role="list">
+      @for (expression of companionExpressions; track expression.key) {
+        <li class="companion-expression">
+          <atlas-companion-avatar
+            [expression]="expression.key"
+            size="expanded"
+            [art]="companionArt"
+          />
+          <span class="atlas-label">{{ expression.art.label }}</span>
+          <span class="atlas-caption atlas-text-secondary">{{ expression.art.usage }}</span>
+        </li>
+      }
+    </ul>
   </section>
 
   <section aria-labelledby="visualization-title">

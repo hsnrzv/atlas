@@ -1,4 +1,5 @@
 import { DOCUMENT, Injectable, inject, signal } from '@angular/core';
+import { ATLAS_ENVIRONMENT } from '../config/atlas-environment';
 import type { CompanionTrigger } from './companion-copy';
 
 /** `on`: card with art slot. `muted`: compact card without art or motion. `off`: no companion at all. */
@@ -20,6 +21,8 @@ export class CompanionPreferencesStore {
 
   readonly mode = signal<CompanionMode>(this.read());
   readonly dismissed = this.dismissedTriggers.asReadonly();
+  /** Real companion art instead of the Atlas symbol (`companionArt` build flag, roadmap R-9). */
+  readonly art = inject(ATLAS_ENVIRONMENT, { optional: true })?.companionArt ?? false;
 
   setMode(mode: CompanionMode): void {
     this.mode.set(mode);

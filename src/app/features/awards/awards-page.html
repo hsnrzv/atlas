@@ -85,6 +85,7 @@
                     trigger="waypoint-achieved"
                     variant="expanded"
                     [mode]="mode"
+                    [art]="companion.art"
                     [body]="vm.celebration.body"
                     (dismissed)="companion.dismiss('waypoint-achieved')"
                     (muted)="companion.setMode('muted')"

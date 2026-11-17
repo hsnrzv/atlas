@@ -35,6 +35,19 @@
         <a mat-flat-button [routerLink]="destinations.path">Create Destination</a>
       </atlas-feedback-state>
     </div>
+    @if (freshStartCompanionMode(); as mode) {
+      <div class="state">
+        <atlas-companion-card
+          class="state-companion"
+          trigger="fresh-start"
+          [mode]="mode"
+          [art]="companion.art"
+          (dismissed)="companion.dismiss('fresh-start')"
+          (muted)="companion.setMode('muted')"
+          (disabled)="companion.setMode('off')"
+        />
+      </div>
+    }
     <section class="panel" aria-labelledby="atlas-starting-point">
       <h2 class="panel-title" id="atlas-starting-point">Your starting point</h2>
       <p class="atlas-text-secondary">0 Destinations · 0% progress</p>
@@ -65,6 +78,19 @@
         <button mat-flat-button type="button" (click)="store.retry()">Retry</button>
       </atlas-feedback-state>
     </div>
+    @if (planUnchangedCompanionMode(); as mode) {
+      <div class="state">
+        <atlas-companion-card
+          class="state-companion"
+          trigger="plan-unchanged"
+          [mode]="mode"
+          [art]="companion.art"
+          (dismissed)="companion.dismiss('plan-unchanged')"
+          (muted)="companion.setMode('muted')"
+          (disabled)="companion.setMode('off')"
+        />
+      </div>
+    }
     @if (store.overview(); as saved) {
       <section class="panel" aria-labelledby="atlas-last-saved">
         <p class="saved-label">Last saved plan</p>
@@ -110,6 +136,7 @@
               <atlas-companion-card
                 trigger="next-step"
                 [mode]="mode"
+                [art]="companion.art"
                 (dismissed)="companion.dismiss('next-step')"
                 (muted)="companion.setMode('muted')"
                 (disabled)="companion.setMode('off')"

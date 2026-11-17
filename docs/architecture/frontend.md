@@ -312,14 +312,30 @@ The companion is an **optional, decorative helper**: no audio, no AI analysis, n
 
 - Preferences (`on` / `muted` / `off`) live in `CompanionPreferencesStore` (core). Until the profile API stores them,
   they are kept in `localStorage` as a non-sensitive UI preference (same rule as the theme, D1).
-- Copy is a static, curated catalogue (`core/companion/companion-copy.ts`) keyed by trigger (`welcome`,
-  `next-step`, `waypoint-achieved`). Nothing is generated. `AtlasCompanionCard` (`shared/ui/companion-card`) shows it
-  on My Atlas and Awards; `/settings/companion` sets the mode.
+- Copy is a static, curated catalogue (`core/companion/companion-copy.ts`) keyed by trigger. Nothing is generated.
+  `AtlasCompanionCard` (`shared/ui/companion-card`) shows it on My Atlas and Awards; `/settings/companion` sets the mode.
+  Each trigger picks one Figma expression (`141:2443`):
+
+  | Trigger             | Where                         | Expression  |
+  | ------------------- | ----------------------------- | ----------- |
+  | `welcome`           | Welcome (onboarding)          | Welcome     |
+  | `next-step`         | My Atlas, under Next Waypoint | Guiding     |
+  | `fresh-start`       | My Atlas, Empty state         | Encouraging |
+  | `plan-unchanged`    | My Atlas, Error state         | Supportive  |
+  | `waypoint-achieved` | Awards celebration            | Celebrating |
+
+  Surprised, Thinking and Idle are catalogued (`COMPANION_ART`) but unused: Surprised never marks errors or risk,
+  Thinking must not suggest analysis, and Idle still reads sleepy in Figma.
+
 - Every appearance offers Dismiss, Mute and Disable. Dismiss hides that appearance until reload; muted shows a compact
   card without art; Off hides it everywhere.
-- **Art:** the Figma companion is raster demonstration art without cleared rights (R-9). Until it is cleared the art
-  slot shows the Atlas symbol; the `companionArt` environment flag stays off. Real art lands only after rights
-  clearance, as optimised PNG/WebP in `public/companion/` with `alt=""` (decorative) and text that carries the message.
+- **Art:** `AtlasCompanionAvatar` (`shared/ui/companion-avatar`) fills the art slot at 48 px (compact card), 64 px
+  (expanded card) or 160 px (Welcome), sized by the `size.companion.*` tokens. With the `companionArt` environment flag
+  on it shows the expression raster from `public/companion/<expression>.png` (240 × 240 Figma exports, `alt=""`,
+  decorative; the text carries the message); with it off it shows the Atlas symbol. `CompanionPreferencesStore.art`
+  reads the flag and pages pass it to the presentational components. The flag is **on for `ng serve` and off in
+  production** because the Figma art is a candidate without cleared rights (R-9). The exports have the dark background
+  baked in (transparent exports are pending in Figma), so both themes use them.
 - Celebration uses a short, optional animation that is disabled under `prefers-reduced-motion`.
 
 ## 10. Theming

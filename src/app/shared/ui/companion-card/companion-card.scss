@@ -1,7 +1,7 @@
 @use 'abstracts' as atlas;
 
-// Figma Atlas/V3/CompanionCard: compact 384 × 138 (art 40, eyebrow, title, close; text actions) and expanded
-// (celebration) with a larger title.
+// Figma Atlas/V3/CompanionCard: compact 384 × 138 (48 px circular art, eyebrow, title, close; text actions) and
+// expanded (celebration, 64 px art) with a larger title. The art slot is `atlas-companion-avatar`.
 :host {
   @include atlas.card(var(--space-4));
 
@@ -23,21 +23,6 @@
   display: flex;
   gap: var(--space-3);
   align-items: flex-start;
-}
-
-.art {
-  display: grid;
-  flex: none;
-  place-items: center;
-  inline-size: var(--size-touch-target-min);
-  block-size: var(--size-touch-target-min);
-  background: var(--color-surface-subtle);
-  border-radius: var(--radius-pill);
-
-  :host(.is-expanded) & {
-    inline-size: calc(var(--size-touch-target-min) * 1.5);
-    block-size: calc(var(--size-touch-target-min) * 1.5);
-  }
 }
 
 .text {

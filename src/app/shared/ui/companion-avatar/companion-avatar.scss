@@ -1,0 +1,40 @@
+// The raster has a baked-in dark background (Figma: transparent exports pending), so it fills the slot edge to edge.
+:host {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--atlas-companion-avatar-size);
+  block-size: var(--atlas-companion-avatar-size);
+  overflow: hidden;
+  background: var(--color-surface-subtle);
+}
+
+:host(.is-compact) {
+  --atlas-companion-avatar-size: var(--size-companion-compact);
+
+  border-radius: var(--radius-pill);
+}
+
+:host(.is-expanded) {
+  --atlas-companion-avatar-size: var(--size-companion-expanded);
+
+  border-radius: var(--radius-sm);
+}
+
+:host(.is-welcome) {
+  --atlas-companion-avatar-size: var(--size-companion-welcome);
+
+  border-radius: var(--radius-sm);
+}
+
+// The placeholder symbol needs no backdrop at welcome size; it sits on the page's hero surface.
+:host(.is-welcome:not(.has-art)) {
+  background: none;
+}
+
+.image {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}

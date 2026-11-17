@@ -173,25 +173,26 @@ Letter-spacing values stay until a Figma variable says otherwise.
 
 ### 5.2 Spacing, radius, size, layout
 
-| Figma variable              | Token                                                     | Value      | Change                                   |
-| --------------------------- | --------------------------------------------------------- | ---------- | ---------------------------------------- |
-| space/2, 3, 4, 6, 8, 12, 16 | `space.2` … `space.16`                                    | 8–64       | none (existing 4-px scale is a superset) |
-| radius/control              | `radius.control` (alias of `radius.sm`)                   | 8 px       | alias added                              |
-| radius/pill                 | `radius.pill`                                             | 999 px     | none                                     |
-| radius/card / feature       | `radius.card` / `radius.feature` (aliases of `md` / `lg`) | 12 / 16 px | aliases added (verified on `230:8180`)   |
-| border/width                | `border.width`                                            | 1 px       | new                                      |
-| progress/height             | `size.progress.height`                                    | 6 px       | new                                      |
-| control/compact             | `size.control.height-compact`                             | 44 px      | new (equals the touch-target minimum)    |
-| layout/topbar-desktop       | `layout.topbar-height`                                    | 68 px      | none                                     |
-| control/height/regular      | `size.control.height`                                     | 48 px      | new                                      |
-| icon/size                   | `size.icon.lg`                                            | 24 px      | none                                     |
-| icon/stroke                 | `size.icon-stroke`                                        | **2**      | changed from 1.75 (ADR-0005 amended)     |
-| IconButton 44 / 48          | `size.touch-target.min` / `.preferred`                    | 44 / 48    | none                                     |
-| Sidebar / rail              | `layout.sidebar-expanded` / `collapsed`                   | 248 / 76   | none                                     |
-| Top bar desktop / mobile    | `layout.topbar-height` / `-compact`                       | 68 / 56    | none                                     |
-| Bottom navigation           | `layout.bottom-nav-height`                                | **80**     | changed from 64                          |
-| Modal width                 | `layout.dialog-width`                                     | 560 px     | new                                      |
-| Popover width               | `layout.popover-width`                                    | 320 px     | new (F2-1c, `152:6988`)                  |
+| Figma variable              | Token                                                     | Value            | Change                                                        |
+| --------------------------- | --------------------------------------------------------- | ---------------- | ------------------------------------------------------------- |
+| space/2, 3, 4, 6, 8, 12, 16 | `space.2` … `space.16`                                    | 8–64             | none (existing 4-px scale is a superset)                      |
+| radius/control              | `radius.control` (alias of `radius.sm`)                   | 8 px             | alias added                                                   |
+| radius/pill                 | `radius.pill`                                             | 999 px           | none                                                          |
+| radius/card / feature       | `radius.card` / `radius.feature` (aliases of `md` / `lg`) | 12 / 16 px       | aliases added (verified on `230:8180`)                        |
+| border/width                | `border.width`                                            | 1 px             | new                                                           |
+| progress/height             | `size.progress.height`                                    | 6 px             | new                                                           |
+| control/compact             | `size.control.height-compact`                             | 44 px            | new (equals the touch-target minimum)                         |
+| layout/topbar-desktop       | `layout.topbar-height`                                    | 68 px            | none                                                          |
+| control/height/regular      | `size.control.height`                                     | 48 px            | new                                                           |
+| Companion avatar            | `size.companion.compact` / `.expanded` / `.welcome`       | 48 / 64 / 160 px | new (ellipse `141:2991`, slot `141:1751`, Welcome `141:2891`) |
+| icon/size                   | `size.icon.lg`                                            | 24 px            | none                                                          |
+| icon/stroke                 | `size.icon-stroke`                                        | **2**            | changed from 1.75 (ADR-0005 amended)                          |
+| IconButton 44 / 48          | `size.touch-target.min` / `.preferred`                    | 44 / 48          | none                                                          |
+| Sidebar / rail              | `layout.sidebar-expanded` / `collapsed`                   | 248 / 76         | none                                                          |
+| Top bar desktop / mobile    | `layout.topbar-height` / `-compact`                       | 68 / 56          | none                                                          |
+| Bottom navigation           | `layout.bottom-nav-height`                                | **80**           | changed from 64                                               |
+| Modal width                 | `layout.dialog-width`                                     | 560 px           | new                                                           |
+| Popover width               | `layout.popover-width`                                    | 320 px           | new (F2-1c, `152:6988`)                                       |
 
 Breakpoints stay (`md` 768, `lg` 1024, `xl` 1280). The Figma viewports are 390, 768 and 1440.
 

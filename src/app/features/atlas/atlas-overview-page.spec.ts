@@ -160,5 +160,29 @@ describe('AtlasOverviewPage', () => {
 
       expect(root.querySelector('atlas-companion-card')).toBeNull();
     });
+
+    it('encourages a first intention on the Empty state', async () => {
+      const { fixture, root } = await render([() => of(emptyDashboard())]);
+      const card = root.querySelector('atlas-companion-card');
+
+      expect(text(card?.querySelector('h2'))).toBe('One meaningful intention is enough to begin.');
+      expect(card?.querySelector('atlas-companion-avatar')?.getAttribute('data-expression')).toBe(
+        'encouraging',
+      );
+
+      card!.querySelector<HTMLButtonElement>('.dismiss')!.click();
+      fixture.detectChanges();
+      expect(root.querySelector('atlas-companion-card')).toBeNull();
+    });
+
+    it('offers a supportive pause on the Error state', async () => {
+      const { root } = await render([offline]);
+      const card = root.querySelector('atlas-companion-card');
+
+      expect(text(card?.querySelector('h2'))).toBe('Pause here, or try again when you are ready.');
+      expect(card?.querySelector('atlas-companion-avatar')?.getAttribute('data-expression')).toBe(
+        'supportive',
+      );
+    });
   });
 });

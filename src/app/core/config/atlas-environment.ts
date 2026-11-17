@@ -9,7 +9,10 @@ export interface AtlasEnvironment {
   readonly dataSource: 'mock' | 'http';
   /** Dev-only tooling such as the `/_design` route and the sample-data actions. */
   readonly devTools: boolean;
-  /** Companion art slot; stays off until the art rights are cleared (roadmap R-9). */
+  /**
+   * Real companion art (Figma raster candidates in `public/companion/`) instead of the Atlas symbol. On for the
+   * development server; stays off in production until the art rights are cleared (roadmap R-9).
+   */
   readonly companionArt: boolean;
   /**
    * Signed-in client (F4-5): `/me` bootstrap and the 401 → sign-in redirect. Stays off until the backend's BFF login

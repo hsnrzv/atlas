@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { ATLAS_ENVIRONMENT } from '../config/atlas-environment';
 import {
   ATLAS_COMPANION_STORAGE_KEY,
   CompanionPreferencesStore,
@@ -32,5 +33,19 @@ describe('CompanionPreferencesStore', () => {
     expect(store.shows('waypoint-achieved')).toBe(true);
     store.setMode('off');
     expect(store.shows('waypoint-achieved')).toBe(false);
+  });
+
+  it('follows the companionArt build flag and defaults to the placeholder', () => {
+    expect(TestBed.inject(CompanionPreferencesStore).art).toBe(false);
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: ATLAS_ENVIRONMENT,
+          useValue: { dataSource: 'mock', devTools: true, companionArt: true, auth: false },
+        },
+      ],
+    });
+    expect(TestBed.inject(CompanionPreferencesStore).art).toBe(true);
   });
 });

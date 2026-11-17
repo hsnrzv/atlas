@@ -9,6 +9,7 @@ import { AtlasCompanionCard } from './companion-card';
       trigger="next-step"
       [mode]="mode()"
       [body]="body()"
+      [art]="art()"
       (dismissed)="events.push('dismissed')"
       (muted)="events.push('muted')"
       (disabled)="events.push('disabled')"
@@ -20,6 +21,7 @@ import { AtlasCompanionCard } from './companion-card';
 class Host {
   readonly mode = signal<'on' | 'muted'>('on');
   readonly body = signal<string | null>(null);
+  readonly art = signal(false);
   readonly events: string[] = [];
 }
 
@@ -40,7 +42,20 @@ describe('AtlasCompanionCard', () => {
     expect(card.querySelector('.eyebrow')?.textContent).toContain('At your pace');
     expect(title.textContent).toContain('Choose one meaningful next step.');
     expect(card.querySelector('a')?.textContent).toContain('View waypoint');
-    expect(card.querySelector('atlas-logo')?.getAttribute('aria-hidden')).toBe('true');
+    expect(card.querySelector('atlas-companion-avatar')?.getAttribute('aria-hidden')).toBe('true');
+    expect(card.querySelector('atlas-companion-avatar')?.classList).toContain('is-compact');
+    expect(card.querySelector('atlas-logo')).not.toBeNull();
+  });
+
+  it('shows the companion expression for the trigger when the art is on', async () => {
+    const { fixture, root } = await render();
+    fixture.componentInstance.art.set(true);
+    await fixture.whenStable();
+
+    expect(root.querySelector('atlas-companion-avatar img')?.getAttribute('src')).toBe(
+      'companion/guiding.png',
+    );
+    expect(root.querySelector('atlas-logo')).toBeNull();
   });
 
   it('emits Dismiss, Mute and Disable', async () => {

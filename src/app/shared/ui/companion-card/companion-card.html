@@ -1,12 +1,11 @@
 <div class="head">
   @if (mode() === 'on') {
-    <span class="art">
-      <atlas-logo
-        variant="symbol"
-        [size]="variant() === 'expanded' ? 40 : 28"
-        [decorative]="true"
-      />
-    </span>
+    <atlas-companion-avatar
+      class="art"
+      [expression]="copy().expression"
+      [size]="variant()"
+      [art]="art()"
+    />
   }
   <div class="text">
     <p class="eyebrow">{{ copy().eyebrow }}</p>

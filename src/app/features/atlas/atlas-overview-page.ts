@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+import type { CompanionTrigger } from '../../core/companion/companion-copy';
 import { CompanionPreferencesStore } from '../../core/companion/companion-preferences.store';
 import { DESTINATIONS } from '../../core/layout/navigation';
 import { AtlasIcon } from '../../shared/icons/atlas-icon';
@@ -47,11 +48,10 @@ export class AtlasOverviewPage implements OnInit {
   protected readonly destinations = DESTINATIONS;
   protected readonly skeletonPanels = [1, 2, 3, 4, 5, 6];
   protected readonly companion = inject(CompanionPreferencesStore);
-  /** The optional "next step" companion (P-C1), unless it is off or dismissed this session. */
-  protected readonly companionMode = computed(() => {
-    const mode = this.companion.mode();
-    return mode !== 'off' && this.companion.shows('next-step') ? mode : null;
-  });
+  /** The optional companions (P-C1) per situation, unless the companion is off or that one was dismissed. */
+  protected readonly companionMode = this.companionModeFor('next-step');
+  protected readonly freshStartCompanionMode = this.companionModeFor('fresh-start');
+  protected readonly planUnchangedCompanionMode = this.companionModeFor('plan-unchanged');
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly injector = inject(Injector);
@@ -69,6 +69,13 @@ export class AtlasOverviewPage implements OnInit {
 
   ngOnInit(): void {
     this.store.enter();
+  }
+
+  private companionModeFor(trigger: CompanionTrigger) {
+    return computed(() => {
+      const mode = this.companion.mode();
+      return mode !== 'off' && this.companion.shows(trigger) ? mode : null;
+    });
   }
 
   private focusHeading(): void {

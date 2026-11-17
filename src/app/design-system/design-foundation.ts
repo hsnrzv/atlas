@@ -10,6 +10,12 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import { AtlasLogo } from '../shared/brand/atlas-logo';
+import {
+  COMPANION_ART,
+  type CompanionArt,
+  type CompanionExpression,
+} from '../core/companion/companion-copy';
+import { CompanionPreferencesStore } from '../core/companion/companion-preferences.store';
 import { AtlasTheme } from '../core/theme/atlas-theme';
 import { LIFE_DIMENSIONS } from '../shared/design-system/life-dimensions';
 import { ATLAS_STATUSES } from '../shared/design-system/statuses';
@@ -24,6 +30,7 @@ import {
   AtlasDestinationCard,
   type DestinationCardVm,
 } from '../shared/ui/destination-card/destination-card';
+import { AtlasCompanionAvatar } from '../shared/ui/companion-avatar/companion-avatar';
 import { AtlasCompanionCard } from '../shared/ui/companion-card/companion-card';
 import { AtlasDimensionCard } from '../shared/ui/dimension-card/dimension-card';
 import { AtlasFeedbackState } from '../shared/ui/feedback-state/feedback-state';
@@ -114,6 +121,7 @@ function swatches(group: string, scale: Record<string, string>): Swatch[] {
   selector: 'atlas-design-foundation',
   imports: [
     AtlasBreadcrumbs,
+    AtlasCompanionAvatar,
     AtlasCompanionCard,
     AtlasConnectionGraph,
     AtlasDateLabel,
@@ -147,6 +155,10 @@ function swatches(group: string, scale: Record<string, string>): Swatch[] {
 })
 export class DesignFoundation {
   protected readonly theme = inject(AtlasTheme);
+  protected readonly companionArt = inject(CompanionPreferencesStore).art;
+  protected readonly companionExpressions = (
+    Object.entries(COMPANION_ART) as [CompanionExpression, CompanionArt][]
+  ).map(([key, art]) => ({ key, art }));
 
   protected readonly palettes = [
     { title: 'Dark foundation', swatches: swatches('tide', colorPrimitives.tide) },

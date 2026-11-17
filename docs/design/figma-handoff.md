@@ -137,9 +137,13 @@ from `project-instruction.md`, not from the prototype.
 - **Companion:** a spherical character with expressions Welcome, Encouraging, Celebrating, Surprised, Thinking,
   Guiding, Supportive and Idle. It is **raster PNG demonstration art, not vector**. Pending: Thinking/Guiding gaze,
   sleepy Idle, celebration cleanup, transparent production exports and commercial-rights clearance. Rules: never label
-  the bitmap as editable SVG; always offer Dismiss / Mute / Disable; no false AI analysis and no streaks. Until the
-  rights are cleared, the app ships a **placeholder slot** (symbol or neutral avatar) behind a feature flag; see
-  [frontend.md §9](../architecture/frontend.md#9-companion).
+  the bitmap as editable SVG; always offer Dismiss / Mute / Disable; no false AI analysis and no streaks. The
+  expression set is `Atlas/Refine/V3/Companion/Expressions` (`141:2443`, page "Reference · V3 approved refinement",
+  frame "B · Intelligent companion" `141:754`); each State symbol holds a 240 × 240 raster (Welcome `141:2397`,
+  Encouraging `141:2403`, Celebrating `141:2409`, Surprised `141:2415`, Thinking `141:2421`, Guiding `141:2427`,
+  Supportive `141:2433`, Idle `141:2439`). They are exported to `public/companion/` and shown behind the `companionArt`
+  flag (on in development, off in production until the rights are cleared); otherwise the slot shows the symbol. See
+  [frontend.md §9](../architecture/frontend.md#9-companion) for the trigger → expression mapping.
 
 ## 6. Sample data shown in Figma
 
@@ -232,11 +236,15 @@ Accepted with Phase 6 (P-V1, F2-8, F2-9, P-V2, P-D1, F3-4, P-C1), pending owner 
 - **Life Dimensions (12–13):** Figma has copy only for Career; the other six descriptions and prompts are authored in
   `dimension-copy.ts` and need product review. "Add intention" opens the Destination form for that dimension (FQ-19).
 - **Welcome and setup (14):**
-  - The "Prototype" label is omitted; the art is the Atlas symbol until the companion art is cleared (R-9).
+  - The "Prototype" label is omitted; the art is the Welcome expression in development and the Atlas symbol in
+    production until the companion art is cleared (R-9). Figma's light-background Welcome candidate is not used; the
+    dark-background export serves both themes.
   - Production copy omits the sample sentence; "Explore sample plan" exists only in dev builds.
   - The setup heading reads "Areas · Choose any" and its description is reworded.
-- **Companion:** the art slot shows the Atlas symbol (R-9). On My Atlas the card sits under the Next Waypoint card. The
-  settings page has no card preview; it describes each mode in the radio option.
+- **Companion:** the art slot shows the expression for the situation (`companionArt` on) or the Atlas symbol (off,
+  production until R-9 is cleared). On My Atlas the card sits under the Next Waypoint card; the Empty and Error states
+  add an Encouraging and a Supportive card that are not in Figma. The settings page has no card preview; it describes
+  each mode in the radio option.
 
 ## 7. Reading the file from code (MCP workflow)
 
