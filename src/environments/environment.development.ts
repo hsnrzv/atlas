@@ -4,4 +4,5 @@ export const environment: AtlasEnvironment = {
   dataSource: 'mock',
   devTools: true,
   companionArt: false,
+  auth: false,
 };

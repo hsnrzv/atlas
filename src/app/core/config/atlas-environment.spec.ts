@@ -11,7 +11,12 @@ describe('ATLAS_ENVIRONMENT', () => {
     expect(TestBed.inject(ATLAS_ENVIRONMENT)).toEqual(development);
   });
 
-  it('uses the mock adapter and dev tools in development builds, with companion art off', () => {
-    expect(development).toEqual({ dataSource: 'mock', devTools: true, companionArt: false });
+  it('uses the mock adapter and dev tools in development builds, with companion art and auth off', () => {
+    expect(development).toEqual({
+      dataSource: 'mock',
+      devTools: true,
+      companionArt: false,
+      auth: false,
+    });
   });
 });

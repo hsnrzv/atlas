@@ -319,8 +319,10 @@ content are built against Figma V3.
       pinned dialog versions, conflict reload, idempotency keys reused after an unknown outcome.
 - [ ] **F4-4** Onboarding, Destination/Waypoint/Step CRUD, completion and unlock, notes and awards wired to the
       backend.
-- [ ] **F4-5** Auth-ready client: `withCredentials`/same-origin cookies, XSRF configuration, a 401 → sign-in
-      redirect hook, and a `/me` bootstrap (behind a flag until Phase 9).
+- [x] **F4-5** Auth-ready client: `withCredentials`/same-origin cookies, XSRF configuration, a 401 → sign-in
+      redirect hook, and a `/me` bootstrap (behind a flag until Phase 9). Done 2026-11-17 (roadmap phase 9):
+      `AtlasSession` and `atlasAuthInterceptor` behind the `auth` flag, which stays off until the BFF login exists;
+      open session endpoints are FQ-22 (frontend.md §6.5).
 - [ ] **F4-6** E2E against `atlas-infra/local` compose in CI; seed through the API, not demo data.
 - [ ] **F4-7** Remove the mock adapter from non-development builds; CI bundle check.
 

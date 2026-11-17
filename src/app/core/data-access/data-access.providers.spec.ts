@@ -16,7 +16,12 @@ function setup(dataSource: AtlasEnvironment['dataSource']) {
       provideHttpClientTesting(),
       {
         provide: ATLAS_ENVIRONMENT,
-        useValue: { dataSource, devTools: true, companionArt: false } satisfies AtlasEnvironment,
+        useValue: {
+          dataSource,
+          devTools: true,
+          companionArt: false,
+          auth: false,
+        } satisfies AtlasEnvironment,
       },
     ],
   });

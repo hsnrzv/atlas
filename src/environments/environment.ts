@@ -4,4 +4,5 @@ export const environment: AtlasEnvironment = {
   dataSource: 'http',
   devTools: false,
   companionArt: false,
+  auth: false,
 };

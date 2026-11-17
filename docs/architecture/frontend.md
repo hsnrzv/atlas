@@ -203,7 +203,7 @@ The fixtures are deleted with the mock (F4-7).
 - "Use sample details" (form) and "Explore sample plan" (onboarding) exist only in dev builds, behind the same
   environment flag.
 
-### 6.5 Proposed contract additions (frontend questions FQ-1 … FQ-21)
+### 6.5 Proposed contract additions (frontend questions FQ-1 … FQ-22)
 
 Figma pages 05–08 show values that the draft `GET /api/v1/dashboard` contract (API-CONTRACT §9.1) does not provide.
 Only the backend can derive them (roadmap R-12), so the frontend models them as **proposed** additions
@@ -251,6 +251,7 @@ The HTTP adapters (Phase 8) raise one more:
 | ID    | Question                                                                                                                                                                                                                                                                                    | Until decided                                                                                                                                                                                                              |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | FQ-21 | Concurrency and body shapes the draft does not fix: rewards, notes, dependencies and onboarding carry no `version`; the reward `PUT`/`DELETE` precondition; the onboarding step body (`{ status, payload }`, FQ-17); whether `GET …/notes?nodeId=` filters; a correlation-ID request header | the adapters send no `If-Match` for those writes except the reward, which uses the Destination's version; the onboarding body is `{ status, payload }`; notes are also filtered by `nodeId` client-side; no correlation ID |
+| FQ-22 | Session endpoints (atlas-microservices ADR-0005 §3): the `GET /api/v1/me` body, the sign-in path under `/api/auth/**` and whether it takes a return path, the logout endpoint, and when the CSRF cookie is first set                                                                        | `/me` is read only for its status (200 signed in, 401 not) and an optional `displayName`; sign-in goes to `/api/auth/login` without a return path; no sign-out action; the cookie names are Spring's defaults              |
 
 ## 7. State
 
@@ -396,8 +397,14 @@ WCAG 2.2 AA is a release gate:
 
 - CSP stays `script-src 'self'`, no inline scripts or `eval`; fonts and images are self-hosted. Any new origin needs a
   change in `nginx/security-headers.conf` and review.
-- No tokens in web storage; same-origin cookie session with XSRF (F4-5). Only non-sensitive preferences (theme,
-  companion) in `localStorage`.
+- No tokens in web storage; same-origin cookie session with XSRF (F4-5). The backend's BFF keeps the tokens and the
+  browser holds only the HttpOnly session cookie, which same-origin `fetch` sends without `withCredentials`. Only
+  non-sensitive preferences (theme, companion) in `localStorage`.
+- `AtlasSession` (`core/data-access/auth`, F4-5) is behind the `auth` build flag, which stays off until the BFF login
+  is live (FQ-22). With it on, the app initializer asks `GET /api/v1/me` once without holding up the first render, and
+  `atlasAuthInterceptor` turns any API `401` into one full-page redirect to the sign-in URL (`AUTH_SIGN_IN_URL`). A
+  `403` keeps the error message. With it off, a `401` only shows "You are not signed in". Capacitor's bearer-token
+  login (ADR-0005 §4) is a later item.
 - No `innerHTML` with user content and no `bypassSecurityTrust*` without an ADR. Notes render as plain text (D13).
 - Dependencies: permissive licences only, lockfile from `registry.npmjs.org`, THIRD-PARTY-NOTICES updated in the same
   PR (Manrope: OFL 1.1).
@@ -410,8 +417,10 @@ WCAG 2.2 AA is a release gate:
   `AtlasDataError` (`problem-details.ts`): reason by status (0 network, 400/422 validation, 401/403 unauthorized,
   404/410 not-found, 409/412/428 conflict, 5xx unavailable), the `urn:problem:atlas:*` code, and field messages from a
   local catalogue. The server's `detail` text is never shown.
-- XSRF uses Angular's defaults (`XSRF-TOKEN` cookie, `X-XSRF-TOKEN` header), which match Spring Security. The 401
-  flow and `/me` are F4-5; a correlation-ID header is open (FQ-21).
+- XSRF is configured explicitly with `withXsrfConfiguration` (`XSRF-TOKEN` cookie, `X-XSRF-TOKEN` header), matching
+  Spring Security's `CookieCsrfTokenRepository`; Angular adds it to same-origin writes only. `atlasAuthInterceptor`
+  runs inside `atlasApiInterceptor`, so it sees the HTTP status before the error is mapped (§14). A correlation-ID
+  header is open (FQ-21).
 - `412 VERSION_CONFLICT` reloads and informs the user (§7, `isVersionConflict` in `data-error.ts`).
 - `Idempotency-Key` (API-CONTRACT §8) goes on `POST /goals` and `POST …/nodes/{nodeId}/complete` through
   `AtlasApi` `{ idempotent: true }`. The key is reused when the user repeats the same request after it got no answer

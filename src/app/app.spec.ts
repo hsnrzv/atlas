@@ -7,7 +7,12 @@ import { ATLAS_ENVIRONMENT, AtlasEnvironment } from './core/config/atlas-environ
 import { provideAtlasData } from './core/data-access/data-access.providers';
 
 function setup(devTools: boolean) {
-  const environment: AtlasEnvironment = { dataSource: 'mock', devTools, companionArt: false };
+  const environment: AtlasEnvironment = {
+    dataSource: 'mock',
+    devTools,
+    companionArt: false,
+    auth: false,
+  };
   TestBed.configureTestingModule({
     imports: [App],
     providers: [

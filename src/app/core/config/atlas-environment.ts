@@ -11,6 +11,11 @@ export interface AtlasEnvironment {
   readonly devTools: boolean;
   /** Companion art slot; stays off until the art rights are cleared (roadmap R-9). */
   readonly companionArt: boolean;
+  /**
+   * Signed-in client (F4-5): `/me` bootstrap and the 401 → sign-in redirect. Stays off until the backend's BFF login
+   * (atlas-microservices ADR-0005) is live; with it off, a 401 only shows the "sign in again" message.
+   */
+  readonly auth: boolean;
 }
 
 export const ATLAS_ENVIRONMENT = new InjectionToken<AtlasEnvironment>('ATLAS_ENVIRONMENT');
