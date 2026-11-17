@@ -53,6 +53,9 @@ jobs:
       - name: Web build
         run: npm run build
 
+      - name: No mock data in the bundle
+        run: npm run bundle:check
+
       - name: Capacitor sync
         run: npx cap sync android
 
@@ -85,6 +88,9 @@ jobs:
 
       - name: Web build
         run: npm run build
+
+      - name: No mock data in the bundle
+        run: npm run bundle:check
 
       - name: Capacitor sync
         run: npx cap sync ios

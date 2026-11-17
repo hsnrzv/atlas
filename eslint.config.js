@@ -10,6 +10,11 @@ const mockImports = {
   group: ['**/data-access/mock', '**/data-access/mock/**'],
   message: 'The mock adapter is reached only through provideAtlasData() (frontend.md §6).',
 };
+// Relative paths from inside core/data-access, which the pattern above cannot see.
+const localMockImports = {
+  group: ['./mock', './mock/**', '../mock', '../mock/**'],
+  message: 'Production wiring and the HTTP adapters never reach the mock (F4-7, frontend.md §6.2).',
+};
 const featureImports = {
   group: ['**/features/**'],
   message: 'core/ and shared/ must not depend on features; move shared code down a layer.',
@@ -83,6 +88,23 @@ module.exports = defineConfig([
     files: ['src/app/core/data-access/**/*.ts'],
     rules: {
       'no-restricted-imports': ['error', { patterns: [featureImports] }],
+    },
+  },
+  {
+    // Production wiring and the HTTP adapters never reach the mock (F4-7); only data-source.development.ts,
+    // the mock itself and specs/testing helpers may.
+    files: [
+      'src/app/core/data-access/*.ts',
+      'src/app/core/data-access/http/**/*.ts',
+      'src/app/core/data-access/auth/**/*.ts',
+      'src/app/core/data-access/ports/**/*.ts',
+    ],
+    ignores: ['src/app/core/data-access/data-source.development.ts', '**/*.spec.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [localMockImports, mockImports, featureImports] },
+      ],
     },
   },
   {

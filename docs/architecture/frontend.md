@@ -177,12 +177,18 @@ precision }`, `Money { amount: string, currency }`, statuses and link types as s
   for the "Sample plan ·" label from Figma.
 - `/_design` lives in `src/app/dev-routes.development.ts`. Production builds use the empty `dev-routes.ts`, so the
   design page and its sample copy never ship.
-- The ESLint boundaries allow imports of `core/data-access/mock/**` only from `core/data-access`. `shared/**` and
-  `features/*/components/**` must not import data access. Feature specs use their own fixtures
-  (`features/*/testing/`).
-- **Bundle guard (CI):** `npm run bundle:check` (`scripts/check-bundle-no-mock.mjs`, part of `npm run verify` and
-  the CI build job) fails if the production bundle contains the mock sentinel (`ATLAS_MOCK_SENTINEL`) or the sample
-  Destination title.
+- The ESLint boundaries allow imports of `core/data-access/mock/**` only from `data-source.development.ts`, the
+  mock itself, `core/data-access/testing` and specs (F4-7): the production `data-source.ts`, the other top-level
+  data-access files, `http/**`, `auth/**` and `ports/**` may not reach it. `shared/**` and `features/*/components/**`
+  must not import data access. Feature specs use their own fixtures (`features/*/testing/`).
+- Only the `development` and `performance` configurations swap in `data-source.development.ts`. `performance` writes
+  to `dist/atlas-performance` and is never deployed; the image, the native shells and every deployable artefact use
+  the production build.
+- **Bundle guard (CI, F4-7):** `npm run bundle:check` (`scripts/check-bundle-no-mock.mjs`) fails if the production
+  bundle contains the mock sentinel (`ATLAS_MOCK_SENTINEL`) or the sample Destination title. It runs in
+  `npm run verify`, the CI build job, the container image build (`Dockerfile`) and both native jobs of
+  `mobile-validation.yml` before `cap sync`. The CI `performance` job runs it with `--expect-mock` on the mock build,
+  which proves the markers survive minification and the guard can fail.
 
 ### 6.3 Derived values in the mock
 

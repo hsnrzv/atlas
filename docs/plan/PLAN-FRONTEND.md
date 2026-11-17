@@ -324,7 +324,9 @@ content are built against Figma V3.
       `AtlasSession` and `atlasAuthInterceptor` behind the `auth` flag, which stays off until the BFF login exists;
       open session endpoints are FQ-22 (frontend.md §6.5).
 - [ ] **F4-6** E2E against `atlas-infra/local` compose in CI; seed through the API, not demo data.
-- [ ] **F4-7** Remove the mock adapter from non-development builds; CI bundle check.
+- [x] **F4-7** Remove the mock adapter from non-development builds; CI bundle check. Done 2026-11-17 (roadmap
+      phase 9): guard in CI, image build and native jobs, with a self-test on the `performance` build and an ESLint
+      boundary for production data-access files.
 
 ### Later phases (outline, refined at the Phase 4 exit)
 

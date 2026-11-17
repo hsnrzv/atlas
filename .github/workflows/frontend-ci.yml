@@ -104,6 +104,9 @@ jobs:
       - name: Optimised build with the mock adapter, then measure LCP, TBT and CLS
         run: npm run e2e:performance
 
+      - name: The bundle guard detects the mock (self-test on the mock build)
+        run: node scripts/check-bundle-no-mock.mjs dist/atlas-performance/browser --expect-mock
+
       - if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:

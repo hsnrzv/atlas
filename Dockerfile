@@ -8,7 +8,8 @@ COPY package.json package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
 
 COPY . .
-RUN npm run build
+# The bundle guard (F4-7) fails the image build if the dev-only mock data reached the bundle.
+RUN npm run build && npm run bundle:check
 
 # ---- Runtime: static files on unprivileged nginx (UID 101, port 8080) ---------------------------
 FROM nginxinc/nginx-unprivileged:1.30-alpine AS runtime

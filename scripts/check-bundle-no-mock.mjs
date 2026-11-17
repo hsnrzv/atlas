@@ -1,11 +1,15 @@
-// Fails when a build contains the dev-only mock data (frontend.md §6.2, PLAN-FRONTEND F2-2).
-// Run after `ng build` (production). Usage: node scripts/check-bundle-no-mock.mjs [distDir]
+// Fails when a build contains the dev-only mock data (frontend.md §6.2, PLAN-FRONTEND F2-2, F4-7).
+// Run after `ng build` (production). Usage: node scripts/check-bundle-no-mock.mjs [distDir] [--expect-mock]
+// `--expect-mock` inverts the check for a build that must contain the mock (the `performance` build), so CI proves
+// the markers survive minification and the guard can fail.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const dist = process.argv[2] ?? join(root, 'dist/atlas-frontend/browser');
+const args = process.argv.slice(2);
+const expectMock = args.includes('--expect-mock');
+const dist = args.find((arg) => !arg.startsWith('--')) ?? join(root, 'dist/atlas-frontend/browser');
 
 // The sentinel exported by core/data-access/mock/sentinel.ts and the sample Destination title (both apostrophes,
 // and the escaped form a minifier may emit).
@@ -40,6 +44,19 @@ for (const file of files(dist)) {
   for (const needle of FORBIDDEN) {
     if (content.includes(needle)) hits.push(`${relative(root, file)} contains "${needle}"`);
   }
+}
+
+if (expectMock) {
+  if (hits.length === 0) {
+    console.error(
+      `✗ Expected mock data in ${relative(root, dist) || dist}, found none: the guard would miss it.`,
+    );
+    process.exit(1);
+  }
+  console.log(
+    `✓ The guard finds the mock in ${relative(root, dist) || dist} (${hits.length} hits)`,
+  );
+  process.exit(0);
 }
 
 if (hits.length > 0) {
