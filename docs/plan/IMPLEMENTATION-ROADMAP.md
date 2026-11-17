@@ -7,7 +7,11 @@
 - Owner: `atlas` (cross-repository). Repository plans hold the detailed backlogs:
   - [PLAN-FRONTEND](PLAN-FRONTEND.md) (IDs `F…`)
   - `atlas-microservices/docs/plan/PLAN-BACKEND.md` (IDs `BE-…`) and `PLAN-DATABASE.md`
-  - `atlas-infra/docs/plan/PLAN-INFRASTRUCTURE-CICD.md` (backlog by phase)
+  - `atlas-infra/docs/plan/PLAN-INFRASTRUCTURE-CICD.md` (backlog by phase, IDs `INF-…`)
+- Per-repository phase order and gates (`docs/implementation/roadmap.md` in each repository):
+  - [`atlas`](../implementation/roadmap.md) (approved 2026-11-14)
+  - `atlas-microservices/docs/implementation/roadmap.md` (proposed 2026-11-17)
+  - `atlas-infra/docs/implementation/roadmap.md` (proposed 2026-11-17)
 - Rules (`project-instruction.md` §0.1, §18):
   - Implement one phase at a time and do not skip gates.
   - Each backlog item is one reviewable PR that meets the Definition of Done (§19).

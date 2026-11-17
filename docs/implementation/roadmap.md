@@ -9,7 +9,9 @@
   [IMPLEMENTATION-ROADMAP.md](../plan/IMPLEMENTATION-ROADMAP.md) (P0–P11). Those documents stay authoritative for
   backend and infrastructure dependencies; this one sets the frontend order.
 - Related: [frontend.md](../architecture/frontend.md), [figma-handoff.md](../design/figma-handoff.md),
-  [component-mapping.md](../design/component-mapping.md), [design-tokens.md](../design/design-tokens.md)
+  [component-mapping.md](../design/component-mapping.md), [design-tokens.md](../design/design-tokens.md); sibling
+  roadmaps: `atlas-microservices/docs/implementation/roadmap.md` (backend) and
+  `atlas-infra/docs/implementation/roadmap.md` (infrastructure)
 
 ## 1. Working rules
 
