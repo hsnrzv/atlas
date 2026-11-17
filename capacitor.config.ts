@@ -9,6 +9,10 @@ const config: CapacitorConfig = {
   appName: 'IKIGAI ATLAS',
   webDir: 'dist/atlas-frontend/browser',
   backgroundColor: TIDE_SPACE,
+  // Dev-only live reload (`npm run start:ios`): the native shell loads the `ng serve` dev server instead of the bundle.
+  ...(process.env['CAP_SERVER_URL']
+    ? { server: { url: process.env['CAP_SERVER_URL'], cleartext: true } }
+    : {}),
   ios: {
     // The web layout pads itself with env(safe-area-inset-*) (viewport-fit=cover).
     contentInset: 'never',

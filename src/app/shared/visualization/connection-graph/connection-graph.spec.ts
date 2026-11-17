@@ -89,11 +89,11 @@ describe('AtlasConnectionGraph', () => {
     expect(emitted).toEqual([null, 'area:CAREER']);
   });
 
-  it('widens the stage with the zoom and focuses a node', async () => {
+  it('scales the stage with the zoom and focuses a node', async () => {
     const { fixture, root } = await render();
     fixture.componentRef.setInput('zoom', 1.5);
     await fixture.whenStable();
-    expect(root.querySelector<HTMLElement>('.stage')?.style.inlineSize).toBe('150%');
+    expect(root.querySelector<HTMLElement>('.stage')?.style.zoom).toBe('1.5');
 
     fixture.componentInstance.focusNode('area:CAREER');
     expect(document.activeElement?.getAttribute('data-id')).toBe('area:CAREER');

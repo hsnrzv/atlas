@@ -1,4 +1,4 @@
-import { GRAPH_WIDTH, layoutConnectionGraph } from './connection-graph-layout';
+import { GRAPH_MIN_WIDTH, GRAPH_WIDTH, layoutConnectionGraph } from './connection-graph-layout';
 
 describe('layoutConnectionGraph', () => {
   it('places sources left and targets right, centred vertically', () => {
@@ -45,5 +45,14 @@ describe('layoutConnectionGraph', () => {
     const small = layoutConnectionGraph(['g'], ['a'], []);
     const large = layoutConnectionGraph(['g'], ['a', 'b', 'c', 'd'], []);
     expect(large.height).toBeGreaterThan(small.height);
+  });
+
+  it('fits the available width but never below the minimum, keeping the node size', () => {
+    const wide = layoutConnectionGraph(['g'], ['a'], [], 1200);
+    const narrow = layoutConnectionGraph(['g'], ['a'], [], 300);
+    expect(wide.width).toBe(1200);
+    expect(narrow.width).toBe(GRAPH_MIN_WIDTH);
+    expect(narrow.nodeWidth).toBe(wide.nodeWidth);
+    expect(wide.nodes.find((node) => node.id === 'a')!.x).toBe(1200 - 40 - wide.nodeWidth);
   });
 });

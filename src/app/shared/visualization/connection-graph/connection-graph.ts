@@ -1,8 +1,21 @@
-import { Component, computed, ElementRef, inject, input, output, signal } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import type { LifeDimensionKey } from '../../design-system/tokens.generated';
 import { AtlasIcon } from '../../icons/atlas-icon';
 import type { AtlasIconName } from '../../icons/atlas-icons';
-import { layoutConnectionGraph } from './connection-graph-layout';
+import { GRAPH_MIN_WIDTH, GRAPH_WIDTH, layoutConnectionGraph } from './connection-graph-layout';
+
+/** Below this the labels become hard to read; the stage scrolls horizontally instead. */
+const MIN_FIT_SCALE = 0.75;
 
 export interface ConnectionGraphNode {
   readonly id: string;
@@ -30,7 +43,9 @@ export interface ConnectionGraphEdge {
 /**
  * Connections graph (F2-9, Figma page 09 "One destination. Two relationships."): SVG curves under HTML buttons.
  * Every node is a button with `aria-pressed`; the curves are decorative because the list view and the relationship
- * panel say the same in text. `zoom` widens the stage inside a scroll container.
+ * panel say the same in text. The stage fits the available width: the node cards keep their size and the gap between
+ * the columns shrinks; below `GRAPH_MIN_WIDTH` the whole stage scales down (to 75%, then it scrolls). `zoom`
+ * scales the stage further inside the scroll container.
  *
  * With `connectable`, a selected Destination arms a connection: a dashed line follows the mouse, and choosing a
  * Life Dimension it has no association with emits `connectRequest` instead of changing the selection. With
@@ -56,6 +71,33 @@ export class AtlasConnectionGraph {
 
   readonly selectedChange = output<string | null>();
   readonly connectRequest = output<{ readonly source: string; readonly target: string }>();
+
+  /** Inner width of the scroll viewport in CSS pixels; `null` until measured (and in environments without layout). */
+  private readonly available = signal<number | null>(null);
+
+  constructor() {
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      const viewport = this.host.nativeElement.querySelector<HTMLElement>('.viewport');
+      if (!viewport || typeof ResizeObserver === 'undefined') {
+        return;
+      }
+      const observer = new ResizeObserver(() => this.available.set(viewport.clientWidth || null));
+      observer.observe(viewport);
+      destroyRef.onDestroy(() => observer.disconnect());
+    });
+  }
+
+  /** Scale that fits the minimum stage into a narrow viewport (1 when it fits). */
+  private readonly fit = computed(() => {
+    const available = this.available();
+    return available === null || available >= GRAPH_MIN_WIDTH
+      ? 1
+      : Math.max(MIN_FIT_SCALE, available / GRAPH_MIN_WIDTH);
+  });
+
+  /** CSS `zoom` of the stage: the fit scale times the user's zoom. */
+  protected readonly scale = computed(() => this.fit() * this.zoom());
 
   /** Pointer position in viewBox units while a connection is armed; `null` without a mouse or pen over the stage. */
   private readonly pointer = signal<{ readonly x: number; readonly y: number } | null>(null);
@@ -90,6 +132,7 @@ export class AtlasConnectionGraph {
         .filter((node) => node.column === 'target')
         .map((node) => node.id),
       this.edges(),
+      (this.available() ?? GRAPH_WIDTH) / this.fit(),
     ),
   );
 

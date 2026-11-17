@@ -32,6 +32,11 @@
 
 .layout {
   @include atlas.with-aside;
+
+  // The graph needs the full content width on tablets; the panel moves below it until the wide desktop layout.
+  @include atlas.between(lg, xl) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .main {

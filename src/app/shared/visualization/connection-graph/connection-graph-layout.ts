@@ -1,7 +1,8 @@
 /**
  * Layout of the Connections graph (F2-9, Figma page 09): sources (Destinations) in the left column, targets (Life
- * Dimensions) in the right column, cubic curves between them. Pure and unit-free: the component scales the result
- * with a viewBox and percentage positions. Native SVG/HTML instead of a chart library (P-V1, ADR-0004).
+ * Dimensions) in the right column, cubic curves between them. Pure; units are CSS pixels at 100% zoom. The width
+ * follows the available space (at least `GRAPH_MIN_WIDTH`) so the node cards keep their size and only the gap between
+ * the columns shrinks. Native SVG/HTML instead of a chart library (P-V1, ADR-0004).
  */
 export interface GraphEdgeInput {
   readonly id: string;
@@ -35,14 +36,16 @@ const NODE_WIDTH = 230;
 const NODE_HEIGHT = 96;
 const GAP = 40;
 const PADDING = 40;
+/** Narrowest stage that still leaves room for readable curves between the two columns. */
+export const GRAPH_MIN_WIDTH = PADDING * 2 + NODE_WIDTH * 2 + 120;
 const MIN_HEIGHT = 320;
 /** Vertical spread of parallel edges between the same two nodes. */
 const PARALLEL_OFFSET = 14;
 
-function column(ids: readonly string[], side: 'source' | 'target', height: number) {
+function column(ids: readonly string[], side: 'source' | 'target', width: number, height: number) {
   const span = ids.length * NODE_HEIGHT + Math.max(ids.length - 1, 0) * GAP;
   const top = (height - span) / 2;
-  const x = side === 'source' ? PADDING : GRAPH_WIDTH - PADDING - NODE_WIDTH;
+  const x = side === 'source' ? PADDING : width - PADDING - NODE_WIDTH;
   return ids.map((id, index) => ({ id, column: side, x, y: top + index * (NODE_HEIGHT + GAP) }));
 }
 
@@ -50,10 +53,15 @@ export function layoutConnectionGraph(
   sources: readonly string[],
   targets: readonly string[],
   edges: readonly GraphEdgeInput[],
+  availableWidth: number = GRAPH_WIDTH,
 ): GraphLayout {
+  const width = Math.max(GRAPH_MIN_WIDTH, Math.round(availableWidth));
   const rows = Math.max(sources.length, targets.length, 1);
   const height = Math.max(MIN_HEIGHT, PADDING * 2 + rows * NODE_HEIGHT + (rows - 1) * GAP);
-  const nodes = [...column(sources, 'source', height), ...column(targets, 'target', height)];
+  const nodes = [
+    ...column(sources, 'source', width, height),
+    ...column(targets, 'target', width, height),
+  ];
   const byId = new Map(nodes.map((node) => [node.id, node]));
 
   const pairs = new Map<string, GraphEdgeInput[]>();
@@ -79,7 +87,7 @@ export function layoutConnectionGraph(
   });
 
   return {
-    width: GRAPH_WIDTH,
+    width,
     height,
     nodeWidth: NODE_WIDTH,
     nodeHeight: NODE_HEIGHT,

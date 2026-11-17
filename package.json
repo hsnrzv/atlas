@@ -26,7 +26,11 @@
     "assets:validate": "node scripts/assets/validate-assets.mjs",
     "design:check": "npm run tokens:check && npm run contrast:check && npm run assets:validate",
     "verify": "npm run lockfile:check && npm run design:check && npm run lint && npm run lint:styles && npm run format:check && npm run test:ci && npm run build && npm run bundle:check",
-    "lockfile:check": "node scripts/check-lockfile-registry.mjs"
+    "lockfile:check": "node scripts/check-lockfile-registry.mjs",
+    "start:ios": "CAP_SERVER_URL=http://localhost:4200 npx cap sync ios && npx cap open ios && ng serve --host 0.0.0.0",
+    "start:ios:device": "CAP_SERVER_URL=http://$(ipconfig getifaddr en0):4200 npx cap sync ios && npx cap open ios && ng serve --host 0.0.0.0",
+    "build:ios": "ng build --configuration development && npx cap sync ios && npx cap open ios",
+    "build:android": "ng build --configuration development && npx cap sync android && npx cap open android"
   },
   "private": true,
   "packageManager": "npm@11.12.1",

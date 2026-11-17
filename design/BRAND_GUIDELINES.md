@@ -162,7 +162,7 @@ rendering (to verify).
 ## App icon, splash and favicon rules
 
 - **App icon master:** a 1024 × 1024 full-bleed, opaque tide-space (`#0B1020`) square. The symbol sits in a centred
-  640 px box with a 192 px inset, as in the Figma master. There is one dark master; the Figma light variant (`#F5F7FA`
+  800 px box with a 112 px inset (enlarged from the Figma 640/192 master for optical parity with system icons). There is one dark master; the Figma light variant (`#F5F7FA`
   background) is not exported.
   - It contains no text.
   - It has no rounded corners, because the platforms apply their own masks.

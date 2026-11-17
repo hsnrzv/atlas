@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-labelledby="ia-title">
   <title id="ia-title">IKIGAI ATLAS app icon</title>
-  <!-- Full-bleed opaque square; platforms apply their own corner mask. No text. Symbol box 640px with a 192px inset,
-       as in the Figma app-icon master Atlas/V3/Brand/App icon Theme=Dark (160px symbol, 48px inset on 256px, exported at 4x). -->
+  <!-- Full-bleed opaque square; platforms apply their own corner mask. No text. Symbol box 800px with a 112px inset (enlarged from the
+       Figma 640px/192px master Atlas/V3/Brand/App icon Theme=Dark so it matches the optical size of system icons). -->
   <rect width="1024" height="1024" fill="#0B1020" />
-  <g transform="translate(512 512) scale(10) translate(-32 -32)">
+  <g transform="translate(512 512) scale(12.5) translate(-32 -32)">
     <!-- Cardinal Ikigai Venn (Figma V3 Atlas/V3/Brand/Symbol): four r19.2 circles on a 64 grid, centres N/W/E/S;
          the shared centre is formed by overlap only. Source: Figma "15.Export Assets", scaled 0.4 from 160px. -->
     <g>

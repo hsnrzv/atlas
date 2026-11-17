@@ -526,7 +526,7 @@ not repeat them.
     outlines so the overlaps stay visible; `symbol-dimensions` is the Figma colour fine-line variant.
   - Keep the repo navy `#14243A` for the app icon and splash and keep the Inter 600 wordmark. The V3 palette and
     Manrope are not adopted.
-  - App icon: a 640 px symbol box with a 192 px inset on 1024, as in the Figma master (160 on 256 at 4×).
+  - App icon: an 800 px symbol box with a 112 px inset on 1024 (enlarged from the Figma 640/192 master for optical parity with system icons).
 - **Consequences:** The seven Life Dimensions are no longer encoded in the mark, which departs from design-instructions
   §1.3. The full-colour symbol stays recognisable at 16 px; the monochrome outline needs 24 px.
 - **Status:** Accepted, implemented (17 masters in `design/svg/logo/`, derived rasters re-exported, `<atlas-logo>`
