@@ -1,5 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { GoalPlanStore } from './goal-plan.store';
 import { MockGoalRepository } from './mock/mock-goal.repository';
 import { MOCK_LATENCY_MS, type MockMode } from './mock/mock-responder';
@@ -100,6 +101,30 @@ describe.each(TEST_ADAPTERS)('GoalPlanStore (%s adapter)', (adapter) => {
     if (!result.ok) {
       expect(result.error.code).toBe('NODE_LOCKED');
     }
+  });
+
+  it('reloads after a version conflict, then saves when the user tries again (F4-3)', async () => {
+    const store = await ready();
+    const stale = store.nodes().find((node) => node.id === N.draftStatement)!;
+    const elsewhere = TestBed.inject(MockGoalRepository).updateNode(
+      stale.goalId,
+      stale.id,
+      stale.version,
+      { title: 'Changed elsewhere' },
+    );
+    await settle(firstValueFrom(elsewhere));
+    const title = () => store.nodes().find((node) => node.id === stale.id)?.title;
+
+    const first = await settle(store.updateNode(stale, { title: 'Mine' }));
+    expect(first.ok).toBe(false);
+    if (!first.ok) {
+      expect(first.error.code).toBe('VERSION_CONFLICT');
+    }
+    expect(title()).toBe('Changed elsewhere');
+
+    const second = await settle(store.updateNode(stale, { title: 'Mine' }));
+    expect(second.ok).toBe(true);
+    expect(title()).toBe('Mine');
   });
 
   it('creates a Step with prerequisites, then syncs them on edit', async () => {

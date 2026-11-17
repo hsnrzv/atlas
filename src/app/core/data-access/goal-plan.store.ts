@@ -5,7 +5,13 @@ import type { Goal, GoalId, GoalSummary } from '../models/goal';
 import type { GoalDraft, NodeDraft, NodePatch, SettableNodeStatus } from '../models/goal-commands';
 import type { GoalNode, NodeId } from '../models/goal-node';
 import type { GoalNote } from '../models/goal-note';
-import { AtlasDataError, writeErrorMessage, writeFailure, type WriteFailure } from './data-error';
+import {
+  AtlasDataError,
+  isVersionConflict,
+  writeErrorMessage,
+  writeFailure,
+  type WriteFailure,
+} from './data-error';
 import { GoalRepository } from './ports/goal.repository';
 
 export type GoalPlanState = 'idle' | 'loading' | 'ready' | 'not-found' | 'error';
@@ -34,7 +40,11 @@ const asDataError = (error: unknown): AtlasDataError =>
  * One Destination's plan (goal, tree, prerequisites, notes) and its writes, shared by the Destinations, Waypoints
  * and Steps features (F2-5…F3-3). Features never import each other, so the store lives here; each route provides
  * its own instance. After a write it reloads the goal, tree and prerequisites from the backend, which owns progress
- * and availability (frontend.md §6.3); there is no optimistic update yet (F4-3).
+ * and availability (frontend.md §6.3), so there are no optimistic updates.
+ *
+ * Versioned writes send the `version` the user saw (`If-Match`). On `412 VERSION_CONFLICT` the store reloads the plan
+ * and reports the conflict; the next write of the same resource then uses the reloaded version, because the user has
+ * been told and chose to save again (F4-3, API-CONTRACT §7). There are no silent lost updates.
  */
 @Injectable()
 export class GoalPlanStore {
@@ -47,6 +57,8 @@ export class GoalPlanStore {
   private readonly listEnabled = signal(false);
   private readonly writing = signal(false);
   private visited = false;
+  /** Resources whose last write hit a version conflict that the user has been shown (`goal:…`, `node:…`). */
+  private readonly conflicted = new Set<string>();
 
   private readonly goalResource = rxResource({
     params: () => this.goalId() ?? undefined,
@@ -165,21 +177,40 @@ export class GoalPlanStore {
 
   // Destination writes (F2-6, F2-7).
 
-  updateGoal(draft: GoalDraft): Promise<WriteResult<Goal>> {
+  /** `version` is the one the form was opened with; it defaults to the shown goal's. */
+  updateGoal(draft: GoalDraft, version?: number): Promise<WriteResult<Goal>> {
     const goal = this.goal();
-    return goal ? this.write(this.repository.update(goal.id, goal.version, draft)) : this.missing();
+    return goal
+      ? this.versioned(`goal:${goal.id}`, version ?? goal.version, goal.version, (current) =>
+          this.repository.update(goal.id, current, draft),
+        )
+      : this.missing();
   }
 
   archiveGoal(): Promise<WriteResult<Goal>> {
     const goal = this.goal();
     return goal
-      ? this.write(this.repository.archive(goal.id, goal.version), false)
+      ? this.versioned(
+          `goal:${goal.id}`,
+          goal.version,
+          goal.version,
+          (version) => this.repository.archive(goal.id, version),
+          false,
+        )
       : this.missing();
   }
 
   removeGoal(): Promise<WriteResult<void>> {
     const goal = this.goal();
-    return goal ? this.write(this.repository.remove(goal.id, goal.version), false) : this.missing();
+    return goal
+      ? this.versioned(
+          `goal:${goal.id}`,
+          goal.version,
+          goal.version,
+          (version) => this.repository.remove(goal.id, version),
+          false,
+        )
+      : this.missing();
   }
 
   // Waypoint and Step writes (F3-1, F3-2).
@@ -204,23 +235,29 @@ export class GoalPlanStore {
     patch: NodePatch,
     prerequisites?: readonly NodeId[],
   ): Promise<WriteResult<GoalNode>> {
-    return this.write(
-      this.repository.updateNode(node.goalId, node.id, node.version, patch),
-      true,
+    return this.versionedNode(
+      node,
+      (version) => this.repository.updateNode(node.goalId, node.id, version, patch),
       prerequisites ? () => this.syncPrerequisites(node, prerequisites) : undefined,
     );
   }
 
   removeNode(node: GoalNode, cascade: boolean): Promise<WriteResult<void>> {
-    return this.write(this.repository.removeNode(node.goalId, node.id, node.version, cascade));
+    return this.versionedNode(node, (version) =>
+      this.repository.removeNode(node.goalId, node.id, version, cascade),
+    );
   }
 
   completeNode(node: GoalNode): Promise<WriteResult<GoalNode>> {
-    return this.write(this.repository.completeNode(node.goalId, node.id, node.version));
+    return this.versionedNode(node, (version) =>
+      this.repository.completeNode(node.goalId, node.id, version),
+    );
   }
 
   reopenNode(node: GoalNode): Promise<WriteResult<GoalNode>> {
-    return this.write(this.repository.reopenNode(node.goalId, node.id, node.version));
+    return this.versionedNode(node, (version) =>
+      this.repository.reopenNode(node.goalId, node.id, version),
+    );
   }
 
   setNodeStatus(node: GoalNode, status: SettableNodeStatus): Promise<WriteResult<GoalNode>> {
@@ -267,6 +304,41 @@ export class GoalPlanStore {
         await firstValueFrom(this.repository.addDependency(node.goalId, prerequisite, node.id));
       }
     }
+  }
+
+  /**
+   * A write guarded by `If-Match`. `seen` is the version the user acted on; after a conflict the user has been shown,
+   * the next write uses `latest` instead. A new conflict reloads the plan so the page shows the current values.
+   */
+  private async versioned<T>(
+    key: string,
+    seen: number,
+    latest: number,
+    request: (version: number) => Observable<T>,
+    refresh = true,
+    after?: (value: T) => Promise<void>,
+  ): Promise<WriteResult<T>> {
+    const result = await this.write(
+      request(this.conflicted.has(key) ? latest : seen),
+      refresh,
+      after,
+    );
+    if (result.ok) {
+      this.conflicted.delete(key);
+    } else if (isVersionConflict(result.error)) {
+      this.conflicted.add(key);
+      await this.refresh();
+    }
+    return result;
+  }
+
+  private versionedNode<T>(
+    node: GoalNode,
+    request: (version: number) => Observable<T>,
+    after?: (value: T) => Promise<void>,
+  ): Promise<WriteResult<T>> {
+    const latest = this.nodes().find((item) => item.id === node.id)?.version ?? node.version;
+    return this.versioned(`node:${node.id}`, node.version, latest, request, true, after);
   }
 
   private async write<T>(

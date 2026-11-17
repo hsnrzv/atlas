@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom, forkJoin } from 'rxjs';
-import { writeErrorMessage } from '../../../core/data-access/data-error';
+import { isVersionConflict, writeErrorMessage } from '../../../core/data-access/data-error';
 import { AwardRepository, DashboardRepository } from '../../../core/data-access/ports';
 import { readModel } from '../../../core/data-access/read-model';
 import { ATLAS_SAMPLE_DATA } from '../../../core/data-access/sample-data';
@@ -30,6 +30,9 @@ export class AwardsStore {
       this.model.retry();
       return null;
     } catch (error) {
+      if (isVersionConflict(error)) {
+        this.model.retry();
+      }
       return writeErrorMessage(error);
     }
   }

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { AtlasDataError, AtlasDataErrorReason } from '../data-error';
+import { AtlasDataError, AtlasDataErrorReason, VERSION_CONFLICT_MESSAGE } from '../data-error';
 
 /** RFC 9457 Problem Details as the Atlas API sends them (API-CONTRACT §4). Unknown members are ignored. */
 export interface ProblemDetails {
@@ -23,9 +23,8 @@ export interface ProblemFieldError {
  * `detail` (frontend.md §15). Codes not listed fall back to the copy of their reason.
  */
 const CODE_MESSAGES: Readonly<Record<string, string>> = {
-  VERSION_CONFLICT: 'This was changed elsewhere. Reload to see the latest version, then try again.',
-  PRECONDITION_REQUIRED:
-    'This was changed elsewhere. Reload to see the latest version, then try again.',
+  VERSION_CONFLICT: VERSION_CONFLICT_MESSAGE,
+  PRECONDITION_REQUIRED: VERSION_CONFLICT_MESSAGE,
   NODE_LOCKED: 'This Step is blocked by an open prerequisite.',
   NODE_HAS_CHILDREN: 'This Waypoint has Steps or Waypoints below it.',
   DEPENDENCY_CYCLE: 'That prerequisite would create a loop. Choose a different one.',
@@ -41,7 +40,7 @@ const REASON_MESSAGES: Readonly<Record<AtlasDataErrorReason, string>> = {
   unavailable: 'The Atlas service is not available right now.',
   'not-found': 'This item no longer exists.',
   network: 'Could not reach the Atlas service. Check your connection and try again.',
-  conflict: 'This was changed elsewhere. Reload to see the latest version, then try again.',
+  conflict: 'This change conflicts with the current plan. Check it, then try again.',
   validation: 'Some details need attention.',
   unauthorized: 'You are not signed in, or you may not do this.',
 };

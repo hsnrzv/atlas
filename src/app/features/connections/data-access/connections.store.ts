@@ -1,6 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom, forkJoin, switchMap } from 'rxjs';
-import { writeFailure, type WriteFailure } from '../../../core/data-access/data-error';
+import {
+  isVersionConflict,
+  writeFailure,
+  type WriteFailure,
+} from '../../../core/data-access/data-error';
 import { ConnectionRepository, GoalRepository } from '../../../core/data-access/ports';
 import { readModel } from '../../../core/data-access/read-model';
 import { ATLAS_SAMPLE_DATA } from '../../../core/data-access/sample-data';
@@ -47,6 +51,9 @@ export class ConnectionsStore {
           ),
       );
     } catch (error) {
+      if (isVersionConflict(error)) {
+        this.model.retry();
+      }
       return writeFailure(error);
     }
     this.model.retry();

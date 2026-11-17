@@ -48,6 +48,45 @@ describe('AtlasApi', () => {
     expect(request.headers.get('Idempotency-Key')).toBe('k-1');
   });
 
+  it('reuses the idempotency key when the same write is repeated after no answer', async () => {
+    const send = () =>
+      firstValueFrom(
+        api.post(['goals', 'g', 'nodes', 'n', 'complete'], null, { version: 2, idempotent: true }),
+      );
+    const key = () => backend.expectOne('/api/v1/goals/g/nodes/n/complete').request.headers;
+
+    const lost = send().catch((error: unknown) => error);
+    const firstRequest = backend.expectOne('/api/v1/goals/g/nodes/n/complete');
+    const firstKey = firstRequest.request.headers.get('Idempotency-Key');
+    expect(firstKey).toMatch(/^[0-9a-f-]{36}$/);
+    firstRequest.error(new ProgressEvent('error'), { status: 0, statusText: 'Unknown Error' });
+    await lost;
+
+    const replayed = send();
+    const second = backend.expectOne('/api/v1/goals/g/nodes/n/complete');
+    expect(second.request.headers.get('Idempotency-Key')).toBe(firstKey);
+    second.flush({ id: 'n' });
+    await replayed;
+
+    void send();
+    expect(key().get('Idempotency-Key')).not.toBe(firstKey);
+  });
+
+  it('uses a new key after a definite failure', async () => {
+    const send = () =>
+      firstValueFrom(api.post(['goals'], { title: 'x' }, { idempotent: true })).catch(
+        (error: unknown) => error,
+      );
+    const rejected = send();
+    const first = backend.expectOne('/api/v1/goals');
+    first.flush({ code: 'VALIDATION' }, { status: 400, statusText: 'Bad Request' });
+    await rejected;
+    void send();
+    expect(backend.expectOne('/api/v1/goals').request.headers.get('Idempotency-Key')).not.toBe(
+      first.request.headers.get('Idempotency-Key'),
+    );
+  });
+
   it('skips empty query values and answers deletes with nothing', async () => {
     const done = firstValueFrom(
       api.delete(['goals', 'g'], { version: 0, query: { cascade: undefined } }),

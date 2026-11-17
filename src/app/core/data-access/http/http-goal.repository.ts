@@ -38,7 +38,7 @@ const rewardText = (reward: string | null): string | null => reward?.trim() || n
 
 /**
  * `/api/v1/goals` and its sub-resources (F4-1, API-CONTRACT §9.5–§9.6). Writes of versioned resources send
- * `If-Match`; creates send an `Idempotency-Key`. Notes, dependencies and rewards carry no `version` yet, so their
+ * `If-Match`; the Destination create and the completion send an `Idempotency-Key` (API-CONTRACT §8, F4-3). Notes, dependencies and rewards carry no `version` yet, so their
  * writes go without `If-Match` until FQ-21 is decided.
  */
 @Injectable({ providedIn: 'root' })
@@ -64,7 +64,7 @@ export class HttpGoalRepository extends GoalRepository {
   /** `POST /goals`, then `PUT …/reward` when the form names one (the reward is its own resource). */
   create(draft: GoalDraft): Observable<Goal> {
     return this.api
-      .post<Goal>(['goals'], goalBody(draft), { idempotencyKey: crypto.randomUUID() })
+      .post<Goal>(['goals'], goalBody(draft), { idempotent: true })
       .pipe(switchMap((goal) => this.syncReward(goal, draft.reward)));
   }
 
@@ -117,7 +117,7 @@ export class HttpGoalRepository extends GoalRepository {
   completeNode(goalId: GoalId, nodeId: NodeId, version: number): Observable<GoalNode> {
     return this.api.post<GoalNode>(['goals', goalId, 'nodes', nodeId, 'complete'], null, {
       version,
-      idempotencyKey: crypto.randomUUID(),
+      idempotent: true,
     });
   }
 

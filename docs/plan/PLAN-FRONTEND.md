@@ -313,9 +313,10 @@ content are built against Figma V3.
       errors → form and field messages, retry for idempotent GETs, global error handling, and money display from string
       amounts through `Intl.NumberFormat` (no client arithmetic). Done 2026-11-17 (roadmap phase 8); the 401 flow and
       global error handling stay with F4-5/F4-3.
-- [ ] **F4-3** Deliberate loading/empty/error/retry states on every page. Optimistic updates send `If-Match` with
+- [x] **F4-3** Deliberate loading/empty/error/retry states on every page. Optimistic updates send `If-Match` with
       the last `ETag`; on `412 VERSION_CONFLICT` the client reloads and tells the user. Creates and completions send an
-      `Idempotency-Key` (API-CONTRACT §7–§8, BE-4.3).
+      `Idempotency-Key` (API-CONTRACT §7–§8, BE-4.3). Done 2026-11-17 (roadmap phase 9) without optimistic UI:
+      pinned dialog versions, conflict reload, idempotency keys reused after an unknown outcome.
 - [ ] **F4-4** Onboarding, Destination/Waypoint/Step CRUD, completion and unlock, notes and awards wired to the
       backend.
 - [ ] **F4-5** Auth-ready client: `withCredentials`/same-origin cookies, XSRF configuration, a 401 → sign-in

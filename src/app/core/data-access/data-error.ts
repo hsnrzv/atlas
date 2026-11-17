@@ -31,6 +31,22 @@ export class AtlasDataError extends Error {
   }
 }
 
+/** Copy for `412 VERSION_CONFLICT` / `428`: the store has already reloaded the latest version when this shows. */
+export const VERSION_CONFLICT_MESSAGE =
+  'This was changed elsewhere, and the latest version is now shown. Check it, then try again.';
+
+/**
+ * The write used an outdated `version` (`412 VERSION_CONFLICT`) or sent none (`428 PRECONDITION_REQUIRED`). Stores
+ * reload the resource and keep the user's input (API-CONTRACT §7, F4-3).
+ */
+export function isVersionConflict(error: unknown): error is AtlasDataError {
+  return (
+    error instanceof AtlasDataError &&
+    error.reason === 'conflict' &&
+    (error.code === 'VERSION_CONFLICT' || error.code === 'PRECONDITION_REQUIRED')
+  );
+}
+
 /** A user-facing sentence for a failed write; never shows raw server text for unexpected failures. */
 export function writeErrorMessage(error: unknown): string {
   if (error instanceof AtlasDataError) {

@@ -60,7 +60,7 @@ describe('Problem Details mapping', () => {
       'The Atlas service is not available right now.',
     );
     expect(toAtlasDataError(failure(409, { code: 'SOMETHING_NEW' })).message).toContain(
-      'changed elsewhere',
+      'conflicts with the current plan',
     );
   });
 });

@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { EMPTY, Observable, expand, map, reduce } from 'rxjs';
+import { EMPTY, Observable, defer, expand, map, reduce, tap } from 'rxjs';
+import { AtlasDataError } from '../data-error';
 import { API_BASE_URL, apiUrl } from './api-config';
 
 /** A paginated collection (API-CONTRACT §5). */
@@ -20,8 +21,13 @@ export type Query = Readonly<Record<string, QueryValue | null | undefined>>;
 export interface WriteOptions {
   /** The resource's `version`; sent as the strong `If-Match` ETag (API-CONTRACT §6). */
   readonly version?: number;
-  /** Sent as `Idempotency-Key` on retry-safe creates (API-CONTRACT §7). */
+  /** Sent as `Idempotency-Key` (API-CONTRACT §8). Prefer {@link WriteOptions.idempotent}. */
   readonly idempotencyKey?: string;
+  /**
+   * Sends a generated `Idempotency-Key` that is reused when the user repeats the same request after it got no
+   * answer (`network`/`unavailable`), so the server replays the first result instead of applying it twice.
+   */
+  readonly idempotent?: boolean;
   readonly query?: Query;
 }
 
@@ -52,6 +58,10 @@ function headers(options: WriteOptions): HttpHeaders {
   return result;
 }
 
+/** The request may have reached the server, so a repeat must carry the same key. */
+const mayHaveApplied = (error: unknown): boolean =>
+  error instanceof AtlasDataError && (error.reason === 'network' || error.reason === 'unavailable');
+
 function isPage<T>(body: unknown): body is Page<T> {
   return typeof body === 'object' && body !== null && Array.isArray((body as Page<T>).content);
 }
@@ -64,6 +74,8 @@ function isPage<T>(body: unknown): body is Page<T> {
 export class AtlasApi {
   private readonly http = inject(HttpClient);
   private readonly base = inject(API_BASE_URL);
+  /** Request fingerprint → key of an `idempotent` write whose outcome is unknown. Memory only. */
+  private readonly pendingKeys = new Map<string, string>();
 
   url(...segments: readonly string[]): string {
     return apiUrl(this.base, ...segments);
@@ -89,10 +101,12 @@ export class AtlasApi {
   }
 
   post<T>(segments: readonly string[], body: unknown, options: WriteOptions = {}): Observable<T> {
-    return this.http.post<T>(this.url(...segments), body ?? null, {
-      headers: headers(options),
-      params: params(options.query),
-    });
+    return this.keyed(['POST', segments, body ?? null, options], options, (sent) =>
+      this.http.post<T>(this.url(...segments), body ?? null, {
+        headers: headers(sent),
+        params: params(sent.query),
+      }),
+    );
   }
 
   put<T>(segments: readonly string[], body: unknown, options: WriteOptions = {}): Observable<T> {
@@ -113,5 +127,31 @@ export class AtlasApi {
     return this.http
       .delete(this.url(...segments), { headers: headers(options), params: params(options.query) })
       .pipe(map(() => undefined));
+  }
+
+  /** Adds the idempotency key of an `idempotent` write; the same request after an unknown outcome reuses it. */
+  private keyed<T>(
+    fingerprint: unknown,
+    options: WriteOptions,
+    send: (options: WriteOptions) => Observable<T>,
+  ): Observable<T> {
+    if (!options.idempotent) {
+      return send(options);
+    }
+    return defer(() => {
+      const id = JSON.stringify(fingerprint);
+      const key = this.pendingKeys.get(id) ?? crypto.randomUUID();
+      this.pendingKeys.set(id, key);
+      return send({ ...options, idempotencyKey: key }).pipe(
+        tap({
+          next: () => this.pendingKeys.delete(id),
+          error: (error: unknown) => {
+            if (!mayHaveApplied(error)) {
+              this.pendingKeys.delete(id);
+            }
+          },
+        }),
+      );
+    });
   }
 }

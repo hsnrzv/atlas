@@ -2,7 +2,7 @@
 
 - Status: approved by the owner on 2026-11-14 with the decisions in §4. Phases 1–6 are complete and approved;
   phase 7 is implemented and gate 7 awaits the owner's real-device and screen-reader checks. Phase 8 is implemented
-  except F3-5, which waits for the backend OpenAPI snapshot (BE-3.82); gate 8 awaits the owner's approval.
+  except F3-5, which waits for the backend OpenAPI snapshot (BE-3.82). The owner started phase 9 on 2026-11-17.
 - Purpose: turn the approved Figma V3 design into the production Angular app, in small reviewed PRs.
 - Maps the nine implementation phases of the production brief onto the existing backlog in
   [PLAN-FRONTEND.md](../plan/PLAN-FRONTEND.md) (`F…` IDs) and the cross-repository phases in
@@ -183,15 +183,15 @@ the contract drift check follow once BE-3.82 publishes the snapshot.
 
 ### Phase 9 — Production integration, testing and deployment
 
-| ID    | Item                                                                 |
-| ----- | -------------------------------------------------------------------- |
-| F4-3  | Loading/empty/error/retry everywhere, ETag/If-Match, Idempotency-Key |
-| F4-4  | All features wired to the backend                                    |
-| F4-5  | Auth-ready client (cookies, XSRF, 401 hook, `/me`)                   |
-| F4-6  | E2E against the local full stack in CI                               |
-| F4-7  | Mock adapter removed from non-development builds; bundle check       |
-| F2-11 | Supply-chain gates (licence allow-list, SBOM, image scan)            |
-| F2-12 | GHCR publishing and `atlas-infra` bump PRs                           |
+| ID    | Item                                                                 | Status                                                                                                                                                                                                                                                                                                                                                                                              |
+| ----- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F4-3  | Loading/empty/error/retry everywhere, ETag/If-Match, Idempotency-Key | done 2026-11-17: every data page already had Loading, Empty, Error and Retry (audited). Edit dialogs pin the version they opened with; `412`/`428` reload the resource and say so, and saving again uses the reloaded version. `Idempotency-Key` is reused when the same create or completion is repeated after no answer. No optimistic UI ([frontend.md §7](../architecture/frontend.md#7-state)) |
+| F4-4  | All features wired to the backend                                    |                                                                                                                                                                                                                                                                                                                                                                                                     |
+| F4-5  | Auth-ready client (cookies, XSRF, 401 hook, `/me`)                   |                                                                                                                                                                                                                                                                                                                                                                                                     |
+| F4-6  | E2E against the local full stack in CI                               |                                                                                                                                                                                                                                                                                                                                                                                                     |
+| F4-7  | Mock adapter removed from non-development builds; bundle check       |                                                                                                                                                                                                                                                                                                                                                                                                     |
+| F2-11 | Supply-chain gates (licence allow-list, SBOM, image scan)            |                                                                                                                                                                                                                                                                                                                                                                                                     |
+| F2-12 | GHCR publishing and `atlas-infra` bump PRs                           |                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 **Gate 9:** repo phase-4 gate (no demo-only data against the real backend; staging e2e green). Store release stays
 in repo phase 10 after identity hardening (phase 9 of the repo plan). The release checklist, the mock and

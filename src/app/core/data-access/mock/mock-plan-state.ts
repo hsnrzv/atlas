@@ -3,7 +3,7 @@ import type { Goal, GoalId } from '../../models/goal';
 import type { GoalDependency } from '../../models/goal-commands';
 import type { GoalNode, NodeId, NodeStatus } from '../../models/goal-node';
 import type { GoalNote } from '../../models/goal-note';
-import { AtlasDataError } from '../data-error';
+import { AtlasDataError, VERSION_CONFLICT_MESSAGE } from '../data-error';
 import { MockResponder } from './mock-responder';
 import { recalculate } from './mock-recalculation';
 import { SAMPLE_COMPLETION_TIMES } from './sample-fixtures';
@@ -109,11 +109,7 @@ export class MockPlanState {
   /** `412 VERSION_CONFLICT` when the client edited an outdated copy (API-CONTRACT §4). */
   checkVersion(current: { readonly version: number }, version: number): void {
     if (current.version !== version) {
-      throw new AtlasDataError(
-        'This was changed elsewhere. Reload to see the latest version, then try again.',
-        'conflict',
-        { code: 'VERSION_CONFLICT' },
-      );
+      throw new AtlasDataError(VERSION_CONFLICT_MESSAGE, 'conflict', { code: 'VERSION_CONFLICT' });
     }
   }
 

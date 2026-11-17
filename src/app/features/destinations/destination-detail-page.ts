@@ -128,7 +128,7 @@ export class DestinationDetailPage {
       mode: 'edit',
       initial: toDraft(goal),
       sample: null,
-      save: async (draft) => failureOf(await this.store.updateGoal(draft)),
+      save: async (draft) => failureOf(await this.store.updateGoal(draft, goal.version)),
     });
     if (saved) {
       this.toast.show('Destination saved.');

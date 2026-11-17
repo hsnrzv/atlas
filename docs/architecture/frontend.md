@@ -267,7 +267,13 @@ The HTTP adapters (Phase 8) raise one more:
   `atlas-overview.view-model.ts`, formatting only) and `refreshing`. A `linkedSignal` keeps the last saved plan, so a
   failed refresh shows the Error state beside "Last saved plan" instead of discarding it.
 - Writes: store method → port → on success, update local state from the **server response** (no client-side
-  re-derivation). Optimistic UI only for Step status toggles, with rollback on error (F4-3).
+  re-derivation). There is no optimistic UI: a write changes backend-derived progress and availability, so the page
+  waits for the server (decided in F4-3).
+- Versioned writes send the `version` the user acted on as `If-Match`; edit dialogs pin the version they opened with,
+  so a background refresh never turns into a silent overwrite. On `412 VERSION_CONFLICT` (or `428`) the store
+  reloads the resource and shows "This was changed elsewhere, and the latest version is now shown. Check it, then try
+  again."; the dialog keeps the user's input, and saving again uses the reloaded version (`GoalPlanStore.versioned`,
+  `AwardsStore`, `ConnectionsStore`; F4-3).
 - Plan pages (Phase 5): `GoalPlanStore` is provided per route and loads one Destination with its nodes, notes and
   progress. `scopeTo(goalId)` drives it from the route input. After every write it reloads the plan and progress
   from the port, so progress and availability always come from the backend. `PlanEditor` (`core/plan`) opens the
@@ -406,7 +412,11 @@ WCAG 2.2 AA is a release gate:
   local catalogue. The server's `detail` text is never shown.
 - XSRF uses Angular's defaults (`XSRF-TOKEN` cookie, `X-XSRF-TOKEN` header), which match Spring Security. The 401
   flow and `/me` are F4-5; a correlation-ID header is open (FQ-21).
-- `412 VERSION_CONFLICT` reloads and informs the user (store `write`).
+- `412 VERSION_CONFLICT` reloads and informs the user (§7, `isVersionConflict` in `data-error.ts`).
+- `Idempotency-Key` (API-CONTRACT §8) goes on `POST /goals` and `POST …/nodes/{nodeId}/complete` through
+  `AtlasApi` `{ idempotent: true }`. The key is reused when the user repeats the same request after it got no answer
+  (`network` or `unavailable`), so the server replays the first result; any answer releases it. Keys live in memory
+  only.
 - Global error handler logs to the console in dev; production telemetry is a later decision.
 
 ## 16. Testing
