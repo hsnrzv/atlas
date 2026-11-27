@@ -12,11 +12,16 @@ COPY . .
 RUN npm run build && npm run bundle:check
 
 # ---- Runtime: static files on unprivileged nginx (UID 101, port 8080) ---------------------------
-FROM nginxinc/nginx-unprivileged:1.30-alpine AS runtime
+FROM nginxinc/nginx-unprivileged:1.31-alpine AS runtime
 
 LABEL org.opencontainers.image.title="atlas-frontend" \
       org.opencontainers.image.description="IKIGAI ATLAS web client (Angular SPA)" \
       org.opencontainers.image.source="https://github.com/hsnrzv/atlas"
+
+# Pull Alpine security fixes released after the base image was published (Trivy gate).
+USER root
+RUN apk upgrade --no-cache
+USER 101
 
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY nginx/security-headers.conf /etc/nginx/snippets/security-headers.conf
