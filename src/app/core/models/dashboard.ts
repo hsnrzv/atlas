@@ -7,9 +7,8 @@ import type { Progress } from './progress';
 /**
  * `GET /api/v1/dashboard`: the read-only "My Atlas" view model (API-CONTRACT §9.1).
  *
- * Fields marked "Proposed" are not in the draft contract yet. Figma page 05 shows them, and only the backend can
- * derive them (roadmap R-12), so they are raised as contract questions FQ-1 … FQ-6 in frontend.md §6.5 instead of
- * being computed in the browser.
+ * Figma page 05 also needs fields only the backend can derive (roadmap R-12). They were raised as FQ-1 … FQ-6
+ * (frontend.md §6.5), accepted by the backend for Phase 3, and are never computed in the browser.
  */
 export interface Dashboard {
   readonly today: IsoDate;
@@ -22,9 +21,9 @@ export interface Dashboard {
   /** `null` until backend Phase 6. */
   readonly timeCapacity: null;
   readonly recentAchievements: readonly RecentAchievement[];
-  /** Proposed (FQ-4): Steps currently in progress, newest first. */
+  /** FQ-4: Steps currently in progress, newest first. */
   readonly inProgress: readonly DashboardNodeRef[];
-  /** Proposed (FQ-3): totals for "At a glance". */
+  /** FQ-3: totals for "At a glance". */
   readonly summary: DashboardSummary;
 }
 
@@ -39,7 +38,7 @@ export interface LifeBalanceEntry {
   readonly areaKey: IkigaiAreaKey;
   readonly label: string;
   readonly activeGoals: number;
-  /** Proposed (FQ-2): area progress; `null` when the area has no active Destination. */
+  /** FQ-2: area progress; `null` when the area has no active Destination with measurable progress. */
   readonly progress: Progress | null;
 }
 
@@ -47,19 +46,20 @@ export interface DashboardGoal {
   readonly id: GoalId;
   readonly title: string;
   readonly primaryAreaKey: IkigaiAreaKey;
-  readonly progress: Progress;
+  /** `null` when there is nothing to measure (API-CONTRACT §9.1). */
+  readonly progress: Progress | null;
   readonly nextNode: DashboardNextNode | null;
   readonly targetDate: PlannedDate | null;
   readonly reward: GoalReward | null;
-  /** Proposed (FQ-3): completed Waypoints of this Destination. */
+  /** FQ-3: completed Waypoints of this Destination. */
   readonly achievedWaypoints: number;
-  /** Proposed (FQ-6): later Waypoints with their planned date (`null` = not set yet), in plan order. */
+  /** FQ-6: open top-level Waypoints with their planned date (`null` = not set yet), in plan order. */
   readonly keyDates: readonly KeyDate[];
 }
 
 /**
- * The next Waypoint. The draft contract has `{ id, title }`; the rest is proposed (FQ-1) so the Next Waypoint card
- * can show status, lock state, planned date and progress without a second request.
+ * The next Waypoint (FQ-1): status, lock state, planned date and progress, so the Next Waypoint card needs no second
+ * request.
  */
 export interface DashboardNextNode {
   readonly id: NodeId;
@@ -83,7 +83,7 @@ export interface RecentAchievement {
   readonly nodeId: NodeId;
   readonly title: string;
   readonly completedAt: IsoInstant;
-  /** Proposed (FQ-4): tells a Step from a Waypoint. */
+  /** FQ-4: tells a Step from a Waypoint. */
   readonly nodeType: NodeType;
 }
 

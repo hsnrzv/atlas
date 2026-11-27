@@ -16,6 +16,6 @@ export interface Progress {
   readonly policy?: ProgressPolicy;
   readonly countedWeight?: string;
   readonly totalWeight?: string;
-  /** Proposed contract addition (frontend.md §6.5, FQ-5). */
+  /** Skipped and cancelled nodes (FQ-5). */
   readonly excludedNodes?: readonly ExcludedNode[];
 }

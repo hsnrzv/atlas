@@ -22,7 +22,7 @@ import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/for
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { firstValueFrom } from 'rxjs';
-import type { GoalStatus } from '../../../../core/models/goal';
+import type { SettableGoalStatus } from '../../../../core/models/goal';
 import type { GoalDraft } from '../../../../core/models/goal-commands';
 import type { IkigaiAreaKey } from '../../../../core/models/life-dimension';
 import {
@@ -50,7 +50,7 @@ interface GoalFormModel {
   title: string;
   outcome: string;
   primaryAreaKey: IkigaiAreaKey | '';
-  status: GoalStatus;
+  status: SettableGoalStatus | null;
   target: PlannedDateModel;
   description: string;
   reward: string;

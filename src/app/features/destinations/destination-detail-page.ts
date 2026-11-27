@@ -7,7 +7,7 @@ import { failureOf, GoalPlanStore, messageOf } from '../../core/data-access/goal
 import { AtlasTitleStrategy } from '../../core/layout/atlas-title-strategy';
 import { DESTINATIONS } from '../../core/layout/navigation';
 import { PlanEditor } from '../../core/plan/plan-editor';
-import type { Goal } from '../../core/models/goal';
+import { isSettableGoalStatus, type Goal } from '../../core/models/goal';
 import type { GoalDraft } from '../../core/models/goal-commands';
 import { lifeDimensionByApiKey } from '../../shared/design-system/life-dimensions';
 import { AtlasIcon } from '../../shared/icons/atlas-icon';
@@ -40,7 +40,7 @@ const toDraft = (goal: Goal): GoalDraft => ({
   outcome: goal.outcome,
   description: goal.description,
   primaryAreaKey: goal.primaryAreaKey,
-  status: goal.status,
+  status: isSettableGoalStatus(goal.status) ? goal.status : null,
   targetDate: goal.targetDate,
   reward: goal.reward?.description ?? null,
 });

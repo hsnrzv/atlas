@@ -99,8 +99,10 @@ describe('plan-view', () => {
         goalId: 'g1',
         nodeId: null,
         body: 'Ask for references',
+        format: 'PLAIN',
         createdAt: '2026-11-12T09:00:00Z',
         updatedAt: '2026-11-12T09:00:00Z',
+        version: 1,
       },
       'en-US',
     );

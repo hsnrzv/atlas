@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import type { Goal, GoalId } from '../../models/goal';
 import type { GoalDependency } from '../../models/goal-commands';
-import type { GoalNode, NodeId, NodeStatus } from '../../models/goal-node';
+import type { GoalNode, NodeId } from '../../models/goal-node';
 import type { GoalNote } from '../../models/goal-note';
 import { AtlasDataError, VERSION_CONFLICT_MESSAGE } from '../data-error';
 import { MockResponder } from './mock-responder';
@@ -26,9 +26,6 @@ export class MockPlanState {
   nodes: GoalNode[] = [];
   dependencies: GoalDependency[] = [];
   notes: GoalNote[] = [];
-  readonly archived = new Set<GoalId>();
-  /** Work status before `complete`, so `reopen` can restore it (the reopen target is FQ-10). */
-  readonly statusBeforeComplete = new Map<NodeId, NodeStatus>();
   private readonly completionTimes = new Map<NodeId, string>();
   private sequence = 0;
   private writes = 0;
@@ -54,8 +51,6 @@ export class MockPlanState {
       },
     ];
     this.notes = [];
-    this.archived.clear();
-    this.statusBeforeComplete.clear();
     this.completionTimes.clear();
     this.recalculate();
   }

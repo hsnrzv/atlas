@@ -4,9 +4,9 @@ import type { Money } from './money';
 import type { PlannedDate } from './planned-date';
 
 /**
- * Proposed read model `GET /api/v1/connections` (FQ-15, Figma page 09). The draft contract has no endpoint that
- * relates a Destination to Life Dimensions beyond `primaryAreaKey`/`secondaryAreas`, and its finance impacts
- * (§9.8) require an amount. The backend decides; the frontend only renders.
+ * Proposed read model `GET /api/v1/connections` (FQ-15, Figma page 09). Deferred by the backend to Phase 6: it needs
+ * finance impacts (§9.8), which require a confirmed amount; this model is the starting point of that contract. The
+ * backend decides; the frontend only renders.
  *
  * - `ASSOCIATION`: the Destination is assigned to the dimension (`primary` for `primaryAreaKey`).
  * - `POSSIBLE_IMPACT`: the Destination could affect the dimension; `verified: false` until the owner confirms it.

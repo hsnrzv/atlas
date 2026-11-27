@@ -15,7 +15,7 @@ import type { GoalNote } from '../../models/goal-note';
  * stores replace their state with it; nothing is re-derived in the client. `version` feeds `If-Match`.
  */
 export abstract class GoalRepository {
-  /** Active Destinations; archived ones are left out (FQ-8). */
+  /** Destinations; archived ones are left out unless `status: 'ARCHIVED'` is asked for (FQ-8). */
   abstract list(query?: GoalQuery): Observable<readonly GoalSummary[]>;
   abstract get(goalId: GoalId): Observable<Goal>;
   abstract tree(goalId: GoalId): Observable<GoalTree>;
@@ -28,7 +28,7 @@ export abstract class GoalRepository {
     version: number,
     areas: readonly SecondaryArea[],
   ): Observable<Goal>;
-  /** `POST /goals/{goalId}/archive`; like every state-changing action it sends `If-Match` (API-CONTRACT §6). */
+  /** `POST /goals/{goalId}/archive` sets `ARCHIVED` (FQ-8); it sends `If-Match` (API-CONTRACT §7). */
   abstract archive(goalId: GoalId, version: number): Observable<Goal>;
   /** Permanent deletion (API-CONTRACT A-1); the UI confirms first. */
   abstract remove(goalId: GoalId, version: number): Observable<void>;
@@ -60,9 +60,15 @@ export abstract class GoalRepository {
   ): Observable<GoalDependency>;
   abstract removeDependency(goalId: GoalId, dependencyId: string): Observable<void>;
 
-  /** Notes of the Destination (`nodeId` null) or of one node. */
+  /** Notes of the Destination itself (`nodeId` null) or of one node. */
   abstract notes(goalId: GoalId, nodeId: NodeId | null): Observable<readonly GoalNote[]>;
   abstract addNote(goalId: GoalId, nodeId: NodeId | null, body: string): Observable<GoalNote>;
-  abstract updateNote(goalId: GoalId, noteId: string, body: string): Observable<GoalNote>;
-  abstract removeNote(goalId: GoalId, noteId: string): Observable<void>;
+  /** `version` is the note's own (`If-Match`, API-CONTRACT §7). */
+  abstract updateNote(
+    goalId: GoalId,
+    noteId: string,
+    version: number,
+    body: string,
+  ): Observable<GoalNote>;
+  abstract removeNote(goalId: GoalId, noteId: string, version: number): Observable<void>;
 }

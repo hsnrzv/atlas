@@ -42,8 +42,8 @@ describe('mock recalculation', () => {
     );
     expect(find(nodes, N.submitApplication).progress?.percent).toBe('60.0');
     expect(find(nodes, N.submitApplication).progress?.countedWeight).toBe('3');
-    expect(goal.progress.percent).toBe('30.0');
-    expect(goal.progress.countedWeight).toBe('3');
+    expect(goal.progress?.percent).toBe('30.0');
+    expect(goal.progress?.countedWeight).toBe('3');
   });
 
   it('achieves the Waypoint in Flow G and moves the next Waypoint on', () => {
@@ -57,7 +57,7 @@ describe('mock recalculation', () => {
       [SAMPLE_DEPENDENCY],
     );
     expect(find(nodes, N.submitApplication).status).toBe('COMPLETED');
-    expect(goal.progress.percent).toBe('50.0');
+    expect(goal.progress?.percent).toBe('50.0');
     expect(goal.nextAvailableNode?.id).toBe(N.admissionDecision);
   });
 
@@ -112,7 +112,7 @@ describe('mock recalculation', () => {
         [],
       );
       expect(find(done.nodes, 'cardio').status).toBe('COMPLETED');
-      expect(done.goal.progress.percent).toBe('100.0');
+      expect(done.goal.progress?.percent).toBe('100.0');
       expect(done.goal.nextAvailableNode).toBeNull();
     });
 

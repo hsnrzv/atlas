@@ -127,8 +127,8 @@ function savedLines(
   return lines;
 }
 
-function policyCaption(progress: Progress): string | null {
-  const excluded = progress.excludedNodes ?? [];
+function policyCaption(progress: Progress | null): string | null {
+  const excluded = progress?.excludedNodes ?? [];
   if (excluded.length === 0) {
     return null;
   }

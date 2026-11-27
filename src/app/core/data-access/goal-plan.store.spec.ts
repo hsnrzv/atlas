@@ -89,7 +89,7 @@ describe.each(TEST_ADAPTERS)('GoalPlanStore (%s adapter)', (adapter) => {
     expect(store.nodes().find((node) => node.id === N.submitApplication)?.progress?.percent).toBe(
       '60.0',
     );
-    expect(store.goal()?.progress.percent).toBe('30.0');
+    expect(store.goal()?.progress?.percent).toBe('30.0');
     expect(store.saving()).toBe(false);
   });
 

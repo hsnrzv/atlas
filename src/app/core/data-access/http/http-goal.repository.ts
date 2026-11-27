@@ -22,7 +22,7 @@ import type {
 } from './api-types';
 import { AtlasApi } from './atlas-api';
 
-/** `sort` of `GET /goals` per list order (API-CONTRACT §5). */
+/** `sort` of `GET /goals` per list order (API-CONTRACT §6). */
 const SORT: Readonly<Record<GoalSort, string>> = {
   targetDate: 'targetDate,asc',
   title: 'title,asc',
@@ -31,15 +31,17 @@ const SORT: Readonly<Record<GoalSort, string>> = {
 
 function goalBody(draft: GoalDraft): GoalWriteRequest {
   const { title, outcome, description, primaryAreaKey, status, targetDate } = draft;
-  return { title, outcome, description, primaryAreaKey, status, targetDate };
+  const body: GoalWriteRequest = { title, outcome, description, primaryAreaKey, targetDate };
+  return status ? { ...body, status } : body;
 }
 
 const rewardText = (reward: string | null): string | null => reward?.trim() || null;
 
 /**
- * `/api/v1/goals` and its sub-resources (F4-1, API-CONTRACT §9.5–§9.6). Writes of versioned resources send
- * `If-Match`; the Destination create and the completion send an `Idempotency-Key` (API-CONTRACT §8, F4-3). Notes, dependencies and rewards carry no `version` yet, so their
- * writes go without `If-Match` until FQ-21 is decided.
+ * `/api/v1/goals` and its sub-resources (F4-1, API-CONTRACT §9.5–§9.6). Writes send `If-Match` as API-CONTRACT §7
+ * lists them (FQ-21): the goal `ETag` for the goal and its reward, the node `ETag` for a node, the note `ETag` for a
+ * note; creates and dependencies send none. The Destination create and the completion send an `Idempotency-Key`
+ * (API-CONTRACT §8, F4-3).
  */
 @Injectable({ providedIn: 'root' })
 export class HttpGoalRepository extends GoalRepository {
@@ -144,11 +146,17 @@ export class HttpGoalRepository extends GoalRepository {
     return this.api.delete(['goals', goalId, 'dependencies', dependencyId]);
   }
 
-  /** `GET …/notes?nodeId=`; the Destination's own notes are those without a node. */
+  /**
+   * `GET …/notes?nodeId=` filters on the server (FQ-21). Without `nodeId` the server returns every note of the
+   * goal, of which the Destination's own are those without a node.
+   */
   notes(goalId: GoalId, nodeId: NodeId | null): Observable<readonly GoalNote[]> {
+    if (nodeId) {
+      return this.api.getAll<GoalNote>(['goals', goalId, 'notes'], { nodeId });
+    }
     return this.api
-      .getAll<GoalNote>(['goals', goalId, 'notes'], { nodeId })
-      .pipe(map((notes) => notes.filter((note) => note.nodeId === nodeId)));
+      .getAll<GoalNote>(['goals', goalId, 'notes'])
+      .pipe(map((notes) => notes.filter((note) => note.nodeId === null)));
   }
 
   addNote(goalId: GoalId, nodeId: NodeId | null, body: string): Observable<GoalNote> {
@@ -156,18 +164,18 @@ export class HttpGoalRepository extends GoalRepository {
     return this.api.post<GoalNote>(['goals', goalId, 'notes'], request);
   }
 
-  updateNote(goalId: GoalId, noteId: string, body: string): Observable<GoalNote> {
+  updateNote(goalId: GoalId, noteId: string, version: number, body: string): Observable<GoalNote> {
     const request: NoteRequest = { body };
-    return this.api.patch<GoalNote>(['goals', goalId, 'notes', noteId], request);
+    return this.api.patch<GoalNote>(['goals', goalId, 'notes', noteId], request, { version });
   }
 
-  removeNote(goalId: GoalId, noteId: string): Observable<void> {
-    return this.api.delete(['goals', goalId, 'notes', noteId]);
+  removeNote(goalId: GoalId, noteId: string, version: number): Observable<void> {
+    return this.api.delete(['goals', goalId, 'notes', noteId], { version });
   }
 
   /**
-   * Brings the reward in line with the form and answers with the server's goal. The reward write is guarded by the
-   * goal's version, which the contract leaves open for sub-resources (FQ-21).
+   * Brings the reward in line with the form and answers with the server's goal. The goal reward has no version of its
+   * own; its write is guarded by the goal `ETag` (API-CONTRACT §7, FQ-21).
    */
   private syncReward(goal: Goal, reward: string | null): Observable<Goal> {
     const wanted = rewardText(reward);

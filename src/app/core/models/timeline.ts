@@ -25,9 +25,9 @@ export interface TimelineItem {
   readonly title: string;
   readonly status: NodeStatus | GoalStatus;
   readonly areaKey: IkigaiAreaKey;
-  /** Proposed (FQ-14): `null` for items without a planned date, so "Not placed yet" needs no second request. */
+  /** FQ-14: `null` for items without a planned date, so "Not placed yet" needs no second request. */
   readonly date: PlannedDate | null;
-  /** Proposed (FQ-14): backend progress of the item, as on the node. */
+  /** FQ-14: backend progress of the item, as on the node. */
   readonly progress: Progress | null;
 }
 

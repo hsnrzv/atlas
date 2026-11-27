@@ -15,7 +15,6 @@ import { AtlasDataError } from '../data-error';
 import { GoalRepository } from '../ports/goal.repository';
 import { MockPlanState } from './mock-plan-state';
 import { MockResponder } from './mock-responder';
-import { progressOf } from './mock-recalculation';
 import { ATLAS_MOCK_SENTINEL } from './sentinel';
 
 function summary(goal: Goal): GoalSummary {
@@ -65,7 +64,8 @@ export class MockGoalRepository extends GoalRepository {
   list(query: GoalQuery = {}): Observable<readonly GoalSummary[]> {
     const read = () =>
       this.state.goals
-        .filter((goal) => !this.state.archived.has(goal.id) && matches(goal, query))
+        .filter((goal) => goal.status !== 'ARCHIVED' || query.status === 'ARCHIVED')
+        .filter((goal) => matches(goal, query))
         .sort(compare(query.sort))
         .map(summary);
     return this.responder.respond('goals', read, read);
@@ -94,10 +94,10 @@ export class MockGoalRepository extends GoalRepository {
         primaryAreaKey: draft.primaryAreaKey,
         secondaryAreas: [],
         priority: null,
-        status: draft.status,
+        status: draft.status ?? 'ACTIVE',
         startDate: null,
         targetDate: draft.targetDate,
-        progress: progressOf(0, 0),
+        progress: null,
         nextAvailableNode: null,
         reward: trimmed(draft.reward)
           ? { description: draft.reward!.trim(), status: 'PLANNED' }
@@ -123,7 +123,7 @@ export class MockGoalRepository extends GoalRepository {
         outcome: trimmed(draft.outcome),
         description: trimmed(draft.description),
         primaryAreaKey: draft.primaryAreaKey,
-        status: draft.status,
+        status: draft.status ?? goal.status,
         targetDate: draft.targetDate,
         reward: reward ? { description: reward, status: goal.reward?.status ?? 'PLANNED' } : null,
         updatedAt: this.state.now(),
@@ -154,8 +154,15 @@ export class MockGoalRepository extends GoalRepository {
     return this.write(() => {
       const goal = this.state.goal(goalId);
       this.checkOptionalVersion(goal, version);
-      this.state.archived.add(goalId);
-      return goal;
+      if (goal.status === 'ARCHIVED') {
+        return goal;
+      }
+      return this.state.replaceGoal({
+        ...goal,
+        status: 'ARCHIVED',
+        updatedAt: this.state.now(),
+        version: goal.version + 1,
+      });
     });
   }
 
@@ -169,7 +176,6 @@ export class MockGoalRepository extends GoalRepository {
       this.state.nodes = this.state.nodes.filter((node) => node.goalId !== goalId);
       this.state.dependencies = this.state.dependencies.filter((dep) => dep.goalId !== goalId);
       this.state.notes = this.state.notes.filter((note) => note.goalId !== goalId);
-      this.state.archived.delete(goalId);
     });
   }
 
@@ -279,7 +285,6 @@ export class MockGoalRepository extends GoalRepository {
         );
       }
       if (node.status !== 'COMPLETED') {
-        this.state.statusBeforeComplete.set(nodeId, node.status);
         this.state.replaceNode({ ...node, status: 'COMPLETED', version: node.version + 1 });
         this.state.markCompleted(nodeId, true);
         this.state.recalculate(goalId);
@@ -293,8 +298,17 @@ export class MockGoalRepository extends GoalRepository {
       const node = this.state.node(goalId, nodeId);
       this.checkOptionalVersion(node, version);
       if (node.status === 'COMPLETED') {
-        const status = this.state.statusBeforeComplete.get(nodeId) ?? 'IN_PROGRESS';
-        this.state.replaceNode({ ...node, status, version: node.version + 1 });
+        // FQ-10: a reopened node is in progress; an earned reward returns to planned, a redeemed one stays.
+        const reward =
+          node.reward?.status === 'EARNED'
+            ? { ...node.reward, status: 'PLANNED' as const }
+            : node.reward;
+        this.state.replaceNode({
+          ...node,
+          status: 'IN_PROGRESS',
+          reward,
+          version: node.version + 1,
+        });
         this.state.markCompleted(nodeId, false);
         this.state.recalculate(goalId);
       }
@@ -374,31 +388,40 @@ export class MockGoalRepository extends GoalRepository {
         goalId,
         nodeId,
         body,
+        format: 'PLAIN',
         createdAt: now,
         updatedAt: now,
+        version: 1,
       };
       this.state.notes = [...this.state.notes, note];
       return note;
     });
   }
 
-  updateNote(goalId: GoalId, noteId: string, body: string): Observable<GoalNote> {
+  updateNote(goalId: GoalId, noteId: string, version: number, body: string): Observable<GoalNote> {
     return this.write(() => {
-      const note = this.state.notes.find((item) => item.id === noteId && item.goalId === goalId);
-      if (!note) {
-        throw new AtlasDataError('This note no longer exists.', 'not-found');
-      }
-      const updated = { ...note, body, updatedAt: this.state.now() };
+      const note = this.note(goalId, noteId);
+      this.state.checkVersion(note, version);
+      const updated = { ...note, body, updatedAt: this.state.now(), version: note.version + 1 };
       this.state.notes = this.state.notes.map((item) => (item.id === noteId ? updated : item));
       return updated;
     });
   }
 
-  removeNote(goalId: GoalId, noteId: string): Observable<void> {
+  removeNote(goalId: GoalId, noteId: string, version: number): Observable<void> {
     return this.write(() => {
-      this.state.goal(goalId);
+      this.state.checkVersion(this.note(goalId, noteId), version);
       this.state.notes = this.state.notes.filter((note) => note.id !== noteId);
     });
+  }
+
+  private note(goalId: GoalId, noteId: string): GoalNote {
+    this.state.goal(goalId);
+    const note = this.state.notes.find((item) => item.id === noteId && item.goalId === goalId);
+    if (!note) {
+      throw new AtlasDataError('This note no longer exists.', 'not-found');
+    }
+    return note;
   }
 
   private checkOptionalVersion(current: { readonly version: number }, version?: number): void {

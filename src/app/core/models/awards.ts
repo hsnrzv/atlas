@@ -5,9 +5,8 @@ import type { IsoInstant } from './planned-date';
 import type { Progress } from './progress';
 
 /**
- * Proposed read model `GET /api/v1/rewards` (FQ-16, Figma page 11). The draft contract only sets, removes and
- * redeems one reward per Destination or node (API-CONTRACT §9.6); a list with counts and earned dates is a backend
- * decision. Domain `GoalReward` = UI "Milestone Award".
+ * Read model `GET /api/v1/rewards` (API-CONTRACT §9.7a, FQ-16, Figma page 11), unpaginated in `v1`. Redeem goes
+ * through the Destination or node (API-CONTRACT §9.6). Domain `GoalReward` = UI "Milestone Award".
  */
 export interface Awards {
   readonly summary: AwardsSummary;

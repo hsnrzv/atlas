@@ -63,13 +63,17 @@ function tally(leaves: readonly GoalNode[]): Tally {
 
 const decimal = (value: number) => String(Math.round(value * 1000) / 1000);
 
+/** Backend progress of a tally; `null` when nothing is counted, never an invented `0 %` (PLAN-DATABASE §8.1 rule 5). */
 export function progressOf(
   counted: number,
   total: number,
   excluded: readonly GoalNode[] = [],
-): Progress {
+): Progress | null {
+  if (!total) {
+    return null;
+  }
   return {
-    percent: (total ? (counted / total) * 100 : 0).toFixed(1),
+    percent: ((counted / total) * 100).toFixed(1),
     policy: 'DERIVED',
     countedWeight: decimal(counted),
     totalWeight: decimal(total),
@@ -102,7 +106,7 @@ function availabilityOf(
 }
 
 /**
- * Provisional (FQ-18): a Waypoint with Steps follows them. All counted Steps completed → Completed; any started →
+ * FQ-18: a Waypoint with counted Steps follows them. All counted Steps completed → Completed; any started →
  * In progress; none started → the stored status, except that a no-longer-complete Waypoint returns to Not started.
  * Skipped and cancelled Waypoints keep their status.
  */
@@ -173,15 +177,15 @@ export function recalculate(
   };
 }
 
-/** Area progress over all its Destinations' leaves (provisional FQ-2 rule; one Destination = its own progress). */
+/**
+ * Area progress over all its Destinations' leaves (a simplification of the FQ-2 weighted average; one Destination =
+ * its own progress). `null` when no Destination of the area has anything to measure.
+ */
 export function areaProgress(trees: readonly (readonly GoalNode[])[]): Progress | null {
-  if (!trees.length) {
-    return null;
-  }
   const work = trees.map((nodes) => tally(leavesBelow(nodes, null)));
-  const { percent } = progressOf(
+  const progress = progressOf(
     work.reduce((sum, item) => sum + item.counted, 0),
     work.reduce((sum, item) => sum + item.total, 0),
   );
-  return { percent };
+  return progress && { percent: progress.percent };
 }

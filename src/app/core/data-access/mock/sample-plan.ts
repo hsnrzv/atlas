@@ -1,4 +1,4 @@
-import type { Goal } from '../../models/goal';
+import { isSettableGoalStatus, type Goal } from '../../models/goal';
 import type { GoalDraft } from '../../models/goal-commands';
 import type { GoalNode, NodeAvailability } from '../../models/goal-node';
 import { SAMPLE_PROGRESS } from './sample-fixtures';
@@ -201,7 +201,7 @@ export const SAMPLE_GOAL_DRAFT: GoalDraft = {
   outcome: SAMPLE_GOAL.outcome,
   description: SAMPLE_GOAL.description,
   primaryAreaKey: SAMPLE_GOAL.primaryAreaKey,
-  status: SAMPLE_GOAL.status,
+  status: isSettableGoalStatus(SAMPLE_GOAL.status) ? SAMPLE_GOAL.status : null,
   targetDate: SAMPLE_GOAL.targetDate,
   reward: SAMPLE_GOAL.reward?.description ?? null,
 };

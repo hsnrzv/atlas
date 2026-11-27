@@ -37,7 +37,7 @@ export class MockConnectionRepository extends ConnectionRepository {
   connections(): Observable<readonly GoalConnection[]> {
     return mockRead(this.responder, 'connections', () =>
       this.state.goals
-        .filter((goal) => !this.state.archived.has(goal.id))
+        .filter((goal) => goal.status !== 'ARCHIVED')
         .flatMap((goal): GoalConnection[] => {
           const base = { goalId: goal.id, goalTitle: goal.title, verified: true, impact: null };
           const associations: GoalConnection[] = [
