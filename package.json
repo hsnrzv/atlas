@@ -70,10 +70,10 @@
     "jsdom": "^31.0.1",
     "prettier": "^3.8.1",
     "sharp": "^0.35.5",
-    "stylelint": "^18.0.0",
+    "stylelint": "^18.1.0",
     "stylelint-config-standard-scss": "^18.0.0",
     "typescript": "~6.0.2",
-    "typescript-eslint": "8.73.0",
+    "typescript-eslint": "8.74.0",
     "vitest": "^5.1.1"
   },
   "engines": {
