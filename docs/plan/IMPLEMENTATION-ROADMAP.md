@@ -101,8 +101,8 @@ each repository plan.
 4. [ ] F2-1 shared UI primitives → F2-2 models + mock repository → F2-3 My Atlas → F2-4 Destinations → F2-5
        Destination detail → F2-6 Waypoint drill-down → F2-7 Steps → F2-8 Awards → F2-9 Journey list → F2-10 e2e on three
        engines → F2-11 supply-chain gates.
-5. [ ] F2-12, BE-2.4 and infra Phase 2: frontend and backend container workflows publish `main-<sha>` to GHCR (SBOM, provenance,
-       scan); GitHub App + bump PR to `environments/dev`.
+5. [x] F2-12, BE-2.4 and infra Phase 2: frontend and backend container workflows publish `main-<sha>` to GHCR (SBOM, provenance,
+       scan); GitHub App + bump PR to `environments/dev`. Backend done 2026-11-27; frontend (F2-12) done 2026-11-27.
 
 ### Phase 3 — backend domain (frontend editing on the mock in parallel)
 
