@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build && npm run bundle:check
 
 # ---- Runtime: static files on unprivileged nginx (UID 101, port 8080) ---------------------------
-FROM nginxinc/nginx-unprivileged:1.30-alpine AS runtime
+FROM nginxinc/nginx-unprivileged:1.31-alpine AS runtime
 
 LABEL org.opencontainers.image.title="atlas-frontend" \
       org.opencontainers.image.description="IKIGAI ATLAS web client (Angular SPA)" \
