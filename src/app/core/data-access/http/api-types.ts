@@ -1,4 +1,4 @@
-import type { GoalStatus, SecondaryArea } from '../../models/goal';
+import type { SecondaryArea, SettableGoalStatus } from '../../models/goal';
 import type { NodeType } from '../../models/goal-node';
 import type { IkigaiAreaKey } from '../../models/life-dimension';
 import type { OnboardingAreas, OnboardingStepStatus } from '../../models/onboarding';
@@ -11,13 +11,16 @@ import type { PlannedDate } from '../../models/planned-date';
  * to them; nothing outside `http/` changes.
  */
 
-/** `POST /goals`, `PATCH /goals/{goalId}` (API-CONTRACT §9.5). The reward is a separate resource. */
+/**
+ * `POST /goals`, `PATCH /goals/{goalId}` (API-CONTRACT §9.5). The reward is a separate resource. `status` is left out
+ * when the goal is in a state `PATCH` cannot set (`COMPLETED`, `ARCHIVED`).
+ */
 export interface GoalWriteRequest {
   readonly title: string;
   readonly outcome: string | null;
   readonly description: string | null;
   readonly primaryAreaKey: IkigaiAreaKey;
-  readonly status: GoalStatus;
+  readonly status?: SettableGoalStatus;
   readonly targetDate: PlannedDate | null;
 }
 
@@ -53,15 +56,16 @@ export interface NoteRequest {
   readonly body: string;
 }
 
-/** Proposed `PUT /onboarding/steps/{stepKey}` (API-CONTRACT §9.3, FQ-17): the step outcome plus its payload. */
+/** `PUT /onboarding/steps/{stepKey}` (API-CONTRACT §9.3, FQ-17): the step outcome plus its payload. */
 export interface OnboardingStepRequest {
   readonly status: Extract<OnboardingStepStatus, 'COMPLETED' | 'SKIPPED'>;
   readonly payload: OnboardingAreas | null;
 }
 
-/** The reward state `POST …/reward/redeem` answers with. */
+/** The reward state `POST …/reward/redeem` answers with (API-CONTRACT §9.6). */
 export interface RewardResponse {
   readonly description: string;
   readonly status: 'PLANNED' | 'EARNED' | 'REDEEMED';
+  readonly earnedAt?: string | null;
   readonly redeemedAt?: string | null;
 }

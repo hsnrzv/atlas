@@ -310,7 +310,7 @@ content are built against Figma V3.
 
 - [x] **F4-1** Typed API client and `HttpGoalRepository`; repository provider switched by build configuration.
       Done 2026-11-17 (roadmap phase 8): `Http*` adapters for every port, the same store specs run against the mock
-      and against `FakeAtlasApi` (gate 8); open contract points are FQ-21 (frontend.md §6.5).
+      and against `FakeAtlasApi` (gate 8). FQ-21 and the other FQ answers were applied 2026-11-27 (frontend.md §6.5).
 - [x] **F4-2** HTTP layer: base path `/api/v1`, Problem Details (RFC 9457, `urn:problem:atlas:*` codes) → typed
       errors → form and field messages, retry for idempotent GETs, global error handling, and money display from string
       amounts through `Intl.NumberFormat` (no client arithmetic). Done 2026-11-17 (roadmap phase 8); the 401 flow and

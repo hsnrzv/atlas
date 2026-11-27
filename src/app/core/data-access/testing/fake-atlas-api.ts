@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, defer, map, type Observable, of, switchMap, throwError } from 'rxjs';
-import type { Goal } from '../../models/goal';
+import { isSettableGoalStatus, type Goal } from '../../models/goal';
 import type { GoalDraft, GoalQuery, GoalSort, NodeDraft } from '../../models/goal-commands';
 import type { IkigaiAreaKey } from '../../models/life-dimension';
 import type { OnboardingStepRequest } from '../http/api-types';
@@ -25,7 +25,7 @@ import { MockTimelineRepository } from '../mock/mock-timeline.repository';
 
 type Reply = Observable<{ status: number; body: unknown }>;
 
-/** Request properties the contract accepts per write; anything else is a `400` (API-CONTRACT §5). */
+/** Request properties the contract accepts per write; anything else is a `400` (API-CONTRACT §1). */
 const BODY_KEYS = {
   goal: ['title', 'outcome', 'description', 'primaryAreaKey', 'status', 'targetDate'],
   goalAreas: ['secondaryAreas'],
@@ -33,6 +33,7 @@ const BODY_KEYS = {
   nodePatch: ['title', 'outcome', 'description', 'dueDate', 'status', 'parentId', 'sortOrder'],
   dependency: ['prerequisiteNodeId', 'dependentNodeId'],
   note: ['nodeId', 'body'],
+  noteUpdate: ['body'],
   reward: ['description'],
   onboardingStep: ['status', 'payload'],
 } as const;
@@ -105,7 +106,7 @@ function checkBody(body: unknown, allowed: readonly string[]): Record<string, un
   return record;
 }
 
-/** The version of a strong ETag in `If-Match`; `428` when it is missing (API-CONTRACT §6). */
+/** The version of a strong ETag in `If-Match`; `428` when it is missing (API-CONTRACT §7). */
 function ifMatch(request: HttpRequest<unknown>): number {
   const header = request.headers.get('If-Match');
   const version = header?.match(/^"(\d+)"$/)?.[1];
@@ -249,7 +250,7 @@ export class FakeAtlasApi extends HttpBackend {
         return this.read(this.goals.archive(goalId, ifMatch(request)));
       case 'reward':
         return subId === 'redeem'
-          ? this.redeem(goalId, null)
+          ? this.redeem(goalId, null, ifMatch(request))
           : this.reward(request, this.state.goal(goalId));
       case 'nodes':
         return this.nodeRoute(request, goalId, subId, action, actionTail);
@@ -271,7 +272,7 @@ export class FakeAtlasApi extends HttpBackend {
       case 'notes':
         switch (request.method) {
           case 'GET':
-            return this.page(this.goals.notes(goalId, params.get('nodeId')));
+            return this.page(this.notes(goalId, params.get('nodeId')));
           case 'POST': {
             const body = checkBody(request.body, BODY_KEYS.note);
             return this.created(
@@ -283,11 +284,12 @@ export class FakeAtlasApi extends HttpBackend {
             );
           }
           case 'PATCH': {
-            const body = checkBody(request.body, BODY_KEYS.note);
-            return this.read(this.goals.updateNote(goalId, subId, body['body'] as string));
+            const version = ifMatch(request);
+            const body = checkBody(request.body, BODY_KEYS.noteUpdate);
+            return this.read(this.goals.updateNote(goalId, subId, version, body['body'] as string));
           }
           case 'DELETE':
-            return this.empty(this.goals.removeNote(goalId, subId));
+            return this.empty(this.goals.removeNote(goalId, subId, ifMatch(request)));
         }
     }
     return reject(404, 'RESOURCE_NOT_FOUND', route);
@@ -311,10 +313,13 @@ export class FakeAtlasApi extends HttpBackend {
         return this.read(this.goals.reopenNode(goalId, nodeId, ifMatch(request)));
       case 'reward':
         if (actionTail === 'redeem') {
-          return this.redeem(goalId, nodeId);
+          return this.redeem(goalId, nodeId, ifMatch(request));
         }
         break;
       case undefined:
+        if (request.method === 'GET') {
+          return of({ status: 200, body: this.state.node(goalId, nodeId) });
+        }
         if (request.method === 'PATCH') {
           const body = checkBody(request.body, BODY_KEYS.nodePatch);
           return this.read(this.goals.updateNode(goalId, nodeId, ifMatch(request), body));
@@ -334,13 +339,19 @@ export class FakeAtlasApi extends HttpBackend {
       request.method === 'PUT'
         ? (checkBody(request.body, BODY_KEYS.reward)['description'] as string)
         : null;
-    const draft: GoalDraft = { ...goal, reward: description };
+    const status = isSettableGoalStatus(goal.status) ? goal.status : null;
+    const draft: GoalDraft = { ...goal, status, reward: description };
     return this.goals
       .update(goal.id, version, draft)
       .pipe(map((updated) => ({ status: description ? 200 : 204, body: updated.reward })));
   }
 
-  private redeem(goalId: string, nodeId: string | null): Reply {
+  /** `POST …/reward/redeem`, guarded by the `ETag` of the reward's owner, the goal or the node (FQ-21). */
+  private redeem(goalId: string, nodeId: string | null, version: number): Reply {
+    this.state.checkVersion(
+      nodeId ? this.state.node(goalId, nodeId) : this.state.goal(goalId),
+      version,
+    );
     return this.awards.awards().pipe(
       switchMap((awards) => {
         const item = awards.rewards.find(
@@ -351,6 +362,19 @@ export class FakeAtlasApi extends HttpBackend {
           : reject(404, 'RESOURCE_NOT_FOUND', 'reward');
       }),
     );
+  }
+
+  /** Without `nodeId` every note of the goal, with it only that node's (server-side filter, FQ-21). */
+  private notes(goalId: string, nodeId: string | null): Observable<readonly unknown[]> {
+    return this.goals
+      .notes(goalId, null)
+      .pipe(
+        map(() =>
+          this.state.notes.filter(
+            (note) => note.goalId === goalId && (nodeId === null || note.nodeId === nodeId),
+          ),
+        ),
+      );
   }
 
   private onboardingRoute(request: HttpRequest<unknown>, path: readonly string[]): Reply {

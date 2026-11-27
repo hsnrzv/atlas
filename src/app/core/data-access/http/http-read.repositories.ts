@@ -1,8 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { map, type Observable } from 'rxjs';
+import { map, type Observable, switchMap } from 'rxjs';
 import type { AwardItem, Awards } from '../../models/awards';
 import type { GoalConnection } from '../../models/connection';
 import type { Dashboard } from '../../models/dashboard';
+import type { Goal } from '../../models/goal';
+import type { GoalNode } from '../../models/goal-node';
 import type { Onboarding, OnboardingAreas } from '../../models/onboarding';
 import type { Timeline, TimelineQuery } from '../../models/timeline';
 import { AwardRepository } from '../ports/award.repository';
@@ -33,7 +35,7 @@ export class HttpTimelineRepository extends TimelineRepository {
   }
 }
 
-/** Proposed `GET /api/v1/connections` (FQ-15). */
+/** Proposed `GET /api/v1/connections` (FQ-15, deferred to backend Phase 6). */
 @Injectable({ providedIn: 'root' })
 export class HttpConnectionRepository extends ConnectionRepository {
   private readonly api = inject(AtlasApi);
@@ -43,7 +45,7 @@ export class HttpConnectionRepository extends ConnectionRepository {
   }
 }
 
-/** Proposed `GET /api/v1/rewards` (FQ-16) and `POST …/reward/redeem` (API-CONTRACT §9.6). */
+/** `GET /api/v1/rewards` (API-CONTRACT §9.7a, FQ-16) and `POST …/reward/redeem` (API-CONTRACT §9.6). */
 @Injectable({ providedIn: 'root' })
 export class HttpAwardRepository extends AwardRepository {
   private readonly api = inject(AtlasApi);
@@ -52,16 +54,23 @@ export class HttpAwardRepository extends AwardRepository {
     return this.api.get<Awards>(['rewards']);
   }
 
-  /** No `If-Match`: the reward carries no `version` yet (FQ-21). */
+  /**
+   * A reward has no version of its own: redeem sends `If-Match` with the `ETag` of its owner, the goal or the node
+   * (API-CONTRACT §7, FQ-21). `GET /rewards` carries no versions, so the owner is read first.
+   */
   redeem(reward: AwardItem): Observable<AwardItem> {
-    const path = reward.nodeId
-      ? ['goals', reward.goalId, 'nodes', reward.nodeId, 'reward', 'redeem']
-      : ['goals', reward.goalId, 'reward', 'redeem'];
-    return this.api.post<RewardResponse>(path, null).pipe(
+    const owner = reward.nodeId
+      ? ['goals', reward.goalId, 'nodes', reward.nodeId]
+      : ['goals', reward.goalId];
+    return this.api.get<Goal | GoalNode>(owner).pipe(
+      switchMap(({ version }) =>
+        this.api.post<RewardResponse>([...owner, 'reward', 'redeem'], null, { version }),
+      ),
       map((result) => ({
         ...reward,
         description: result.description,
         status: result.status,
+        earnedAt: result.earnedAt ?? reward.earnedAt,
         redeemedAt: result.redeemedAt ?? reward.redeemedAt,
       })),
     );

@@ -1,4 +1,4 @@
-import type { GoalId, GoalStatus } from './goal';
+import type { GoalId, GoalStatus, SettableGoalStatus } from './goal';
 import type { NodeId, NodeStatus, NodeType } from './goal-node';
 import type { IkigaiAreaKey } from './life-dimension';
 import type { IsoDate, PlannedDate } from './planned-date';
@@ -13,7 +13,8 @@ export interface GoalDraft {
   readonly outcome: string | null;
   readonly description: string | null;
   readonly primaryAreaKey: IkigaiAreaKey;
-  readonly status: GoalStatus;
+  /** `null` keeps a lifecycle status the form cannot set (`COMPLETED`, `ARCHIVED`); it is not sent. */
+  readonly status: SettableGoalStatus | null;
   readonly targetDate: PlannedDate | null;
   readonly reward: string | null;
 }

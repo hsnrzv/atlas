@@ -47,7 +47,7 @@ export class MockAwardRepository extends AwardRepository {
   }
 
   private read(): Awards {
-    const goals = this.state.goals.filter((goal) => !this.state.archived.has(goal.id));
+    const goals = this.state.goals.filter((goal) => goal.status !== 'ARCHIVED');
     const rewards: AwardItem[] = [];
     const achievedWaypoints: AchievedWaypoint[] = [];
     for (const goal of goals) {

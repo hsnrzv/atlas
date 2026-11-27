@@ -6,10 +6,19 @@ import type { Progress } from './progress';
 /** Domain `Goal` = UI "Destination" (ADR-0006). */
 export type GoalId = string;
 
-/** Settable statuses in the draft contract (API-CONTRACT §9.5). Further lifecycle states are a backend decision. */
-export type GoalStatus = 'DRAFT' | 'ACTIVE' | 'PAUSED';
+/**
+ * Goal lifecycle status (API-CONTRACT §9.5, FQ-8). `ARCHIVED` goals are left out of `GET /goals` unless
+ * `status=ARCHIVED` is requested; `archive`/`restore` handle that state.
+ */
+export type GoalStatus = 'DRAFT' | 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'ARCHIVED';
 
-/** Proposed scale, to confirm with design (API-CONTRACT §9.5). */
+/** The statuses `PATCH /goals/{goalId}` can set (API-CONTRACT §9.5). */
+export type SettableGoalStatus = Extract<GoalStatus, 'DRAFT' | 'ACTIVE' | 'PAUSED'>;
+
+export const isSettableGoalStatus = (status: GoalStatus): status is SettableGoalStatus =>
+  status === 'DRAFT' || status === 'ACTIVE' || status === 'PAUSED';
+
+/** Agreed scale (API-CONTRACT §9.5, DB-2.2); `null` = not set. */
 export type GoalPriority = 'LOW' | 'MEDIUM' | 'HIGH';
 
 export type RewardStatus = 'PLANNED' | 'EARNED' | 'REDEEMED';
@@ -38,7 +47,8 @@ export interface Goal {
   readonly status: GoalStatus;
   readonly startDate: PlannedDate | null;
   readonly targetDate: PlannedDate | null;
-  readonly progress: Progress;
+  /** `null` when there is nothing to measure; the backend never reports an invented `0 %` (API-CONTRACT §9.5). */
+  readonly progress: Progress | null;
   readonly nextAvailableNode: GoalNodeRef | null;
   readonly reward: GoalReward | null;
   readonly expectedWeeklyEffortMinutes: number | null;

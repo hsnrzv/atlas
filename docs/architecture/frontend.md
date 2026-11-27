@@ -209,55 +209,44 @@ The fixtures are deleted with the mock (F4-7).
 - "Use sample details" (form) and "Explore sample plan" (onboarding) exist only in dev builds, behind the same
   environment flag.
 
-### 6.5 Proposed contract additions (frontend questions FQ-1 … FQ-22)
+### 6.5 Contract decisions (frontend questions FQ-1 … FQ-22)
 
-Figma pages 05–08 show values that the draft `GET /api/v1/dashboard` contract (API-CONTRACT §9.1) does not provide.
-Only the backend can derive them (roadmap R-12), so the frontend models them as **proposed** additions
-(marked "Proposed (FQ-n)" in `core/models/dashboard.ts` and `progress.ts`). The mock serves Figma's values for them.
-The backend owner decides each question before F4-1. If one is rejected, its UI element is removed. The frontend
-never derives it.
+Figma pages 05–14 and the HTTP adapters raised questions the draft contract did not answer. The backend owner decided
+them on 2026-11-27 (atlas-microservices `docs/implementation/phase-2-contract-review.md` §2, API-CONTRACT). Accepted
+fields are part of the models without a "Proposed" marker. Only the backend derives them (roadmap R-12); the mock
+serves Figma's values and the frontend never computes them. A rejected or deferred element stays out of the UI.
 
-| ID   | Proposed field                                                                                   | Shown on page 05                                            |
-| ---- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| FQ-1 | `activeGoals[].nextNode` gains `nodeType`, `status`, `availability.state`, `dueDate`, `progress` | Next Waypoint card: status chip, planned date, progress     |
-| FQ-2 | `lifeBalance[].progress` (`null` when the area has no active Destination)                        | Life dimension cards                                        |
-| FQ-3 | `summary { activeGoals, achievedWaypoints }`, `activeGoals[].achievedWaypoints`                  | At a glance; hero "Waypoints achieved"                      |
-| FQ-4 | `inProgress[]` (Steps in progress); `recentAchievements[].nodeType`                              | Recent progress ("Completed · Step", "In progress")         |
-| FQ-5 | `progress.excludedNodes[]`                                                                       | Progress policy caption ("… is excluded from progress")     |
-| FQ-6 | `activeGoals[].keyDates[]` (later Waypoints with their planned date or `null`)                   | Timing line ("Receive admission decision · date not set …") |
+| ID    | Decision                                                                                                                                      | Frontend                                                                                                                                                     |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| FQ-1  | Accepted: `activeGoals[].nextNode` with `nodeType`, `status`, `availability.state`, `dueDate`, `progress` (`null` when nothing to measure)    | Next Waypoint card                                                                                                                                           |
+| FQ-2  | Accepted: `lifeBalance[].progress`, `null` without an active Destination with measurable progress                                             | Life dimension cards                                                                                                                                         |
+| FQ-3  | Accepted: `summary { activeGoals, achievedWaypoints }`, `activeGoals[].achievedWaypoints`                                                     | At a glance; hero "Waypoints achieved"                                                                                                                       |
+| FQ-4  | Accepted: `inProgress[]` (Steps in progress, at most 10); `recentAchievements[].nodeType`                                                     | Recent progress                                                                                                                                              |
+| FQ-5  | Accepted: `progress.excludedNodes[] { nodeId, title }`                                                                                        | Progress policy caption                                                                                                                                      |
+| FQ-6  | Accepted: `activeGoals[].keyDates[]` (open top-level Waypoints, at most 5; `date` or `null`)                                                  | Timing line                                                                                                                                                  |
+| FQ-7  | Rejected: an application date is a Waypoint with a `dueDate`                                                                                  | not in the Destination form                                                                                                                                  |
+| FQ-8  | Accepted: goal status `DRAFT`, `ACTIVE`, `PAUSED`, `COMPLETED`, `ARCHIVED`; only the first three are set with `PATCH`; lists exclude archived | `archive` returns `ARCHIVED`; lists show non-archived Destinations; the form keeps a `COMPLETED`/`ARCHIVED` status unless one of the settable ones is chosen |
+| FQ-9  | Accepted: note text `body` with `format` `PLAIN` (default) or `MARKDOWN`                                                                      | `GoalNote.body`, rendered as plain text (D13)                                                                                                                |
+| FQ-10 | Changed: `reopen` sets a `COMPLETED` node to `IN_PROGRESS`; an `EARNED` reward returns to `PLANNED`                                           | the mock does the same                                                                                                                                       |
+| FQ-11 | Deferred (after MVP): no node priority; goals have `priority`                                                                                 | no priority filter on Steps                                                                                                                                  |
+| FQ-12 | Accepted: `achievedWaypoints` on the goal detail and goal list (backend Phase 3)                                                              | not shown on Destination detail yet                                                                                                                          |
+| FQ-13 | Accepted: `noteCount` on every node of `GET …/tree` (backend Phase 3)                                                                         | not shown in the Step row yet                                                                                                                                |
+| FQ-14 | Accepted: timeline items with `date: null` and `progress`                                                                                     | Journey "Not placed yet" and marker progress                                                                                                                 |
+| FQ-15 | Deferred (Phase 6): `GET /connections` needs finance impacts                                                                                  | `GoalConnection` stays a proposed model (marked in `connection.ts`); no amounts                                                                              |
+| FQ-16 | Accepted: `GET /rewards` returns the `Awards` model                                                                                           | Awards page                                                                                                                                                  |
+| FQ-17 | Accepted: onboarding step `areas`; ikigai areas carry `focused`                                                                               | setup saves focus areas; `IkigaiArea.focused`                                                                                                                |
+| FQ-18 | Accepted: a Waypoint with counted Steps follows them                                                                                          | the UI shows the returned status (the mock derives it, `mock-recalculation.ts`)                                                                              |
+| FQ-19 | Deferred (after MVP): no intention entity                                                                                                     | "Add intention" opens the Destination form for that dimension                                                                                                |
+| FQ-20 | Accepted: `weight` optional, decimal string, `0 < weight ≤ 1`; out of range → `400`                                                           | Connections "connect" sends `{ areaKey, weight }`; the form checks the format, the backend the range                                                         |
+| FQ-21 | Changed: see below                                                                                                                            | the adapters follow the `If-Match` matrix                                                                                                                    |
+| FQ-22 | Deferred (Phase 9, BFF): `GET /me` → `200 { displayName }` or `401`; sign-in `/api/auth/login` (optional `returnTo`); `POST /api/auth/logout` | `/me` read for its status and `displayName`; sign-in without a return path; no sign-out action yet                                                           |
 
-Pages 06–08 (Phase 5) raise further questions. Until they are decided, the UI leaves the element out or uses the
-contract's existing field, as listed:
-
-| ID    | Question                                                               | Until decided                                             |
-| ----- | ---------------------------------------------------------------------- | --------------------------------------------------------- |
-| FQ-7  | Destination application date (Figma form field) is not in the contract | not in the form                                           |
-| FQ-8  | How archived Destinations are returned and shown                       | `archive` is called; lists show active Destinations only  |
-| FQ-9  | Note text field name (`body` proposed)                                 | `GoalNote.body`, shown as plain text (D13)                |
-| FQ-10 | Status a Step returns to when it is reopened                           | the mock restores the previous status, else `IN_PROGRESS` |
-| FQ-11 | Node priority (Figma Steps filter)                                     | no priority filter                                        |
-| FQ-12 | Waypoints achieved on a Destination outside the dashboard              | not shown on Destination detail                           |
-| FQ-13 | Notes count per Step (Figma Step row "No notes")                       | not shown in the Step row                                 |
-
-Pages 09–14 (Phase 6) need read models the draft contract does not define. The ports, models and mock follow these
-proposals; the backend owner decides them before F4-1:
-
-| ID    | Question                                                                                                                                                                | Until decided                                                                                                            |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| FQ-14 | `GET /timeline` returns undated items (`date: null`) and each item's `progress`                                                                                         | Journey "Not placed yet" and marker progress use these fields                                                            |
-| FQ-15 | `GET /connections`: associations and unverified possible impacts per Destination                                                                                        | proposed `GoalConnection` model; no amounts                                                                              |
-| FQ-16 | `GET /rewards`: Milestone Awards with counts, earned dates and achieved Waypoints                                                                                       | proposed `Awards` model                                                                                                  |
-| FQ-17 | Onboarding step `areas` and `PUT /onboarding/steps/areas`                                                                                                               | setup saves focus areas through the proposed step                                                                        |
-| FQ-18 | Whether a Waypoint's status follows its Steps                                                                                                                           | the UI shows the status the backend returns (the mock derives it from the Steps, `mock-recalculation.ts`)                |
-| FQ-19 | Whether a Life Dimension "intention" is its own entity                                                                                                                  | "Add intention" opens the Destination form for that dimension                                                            |
-| FQ-20 | `PATCH /goals/{goalId}` with `secondaryAreas[]` (API-CONTRACT §9.5): the allowed range of the optional contribution `weight`, and whether `GET /connections` returns it | Connections "connect" sends `{ areaKey, weight }`; the form checks only the decimal format, the backend checks the range |
-
-The HTTP adapters (Phase 8) raise one more:
-
-| ID    | Question                                                                                                                                                                                                                                                                                    | Until decided                                                                                                                                                                                                              |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| FQ-21 | Concurrency and body shapes the draft does not fix: rewards, notes, dependencies and onboarding carry no `version`; the reward `PUT`/`DELETE` precondition; the onboarding step body (`{ status, payload }`, FQ-17); whether `GET …/notes?nodeId=` filters; a correlation-ID request header | the adapters send no `If-Match` for those writes except the reward, which uses the Destination's version; the onboarding body is `{ status, payload }`; notes are also filtered by `nodeId` client-side; no correlation ID |
-| FQ-22 | Session endpoints (atlas-microservices ADR-0005 §3): the `GET /api/v1/me` body, the sign-in path under `/api/auth/**` and whether it takes a return path, the logout endpoint, and when the CSRF cookie is first set                                                                        | `/me` is read only for its status (200 signed in, 401 not) and an optional `displayName`; sign-in goes to `/api/auth/login` without a return path; no sign-out action; the cookie names are Spring's defaults              |
+FQ-21 preconditions (API-CONTRACT §7): the goal `ETag` for goal writes and the goal reward (`PUT`, `DELETE`, `redeem`);
+the node `ETag` for node writes and the node reward; the note `ETag` for note `PATCH`/`DELETE` (notes carry `version`);
+none for creates, dependencies and onboarding steps. `GET …/notes?nodeId=` filters on the server; without `nodeId`
+the server returns all notes of the goal and the client keeps the Destination's own notes (`nodeId: null`). No
+correlation-ID header (the backend accepts W3C `traceparent` later). Goal `progress` may be `null` (nothing to
+measure); the UI then draws an empty bar without an "n of m" detail, as it already did for nodes.
 
 ## 7. State
 

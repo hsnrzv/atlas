@@ -280,16 +280,25 @@ export class GoalPlanStore {
       : this.missing();
   }
 
+  /** Sends the loaded note's `version` as `If-Match` (FQ-21); a stale copy fails with a version conflict. */
   updateNote(noteId: string, body: string): Promise<WriteResult<GoalNote>> {
     const goalId = this.goalId();
-    return goalId
-      ? this.writeNote(this.repository.updateNote(goalId, noteId, body))
+    const note = this.note(noteId);
+    return goalId && note
+      ? this.writeNote(this.repository.updateNote(goalId, noteId, note.version, body))
       : this.missing();
   }
 
   removeNote(noteId: string): Promise<WriteResult<void>> {
     const goalId = this.goalId();
-    return goalId ? this.writeNote(this.repository.removeNote(goalId, noteId)) : this.missing();
+    const note = this.note(noteId);
+    return goalId && note
+      ? this.writeNote(this.repository.removeNote(goalId, noteId, note.version))
+      : this.missing();
+  }
+
+  private note(noteId: string): GoalNote | undefined {
+    return this.notes().find((note) => note.id === noteId);
   }
 
   private async syncPrerequisites(node: GoalNode, wanted: readonly NodeId[]): Promise<void> {
@@ -374,7 +383,12 @@ export class GoalPlanStore {
       this.notesResource.reload();
       return { ok: true, value };
     } catch (error) {
-      return { ok: false, error: asDataError(error) };
+      const failure = asDataError(error);
+      if (failure.reason === 'not-found' || isVersionConflict(failure)) {
+        // The loaded notes are stale; show the server's.
+        this.notesResource.reload();
+      }
+      return { ok: false, error: failure };
     } finally {
       this.writing.set(false);
     }

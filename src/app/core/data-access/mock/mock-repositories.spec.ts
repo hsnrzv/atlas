@@ -115,7 +115,7 @@ describe('mock repositories (dev only)', () => {
       title: 'Learn Japanese',
       version: 1,
       reward: { description: 'Trip', status: 'PLANNED' },
-      progress: { percent: '0.0' },
+      progress: null,
     });
 
     const titles = async (query = {}) =>
@@ -134,8 +134,10 @@ describe('mock repositories (dev only)', () => {
 
     await settle(firstValueFrom(goals.remove(created.id, 2)));
     expect(await titles()).toEqual([SAMPLE_GOAL_TITLE]);
-    await settle(firstValueFrom(goals.archive(SAMPLE_GOAL_ID)));
+    const archived = await settle(firstValueFrom(goals.archive(SAMPLE_GOAL_ID)));
+    expect(archived.status).toBe('ARCHIVED');
     expect(await titles()).toEqual([]);
+    expect(await titles({ status: 'ARCHIVED' })).toEqual([SAMPLE_GOAL_TITLE]);
   });
 
   it('adds, moves and deletes Waypoints and Steps', async () => {
@@ -208,7 +210,9 @@ describe('mock repositories (dev only)', () => {
       firstValueFrom(goals.reopenNode(SAMPLE_GOAL_ID, N.draftStatement)),
     );
     expect(reopened.status).toBe('IN_PROGRESS');
-    expect((await settle(firstValueFrom(goals.get(SAMPLE_GOAL_ID)))).progress.percent).toBe('20.0');
+    expect((await settle(firstValueFrom(goals.get(SAMPLE_GOAL_ID)))).progress?.percent).toBe(
+      '20.0',
+    );
   });
 
   it('refuses to complete a blocked Step and rejects dependency loops', async () => {
@@ -241,13 +245,23 @@ describe('mock repositories (dev only)', () => {
     expect(
       (await settle(firstValueFrom(goals.notes(SAMPLE_GOAL_ID, null)))).map((n) => n.body),
     ).toEqual(['Goal note']);
-    await settle(firstValueFrom(goals.updateNote(SAMPLE_GOAL_ID, nodeNote.id, 'Draft v3')));
+    expect(nodeNote).toMatchObject({ format: 'PLAIN', version: 1 });
+    const edited = await settle(
+      firstValueFrom(goals.updateNote(SAMPLE_GOAL_ID, nodeNote.id, 1, 'Draft v3')),
+    );
+    expect(edited.version).toBe(2);
+    expect(
+      await reason(firstValueFrom(goals.updateNote(SAMPLE_GOAL_ID, nodeNote.id, 1, 'Stale'))),
+    ).toBe('VERSION_CONFLICT');
     expect(
       (await settle(firstValueFrom(goals.notes(SAMPLE_GOAL_ID, N.draftStatement)))).map(
         (n) => n.body,
       ),
     ).toEqual(['Draft v3']);
-    await settle(firstValueFrom(goals.removeNote(SAMPLE_GOAL_ID, nodeNote.id)));
+    expect(await reason(firstValueFrom(goals.removeNote(SAMPLE_GOAL_ID, nodeNote.id, 1)))).toBe(
+      'VERSION_CONFLICT',
+    );
+    await settle(firstValueFrom(goals.removeNote(SAMPLE_GOAL_ID, nodeNote.id, 2)));
     expect(await settle(firstValueFrom(goals.notes(SAMPLE_GOAL_ID, N.draftStatement)))).toEqual([]);
   });
 

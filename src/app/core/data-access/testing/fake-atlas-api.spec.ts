@@ -75,6 +75,43 @@ describe('FakeAtlasApi', () => {
     expect(error.reason).toBe('validation');
   });
 
+  it('requires the owner ETag to redeem a reward', async () => {
+    const error = await failure(
+      firstValueFrom(api().post(['goals', SAMPLE_GOAL_ID, 'reward', 'redeem'], null)),
+    );
+    expect(error.code).toBe('PRECONDITION_REQUIRED');
+  });
+
+  it('requires the note ETag and filters notes by node on the server', async () => {
+    const notes = ['goals', SAMPLE_GOAL_ID, 'notes'];
+    await settle(firstValueFrom(api().post(notes, { nodeId: null, body: 'Goal note' })));
+    const added = await settle(
+      firstValueFrom(
+        api().post<{ id: string }>(notes, { nodeId: N.draftStatement, body: 'Node note' }),
+      ),
+    );
+    const all = await settle(firstValueFrom(api().getAll<{ body: string }>(notes)));
+    expect(all.map((note) => note.body).sort()).toEqual(['Goal note', 'Node note']);
+    const filtered = await settle(
+      firstValueFrom(api().getAll<{ body: string }>(notes, { nodeId: N.draftStatement })),
+    );
+    expect(filtered.map((note) => note.body)).toEqual(['Node note']);
+    const error = await failure(firstValueFrom(api().delete([...notes, added.id])));
+    expect(error.code).toBe('PRECONDITION_REQUIRED');
+  });
+
+  it('archives a Destination and lists it only when asked', async () => {
+    const goals = ['goals'];
+    await settle(
+      firstValueFrom(api().post([...goals, SAMPLE_GOAL_ID, 'archive'], null, { version: 1 })),
+    );
+    expect(await settle(firstValueFrom(api().getAll(goals)))).toEqual([]);
+    const archived = await settle(
+      firstValueFrom(api().getAll<{ status: string }>(goals, { status: 'ARCHIVED' })),
+    );
+    expect(archived.map((goal) => goal.status)).toEqual(['ARCHIVED']);
+  });
+
   it('answers 404 as not-found', async () => {
     const error = await failure(firstValueFrom(api().get(['goals', 'missing'])));
     expect(error.reason).toBe('not-found');

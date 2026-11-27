@@ -41,6 +41,9 @@
             <mat-option [value]="option.value">{{ option.label }}</mat-option>
           }
         </mat-select>
+        @if (!model().status) {
+          <mat-hint>Completed or archived. Choose a status to change it.</mat-hint>
+        }
       </mat-form-field>
     </div>
     <atlas-planned-date-fields [label]="'Target · optional'" [field]="goal.target" />

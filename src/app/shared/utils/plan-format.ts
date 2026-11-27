@@ -1,4 +1,9 @@
-import type { GoalReward, GoalStatus, RewardStatus } from '../../core/models/goal';
+import type {
+  GoalReward,
+  GoalStatus,
+  RewardStatus,
+  SettableGoalStatus,
+} from '../../core/models/goal';
 import type { GoalNode, NodeStatus } from '../../core/models/goal-node';
 import type { PlannedDate } from '../../core/models/planned-date';
 import type { Progress } from '../../core/models/progress';
@@ -15,9 +20,12 @@ const GOAL_STATUS: Record<GoalStatus, StatusBadgeVm> = {
   ACTIVE: { status: 'in-progress', label: 'Active' },
   DRAFT: { status: 'not-started', label: 'Draft' },
   PAUSED: { status: 'not-started', label: 'Paused' },
+  COMPLETED: { status: 'success', label: 'Completed' },
+  ARCHIVED: { status: 'not-started', label: 'Archived' },
 };
 
-export const GOAL_STATUS_OPTIONS: readonly { value: GoalStatus; label: string }[] = [
+/** The statuses a user can choose; `COMPLETED` and `ARCHIVED` come from backend actions (FQ-8). */
+export const GOAL_STATUS_OPTIONS: readonly { value: SettableGoalStatus; label: string }[] = [
   { value: 'ACTIVE', label: 'Active' },
   { value: 'DRAFT', label: 'Draft' },
   { value: 'PAUSED', label: 'Paused' },

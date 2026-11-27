@@ -104,7 +104,31 @@ describe('HttpGoalRepository', () => {
     expect(remove.request.headers.get('If-Match')).toBe('"5"');
   });
 
-  it('keeps only the notes of the asked owner', async () => {
+  it('leaves a lifecycle status out of the PATCH body', () => {
+    void firstValueFrom(goals.update('g-1', 4, { ...draft, status: null }));
+    const patch = backend.expectOne('/api/v1/goals/g-1').request;
+    expect(patch.body).not.toHaveProperty('status');
+  });
+
+  it('lets the server filter the notes of a node', async () => {
+    const notes = firstValueFrom(goals.notes('g-1', 'n-1'));
+    const request = backend.expectOne((r) => r.url === '/api/v1/goals/g-1/notes');
+    expect(request.request.params.get('nodeId')).toBe('n-1');
+    request.flush([{ id: 'b', nodeId: 'n-1' }]);
+    await expect(notes).resolves.toEqual([{ id: 'b', nodeId: 'n-1' }]);
+  });
+
+  it('sends the note ETag on note edits and deletes', () => {
+    void firstValueFrom(goals.updateNote('g-1', 'note-1', 3, 'Edited'));
+    void firstValueFrom(goals.removeNote('g-1', 'note-2', 5));
+    const patch = backend.expectOne('/api/v1/goals/g-1/notes/note-1').request;
+    expect([patch.method, patch.headers.get('If-Match')]).toEqual(['PATCH', '"3"']);
+    expect(patch.body).toEqual({ body: 'Edited' });
+    const remove = backend.expectOne('/api/v1/goals/g-1/notes/note-2').request;
+    expect([remove.method, remove.headers.get('If-Match')]).toEqual(['DELETE', '"5"']);
+  });
+
+  it('keeps only the Destination notes when no node is asked', async () => {
     const notes = firstValueFrom(goals.notes('g-1', null));
     const request = backend.expectOne((r) => r.url === '/api/v1/goals/g-1/notes');
     expect(request.request.params.has('nodeId')).toBe(false);

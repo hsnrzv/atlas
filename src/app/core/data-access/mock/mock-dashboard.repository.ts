@@ -166,7 +166,7 @@ export class MockDashboardRepository extends DashboardRepository {
     const current = () =>
       mockDashboard(
         this.state.goals
-          .filter((goal) => !this.state.archived.has(goal.id))
+          .filter((goal) => goal.status !== 'ARCHIVED')
           .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
           .map((goal) => ({ goal, nodes: this.state.nodesOf(goal.id) })),
         (id) => this.state.completedAt(id),

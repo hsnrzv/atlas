@@ -4,7 +4,7 @@ import { EMPTY, Observable, defer, expand, map, reduce, tap } from 'rxjs';
 import { AtlasDataError } from '../data-error';
 import { API_BASE_URL, apiUrl } from './api-config';
 
-/** A paginated collection (API-CONTRACT §5). */
+/** A paginated collection (API-CONTRACT §6). */
 export interface Page<T> {
   readonly content: readonly T[];
   readonly page: {
@@ -19,7 +19,7 @@ export type QueryValue = string | number | boolean | readonly (string | number |
 export type Query = Readonly<Record<string, QueryValue | null | undefined>>;
 
 export interface WriteOptions {
-  /** The resource's `version`; sent as the strong `If-Match` ETag (API-CONTRACT §6). */
+  /** The resource's `version`; sent as the strong `If-Match` ETag (API-CONTRACT §7). */
   readonly version?: number;
   /** Sent as `Idempotency-Key` (API-CONTRACT §8). Prefer {@link WriteOptions.idempotent}. */
   readonly idempotencyKey?: string;

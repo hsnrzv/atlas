@@ -91,9 +91,13 @@ each repository plan.
 
 ### Phase 2 — shell content + contract alignment + publishing
 
-1. [ ] Owner review of all `Proposed` ADRs and the decisions in §4 (BE-2.2, infra "owner decisions recorded").
-2. [ ] BE-2.1 API draft reviewed against the frontend models planned in F2-2 (A-1…A-6 resolved).
-3. [ ] BE-2.3 spike (springdoc with Boot 4/Jackson 3; JWT audiences).
+1. [x] Owner review of all `Proposed` ADRs and the decisions in §4 (BE-2.2, infra "owner decisions recorded").
+       Done 2026-11-27 (atlas-microservices `docs/implementation/phase-2-contract-review.md` §5).
+2. [x] BE-2.1 API draft reviewed against the frontend models planned in F2-2 (A-1…A-6 resolved). Done 2026-11-27;
+       the `atlas` follow-ups of the review's §6 (FQ answers in frontend.md §6.5, `ARCHIVED`/`COMPLETED` goal status,
+       nullable progress, reopen → `IN_PROGRESS`, versioned notes with `If-Match`, node reward `If-Match`,
+       `IkigaiArea.focused`, API-CONTRACT §6/§7 references) are done 2026-11-27.
+3. [x] BE-2.3 spike (springdoc with Boot 4/Jackson 3; JWT audiences). Done 2026-11-27 (backend).
 4. [ ] F2-1 shared UI primitives → F2-2 models + mock repository → F2-3 My Atlas → F2-4 Destinations → F2-5
        Destination detail → F2-6 Waypoint drill-down → F2-7 Steps → F2-8 Awards → F2-9 Journey list → F2-10 e2e on three
        engines → F2-11 supply-chain gates.

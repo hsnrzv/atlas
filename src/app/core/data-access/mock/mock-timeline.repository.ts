@@ -29,7 +29,7 @@ export class MockTimelineRepository extends TimelineRepository {
 
   private items(query: TimelineQuery): TimelineItem[] {
     const goals = this.state.goals.filter(
-      (goal) => !this.state.archived.has(goal.id) && (!query.goalId || goal.id === query.goalId),
+      (goal) => goal.status !== 'ARCHIVED' && (!query.goalId || goal.id === query.goalId),
     );
     const items = goals.flatMap((goal): TimelineItem[] => [
       ...(query.nodeType

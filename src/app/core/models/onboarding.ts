@@ -7,8 +7,8 @@ export type OnboardingStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED';
 export type OnboardingStepStatus = 'NOT_STARTED' | 'COMPLETED' | 'SKIPPED';
 
 /**
- * Step keys. The contract proposes `preferences`, `personal-context` and `financial-baseline`; Figma's setup asks
- * for focus areas first, so `areas` is proposed (FQ-17).
+ * Step keys. Figma's setup asks for focus areas first, so the contract adds `areas` (FQ-17) to `preferences`,
+ * `personal-context` and `financial-baseline`.
  */
 export type OnboardingStepKey = 'areas' | 'preferences' | 'personal-context' | 'financial-baseline';
 
@@ -23,7 +23,7 @@ export interface Onboarding {
   readonly completedAt: IsoInstant | null;
 }
 
-/** Proposed (FQ-17) payload of `PUT /api/v1/onboarding/steps/areas`. */
+/** FQ-17 payload of `PUT /api/v1/onboarding/steps/areas`. */
 export interface OnboardingAreas {
   readonly areaKeys: readonly IkigaiAreaKey[];
 }

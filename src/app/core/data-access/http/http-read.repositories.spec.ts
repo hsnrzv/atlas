@@ -39,17 +39,37 @@ describe('HTTP read-model adapters', () => {
     );
   });
 
-  it('redeems a Waypoint reward and keeps the server state', async () => {
+  it('redeems a Waypoint reward with the node ETag and keeps the server state', async () => {
     const item = { goalId: 'g', nodeId: 'n', status: 'EARNED', redeemedAt: null } as AwardItem;
     const redeemed = firstValueFrom(TestBed.inject(HttpAwardRepository).redeem(item));
+    backend.expectOne('/api/v1/goals/g/nodes/n').flush({ id: 'n', version: 4 });
+    await Promise.resolve();
     const request = backend.expectOne('/api/v1/goals/g/nodes/n/reward/redeem');
     expect(request.request.method).toBe('POST');
-    request.flush({ description: 'Trip', status: 'REDEEMED', redeemedAt: '2027-01-01T00:00:00Z' });
+    expect(request.request.headers.get('If-Match')).toBe('"4"');
+    request.flush({
+      description: 'Trip',
+      status: 'REDEEMED',
+      earnedAt: '2026-12-01T00:00:00Z',
+      redeemedAt: '2027-01-01T00:00:00Z',
+    });
     await expect(redeemed).resolves.toMatchObject({
       goalId: 'g',
       status: 'REDEEMED',
+      earnedAt: '2026-12-01T00:00:00Z',
       redeemedAt: '2027-01-01T00:00:00Z',
     });
+  });
+
+  it('redeems a Destination reward with the goal ETag', async () => {
+    const item = { goalId: 'g', nodeId: null, status: 'EARNED', redeemedAt: null } as AwardItem;
+    const redeemed = firstValueFrom(TestBed.inject(HttpAwardRepository).redeem(item));
+    backend.expectOne('/api/v1/goals/g').flush({ id: 'g', version: 7 });
+    await Promise.resolve();
+    const request = backend.expectOne('/api/v1/goals/g/reward/redeem');
+    expect(request.request.headers.get('If-Match')).toBe('"7"');
+    request.flush({ description: 'Trip', status: 'REDEEMED', redeemedAt: '2027-01-01T00:00:00Z' });
+    await expect(redeemed).resolves.toMatchObject({ status: 'REDEEMED' });
   });
 
   it('saves or skips the areas step', () => {
