@@ -28,7 +28,7 @@
 | ----- | ------------------------------------------------ | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
 | 0     | Plans, ADRs, context, matrices, cost comparison  | PLAN-FRONTEND, CONTEXT, roadmap, license matrix, ADR 0001–0008, `design/` docs | PLAN-BACKEND, PLAN-DATABASE, DOMAIN-MODULES, API-CONTRACT, ADR 0001–0008         | PLAN-INFRASTRUCTURE-CICD, COST-COMPARISON, ADR 0001–0009, runbooks | ✅ delivered, **awaiting review**                                                                     |
 | 1     | Repository foundations, developer experience     | scaffold, tokens, brand assets, theme, icons, CI, container (F1-1…F1-13)       | foundations, CI, coverage, SBOM and image scan, GitHub settings (BE-1.1…BE-1.15) | local full stack, Kustomize, Argo CD apps, `validate.sh`, CI       | 🟡 mostly done: `atlas` green on GitHub; backend Gate 1 met 2026-11-27; `atlas-infra` first push open |
-| 2     | Frontend shell and one sample goal (mock-backed) | F2-1…F2-12                                                                     | contract alignment, owner reviews, spikes, GHCR publishing (BE-2.1…2.4)          | GHCR publishing, bump PRs, owner decisions                         | ⏳                                                                                                    |
+| 2     | Frontend shell and one sample goal (mock-backed) | F2-1…F2-12                                                                     | contract alignment, owner reviews, spikes, GHCR publishing (BE-2.1…2.4)          | GHCR publishing, bump PRs, owner decisions                         | ✅ done 2026-11-27 (Gate 2 met in all three repos)                                                    |
 | 3     | Core backend domain and database                 | editing and onboarding UI on the mock, OpenAPI client spike (F3-1…F3-5)        | BE-3.01…BE-3.82                                                                  | non-prod platform and dev environment                              | ⏳                                                                                                    |
 | 4     | Frontend/backend integration                     | HTTP adapter, states, e2e on the full stack (F4-1…F4-7)                        | BE-4.1…BE-4.6                                                                    | staging, promotion workflow, e2e in staging                        | ⏳                                                                                                    |
 | 5     | Timeline, calendar, charts                       | visualization spike → wrappers (ADR-0004)                                      | read models if needed                                                            | —                                                                  | ⏳                                                                                                    |
@@ -98,11 +98,12 @@ each repository plan.
        nullable progress, reopen → `IN_PROGRESS`, versioned notes with `If-Match`, node reward `If-Match`,
        `IkigaiArea.focused`, API-CONTRACT §6/§7 references) are done 2026-11-27.
 3. [x] BE-2.3 spike (springdoc with Boot 4/Jackson 3; JWT audiences). Done 2026-11-27 (backend).
-4. [ ] F2-1 shared UI primitives → F2-2 models + mock repository → F2-3 My Atlas → F2-4 Destinations → F2-5
+4. [x] F2-1 shared UI primitives → F2-2 models + mock repository → F2-3 My Atlas → F2-4 Destinations → F2-5
        Destination detail → F2-6 Waypoint drill-down → F2-7 Steps → F2-8 Awards → F2-9 Journey list → F2-10 e2e on three
-       engines → F2-11 supply-chain gates.
+       engines → F2-11 supply-chain gates. Done (PLAN-FRONTEND Phase 2).
 5. [x] F2-12, BE-2.4 and infra Phase 2: frontend and backend container workflows publish `main-<sha>` to GHCR (SBOM, provenance,
-       scan); GitHub App + bump PR to `environments/dev`. Backend done 2026-11-27; frontend (F2-12) done 2026-11-27.
+       scan); GitHub App + bump PR to `environments/dev`. Done 2026-11-27: first frontend run published `atlas-frontend:main-14311115909a`; its bump PR (`atlas-infra`
+       #8) auto-merged into `environments/dev` after `manifests-ci`.
 
 ### Phase 3 — backend domain (frontend editing on the mock in parallel)
 
