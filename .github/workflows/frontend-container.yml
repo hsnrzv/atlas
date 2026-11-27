@@ -3,20 +3,11 @@ name: frontend-container
 # Builds, smoke-tests and scans the runtime image (F2-11). Publishing to ghcr.io/hsnrzv/atlas-frontend (immutable
 # tags, provenance, signing) is added with the delivery pipeline (F2-12, atlas-infra ADR-0007); see atlas-infra
 # docs/plan/PLAN-INFRASTRUCTURE-CICD.md.
+#
+# No path filter on pull_request: the job is a required status check, and a workflow skipped by a path filter never
+# reports a status, which blocks the merge indefinitely.
 on:
   pull_request:
-    paths:
-      - Dockerfile
-      - .dockerignore
-      - nginx/**
-      - package.json
-      - package-lock.json
-      - angular.json
-      - src/**
-      - public/**
-      - design/svg/**
-      - .trivyignore
-      - .github/workflows/frontend-container.yml
   push:
     branches: [main]
 
