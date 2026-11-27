@@ -71,7 +71,9 @@ jobs:
 
   e2e:
     name: Playwright smoke + axe
-    runs-on: ubuntu-latest
+    # Pinned: Playwright's `install --with-deps` has no package list for Ubuntu 26.04 (the new
+    # ubuntu-latest) yet and fails on removed font packages. Move back once Playwright supports it.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
@@ -98,7 +100,9 @@ jobs:
 
   performance:
     name: Core Web Vitals budgets (mid-range phone)
-    runs-on: ubuntu-latest
+    # Pinned: Playwright's `install --with-deps` has no package list for Ubuntu 26.04 (the new
+    # ubuntu-latest) yet and fails on removed font packages. Move back once Playwright supports it.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
