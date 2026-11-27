@@ -284,8 +284,8 @@ content are built against Figma V3.
       `atlas-infra` and the backend (BE-1.13). Done 2026-11-17 (roadmap phase 9): `scripts/check-licenses.mjs` (no new
       dependency), `npm sbom` (CycloneDX), Trivy v0.76.2 in `frontend-container` (proposed as the shared scanner).
 - [ ] **F2-12** `frontend-container.yml` publishes `main-<sha>` to GHCR on `main` (provenance, SBOM and scan from
-      F2-11) and opens the bump PR to `atlas-infra` `environments/dev`. Starts once `atlas-infra` ADR-0007 is accepted. Blocked
-      (2026-11-17): ADR-0007 is still Proposed.
+      F2-11) and opens the bump PR to `atlas-infra` `environments/dev`. Unblocked 2026-11-27:
+      ADR-0007 is accepted and the GitHub App exists; the backend's `backend-container.yml` (BE-2.4) is the reference.
 
 ### Phase 3 — editing and onboarding (frontend, parallel to backend Phase 3)
 
