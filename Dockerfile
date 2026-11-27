@@ -18,6 +18,11 @@ LABEL org.opencontainers.image.title="atlas-frontend" \
       org.opencontainers.image.description="IKIGAI ATLAS web client (Angular SPA)" \
       org.opencontainers.image.source="https://github.com/hsnrzv/atlas"
 
+# Pull Alpine security fixes released after the base image was published (Trivy gate).
+USER root
+RUN apk upgrade --no-cache
+USER 101
+
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY nginx/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=build /app/dist/atlas-frontend/browser /usr/share/nginx/html
