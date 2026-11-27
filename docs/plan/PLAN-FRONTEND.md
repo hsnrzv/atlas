@@ -78,14 +78,14 @@ unit test and a bundle grep in CI assert.
 
 ## 4. Dependencies
 
-| Dependency                                                                           | Needed for                          | Status                                     |
-| ------------------------------------------------------------------------------------ | ----------------------------------- | ------------------------------------------ |
-| Backend draft API contract (`atlas-microservices/docs/architecture/API-CONTRACT.md`) | model shapes in F2-2                | draft (Phase 0)                            |
-| Published OpenAPI document and generated or adapted client                           | F4-1                                | Phase 3 (backend)                          |
-| Authentication decision and BFF endpoints (`/api/v1/me`, login/logout, CSRF cookie)  | F4-5, Phase 9                       | `atlas-microservices` ADR-0005 proposed    |
-| Edge/Ingress same-origin routing, local full stack                                   | e2e against the real backend (F4-6) | delivered in `atlas-infra` (local compose) |
-| GHCR publishing and promotion PRs                                                    | deploying the image                 | `atlas-infra` ADR-0007 proposed            |
-| Owner decisions D1–D14 below                                                         | as listed                           | open                                       |
+| Dependency                                                                           | Needed for                          | Status                                        |
+| ------------------------------------------------------------------------------------ | ----------------------------------- | --------------------------------------------- |
+| Backend draft API contract (`atlas-microservices/docs/architecture/API-CONTRACT.md`) | model shapes in F2-2                | draft (Phase 0)                               |
+| Published OpenAPI document and generated or adapted client                           | F4-1                                | Phase 3 (backend)                             |
+| Authentication decision and BFF endpoints (`/api/v1/me`, login/logout, CSRF cookie)  | F4-5, Phase 9                       | `atlas-microservices` ADR-0005 proposed       |
+| Edge/Ingress same-origin routing, local full stack                                   | e2e against the real backend (F4-6) | delivered in `atlas-infra` (local compose)    |
+| GHCR publishing and promotion PRs                                                    | deploying the image                 | `atlas-infra` ADR-0007 accepted; done (F2-12) |
+| Owner decisions D1–D14 below                                                         | as listed                           | open                                          |
 
 Runtime npm dependencies today: Angular 22.2, Material/CDK 22.2, Capacitor 8.6 (core, iOS, Android, app, keyboard,
 splash screen), Tabler Icons Angular 3.51,
@@ -116,7 +116,7 @@ Fontsource Inter/Manrope, rxjs, tslib. Planned: the Phase 5 visualization packag
 | Unit/component        | Vitest via `ng test` (jsdom)                                                                      | registries, view-model mappers, date-precision and currency formatting, components' inputs/outputs and accessible names, mock-data guard | CI `verify`      |
 | E2E                   | Playwright (desktop + Pixel 7 Chromium, desktop Firefox and WebKit)                               | §17.1 flows as they arrive: navigation overview → Destination → Waypoint → nested and back; CRUD; unlock; onboarding; responsive layout  | CI `e2e`         |
 | Accessibility         | `@axe-core/playwright` (WCAG 2.0–2.2 A/AA), light and dark                                        | zero violations on every routed page; plus manual keyboard and screen-reader checks in the PR checklist                                  | CI `e2e`         |
-| Container             | `frontend-container.yml`                                                                          | build, `/healthz`, deep link, CSP header, `/api` 404, non-root                                                                           | CI               |
+| Container             | `frontend-container.yml`                                                                          | build, `/healthz`, deep link, CSP header, `/api` 404, non-root; on `main` publish to GHCR and open the `atlas-infra` dev bump PR (F2-12) | CI               |
 | Integration (Phase 4) | Playwright against `atlas-infra/local` compose                                                    | real backend and database flows                                                                                                          | CI (Phase 4)     |
 | Visual regression     | Playwright screenshots in the Linux Playwright container (`playwright.visual.config.ts`)          | `/_design` and 11 key pages at 390 and 1440 px in both themes against approved baselines                                                 | CI `visual`      |
 | Performance           | Playwright with CDP throttling (`playwright.performance.config.ts`)                               | LCP < 2.5 s, TBT < 200 ms, CLS < 0.1 for 10 key pages on a mid-range phone profile                                                       | CI `performance` |
@@ -283,9 +283,10 @@ content are built against Figma V3.
       §1; tool and license to verify), a CycloneDX SBOM, and an image scan with the scanner chosen together with
       `atlas-infra` and the backend (BE-1.13). Done 2026-11-17 (roadmap phase 9): `scripts/check-licenses.mjs` (no new
       dependency), `npm sbom` (CycloneDX), Trivy v0.76.2 in `frontend-container` (proposed as the shared scanner).
-- [ ] **F2-12** `frontend-container.yml` publishes `main-<sha>` to GHCR on `main` (provenance, SBOM and scan from
+- [x] **F2-12** `frontend-container.yml` publishes `main-<sha>` to GHCR on `main` (provenance, SBOM and scan from
       F2-11) and opens the bump PR to `atlas-infra` `environments/dev`. Unblocked 2026-11-27:
       ADR-0007 is accepted and the GitHub App exists; the backend's `backend-container.yml` (BE-2.4) is the reference.
+      Done 2026-11-27: `publish` and `bump-infra-dev` jobs as in the backend (roadmap F2-12).
 
 ### Phase 3 — editing and onboarding (frontend, parallel to backend Phase 3)
 

@@ -99,8 +99,8 @@ flowchart LR
 ```
 
 - Images are immutable (tag plus digest). The same digest is promoted `dev` → `staging` → `prod` through reviewed PRs
-  (`atlas-infra` ADR-0007, proposed). Image publishing to GHCR is not enabled yet. The container workflows currently
-  build and smoke-test only.
+  (`atlas-infra` ADR-0007, accepted). On `main`, both container workflows publish `main-<sha>` to GHCR with provenance
+  and SBOM attestations and open a bump PR to `atlas-infra` `environments/dev` through a GitHub App.
 - Database migrations must be backward compatible across a deployment window (expand/contract, §16.4). How they are
   executed is `atlas-infra` ADR-0008 (proposed).
 
