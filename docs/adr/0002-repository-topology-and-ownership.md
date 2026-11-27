@@ -1,7 +1,7 @@
 # ADR-0002: Repository topology and ownership
 
 - Status: Accepted
-- Date: 2026-11-12
+- Date: 2026-11-12, amended 2026-11-27 (documentation ownership)
 - Deciders: @hsnrzv (owner)
 
 ## Context
@@ -42,9 +42,24 @@ Three repositories, each with a single owner role:
   `atlas-infra`.
 - A change that crosses the API boundary needs coordinated PRs: backend first (backward-compatible), then frontend.
   The roadmap orders them that way.
-- Cross-repository documentation lives in one place (`atlas/docs`), but every repository's README links to it.
+- Cross-repository documentation lives in one place (`atlas/docs`), but every repository's README links to it. It
+  stays at system level; repository-specific details live in their repository (amendment 2026-11-27).
 - Same-origin routing avoids CORS and keeps cookie-based BFF authentication possible (`atlas-microservices`
   ADR-0005, proposed).
+
+## Amendment 2026-11-27 (documentation ownership)
+
+The cross-repository docs in `atlas` had started to repeat backend versions, the backend dependency inventory and
+backend item status. They drifted after every backend upgrade. From now on:
+
+- `atlas/docs` keeps only **system-level** material: system context and runtime contract, cross-repository phase
+  coordination and gates (backend items as ID ranges only), the licence **policy** and artifact summary, cross-cutting
+  ADRs, and the frontend's own plans and design docs.
+- Each repository owns its **stack versions, dependency inventory (`THIRD-PARTY-NOTICES.md`), plans, backlog,
+  item-level status and open licence items**. For the backend that is `atlas-microservices` (README, `PLAN-BACKEND`,
+  `PLAN-DATABASE`, `docs/implementation/roadmap.md`, `THIRD-PARTY-NOTICES.md`, ADRs).
+- `atlas` documents link to the backend sources instead of copying them. A backend dependency change updates only the
+  backend repository, unless it changes the licence policy, what ships in an artifact, or the integration contract.
 
 ## Alternatives considered
 

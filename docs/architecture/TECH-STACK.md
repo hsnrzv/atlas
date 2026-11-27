@@ -1,8 +1,9 @@
 # IKIGAI ATLAS: technical stack and architecture overview
 
-Snapshot after Phase 0 (plans) and Phase 1 (foundations), 2026-11-12. Exact versions and licences are in
-[DEPENDENCY-LICENSE-MATRIX.md](DEPENDENCY-LICENSE-MATRIX.md); the C4-style context and delivery views are in
-[CONTEXT.md](CONTEXT.md).
+Snapshot after Phase 0 (plans) and Phase 1 (foundations), 2026-11-12; backend section updated 2026-11-27. Frontend
+and infrastructure versions and licences are in [DEPENDENCY-LICENSE-MATRIX.md](DEPENDENCY-LICENSE-MATRIX.md); backend
+versions are owned by the backend repository (see [Backend](#backend-atlas-microservices)). The C4-style context and
+delivery views are in [CONTEXT.md](CONTEXT.md).
 
 **Status legend:** **In place** = built and verified in Phase 1. **Accepted** = owner decision recorded, not built
 yet. **Proposed** = ADR written, waiting for the owner. **Planned** = later phase (see
@@ -32,7 +33,7 @@ flowchart TB
       certm["cert-manager<br/>Let's Encrypt certificates"]
       subgraph ns["Namespace atlas-dev / atlas-staging / atlas-prod<br/>PSA restricted · NetworkPolicies · non-root · read-only rootfs"]
         fe["atlas-frontend pod<br/>nginx 1.30 unprivileged<br/>static SPA · CSP headers"]
-        be["atlas-backend pod<br/>Java 25 · Spring Boot 4.1<br/>Spring Modulith modular monolith<br/>REST /api/v1 · Problem Details"]
+        be["atlas-backend pod<br/>Java 25 · Spring Boot 4<br/>Spring Modulith modular monolith<br/>REST /api/v1 · Problem Details"]
       end
       eso["External Secrets Operator"]
       argo["Argo CD 3.6<br/>GitOps controller"]
@@ -116,25 +117,21 @@ flowchart LR
 
 ## Backend: `atlas-microservices`
 
-| Area              | Technology                                                                                      | Version        | Status                                         |
-| ----------------- | ----------------------------------------------------------------------------------------------- | -------------- | ---------------------------------------------- |
-| Runtime           | Java LTS (Eclipse Temurin), backend ADR-0008                                                    | 25             | In place                                       |
-| Framework         | Spring Boot (Spring Framework 7)                                                                | 4.1.2          | In place                                       |
-| Architecture      | Spring Modulith modular monolith, one deployable; package `dev.myatlas`                         | 2.1.1          | In place                                       |
-| Domain modules    | profile, onboarding, ikigai, goals, dashboard, timeline; later finance, capacity, export, ai    | n/a            | Planned (Phase 3 onwards)                      |
-| Web and API       | Spring MVC on Tomcat 11, Jackson 3, Bean Validation; REST `/api/v1`, Problem Details (RFC 9457) | Boot-managed   | Scaffold in place; endpoints Planned (Phase 3) |
-| API conventions   | ETag/If-Match, Idempotency-Key, money as string, `PlannedDate`                                  | n/a            | Specified in API-CONTRACT                      |
-| Persistence       | Spring Data JPA / Hibernate, HikariCP, PostgreSQL JDBC                                          | 7.4 · 7 · 42.7 | In place                                       |
-| Migrations        | Flyway, schema `atlas`                                                                          | 12.4           | In place                                       |
-| Database          | PostgreSQL                                                                                      | 18.6           | In place (local and tests)                     |
-| Operations        | Spring Boot Actuator (health, liveness, readiness, info), Micrometer, ECS JSON logs             | Boot-managed   | In place                                       |
-| Security          | Spring Security OAuth2 resource server (JWT), provider-neutral OIDC                             | Boot-managed   | Proposed (ADR-0005), Planned (Phase 3)         |
-| Web session (BFF) | Spring Security OAuth2 client + Spring Session JDBC, `__Host-` cookie                           | Boot-managed   | Planned (Phase 9)                              |
-| API documentation | springdoc-openapi, code-first                                                                   | 3.x            | Planned (Phase 4)                              |
-| Build             | Maven via wrapper                                                                               | 3.10           | In place                                       |
-| Tests             | JUnit, Spring Modulith module verification, Testcontainers (PostgreSQL)                         | 6 · 2.1 · 2.0  | In place                                       |
-| Container         | Eclipse Temurin 25 JRE (Ubuntu noble), port 8080, UID 10001                                     | 25.0.5         | In place                                       |
-| CI                | GitHub Actions `backend-ci.yml` and `backend-container.yml`                                     | n/a            | In place (first GitHub run open)               |
+The backend repository owns its stack, versions, plan and status; this file only records the system-level shape.
+For details, see the backend [README](https://github.com/hsnrzv/atlas-microservices#readme),
+[PLAN-BACKEND §6](https://github.com/hsnrzv/atlas-microservices/blob/main/docs/plan/PLAN-BACKEND.md) (stack and
+dependency policy) and
+[THIRD-PARTY-NOTICES](https://github.com/hsnrzv/atlas-microservices/blob/main/THIRD-PARTY-NOTICES.md) (exact
+versions and licences).
+
+| Area         | System-level choice                                                                                  | Status                                     |
+| ------------ | ---------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| Runtime      | Java 25 LTS (Eclipse Temurin), Spring Boot 4                                                         | In place                                   |
+| Architecture | One deployable modular monolith (Spring Modulith); no microservices, brokers or per-module databases | In place; domain modules Planned (Phase 3) |
+| API          | REST `/api/v1`, Problem Details (RFC 9457), code-first OpenAPI; contract in backend API-CONTRACT     | Scaffold in place; endpoints Planned       |
+| Persistence  | PostgreSQL 18, one `atlas` schema owned by Flyway                                                    | In place                                   |
+| Security     | Provider-neutral OIDC: JWT resource server, BFF session for web                                      | Planned (Phases 3 and 9)                   |
+| Container    | `ghcr.io/hsnrzv/atlas-backend`, non-root, port 8080, health under `/actuator/health`                 | Image in place; publishing Phase 2         |
 
 ## Infrastructure and delivery: `atlas-infra`
 
