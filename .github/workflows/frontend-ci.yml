@@ -103,9 +103,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: chromium
+          - name: chromium-desktop
             browser: chromium
-            args: --project=desktop-chromium --project=mobile-chromium
+            args: --project=desktop-chromium
+          - name: chromium-mobile
+            browser: chromium
+            args: --project=mobile-chromium
           - name: firefox
             browser: firefox
             args: --project=desktop-firefox
