@@ -13,10 +13,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
-    name: Design checks, lint, test, build
+  # Documentation-only changes skip the browser jobs (e2e, performance, visual). The checks, lint, unit and build jobs
+  # always run: they are fast and Prettier also checks the Markdown. Skipped jobs report success, so the required
+  # checks still pass. If change detection itself fails, the gated jobs run (`!= 'false'`), so they never pass unrun.
+  # `npm run verify` runs the same four jobs locally, in sequence.
+  changes:
+    name: Detect code changes
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.changes.outputs.code }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - id: changes
+        run: bash .github/scripts/detect-code-changes.sh
+        env:
+          BEFORE: ${{ github.event.before }}
+
+  checks:
+    name: Design and supply-chain checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
 
@@ -36,17 +57,60 @@ jobs:
       - name: Design system (tokens in sync, WCAG contrast, dimension icons, brand assets)
         run: npm run design:check
 
+  lint:
+    name: Lint and format
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
       - name: ESLint (TypeScript + templates incl. accessibility rules)
         run: npm run lint
 
       - name: Stylelint (no raw hex in components)
+        if: ${{ !cancelled() }}
         run: npm run lint:styles
 
       - name: Prettier
+        if: ${{ !cancelled() }}
         run: npm run format:check
 
-      - name: Unit tests (Vitest)
-        run: npm run test:ci
+  unit:
+    name: Unit tests (Vitest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - run: npm run test:ci
+
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
 
       - name: Production build (type-check + budgets)
         run: npm run build
@@ -69,12 +133,36 @@ jobs:
           path: dist/atlas-frontend.cdx.json
           retention-days: 30
 
+  # The suite is CPU-bound (axe, four browser projects), so it runs as parallel jobs, each on its own runner and with
+  # only its own browser. WebKit is the slowest engine on Linux and gets two shards. `e2e-result` reports the
+  # required check "Playwright smoke + axe" for all of them.
   e2e:
-    name: Playwright smoke + axe
+    name: Playwright (${{ matrix.name }})
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.code != 'false' }}
     # Pinned: Playwright's `install --with-deps` has no package list for Ubuntu 26.04 (the new
     # ubuntu-latest) yet and fails on removed font packages. Move back once Playwright supports it.
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: chromium-desktop
+            browser: chromium
+            args: --project=desktop-chromium
+          - name: chromium-mobile
+            browser: chromium
+            args: --project=mobile-chromium
+          - name: firefox
+            browser: firefox
+            args: --project=desktop-firefox
+          - name: webkit-1
+            browser: webkit
+            args: --project=desktop-webkit --shard=1/2
+          - name: webkit-2
+            browser: webkit
+            args: --project=desktop-webkit --shard=2/2
     steps:
       - uses: actions/checkout@v7
 
@@ -85,21 +173,38 @@ jobs:
 
       - run: npm ci --no-audit --no-fund
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps ${{ matrix.browser }}
 
       - name: Playwright
-        run: npm run e2e
+        run: npm run e2e -- ${{ matrix.args }}
 
       - if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.name }}
           path: playwright-report
           retention-days: 7
 
+  e2e-result:
+    name: Playwright smoke + axe
+    needs: e2e
+    # Runs even when a shard fails, so the required check fails instead of being skipped (skipped counts as passed).
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: All shards passed (or were skipped for a documentation-only change)
+        env:
+          RESULT: ${{ needs.e2e.result }}
+        run: |
+          echo "e2e shards: $RESULT"
+          [[ "$RESULT" == "success" || "$RESULT" == "skipped" ]]
+
   performance:
     name: Core Web Vitals budgets (mid-range phone)
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.code != 'false' }}
     # Pinned: Playwright's `install --with-deps` has no package list for Ubuntu 26.04 (the new
     # ubuntu-latest) yet and fails on removed font packages. Move back once Playwright supports it.
     runs-on: ubuntu-24.04
@@ -132,6 +237,8 @@ jobs:
 
   visual:
     name: Visual regression (key pages, both themes)
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.code != 'false' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

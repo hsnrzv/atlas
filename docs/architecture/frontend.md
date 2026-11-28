@@ -383,7 +383,8 @@ ECharts stays the choice for future charts (finance, ADR-0004); it is added only
 - No other native-only features. Tokens and auth stay in HttpOnly cookies, never in `localStorage` or Capacitor
   Preferences.
 - CI (`mobile-validation.yml`): Android `assembleDebug lintDebug testDebugUnitTest`; iOS simulator build without
-  signing.
+  signing. Runs on pull requests and `main` only when native paths or the Capacitor dependencies change, plus weekly
+  and on demand.
 
 ## 13. Accessibility
 
