@@ -40,7 +40,7 @@ Backend and database are **not** needed to work on the current foundation. For t
 nvm use                 # Node 26
 npm ci                  # install exactly what package-lock.json pins
 npm start               # http://localhost:4200 (proxies /api → http://localhost:8080)
-npm run verify          # everything CI's verify job runs, in the same order
+npm run verify          # everything the CI checks, lint, unit and build jobs run, in sequence
 ```
 
 > **Private npm mirror?** `package-lock.json` must resolve only from `https://registry.npmjs.org/`.

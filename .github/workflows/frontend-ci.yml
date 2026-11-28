@@ -13,8 +13,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Documentation-only changes skip the browser jobs (e2e, performance, visual). `verify` always runs: it is fast and
-  # Prettier also checks the Markdown. Skipped jobs report success, so the required checks still pass.
+  # Documentation-only changes skip the browser jobs (e2e, performance, visual). The checks, lint, unit and build jobs
+  # always run: they are fast and Prettier also checks the Markdown. Skipped jobs report success, so the required
+  # checks still pass. `npm run verify` runs the same four jobs locally, in sequence.
   changes:
     name: Detect code changes
     runs-on: ubuntu-latest
@@ -32,10 +33,10 @@ jobs:
         env:
           BEFORE: ${{ github.event.before }}
 
-  verify:
-    name: Design checks, lint, test, build
+  checks:
+    name: Design and supply-chain checks
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
 
@@ -55,17 +56,60 @@ jobs:
       - name: Design system (tokens in sync, WCAG contrast, dimension icons, brand assets)
         run: npm run design:check
 
+  lint:
+    name: Lint and format
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
       - name: ESLint (TypeScript + templates incl. accessibility rules)
         run: npm run lint
 
       - name: Stylelint (no raw hex in components)
+        if: ${{ !cancelled() }}
         run: npm run lint:styles
 
       - name: Prettier
+        if: ${{ !cancelled() }}
         run: npm run format:check
 
-      - name: Unit tests (Vitest)
-        run: npm run test:ci
+  unit:
+    name: Unit tests (Vitest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - run: npm run test:ci
+
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
 
       - name: Production build (type-check + budgets)
         run: npm run build
