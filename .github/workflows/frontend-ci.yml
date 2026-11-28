@@ -88,10 +88,11 @@ jobs:
           path: dist/atlas-frontend.cdx.json
           retention-days: 30
 
-  # The suite is CPU-bound (axe, four browser projects), so it runs as parallel shards, each on its own runner.
-  # `e2e-result` reports the required check "Playwright smoke + axe" for all shards.
+  # The suite is CPU-bound (axe, four browser projects), so it runs as parallel jobs, each on its own runner and with
+  # only its own browser. WebKit is the slowest engine on Linux and gets two shards. `e2e-result` reports the
+  # required check "Playwright smoke + axe" for all of them.
   e2e:
-    name: Playwright shard ${{ matrix.shard }}/3
+    name: Playwright (${{ matrix.name }})
     needs: changes
     if: needs.changes.outputs.code == 'true'
     # Pinned: Playwright's `install --with-deps` has no package list for Ubuntu 26.04 (the new
@@ -101,7 +102,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3]
+        include:
+          - name: chromium
+            browser: chromium
+            args: --project=desktop-chromium --project=mobile-chromium
+          - name: firefox
+            browser: firefox
+            args: --project=desktop-firefox
+          - name: webkit-1
+            browser: webkit
+            args: --project=desktop-webkit --shard=1/2
+          - name: webkit-2
+            browser: webkit
+            args: --project=desktop-webkit --shard=2/2
     steps:
       - uses: actions/checkout@v7
 
@@ -112,16 +125,16 @@ jobs:
 
       - run: npm ci --no-audit --no-fund
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps ${{ matrix.browser }}
 
       - name: Playwright
-        run: npm run e2e -- --shard=${{ matrix.shard }}/3
+        run: npm run e2e -- ${{ matrix.args }}
 
       - if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report-${{ matrix.shard }}
+          name: playwright-report-${{ matrix.name }}
           path: playwright-report
           retention-days: 7
 

@@ -16,7 +16,7 @@ export default defineConfig({
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 1 : 0,
   // Two per 4-vCPU runner: more workers starve the browsers and make focus/animation checks flaky. CI splits the
-  // suite across parallel jobs with --shard instead (frontend-ci.yml).
+  // suite across parallel jobs by browser project instead (frontend-ci.yml).
   workers: process.env['CI'] ? 2 : undefined,
   reporter: process.env['CI'] ? [['github'], ['html', { open: 'never' }]] : 'list',
   use: {
