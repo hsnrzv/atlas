@@ -88,14 +88,20 @@ jobs:
           path: dist/atlas-frontend.cdx.json
           retention-days: 30
 
+  # The suite is CPU-bound (axe, four browser projects), so it runs as parallel shards, each on its own runner.
+  # `e2e-result` reports the required check "Playwright smoke + axe" for all shards.
   e2e:
-    name: Playwright smoke + axe
+    name: Playwright shard ${{ matrix.shard }}/3
     needs: changes
     if: needs.changes.outputs.code == 'true'
     # Pinned: Playwright's `install --with-deps` has no package list for Ubuntu 26.04 (the new
     # ubuntu-latest) yet and fails on removed font packages. Move back once Playwright supports it.
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     steps:
       - uses: actions/checkout@v7
 
@@ -110,14 +116,29 @@ jobs:
         run: npx playwright install --with-deps chromium firefox webkit
 
       - name: Playwright
-        run: npm run e2e
+        run: npm run e2e -- --shard=${{ matrix.shard }}/3
 
       - if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.shard }}
           path: playwright-report
           retention-days: 7
+
+  e2e-result:
+    name: Playwright smoke + axe
+    needs: e2e
+    # Runs even when a shard fails, so the required check fails instead of being skipped (skipped counts as passed).
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: All shards passed (or were skipped for a documentation-only change)
+        env:
+          RESULT: ${{ needs.e2e.result }}
+        run: |
+          echo "e2e shards: $RESULT"
+          [[ "$RESULT" == "success" || "$RESULT" == "skipped" ]]
 
   performance:
     name: Core Web Vitals budgets (mid-range phone)

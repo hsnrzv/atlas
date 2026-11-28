@@ -15,8 +15,9 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 1 : 0,
-  // GitHub's Linux runners for public repositories have 4 vCPUs; the tests mostly wait on the browser.
-  workers: process.env['CI'] ? 4 : undefined,
+  // Two per 4-vCPU runner: more workers starve the browsers and make focus/animation checks flaky. CI splits the
+  // suite across parallel jobs with --shard instead (frontend-ci.yml).
+  workers: process.env['CI'] ? 2 : undefined,
   reporter: process.env['CI'] ? [['github'], ['html', { open: 'never' }]] : 'list',
   use: {
     baseURL: BASE_URL,
