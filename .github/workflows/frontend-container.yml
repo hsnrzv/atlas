@@ -16,7 +16,8 @@ name: frontend-container
 # See atlas-infra docs/plan/PLAN-INFRASTRUCTURE-CICD.md.
 #
 # No path filter on pull_request: the job is a required status check, and a workflow skipped by a path filter never
-# reports a status, which blocks the merge indefinitely.
+# reports a status, which blocks the merge indefinitely. Instead the `changes` job skips the image job (and with it
+# publish and the dev bump) for documentation-only changes; a job skipped by its `if` reports success.
 on:
   pull_request:
   push:
@@ -34,8 +35,27 @@ env:
   REGISTRY_IMAGE: ghcr.io/hsnrzv/atlas-frontend
 
 jobs:
+  changes:
+    name: Detect code changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.changes.outputs.code }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - id: changes
+        run: bash .github/scripts/detect-code-changes.sh
+        env:
+          BEFORE: ${{ github.event.before }}
+
   image:
     name: Build and smoke-test image
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

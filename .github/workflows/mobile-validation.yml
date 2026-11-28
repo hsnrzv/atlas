@@ -1,7 +1,8 @@
 name: mobile-validation
 
 # Builds the Capacitor shells. Runs when the native projects, the native shell code or the Capacitor
-# dependencies change (macOS minutes are expensive), on main, and on demand.
+# dependencies change (macOS minutes are expensive), on pull requests and on main alike, weekly (catches runner and
+# Xcode image drift) and on demand. Not a required check, so the path filter cannot block a merge.
 on:
   pull_request:
     paths:
@@ -15,6 +16,18 @@ on:
       - '.github/workflows/mobile-validation.yml'
   push:
     branches: [main]
+    # Same list as pull_request.
+    paths:
+      - 'android/**'
+      - 'ios/**'
+      - 'capacitor.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'src/app/core/native/**'
+      - 'scripts/assets/**'
+      - '.github/workflows/mobile-validation.yml'
+  schedule:
+    - cron: '17 4 * * 1'
   workflow_dispatch:
 
 permissions:

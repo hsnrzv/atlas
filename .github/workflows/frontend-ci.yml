@@ -13,6 +13,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Documentation-only changes skip the browser jobs (e2e, performance, visual). `verify` always runs: it is fast and
+  # Prettier also checks the Markdown. Skipped jobs report success, so the required checks still pass.
+  changes:
+    name: Detect code changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.changes.outputs.code }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - id: changes
+        run: bash .github/scripts/detect-code-changes.sh
+        env:
+          BEFORE: ${{ github.event.before }}
+
   verify:
     name: Design checks, lint, test, build
     runs-on: ubuntu-latest
@@ -71,6 +90,8 @@ jobs:
 
   e2e:
     name: Playwright smoke + axe
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     # Pinned: Playwright's `install --with-deps` has no package list for Ubuntu 26.04 (the new
     # ubuntu-latest) yet and fails on removed font packages. Move back once Playwright supports it.
     runs-on: ubuntu-24.04
@@ -100,6 +121,8 @@ jobs:
 
   performance:
     name: Core Web Vitals budgets (mid-range phone)
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     # Pinned: Playwright's `install --with-deps` has no package list for Ubuntu 26.04 (the new
     # ubuntu-latest) yet and fails on removed font packages. Move back once Playwright supports it.
     runs-on: ubuntu-24.04
@@ -132,6 +155,8 @@ jobs:
 
   visual:
     name: Visual regression (key pages, both themes)
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
